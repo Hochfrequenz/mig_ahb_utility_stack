@@ -1,43 +1,95 @@
-from typing import List, Optional, Union
+"""
+MAUS is the MIG AHB Utility Stack. It merges/joins data from Message Implementation Guide and Anwendungshandbuch.
+"""
+from itertools import groupby
+from typing import List, Sequence
 
-import attr
+from maus.models.anwendungshandbuch import AhbLine, DeepAnwendungshandbuch, FlatAnwendungshandbuch
+from maus.models.edifact_components import DataElement, DataElementFreeText, DataElementValuePool, SegmentGroup
+from maus.models.message_implementation_guide import SegmentGroupHierarchy
 
 
-@attr.s(auto_attribs=True)
-class MessageImplementationGuide:
+def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElement:
     """
-    A Message Implementation Guide (MIG) describes the structure of messages in a certain EDIFACT format (e.g. UTILMD 5.2a)
+    Merges lines that have the same data element into a single data element instance which is returned
     """
+    distinct_data_element_keys = {ahb_line.data_element for ahb_line in ahb_lines}
+    if len(distinct_data_element_keys) != 1:
+        raise ValueError(
+            "You must only use this function with lines that share the same data element but the "
+            f"parameter ahb_lines contains: {', '.join([x for x in distinct_data_element_keys])} "
+        )
+    result: DataElement
+    if ahb_lines[0].value_pool_entry:
+        result = DataElementValuePool(discriminator=ahb_lines[0].get_discriminator(include_name=False), value_pool={})
+        for data_element_value_entry in ahb_lines:
+            result.value_pool[data_element_value_entry.value_pool_entry] = data_element_value_entry.name
+    else:
+        result = DataElementFreeText(
+            entered_input=None,
+            ahb_expression=ahb_lines[0].ahb_expression,
+            discriminator=ahb_lines[0].get_discriminator(include_name=True),
+        )
+        # a free text field never spans more than 1 line
+    return result
 
-    mig_json: Union[dict, list]
 
-
-@attr.s(auto_attribs=True)
-class AhbLine:
+def group_lines_by_segment_group(
+    ahb_lines: List[AhbLine], segment_group_hierarchy: SegmentGroupHierarchy
+) -> List[SegmentGroup]:
     """
-    An AhbLine is a single line inside the machine redable AHB
+    Group the lines by their segment group and arrange the segment groups in a flat/not deep list
     """
+    result: List[SegmentGroup] = []
+    flattened_hierarchy = segment_group_hierarchy.flattened()  # flatten = ignore hierarchy but preserve order
+    for hierarchy_segment_group, _ in flattened_hierarchy:
+        for segment_group_key, sg_group in groupby(ahb_lines, key=lambda line: line.segment_group):
+            if hierarchy_segment_group == segment_group_key:
+                sg_draft = SegmentGroup(
+                    discriminator="",
+                    ahb_expression="",
+                    segments=[],
+                    segment_groups=[],
+                )
+                this_sg = list(sg_group)
+                sg_draft.discriminator = this_sg[0].segment_group
+                sg_draft.ahb_expression = this_sg[0].ahb_expression or ""
+                for data_element_key, data_element_lines in groupby(this_sg, key=lambda line: line.data_element):
+                    data_element = merge_lines_with_same_data_element(list(data_element_lines))
+                    sg_draft.segments.append(data_element)  # type:ignore[union-attr]
+                result.append(sg_draft)
+    return result
 
-    segment_group: Optional[str]  # the segment group, e.g. "SG5"
-    segment: Optional[str]  # the segment, e.g. "IDE"
-    data_element: Optional[str]  # the data element ID, e.g. "3224"
-    name: Optional[str]  # the name, e.g. "Meldepunkt"
-    ahb_expression: Optional[str]  # a modal mark + an optional condition ("ahb expression"), f.e. "Muss [123] O [456]"
-    # note: to parse expressions from AHBs consider using AHBicht: https://github.com/Hochfrequenz/ahbicht/
 
-
-@attr.s(auto_attribs=True)
-class Anwendungshandbuch:
+def nest_segment_groups_into_each_other(
+    flat_groups: List[SegmentGroup], segment_group_hierarchy: SegmentGroupHierarchy, is_root: bool = False
+) -> List[SegmentGroup]:
     """
-    An Anwendungshandbuch (AHB) describes the structure of a message and which data are required under which circumstances.
-    It is basically a list of AhbLines + some meta information
+    Take the pre-grouped but flat/"not nested" groups and nest them into each other as described in the SGH
     """
+    result: List[SegmentGroup] = []
+    for n, segment_group in enumerate(flat_groups):  # pylint:disable=invalid-name
+        # todo: recursion is not yet working
+        if segment_group.discriminator == segment_group_hierarchy.segment_group:
+            # this is the root level for the given hierarchy
+            if segment_group_hierarchy.sub_hierarchy is None:
+                return [segment_group]
+            for sub_sgh in segment_group_hierarchy.sub_hierarchy:
+                # pass the remaining groups to to the remaining hierarchy
+                sub_result = nest_segment_groups_into_each_other(flat_groups[n + 1 :], sub_sgh)
+                for sr in sub_result:
+                    result.append(sr)
+    return result
 
-    pruefidentifikator: str  # e.g. "11042" or "13012"
-    lines: List[AhbLine]  # ordered list of AHblines
 
-
-class MigAhbUtilityStack:
-    def __init__(self, mig: MessageImplementationGuide, ahb: Anwendungshandbuch):
-        self._mig: MessageImplementationGuide = mig
-        self._ahb: Anwendungshandbuch = ahb
+def to_deep_ahb(
+    flat_ahb: FlatAnwendungshandbuch, segment_group_hierarchy: SegmentGroupHierarchy
+) -> DeepAnwendungshandbuch:
+    """
+    Converts a flat ahb into a nested ahb using the provided segment hierarchy
+    """
+    result = DeepAnwendungshandbuch(meta=flat_ahb.meta, lines=[])
+    flat_groups = group_lines_by_segment_group(flat_ahb.lines, segment_group_hierarchy)
+    # in a first step we group the lines by their segment groups but ignore the actual hierarchy except for the order
+    result.lines = nest_segment_groups_into_each_other(flat_groups, segment_group_hierarchy, is_root=True)
+    return result

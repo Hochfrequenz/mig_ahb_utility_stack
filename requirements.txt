@@ -6,3 +6,5 @@
 #
 attrs==21.2.0
     # via -r requirements.in
+marshmallow==3.14.1
+    # via -r requirements.in
