@@ -7,6 +7,11 @@ from typing import List, Optional, Tuple, Union
 import attr
 from marshmallow import Schema, fields, post_load
 
+# pylint:disable=fixme
+# TODO: the SegmentGroupHierarchy shall not be hardcoded but loaded from the .tree files
+# I already wrote a LARK grammar that works for some trees but there's still some work left before we can use it here
+# and derive the segment group hierarchy from it.
+
 
 @attr.s(auto_attribs=True, kw_only=True)
 class SegmentGroupHierarchy:

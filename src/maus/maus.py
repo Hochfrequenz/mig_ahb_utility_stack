@@ -17,23 +17,26 @@ def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElem
     if len(distinct_data_element_keys) != 1:
         raise ValueError(
             "You must only use this function with lines that share the same data element but the "
-            f"parameter ahb_lines contains: {', '.join([x for x in distinct_data_element_keys])} "
+            f"parameter ahb_lines contains: {', '.join([x or '' for x in distinct_data_element_keys])} "
         )
     result: DataElement
-    if ahb_lines[0].value_pool_entry:
+    if ahb_lines[0].value_pool_entry is not None:
         result = DataElementValuePool(discriminator=ahb_lines[0].get_discriminator(include_name=False), value_pool={})
         for data_element_value_entry in ahb_lines:
-            result.value_pool[data_element_value_entry.value_pool_entry] = data_element_value_entry.name
+            result.value_pool[
+                data_element_value_entry.value_pool_entry  # type:ignore[index]
+            ] = data_element_value_entry.name  # type:ignore[assignment]
     else:
         result = DataElementFreeText(
             entered_input=None,
-            ahb_expression=ahb_lines[0].ahb_expression,
+            ahb_expression=ahb_lines[0].ahb_expression or "",
             discriminator=ahb_lines[0].get_discriminator(include_name=True),
         )
         # a free text field never spans more than 1 line
     return result
 
 
+# todo: this method has some problems...
 def group_lines_by_segment_group(
     ahb_lines: List[AhbLine], segment_group_hierarchy: SegmentGroupHierarchy
 ) -> List[SegmentGroup]:
@@ -54,7 +57,7 @@ def group_lines_by_segment_group(
                 this_sg = list(sg_group)
                 sg_draft.discriminator = this_sg[0].segment_group
                 sg_draft.ahb_expression = this_sg[0].ahb_expression or ""
-                for data_element_key, data_element_lines in groupby(this_sg, key=lambda line: line.data_element):
+                for _, data_element_lines in groupby(this_sg, key=lambda line: line.data_element):
                     data_element = merge_lines_with_same_data_element(list(data_element_lines))
                     sg_draft.segments.append(data_element)  # type:ignore[union-attr]
                 result.append(sg_draft)
@@ -62,23 +65,23 @@ def group_lines_by_segment_group(
 
 
 def nest_segment_groups_into_each_other(
-    flat_groups: List[SegmentGroup], segment_group_hierarchy: SegmentGroupHierarchy, is_root: bool = False
+    flat_groups: List[SegmentGroup], segment_group_hierarchy: SegmentGroupHierarchy
 ) -> List[SegmentGroup]:
     """
     Take the pre-grouped but flat/"not nested" groups and nest them into each other as described in the SGH
     """
     result: List[SegmentGroup] = []
     for n, segment_group in enumerate(flat_groups):  # pylint:disable=invalid-name
-        # todo: recursion is not yet working
         if segment_group.discriminator == segment_group_hierarchy.segment_group:
             # this is the root level for the given hierarchy
+            result.append(segment_group)
             if segment_group_hierarchy.sub_hierarchy is None:
-                return [segment_group]
+                break
             for sub_sgh in segment_group_hierarchy.sub_hierarchy:
                 # pass the remaining groups to to the remaining hierarchy
-                sub_result = nest_segment_groups_into_each_other(flat_groups[n + 1 :], sub_sgh)
-                for sr in sub_result:
-                    result.append(sr)
+                sub_results = nest_segment_groups_into_each_other(flat_groups[n + 1 :], sub_sgh)
+                for sub_result in sub_results:
+                    result[-1].segment_groups.append(sub_result)
     return result
 
 
@@ -91,5 +94,5 @@ def to_deep_ahb(
     result = DeepAnwendungshandbuch(meta=flat_ahb.meta, lines=[])
     flat_groups = group_lines_by_segment_group(flat_ahb.lines, segment_group_hierarchy)
     # in a first step we group the lines by their segment groups but ignore the actual hierarchy except for the order
-    result.lines = nest_segment_groups_into_each_other(flat_groups, segment_group_hierarchy, is_root=True)
+    result.lines = nest_segment_groups_into_each_other(flat_groups, segment_group_hierarchy)
     return result
