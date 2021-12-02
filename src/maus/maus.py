@@ -5,7 +5,7 @@ from itertools import groupby
 from typing import List, Sequence
 
 from maus.models.anwendungshandbuch import AhbLine, DeepAnwendungshandbuch, FlatAnwendungshandbuch
-from maus.models.edifact_components import DataElement, DataElementFreeText, DataElementValuePool, SegmentGroup
+from maus.models.edifact_components import DataElement, DataElementFreeText, DataElementValuePool, Segment, SegmentGroup
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
 
 
@@ -36,7 +36,6 @@ def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElem
     return result
 
 
-# todo: this method has some problems...
 def group_lines_by_segment_group(
     ahb_lines: List[AhbLine], segment_group_hierarchy: SegmentGroupHierarchy
 ) -> List[SegmentGroup]:
@@ -44,22 +43,29 @@ def group_lines_by_segment_group(
     Group the lines by their segment group and arrange the segment groups in a flat/not deep list
     """
     result: List[SegmentGroup] = []
-    flattened_hierarchy = segment_group_hierarchy.flattened()  # flatten = ignore hierarchy but preserve order
-    for hierarchy_segment_group, _ in flattened_hierarchy:
+    for hierarchy_segment_group, _ in segment_group_hierarchy.flattened():  # flatten = ignore hierarchy, preserve order
         for segment_group_key, sg_group in groupby(ahb_lines, key=lambda line: line.segment_group):
             if hierarchy_segment_group == segment_group_key:
+                this_sg = list(sg_group)
                 sg_draft = SegmentGroup(
-                    discriminator="",
-                    ahb_expression="",
+                    discriminator=segment_group_key,  # type:ignore[arg-type] # because the SGH only contains str
+                    ahb_expression=this_sg[0].ahb_expression or "",
                     segments=[],
                     segment_groups=[],
                 )
-                this_sg = list(sg_group)
-                sg_draft.discriminator = this_sg[0].segment_group
-                sg_draft.ahb_expression = this_sg[0].ahb_expression or ""
-                for _, data_element_lines in groupby(this_sg, key=lambda line: line.data_element):
-                    data_element = merge_lines_with_same_data_element(list(data_element_lines))
-                    sg_draft.segments.append(data_element)  # type:ignore[union-attr]
+                for segment_key, segments in groupby(this_sg, key=lambda line: line.segment):
+                    this_segment_lines = list(segments)
+                    segment = Segment(
+                        discriminator=segment_key,  # type:ignore[arg-type] # shall not be none after sanitizing
+                        data_elements=[],
+                        ahb_expression=this_segment_lines[0].ahb_expression or "",
+                    )
+                    for _, data_element_lines in groupby(this_sg, key=lambda line: line.data_element):
+                        data_element = merge_lines_with_same_data_element(list(data_element_lines))
+                        segment.data_elements.append(data_element)  # type:ignore[union-attr] # yes, it's not none
+                    sg_draft.segments.append(  # type:ignore[union-attr] # yes, we ensured above that it's a list
+                        segment
+                    )
                 result.append(sg_draft)
     return result
 
@@ -81,7 +87,9 @@ def nest_segment_groups_into_each_other(
                 # pass the remaining groups to to the remaining hierarchy
                 sub_results = nest_segment_groups_into_each_other(flat_groups[n + 1 :], sub_sgh)
                 for sub_result in sub_results:
-                    result[-1].segment_groups.append(sub_result)
+                    # for any entry coming from nest_segment_groups_into_each other, it is ensured,
+                    # that the segment groups are maybe an empty list but never None.
+                    result[-1].segment_groups.append(sub_result)  # type:ignore[union-attr]
     return result
 
 
