@@ -2,7 +2,7 @@ from typing import List
 
 import pytest  # type:ignore[import]
 
-from maus.maus import merge_lines_with_same_data_element, to_deep_ahb
+from maus.maus import group_lines_by_segment_group, merge_lines_with_same_data_element, to_deep_ahb
 from maus.models.anwendungshandbuch import (
     AhbLine,
     AhbMetaInformation,
@@ -10,7 +10,7 @@ from maus.models.anwendungshandbuch import (
     DeepAnwendungshandbuchSchema,
     FlatAnwendungshandbuch,
 )
-from maus.models.edifact_components import DataElement, DataElementFreeText, DataElementValuePool, SegmentGroup
+from maus.models.edifact_components import DataElement, DataElementFreeText, DataElementValuePool, Segment, SegmentGroup
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
 from unittests.serialization_test_helper import assert_serialization_roundtrip  # type:ignore[import]
 
@@ -156,6 +156,59 @@ class TestMaus:
         assert actual == expected_data_element
 
     @pytest.mark.parametrize(
+        "ahb_lines, sgh, expected_result",
+        [
+            pytest.param(
+                [
+                    AhbLine(
+                        segment_group="SG4",
+                        segment="FOO",
+                        ahb_expression="X",
+                        data_element="0333",
+                        value_pool_entry="E01",
+                        name="Das Eine",
+                        guid=None,
+                    ),
+                    AhbLine(
+                        segment_group="SG4",
+                        segment="FOO",
+                        ahb_expression="X",
+                        data_element="0333",
+                        value_pool_entry="E02",
+                        name="Das Andere",
+                        guid=None,
+                    ),
+                ],
+                SegmentGroupHierarchy(segment_group="SG4", sub_hierarchy=None, opening_segment="FOO"),
+                [
+                    SegmentGroup(
+                        discriminator="SG4",
+                        ahb_expression="X",
+                        segments=[
+                            Segment(
+                                discriminator="FOO",
+                                ahb_expression="X",
+                                data_elements=[
+                                    DataElementValuePool(
+                                        discriminator="SG4->FOO->0333",
+                                        value_pool={"E01": "Das Eine", "E02": "Das Andere"},
+                                    )
+                                ],
+                            )
+                        ],
+                        segment_groups=[],
+                    )
+                ],
+            ),
+        ],
+    )
+    def test_group_lines_by_segment_group(
+        self, ahb_lines: List[AhbLine], sgh: SegmentGroupHierarchy, expected_result: List[SegmentGroup]
+    ):
+        actual = group_lines_by_segment_group(ahb_lines, sgh)
+        assert actual == expected_result
+
+    @pytest.mark.parametrize(
         "sgh, flat_ahb, expected_deep",
         [
             pytest.param(
@@ -256,13 +309,19 @@ class TestMaus:
                     meta=AhbMetaInformation(pruefidentifikator="12345"),
                     lines=[
                         SegmentGroup(
-                            discriminator=None,
+                            discriminator=None,  # type:ignore[arg-type]
                             ahb_expression="X",
                             segments=[
-                                DataElementFreeText(
-                                    discriminator="UNH->1234 (Nachrichten-Startsegment)",
+                                Segment(
+                                    discriminator="UNH",
                                     ahb_expression="X",
-                                    entered_input=None,
+                                    data_elements=[
+                                        DataElementFreeText(
+                                            discriminator="UNH->1234 (Nachrichten-Startsegment)",
+                                            ahb_expression="X",
+                                            entered_input=None,
+                                        )
+                                    ],
                                 )
                             ],
                             segment_groups=[
@@ -270,9 +329,15 @@ class TestMaus:
                                     discriminator="SG4",
                                     ahb_expression="X",
                                     segments=[
-                                        DataElementValuePool(
-                                            discriminator="SG4->FOO->0333",
-                                            value_pool={"E01": "Das andere", "E02": "Das Eine"},
+                                        Segment(
+                                            discriminator="FOO",
+                                            ahb_expression="X",
+                                            data_elements=[
+                                                DataElementValuePool(
+                                                    discriminator="SG4->FOO->0333",
+                                                    value_pool={"E01": "Das andere", "E02": "Das Eine"},
+                                                )
+                                            ],
                                         )
                                     ],
                                     segment_groups=[
@@ -280,10 +345,16 @@ class TestMaus:
                                             discriminator="SG5",
                                             ahb_expression="X",
                                             segments=[
-                                                DataElementFreeText(
-                                                    discriminator="SG5->BAR->1234 (Die fünfte Gruppe)",
+                                                Segment(
+                                                    discriminator="BAR",
                                                     ahb_expression="X",
-                                                    entered_input=None,
+                                                    data_elements=[
+                                                        DataElementFreeText(
+                                                            discriminator="SG5->BAR->1234 (Die fünfte Gruppe)",
+                                                            ahb_expression="X",
+                                                            entered_input=None,
+                                                        )
+                                                    ],
                                                 )
                                             ],
                                             segment_groups=[
@@ -291,10 +362,16 @@ class TestMaus:
                                                     discriminator="SG6",
                                                     ahb_expression="X",
                                                     segments=[
-                                                        DataElementFreeText(
-                                                            discriminator="SG6->irgendwas->7889 (Die sechste Gruppe)",
+                                                        Segment(
+                                                            discriminator="irgendwas",
                                                             ahb_expression="X",
-                                                            entered_input=None,
+                                                            data_elements=[
+                                                                DataElementFreeText(
+                                                                    discriminator="SG6->irgendwas->7889 (Die sechste Gruppe)",
+                                                                    ahb_expression="X",
+                                                                    entered_input=None,
+                                                                )
+                                                            ],
                                                         )
                                                     ],
                                                     segment_groups=[],
@@ -305,10 +382,16 @@ class TestMaus:
                                             discriminator="SG7",
                                             ahb_expression="X",
                                             segments=[
-                                                DataElementFreeText(
-                                                    discriminator="SG7->ASD->0123 (Die siebte Gruppe)",
+                                                Segment(
+                                                    discriminator="ASD",
                                                     ahb_expression="X",
-                                                    entered_input=None,
+                                                    data_elements=[
+                                                        DataElementFreeText(
+                                                            discriminator="SG7->ASD->0123 (Die siebte Gruppe)",
+                                                            ahb_expression="X",
+                                                            entered_input=None,
+                                                        )
+                                                    ],
                                                 )
                                             ],
                                             segment_groups=[],

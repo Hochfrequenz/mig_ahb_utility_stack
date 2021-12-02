@@ -8,9 +8,10 @@ MIG AHB Utility Stack (MAUS) 🐁
 
 | This repository contains the Python package ``maus``.
 | MAUS is an acronym for **M**\ IG **A**\ HB **U**\ tility **S**\ tack where MIG stands for **M**\ essage **I**\ mplementation **G**\ uide and AHB stands for ***A**\ nwendungs\ **h**\ and\ **b**\ uch*.
-| The maus package provides allows matching single lines from the AHB with fields specified in the MIG.
+| The maus package allows matching single lines from the AHB with fields specified in the MIG.
 | This package is necessary because EDI\@Energy does not provide any real technical and machine-readable description of the MIGs and AHBs, only PDFs.
 
+We're all hoping for the day of true digitization on which this repository will become obsolete.
 
 What Problem Does It Solve?
 ---------------------------
