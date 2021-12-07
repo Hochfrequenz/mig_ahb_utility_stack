@@ -47,7 +47,7 @@ class DataElementFreeTextSchema(DataElementSchema):
     """
 
     ahb_expression = fields.String(required=True)
-    entered_input = fields.String(required=False, missing=None)
+    entered_input = fields.String(required=False, load_default=None)
 
     # pylint:disable=unused-argument,no-self-use
     @post_load
@@ -232,12 +232,12 @@ class SegmentGroupSchema(SegmentLevelSchema):
     A Schema to serialize SegmentGroups.
     """
 
-    segments = fields.List(fields.Nested(SegmentSchema), missing=None, required=False)
+    segments = fields.List(fields.Nested(SegmentSchema), load_default=None, required=False)
     segment_groups = fields.List(
         fields.Nested(
             lambda: SegmentGroupSchema(),  # pylint: disable=unnecessary-lambda
         ),
-        missing=None,
+        load_default=None,
         required=False,
     )
 

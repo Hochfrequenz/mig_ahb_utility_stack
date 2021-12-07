@@ -59,13 +59,13 @@ class AhbLineSchema(Schema):
     A schema to (de-)serialize :class:`.AhbLine`
     """
 
-    guid = fields.UUID(required=False, missing=None)
-    segment_group = fields.String(required=False, missing=None)
-    segment = fields.String(required=False, missing=None)
-    data_element = fields.String(required=False, missing=None)
-    value_pool_entry = fields.String(required=False, missing=None)
-    name = fields.String(required=False, missing=None)
-    ahb_expression = fields.String(required=False, missing=None)
+    guid = fields.UUID(required=False, load_default=None)
+    segment_group = fields.String(required=False, load_default=None)
+    segment = fields.String(required=False, load_default=None)
+    data_element = fields.String(required=False, load_default=None)
+    value_pool_entry = fields.String(required=False, load_default=None)
+    name = fields.String(required=False, load_default=None)
+    ahb_expression = fields.String(required=False, load_default=None)
 
     # pylint:disable=unused-argument,no-self-use
     @post_load
