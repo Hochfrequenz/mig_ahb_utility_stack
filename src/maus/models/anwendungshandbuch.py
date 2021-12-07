@@ -115,7 +115,6 @@ class FlatAnwendungshandbuch:
 
     def get_segment_groups(self):
         """
-
         :return: a set with all segment groups in this AHB
         """
         return FlatAnwendungshandbuch._get_available_segment_groups(self.lines)
