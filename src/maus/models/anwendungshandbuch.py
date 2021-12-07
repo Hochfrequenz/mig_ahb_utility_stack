@@ -131,7 +131,7 @@ class FlatAnwendungshandbuch:
 
 class FlatAnwendungshandbuchSchema(Schema):
     """
-    A schema to (de-)serialize :class:`.Anwendungshandbuch`
+    A schema to (de-)serialize :class:`.FlatAnwendungshandbuch`
     """
 
     meta = fields.Nested(AhbMetaInformationSchema)
@@ -141,7 +141,7 @@ class FlatAnwendungshandbuchSchema(Schema):
     @post_load
     def deserialize(self, data, **kwargs) -> FlatAnwendungshandbuch:
         """
-        Converts the barely typed data dictionary into an actual :class:`.Anwendungshandbuch`
+        Converts the barely typed data dictionary into an actual :class:`.FlatAnwendungshandbuch`
         """
         return FlatAnwendungshandbuch(**data)
 
