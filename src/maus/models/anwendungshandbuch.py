@@ -79,7 +79,7 @@ class AhbLineSchema(Schema):
 @attr.s(auto_attribs=True, kw_only=True)
 class AhbMetaInformation:
     """
-    Meta information about an AHB like f.e. Its title, Prüfidentifikator, possible sender and receiver roles
+    Meta information about an AHB like f.e. its title, Prüfidentifikator, possible sender and receiver roles
     """
 
     pruefidentifikator: str  #: identifies the message type (within a fixed format version) e.g. "11042" or "13012"
