@@ -2,10 +2,11 @@
 """
 Contains classes to Model Message Implementation Guides (MIG)
 """
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Tuple
 
 import attr
 from marshmallow import Schema, fields, post_load
+
 
 # pylint:disable=fixme
 # TODO: the SegmentGroupHierarchy shall not be hardcoded but loaded from the .tree files
