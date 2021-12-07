@@ -37,7 +37,7 @@ class DataElementFreeText(DataElement):
     This is the main difference to the :class:`DataElementValuePool` which has a finite set of allowed values attached.
     """
 
-    ahb_expression: str  #: any freetext data element has an ahb expression attached. Could be 'X' but also 'Muss [13]'.
+    ahb_expression: str  #: any freetext data element has an ahb expression attached. Could be 'X' but also 'M [13]'.
     entered_input: Optional[str]  #: If the message contains data for this data element, this is not None.
 
 
