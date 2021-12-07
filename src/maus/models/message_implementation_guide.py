@@ -70,13 +70,3 @@ class SegmentGroupHierarchySchema(Schema):
         Converts the barely typed data dictionary into an actual :class:`.SegmentGroupHierarchy`
         """
         return SegmentGroupHierarchy(**data)
-
-
-@attr.s(auto_attribs=True)
-class MessageImplementationGuide:
-    """
-    A Message Implementation Guide (MIG) describes the structure of messages in a certain EDIFACT format (e.g. UTILMD
-    5.2a)
-    """
-
-    mig_json: Union[dict, list]
