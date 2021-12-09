@@ -14,7 +14,7 @@ sys.path.insert(0, project_root)
 
 # -- Project information -----------------------------------------------------
 
-project = "ahbicht"
+project = "maus"
 copyright = "2022, Hochfrequenz Unternehmensberatung GmbH"
 author = "Hochfrequenz Unternehmensberatung"
 
