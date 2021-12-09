@@ -18,7 +18,11 @@ from marshmallow import Schema, fields, post_load
 class SegmentGroupHierarchy:
     """
     Models the hierarchy of segment groups within an EDIFACT format.
-    This information can be (manually) extracted form the diagrams in the MIG PDF.
+    The Segment Group Hierarchy (SGH) is what allows us to transform a flat AHB into a NestedAhb that has a structure.
+    This information / the SGH can be (manually) extracted form the diagrams in the MIG PDFs or generated from another
+    source (which the BDEW does not provide, sadly).
+    See the unit tests for working examples for UTILMD and MSCONS.
+    It'll make sense then.
     """
 
     segment_group: Optional[str]  #: segment group name, f.e. "SG4" or "SG5"
