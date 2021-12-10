@@ -8,6 +8,7 @@ Subpackages
    :maxdepth: 4
 
    maus.models
+   maus.reader
 
 Submodules
 ----------

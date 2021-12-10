@@ -1,4 +1,4 @@
-maus.models package
+maus.reader package
 ===================
 
 Submodules
@@ -7,14 +7,12 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
-   maus.models.anwendungshandbuch
-   maus.models.edifact_components
-   maus.models.message_implementation_guide
+   maus.reader.ahb_csv_reader
 
 Module contents
 ---------------
 
-.. automodule:: maus.models
+.. automodule:: maus.reader
    :members:
    :undoc-members:
    :show-inheritance:
