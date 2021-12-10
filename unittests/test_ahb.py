@@ -434,7 +434,7 @@ class TestAhb:
         ],
     )
     def test_sorted_segment_groups(
-        self, unsorted_input: List[AhbLine], sg_order: List[str], expected_result: List[AhbLine]
+        self, unsorted_input: List[AhbLine], sg_order: List[Optional[str]], expected_result: List[AhbLine]
     ):
         actual = FlatAnwendungshandbuch._sorted_lines_by_segment_groups(unsorted_input, sg_order)
         assert actual == expected_result
