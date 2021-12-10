@@ -351,7 +351,7 @@ class TestMaus:
                     meta=AhbMetaInformation(pruefidentifikator="12345"),
                     lines=[
                         SegmentGroup(
-                            discriminator=None,  # type:ignore[arg-type]
+                            discriminator="root",
                             ahb_expression="X",
                             segments=[
                                 Segment(

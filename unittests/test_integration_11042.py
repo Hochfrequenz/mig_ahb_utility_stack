@@ -27,5 +27,5 @@ class TestIntegration11042:
         actual = to_deep_ahb(flat_ahb, sgh)
         with open(datafiles / "11042_deep.json", "r", encoding="utf-8") as deep_ahb_file:
             expected_deep_ahb = DeepAnwendungshandbuchSchema().loads(deep_ahb_file.read())
-        # actual_json = DeepAnwendungshandbuchSchema().dumps(actual, ensure_ascii=False, sort_keys=True)
+        actual_json = DeepAnwendungshandbuchSchema().dumps(actual, ensure_ascii=True, sort_keys=True)
         assert actual == expected_deep_ahb
