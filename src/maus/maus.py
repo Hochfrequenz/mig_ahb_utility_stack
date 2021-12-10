@@ -62,7 +62,7 @@ def group_lines_by_segment_group(
                         data_elements=[],
                         ahb_expression=this_segment_lines[0].ahb_expression or "",
                     )
-                    for _, data_element_lines in groupby(this_sg, key=lambda line: line.data_element):
+                    for _, data_element_lines in groupby(this_segment_lines, key=lambda line: line.data_element):
                         data_element = merge_lines_with_same_data_element(list(data_element_lines))
                         segment.data_elements.append(data_element)  # type:ignore[union-attr] # yes, it's not none
                     sg_draft.segments.append(  # type:ignore[union-attr] # yes, we ensured above that it's a list
