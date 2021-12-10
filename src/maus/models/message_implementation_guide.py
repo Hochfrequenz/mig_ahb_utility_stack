@@ -7,17 +7,19 @@ from typing import List, Optional, Tuple
 import attr
 from marshmallow import Schema, fields, post_load
 
-
 # pylint:disable=fixme
-# TODO: the SegmentGroupHierarchy shall not be hardcoded but loaded from the .tree files
-# I already wrote a LARK grammar that works for some trees but there's still some work left before we can use it here
-# and derive the segment group hierarchy from it.
+# TODO: the SegmentGroupHierarchy shall not be hardcoded but instead loaded from .tree files
+# .tree files are a complete representation of an EDIFACT format including all segments and allowed data element values.
+# A LARK grammar to parse them is work in progress at the moment and will be added later.
+# From a parsed .tree file it is possible to also derive the segment group hierarchy.
 
 
 @attr.s(auto_attribs=True, kw_only=True)
 class SegmentGroupHierarchy:
     """
     Models the hierarchy of segment groups within an EDIFACT format.
+    Therefore each segment group is modeled together with its respective first segment inside the group.
+    This is not a full representation of the EDIFACT formats structure but enough to understand the basic hierarchy.
     The Segment Group Hierarchy (SGH) is what allows us to transform a flat AHB into a NestedAhb that has a structure.
     This information / the SGH can be (manually) extracted form the diagrams in the MIG PDFs or generated from another
     source (which the BDEW does not provide, sadly).
