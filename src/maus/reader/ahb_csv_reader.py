@@ -129,5 +129,5 @@ class AhbCsvReader:
             meta=AhbMetaInformation(
                 pruefidentifikator=self.pruefidentifikator  # type:ignore[arg-type]
             ),
-            lines=self.rows,
+            lines=[row for row in self.rows if row.holds_any_information()],
         )
