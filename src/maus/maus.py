@@ -25,7 +25,7 @@ def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElem
         for data_element_value_entry in ahb_lines:
             result.value_pool[
                 data_element_value_entry.value_pool_entry  # type:ignore[index]
-            ] = data_element_value_entry.name.strip()  # type:ignore[assignment]
+            ] = data_element_value_entry.name.strip()  # type:ignore[assignment,union-attr]
     else:
         result = DataElementFreeText(
             entered_input=None,
