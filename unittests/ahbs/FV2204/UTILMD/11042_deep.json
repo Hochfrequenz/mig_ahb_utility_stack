@@ -71,7 +71,7 @@
                             "data_elements": [{
                                     "discriminator": "SG2->NAD->3035",
                                     "value_pool": {
-                                        "Nachrichtenempf\u00e4nger": "MR"
+                                        "Nachrichtenempfänger": "MR"
                                     }
                                 }, {
                                     "ahb_expression": "X",
@@ -121,13 +121,13 @@
                                     "data_elements": [{
                                             "discriminator": "SG6->RFF->1153",
                                             "value_pool": {
-                                                "Z13": "Pr\u00fcfidentifikator"
+                                                "Z13": "Prüfidentifikator"
                                             }
                                         }, {
                                             "discriminator": "SG6->RFF->1154",
                                             "value_pool": {
                                                 "11042": "WiM / Anmeldung MSB",
-                                                "11043": "WiM / Best\u00e4tigung Anmeldung MSB",
+                                                "11043": "WiM / Bestätigung Anmeldung MSB",
                                                 "11044": "WiM / Ablehnung Anmeldung MSB"
                                             }
                                         }
@@ -286,8 +286,8 @@
                                             "data_elements": [{
                                                     "discriminator": "SG9->QTY->6063",
                                                     "value_pool": {
-                                                        "265": "Veranschlagte Jahresmenge Gesamt/ Jahresverbrauchsprogno se f\u00fcr spezifische Arbeit f\u00fcr tagesparameterabh\u00e4ngig e Marktlokation",
-                                                        "Z08": "Angepasste elektrische Arbeit nach Anhang D der VDN-Richtlinie \"Lastprofile f\u00fcr unterbrechbare Verbrauchseinrichtungen\""
+                                                        "265": "Veranschlagte Jahresmenge Gesamt/ Jahresverbrauchsprogno se für spezifische Arbeit für tagesparameterabhängig e Marktlokation",
+                                                        "Z08": "Angepasste elektrische Arbeit nach Anhang D der VDN-Richtlinie \"Lastprofile für unterbrechbare Verbrauchseinrichtungen\""
                                                     }
                                                 }, {
                                                     "ahb_expression": "",
@@ -391,7 +391,7 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CAV->7111",
                                                     "value_pool": {
-                                                        "Z90": "\u00dcNB"
+                                                        "Z90": "ÜNB"
                                                     }
                                                 }, {
                                                     "ahb_expression": "",
@@ -414,8 +414,8 @@
                                                 }, {
                                                     "discriminator": "SG10->CAV->7110",
                                                     "value_pool": {
-                                                        "Z19": "Auf vertraglicher Grundlage gegen\u00fcber Anschlussnutzer / Anschlussnehmer",
-                                                        "Z20": "In der Aus\u00fcbung der"
+                                                        "Z19": "Auf vertraglicher Grundlage gegenüber Anschlussnutzer / Anschlussnehmer",
+                                                        "Z20": "In der Ausübung der"
                                                     }
                                                 }
                                             ],
@@ -435,7 +435,7 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CAV->7111",
                                                     "value_pool": {
-                                                        "E03": "H\u00f6chstspannung",
+                                                        "E03": "Höchstspannung",
                                                         "E04": "Hochspannung",
                                                         "E05": "Mittelspannung",
                                                         "E06": "Niederspannung"
@@ -475,7 +475,7 @@
                                                     "discriminator": "SG10->CCI->7037",
                                                     "value_pool": {
                                                         "ZA8": "NB",
-                                                        "ZA9": "\u00dcNB"
+                                                        "ZA9": "ÜNB"
                                                     }
                                                 }
                                             ],
@@ -565,7 +565,7 @@
                                                     "value_pool": {
                                                         "ZC4": "Kumuliert",
                                                         "ZC5": "1/4 Stunde",
-                                                        "ZC7": "h\u00f6chste 1/4 Stunde im Monat"
+                                                        "ZC7": "höchste 1/4 Stunde im Monat"
                                                     }
                                                 }
                                             ],
@@ -575,12 +575,12 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CCI->7059",
                                                     "value_pool": {
-                                                        "Z39": "Code der Z\u00e4hlzeit"
+                                                        "Z39": "Code der Zählzeit"
                                                     }
                                                 }, {
                                                     "discriminator": "SG10->CCI->7037",
                                                     "value_pool": {
-                                                        "0": "Code der Z\u00e4hlzeitZ61"
+                                                        "0": "Code der ZählzeitZ61"
                                                     }
                                                 }
                                             ],
@@ -603,7 +603,7 @@
                                                         "Z84": "Netznutzungsabrechnung",
                                                         "Z85": "Bilanzkreisabrechnung",
                                                         "Z86": "Mehrmindermengenabrec hnung\t[27P1..1]",
-                                                        "Z92": "\u00dcbermittlung an das HKNR\t[24P1..1]",
+                                                        "Z92": "Übermittlung an das HKNR\t[24P1..1]",
                                                         "ZD1": "Blindstromabrechnung",
                                                         "ZE1": "Es liegt kein Verwendungszweck vor"
                                                     }
@@ -640,7 +640,7 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CCI->7037",
                                                     "value_pool": {
-                                                        "ZA9": "\u00dcNB"
+                                                        "ZA9": "ÜNB"
                                                     }
                                                 }
                                             ],
@@ -661,11 +661,11 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CCI->7059",
                                                     "value_pool": {
-                                                        "Z39": "Code der Z\u00e4hlzeit"
+                                                        "Z39": "Code der Zählzeit"
                                                     }
                                                 }, {
                                                     "ahb_expression": "",
-                                                    "discriminator": "SG10->CCI->7037 (Code der Z\u00e4hlzeit)",
+                                                    "discriminator": "SG10->CCI->7037 (Code der Zählzeit)",
                                                     "entered_input": null
                                                 }
                                             ],
@@ -675,11 +675,11 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CCI->7059",
                                                     "value_pool": {
-                                                        "Z38": "Code desZ\u00e4hlzeitregisters"
+                                                        "Z38": "Code desZählzeitregisters"
                                                     }
                                                 }, {
                                                     "ahb_expression": "",
-                                                    "discriminator": "SG10->CCI->7037 (Code des Z\u00e4hlzeitregisters)",
+                                                    "discriminator": "SG10->CCI->7037 (Code des Zählzeitregisters)",
                                                     "entered_input": null
                                                 }
                                             ],
@@ -702,7 +702,7 @@
                                                         "Z84": "Netznutzungsabrechnung",
                                                         "Z85": "Bilanzkreisabrechnung",
                                                         "Z86": "Mehrmindermengenabrec hnung\t[37P1..1]",
-                                                        "Z92": "\u00dcbermittlung an das HKNR\t[34P1..1]",
+                                                        "Z92": "Übermittlung an das HKNR\t[34P1..1]",
                                                         "ZD1": "Blindstromabrechnung",
                                                         "ZE1": "Es liegt kein Verwendungszweck vor"
                                                     }
@@ -733,7 +733,7 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CCI->7037",
                                                     "value_pool": {
-                                                        "ZA9": "\u00dcNB"
+                                                        "ZA9": "ÜNB"
                                                     }
                                                 }
                                             ],
@@ -778,13 +778,13 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CCI->7059",
                                                     "value_pool": {
-                                                        "Z37": "Basis zur Bildung derTranchengr\u00f6\u00dfe"
+                                                        "Z37": "Basis zur Bildung derTranchengröße"
                                                     }
                                                 }, {
                                                     "discriminator": "SG10->CCI->7037",
                                                     "value_pool": {
-                                                        "ZC11": "Prozentual \u00a0",
-                                                        "ZC12": "Aufteilungsfaktor auf Basis von Referenzentr\u00e4ger/ installierter Leistung"
+                                                        "ZC11": "Prozentual  ",
+                                                        "ZC12": "Aufteilungsfaktor auf Basis von Referenzenträger/ installierter Leistung"
                                                     }
                                                 }
                                             ],
@@ -835,7 +835,7 @@
                                                     "discriminator": "SG10->CAV->7111",
                                                     "value_pool": {
                                                         "Z85": "Bilanzkreisabrechnung",
-                                                        "Z92": "\u00dcbermittlung an das HKNR"
+                                                        "Z92": "Übermittlung an das HKNR"
                                                     }
                                                 }
                                             ],
@@ -866,7 +866,7 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CCI->7037",
                                                     "value_pool": {
-                                                        "ZA9": "\u00dcNB"
+                                                        "ZA9": "ÜNB"
                                                     }
                                                 }
                                             ],
@@ -906,8 +906,8 @@
                                                 }, {
                                                     "discriminator": "SG10->CAV->7110",
                                                     "value_pool": {
-                                                        "Z19": "Auf vertraglicher Grundlage gegen\u00fcber Anschlussnutzer / Anschlussnehmer",
-                                                        "Z20": "In der Aus\u00fcbung der Weiterverpflichtung durch den gMSB"
+                                                        "Z19": "Auf vertraglicher Grundlage gegenüber Anschlussnutzer / Anschlussnehmer",
+                                                        "Z20": "In der Ausübung der Weiterverpflichtung durch den gMSB"
                                                     }
                                                 }
                                             ],
@@ -941,7 +941,7 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CAV->7111",
                                                     "value_pool": {
-                                                        "E03": "H\u00f6chstspannung",
+                                                        "E03": "Höchstspannung",
                                                         "E04": "Hochspannung",
                                                         "E05": "Mittelspannung",
                                                         "E06": "Niederspannung"
@@ -954,7 +954,7 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CCI->7037",
                                                     "value_pool": {
-                                                        "Y02": "Gasqualit\u00e4t"
+                                                        "Y02": "Gasqualität"
                                                     }
                                                 }
                                             ],
@@ -980,7 +980,7 @@
                                                 }, {
                                                     "discriminator": "SG10->CCI->7037",
                                                     "value_pool": {
-                                                        "Z81": "ID der Messlokation im Lokationsb\u00fcndel",
+                                                        "Z81": "ID der Messlokation im Lokationsbündel",
                                                         "Z82": "ID der prozessual behandelten Messlokation"
                                                     }
                                                 }
@@ -1032,7 +1032,7 @@
                                                         "ZC4": "Kumuliert",
                                                         "ZC5": "1/4 Stunde",
                                                         "ZC6": "Eine Stunde",
-                                                        "ZC7": "h\u00f6chste 1/4 Stunde im Monat"
+                                                        "ZC7": "höchste 1/4 Stunde im Monat"
                                                     }
                                                 }
                                             ],
@@ -1053,7 +1053,7 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CAV->7111",
                                                     "value_pool": {
-                                                        "ZC9": "Zweite Messung f\u00fcrVergleichsmessungerforderlich"
+                                                        "ZC9": "Zweite Messung fürVergleichsmessungerforderlich"
                                                     }
                                                 }, {
                                                     "discriminator": "SG10->CAV->7110",
@@ -1084,12 +1084,12 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CCI->7059",
                                                     "value_pool": {
-                                                        "Z39": "Code der Z\u00e4hlzeit"
+                                                        "Z39": "Code der Zählzeit"
                                                     }
                                                 }, {
                                                     "discriminator": "SG10->CCI->7037",
                                                     "value_pool": {
-                                                        "0": "Code der Z\u00e4hlzeitZ61"
+                                                        "0": "Code der ZählzeitZ61"
                                                     }
                                                 }
                                             ],
@@ -1099,7 +1099,7 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CCI->7037",
                                                     "value_pool": {
-                                                        "E13": "Z\u00e4hlertyp"
+                                                        "E13": "Zählertyp"
                                                     }
                                                 }
                                             ],
@@ -1109,19 +1109,19 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CAV->7111",
                                                     "value_pool": {
-                                                        "AHZ": "analoger Haushaltsz\u00e4hler (Drehstrom)",
-                                                        "BGZ": "Balgengasz\u00e4hler",
-                                                        "DKZ": "Drehkolbengasz\u00e4hler",
-                                                        "EHZ": "elektronischer Haushaltsz\u00e4hler",
+                                                        "AHZ": "analoger Haushaltszähler (Drehstrom)",
+                                                        "BGZ": "Balgengaszähler",
+                                                        "DKZ": "Drehkolbengaszähler",
+                                                        "EHZ": "elektronischer Haushaltszähler",
                                                         "IVA": "Individuelle Abstimmung (Sonderausstattung)",
-                                                        "LAZ": "Lastgangz\u00e4hler",
-                                                        "MAZ": "Maximumz\u00e4hler",
+                                                        "LAZ": "Lastgangzähler",
+                                                        "MAZ": "Maximumzähler",
                                                         "MME": "moderne Messeinrichtung nach MsbG",
-                                                        "MRG": "Messdatenregistrierger\u00e4t",
-                                                        "TRZ": "Turbinenradgasz\u00e4hler",
-                                                        "UGZ": "Ultraschallgasz\u00e4hler",
-                                                        "WGZ": "Wirbelgasz\u00e4hler",
-                                                        "WSZ": "analoger Wechselstromz\u00e4hler"
+                                                        "MRG": "Messdatenregistriergerät",
+                                                        "TRZ": "Turbinenradgaszähler",
+                                                        "UGZ": "Ultraschallgaszähler",
+                                                        "WGZ": "Wirbelgaszähler",
+                                                        "WSZ": "analoger Wechselstromzähler"
                                                     }
                                                 }, {
                                                     "discriminator": "SG10->CAV->7110",
@@ -1130,7 +1130,7 @@
                                                         "EDL40": "Z01",
                                                         "Z03": "sonstiger EHZ",
                                                         "Z04": "Standard",
-                                                        "Z05": "MeDa-Z\u00e4hler"
+                                                        "Z05": "MeDa-Zähler"
                                                     }
                                                 }
                                             ],
@@ -1140,27 +1140,27 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CAV->7110",
                                                     "value_pool": {
-                                                        "G10": "Gasz\u00e4hler G10",
-                                                        "G100": "Gasz\u00e4hler G100",
-                                                        "G1000": "Gasz\u00e4hler G1000",
-                                                        "G10000": "Gasz\u00e4hler G10000",
-                                                        "G12500": "Gasz\u00e4hler G12500",
-                                                        "G16": "Gasz\u00e4hler G16",
-                                                        "G160": "Gasz\u00e4hler G160",
-                                                        "G1600": "Gasz\u00e4hler G1600",
-                                                        "G16000": "Gasz\u00e4hler G16000",
-                                                        "G25": "Gasz\u00e4hler G25",
-                                                        "G250": "Gasz\u00e4hler G250",
-                                                        "G2500": "Gasz\u00e4hler G2500",
-                                                        "G350": "Gasz\u00e4hler G350",
-                                                        "G40": "Gasz\u00e4hler G40",
-                                                        "G400": "Gasz\u00e4hler G400",
-                                                        "G4000": "Gasz\u00e4hler G4000",
-                                                        "G65": "Gasz\u00e4hler G65",
-                                                        "G650": "Gasz\u00e4hler G650",
-                                                        "Gasz\u00e4hler G2.5": "G2.5",
-                                                        "Gasz\u00e4hler G4": "G4",
-                                                        "Gasz\u00e4hler G6": "G6"
+                                                        "G10": "Gaszähler G10",
+                                                        "G100": "Gaszähler G100",
+                                                        "G1000": "Gaszähler G1000",
+                                                        "G10000": "Gaszähler G10000",
+                                                        "G12500": "Gaszähler G12500",
+                                                        "G16": "Gaszähler G16",
+                                                        "G160": "Gaszähler G160",
+                                                        "G1600": "Gaszähler G1600",
+                                                        "G16000": "Gaszähler G16000",
+                                                        "G25": "Gaszähler G25",
+                                                        "G250": "Gaszähler G250",
+                                                        "G2500": "Gaszähler G2500",
+                                                        "G350": "Gaszähler G350",
+                                                        "G40": "Gaszähler G40",
+                                                        "G400": "Gaszähler G400",
+                                                        "G4000": "Gaszähler G4000",
+                                                        "G65": "Gaszähler G65",
+                                                        "G650": "Gaszähler G650",
+                                                        "Gaszähler G2.5": "G2.5",
+                                                        "Gaszähler G4": "G4",
+                                                        "Gaszähler G6": "G6"
                                                     }
                                                 }
                                             ],
@@ -1170,11 +1170,11 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CAV->7111",
                                                     "value_pool": {
-                                                        "Z30": "Ger\u00e4tenummer"
+                                                        "Z30": "Gerätenummer"
                                                     }
                                                 }, {
                                                     "ahb_expression": "X",
-                                                    "discriminator": "SG10->CAV->7110 (Ger\u00e4tenummer)",
+                                                    "discriminator": "SG10->CAV->7110 (Gerätenummer)",
                                                     "entered_input": null
                                                 }
                                             ],
@@ -1196,8 +1196,8 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CAV->7111",
                                                     "value_pool": {
-                                                        "ERZ": "Einrichtungsz\u00e4hler",
-                                                        "ZRZ": "Zweirichtungsz\u00e4hler"
+                                                        "ERZ": "Einrichtungszähler",
+                                                        "ZRZ": "Zweirichtungszähler"
                                                     }
                                                 }
                                             ],
@@ -1207,7 +1207,7 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CAV->7111",
                                                     "value_pool": {
-                                                        "Z58": "Fernschaltung derZ\u00e4hleinrichtung"
+                                                        "Z58": "Fernschaltung derZähleinrichtung"
                                                     }
                                                 }, {
                                                     "discriminator": "SG10->CAV->7110",
@@ -1238,7 +1238,7 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CCI->7037",
                                                     "value_pool": {
-                                                        "Z28": "BefestigungsartZ\u00e4hleinrichtung"
+                                                        "Z28": "BefestigungsartZähleinrichtung"
                                                     }
                                                 }
                                             ],
@@ -1249,10 +1249,10 @@
                                                     "discriminator": "SG10->CAV->7111",
                                                     "value_pool": {
                                                         "BKE": "Stecktechnik (Befestigungs- und Kontaktierungseinrichtun g)",
-                                                        "DPA": "3-Dreipunktaufh\u00e4ngung",
+                                                        "DPA": "3-Dreipunktaufhängung",
                                                         "HUT": "Hutschiene",
-                                                        "Z31": "Einstutzen-Z\u00e4hler",
-                                                        "Z32": "Zweistutzen-Z\u00e4hler"
+                                                        "Z31": "Einstutzen-Zähler",
+                                                        "Z32": "Zweistutzen-Zähler"
                                                     }
                                                 }
                                             ],
@@ -1262,7 +1262,7 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CCI->7037",
                                                     "value_pool": {
-                                                        "E12": "Messwerterfassung ander Z\u00e4hleinrichtung"
+                                                        "E12": "Messwerterfassung ander Zähleinrichtung"
                                                     }
                                                 }
                                             ],
@@ -1272,8 +1272,8 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CAV->7111",
                                                     "value_pool": {
-                                                        "AMR": "fernauslesbare Z\u00e4hler",
-                                                        "MMR": "manuell ausgelesene Z\u00e4hler"
+                                                        "AMR": "fernauslesbare Zähler",
+                                                        "MMR": "manuell ausgelesene Zähler"
                                                     }
                                                 }
                                             ],
@@ -1293,11 +1293,11 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CAV->7111",
                                                     "value_pool": {
-                                                        "Z30": "Ger\u00e4tenummer"
+                                                        "Z30": "Gerätenummer"
                                                     }
                                                 }, {
                                                     "ahb_expression": "",
-                                                    "discriminator": "SG10->CAV->7110 (Ger\u00e4tenummer)",
+                                                    "discriminator": "SG10->CAV->7110 (Gerätenummer)",
                                                     "entered_input": null
                                                 }
                                             ],
@@ -1325,7 +1325,7 @@
                                                     "discriminator": "SG10->CAV->7110",
                                                     "value_pool": {
                                                         "Z17": "Kennlinienkorrektur",
-                                                        "Z18": "Schleichmengenunterdr\u00fc ckung"
+                                                        "Z18": "Schleichmengenunterdrü ckung"
                                                     }
                                                 }
                                             ],
@@ -1340,7 +1340,7 @@
                                                 }, {
                                                     "discriminator": "SG10->CCI->7037",
                                                     "value_pool": {
-                                                        "Z33": "Vor- undNachkommastellen desZ\u00e4hlwerkes"
+                                                        "Z33": "Vor- undNachkommastellen desZählwerkes"
                                                     }
                                                 }
                                             ],
@@ -1369,11 +1369,11 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CAV->7111",
                                                     "value_pool": {
-                                                        "Z30": "Ger\u00e4tenummer"
+                                                        "Z30": "Gerätenummer"
                                                     }
                                                 }, {
                                                     "ahb_expression": "",
-                                                    "discriminator": "SG10->CAV->7110 (Ger\u00e4tenummer)",
+                                                    "discriminator": "SG10->CAV->7110 (Gerätenummer)",
                                                     "entered_input": null
                                                 }
                                             ],
@@ -1410,11 +1410,11 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CAV->7111",
                                                     "value_pool": {
-                                                        "Z30": "Ger\u00e4tenummer"
+                                                        "Z30": "Gerätenummer"
                                                     }
                                                 }, {
                                                     "ahb_expression": "",
-                                                    "discriminator": "SG10->CAV->7110 (Ger\u00e4tenummer)",
+                                                    "discriminator": "SG10->CAV->7110 (Gerätenummer)",
                                                     "entered_input": null
                                                 }
                                             ],
@@ -1449,11 +1449,11 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CAV->7111",
                                                     "value_pool": {
-                                                        "Z30": "Ger\u00e4tenummer"
+                                                        "Z30": "Gerätenummer"
                                                     }
                                                 }, {
                                                     "ahb_expression": "",
-                                                    "discriminator": "SG10->CAV->7110 (Ger\u00e4tenummer)",
+                                                    "discriminator": "SG10->CAV->7110 (Gerätenummer)",
                                                     "entered_input": null
                                                 }
                                             ],
@@ -1463,7 +1463,7 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CAV->7111",
                                                     "value_pool": {
-                                                        "RSU": "Rundsteuerempf\u00e4nger",
+                                                        "RSU": "Rundsteuerempfänger",
                                                         "TSU": "Tarifschaltuhr"
                                                     }
                                                 }
@@ -1484,11 +1484,11 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CAV->7111",
                                                     "value_pool": {
-                                                        "Z30": "Ger\u00e4tenummer"
+                                                        "Z30": "Gerätenummer"
                                                     }
                                                 }, {
                                                     "ahb_expression": "",
-                                                    "discriminator": "SG10->CAV->7110 (Ger\u00e4tenummer)",
+                                                    "discriminator": "SG10->CAV->7110 (Gerätenummer)",
                                                     "entered_input": null
                                                 }
                                             ],
@@ -1508,11 +1508,11 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CAV->7111",
                                                     "value_pool": {
-                                                        "Z30": "Ger\u00e4tenummer"
+                                                        "Z30": "Gerätenummer"
                                                     }
                                                 }, {
                                                     "ahb_expression": "",
-                                                    "discriminator": "SG10->CAV->7110 (Ger\u00e4tenummer)",
+                                                    "discriminator": "SG10->CAV->7110 (Gerätenummer)",
                                                     "entered_input": null
                                                 }
                                             ],
@@ -1548,8 +1548,8 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CCI->7059",
                                                     "value_pool": {
-                                                        "Z03": "tagesparameterabh\u00e4ngig es Lastprofil",
-                                                        "Z05": "tagesparameterabh\u00e4ngig es Einspeiseprofil"
+                                                        "Z03": "tagesparameterabhängig es Lastprofil",
+                                                        "Z05": "tagesparameterabhängig es Einspeiseprofil"
                                                     }
                                                 }, {
                                                     "discriminator": "SG10->CCI->7037",
@@ -1589,7 +1589,7 @@
                                                     "discriminator": "SG10->CCI->3055",
                                                     "value_pool": {
                                                         "293": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",
-                                                        "Vergeben vom H\u00e4ndler (hier Netzbetreiber)": "89"
+                                                        "Vergeben vom Händler (hier Netzbetreiber)": "89"
                                                     }
                                                 }
                                             ],
@@ -1599,7 +1599,7 @@
                                             "data_elements": [{
                                                     "discriminator": "SG10->CCI->7059",
                                                     "value_pool": {
-                                                        "Z05": "tagesparameterabh\u00e4ngiges Einspeiseprofil"
+                                                        "Z05": "tagesparameterabhängiges Einspeiseprofil"
                                                     }
                                                 }
                                             ],
@@ -1851,7 +1851,7 @@
                                     "data_elements": [{
                                             "discriminator": "SG8->SEQ->1229",
                                             "value_pool": {
-                                                "Z03": "Z\u00e4hleinrichtungsdaten"
+                                                "Z03": "Zähleinrichtungsdaten"
                                             }
                                         }
                                     ],
@@ -1899,11 +1899,11 @@
                                     "data_elements": [{
                                             "discriminator": "SG8->RFF->1153",
                                             "value_pool": {
-                                                "Ger\u00e4tenummer desZ\u00e4hlers": "MG"
+                                                "Gerätenummer desZählers": "MG"
                                             }
                                         }, {
                                             "ahb_expression": "",
-                                            "discriminator": "SG8->RFF->1154 (Ger\u00e4tenummer)",
+                                            "discriminator": "SG8->RFF->1154 (Gerätenummer)",
                                             "entered_input": null
                                         }
                                     ],
@@ -1913,7 +1913,7 @@
                                     "data_elements": [{
                                             "discriminator": "SG8->SEQ->1229",
                                             "value_pool": {
-                                                "Z20": "OBIS-Daten derZ\u00e4hleinrichtung"
+                                                "Z20": "OBIS-Daten derZähleinrichtung"
                                             }
                                         }
                                     ],
@@ -1923,13 +1923,13 @@
                                     "data_elements": [{
                                             "discriminator": "SG8->RFF->1153",
                                             "value_pool": {
-                                                "Ger\u00e4tenummer des Z\u00e4hlers": "MG",
-                                                "Z11": "Ger\u00e4tenummer des Mengenumwerters",
+                                                "Gerätenummer des Zählers": "MG",
+                                                "Z11": "Gerätenummer des Mengenumwerters",
                                                 "Z14": "Smartmeter-Gateway"
                                             }
                                         }, {
                                             "ahb_expression": "",
-                                            "discriminator": "SG8->RFF->1154 (Ger\u00e4tenummer)",
+                                            "discriminator": "SG8->RFF->1154 (Gerätenummer)",
                                             "entered_input": null
                                         }
                                     ],
@@ -1971,7 +1971,7 @@
                                             }
                                         }, {
                                             "ahb_expression": "",
-                                            "discriminator": "SG8->PIA->7140 (OBIS-Kennzahl derZ\u00e4hleinrichtung)",
+                                            "discriminator": "SG8->PIA->7140 (OBIS-Kennzahl derZähleinrichtung)",
                                             "entered_input": null
                                         }, {
                                             "discriminator": "SG8->PIA->7143",
@@ -1996,11 +1996,11 @@
                                     "data_elements": [{
                                             "discriminator": "SG8->RFF->1153",
                                             "value_pool": {
-                                                "Ger\u00e4tenummer desZ\u00e4hlers": "MG"
+                                                "Gerätenummer desZählers": "MG"
                                             }
                                         }, {
                                             "ahb_expression": "",
-                                            "discriminator": "SG8->RFF->1154 (Ger\u00e4tenummer)",
+                                            "discriminator": "SG8->RFF->1154 (Gerätenummer)",
                                             "entered_input": null
                                         }
                                     ],
@@ -2020,11 +2020,11 @@
                                     "data_elements": [{
                                             "discriminator": "SG8->RFF->1153",
                                             "value_pool": {
-                                                "Ger\u00e4tenummer desZ\u00e4hlers": "MG"
+                                                "Gerätenummer desZählers": "MG"
                                             }
                                         }, {
                                             "ahb_expression": "",
-                                            "discriminator": "SG8->RFF->1154 (Ger\u00e4tenummer)",
+                                            "discriminator": "SG8->RFF->1154 (Gerätenummer)",
                                             "entered_input": null
                                         }
                                     ],
@@ -2044,11 +2044,11 @@
                                     "data_elements": [{
                                             "discriminator": "SG8->RFF->1153",
                                             "value_pool": {
-                                                "Ger\u00e4tenummer desZ\u00e4hlers": "MG"
+                                                "Gerätenummer desZählers": "MG"
                                             }
                                         }, {
                                             "ahb_expression": "",
-                                            "discriminator": "SG8->RFF->1154 (Ger\u00e4tenummer)",
+                                            "discriminator": "SG8->RFF->1154 (Gerätenummer)",
                                             "entered_input": null
                                         }
                                     ],
@@ -2232,7 +2232,7 @@
                                             }
                                         }, {
                                             "ahb_expression": "",
-                                            "discriminator": "SG12->NAD->3042 (Stra\u00dfe und Hausnummer oderPostfach)",
+                                            "discriminator": "SG12->NAD->3042 (Straße und Hausnummer oderPostfach)",
                                             "entered_input": null
                                         }, {
                                             "ahb_expression": "",
@@ -2244,7 +2244,7 @@
                                             "entered_input": null
                                         }, {
                                             "ahb_expression": "",
-                                            "discriminator": "SG12->NAD->3207 (L\u00e4ndername, Code)",
+                                            "discriminator": "SG12->NAD->3207 (Ländername, Code)",
                                             "entered_input": null
                                         }
                                     ],
@@ -2316,7 +2316,7 @@
                                             }
                                         }, {
                                             "ahb_expression": "X",
-                                            "discriminator": "SG12->NAD->3042 (Stra\u00dfe und Hausnummer oderPostfach)",
+                                            "discriminator": "SG12->NAD->3042 (Straße und Hausnummer oderPostfach)",
                                             "entered_input": null
                                         }, {
                                             "ahb_expression": "X",
@@ -2328,7 +2328,7 @@
                                             "entered_input": null
                                         }, {
                                             "ahb_expression": "X",
-                                            "discriminator": "SG12->NAD->3207 (L\u00e4ndername, Code)",
+                                            "discriminator": "SG12->NAD->3207 (Ländername, Code)",
                                             "entered_input": null
                                         }
                                     ],
@@ -2360,7 +2360,7 @@
                                             "entered_input": null
                                         }, {
                                             "ahb_expression": "S [166]M [212]",
-                                            "discriminator": "SG12->NAD->3042 (Stra\u00dfe und Hausnummer oderPostfach)",
+                                            "discriminator": "SG12->NAD->3042 (Straße und Hausnummer oderPostfach)",
                                             "entered_input": null
                                         }, {
                                             "ahb_expression": "X",
@@ -2372,7 +2372,7 @@
                                             "entered_input": null
                                         }, {
                                             "ahb_expression": "X",
-                                            "discriminator": "SG12->NAD->3207 (L\u00e4ndername, Code)",
+                                            "discriminator": "SG12->NAD->3207 (Ländername, Code)",
                                             "entered_input": null
                                         }
                                     ],
@@ -2396,7 +2396,7 @@
                                     "data_elements": [{
                                             "discriminator": "SG12->NAD->3035",
                                             "value_pool": {
-                                                "Z05": "Name und Adresse f\u00fcrdie Ablesekarte"
+                                                "Z05": "Name und Adresse fürdie Ablesekarte"
                                             }
                                         }, {
                                             "ahb_expression": "X",
@@ -2410,7 +2410,7 @@
                                             }
                                         }, {
                                             "ahb_expression": "X",
-                                            "discriminator": "SG12->NAD->3042 (Stra\u00dfe und Hausnummer oderPostfach)",
+                                            "discriminator": "SG12->NAD->3042 (Straße und Hausnummer oderPostfach)",
                                             "entered_input": null
                                         }, {
                                             "ahb_expression": "X",
@@ -2422,7 +2422,7 @@
                                             "entered_input": null
                                         }, {
                                             "ahb_expression": "X",
-                                            "discriminator": "SG12->NAD->3207 (L\u00e4ndername, Code)",
+                                            "discriminator": "SG12->NAD->3207 (Ländername, Code)",
                                             "entered_input": null
                                         }
                                     ],
@@ -2491,7 +2491,7 @@
                                         "E01": "Ein-/Auszug (Umzug)",
                                         "E02": "Einzug/Neuanlage",
                                         "E03": "Wechsel",
-                                        "ZJ4": "\u00dcbernahme aufgrund nicht erfolgtem iMS- Einbau"
+                                        "ZJ4": "Übernahme aufgrund nicht erfolgtem iMS- Einbau"
                                     }
                                 }
                             ],
@@ -2505,7 +2505,7 @@
                                     }
                                 }, {
                                     "ahb_expression": "",
-                                    "discriminator": "SG4->STS->9013 (Code des Pr\u00fcfschritts)",
+                                    "discriminator": "SG4->STS->9013 (Code des Prüfschritts)",
                                     "entered_input": null
                                 }, {
                                     "discriminator": "SG4->STS->1131",

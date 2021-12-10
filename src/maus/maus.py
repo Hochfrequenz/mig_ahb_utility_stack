@@ -36,6 +36,29 @@ def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElem
     return result
 
 
+def group_lines_by_segment(segment_group_lines: List[AhbLine]) -> List[Segment]:
+    """
+    convert the given lines (which are assumed to be from the same segment group) into single segments
+    """
+    result: List[Segment] = []
+    for segment_key, segments in groupby(segment_group_lines, key=lambda line: line.segment):
+        if segment_key is None:
+            continue  # filter out segment group level
+        this_segment_lines = list(segments)
+        segment = Segment(
+            discriminator=segment_key,  # type:ignore[arg-type] # shall not be none after sanitizing
+            data_elements=[],
+            ahb_expression=this_segment_lines[0].ahb_expression or "",
+        )
+        for data_element_key, data_element_lines in groupby(this_segment_lines, key=lambda line: line.data_element):
+            if data_element_key is None:
+                continue
+            data_element = merge_lines_with_same_data_element(list(data_element_lines))
+            segment.data_elements.append(data_element)  # type:ignore[union-attr] # yes, it's not none
+        result.append(segment)
+    return result
+
+
 def group_lines_by_segment_group(
     ahb_lines: List[AhbLine], segment_group_hierarchy: SegmentGroupHierarchy
 ) -> List[SegmentGroup]:
@@ -52,28 +75,9 @@ def group_lines_by_segment_group(
                 sg_draft = SegmentGroup(
                     discriminator=segment_group_key,  # type:ignore[arg-type] # might be None now, will be replace later
                     ahb_expression=this_sg[0].ahb_expression or "",
-                    segments=[],
+                    segments=group_lines_by_segment(this_sg),
                     segment_groups=[],
                 )
-                for segment_key, segments in groupby(this_sg, key=lambda line: line.segment):
-                    if segment_key is None:
-                        continue  # filter out segment group level
-                    this_segment_lines = list(segments)
-                    segment = Segment(
-                        discriminator=segment_key,  # type:ignore[arg-type] # shall not be none after sanitizing
-                        data_elements=[],
-                        ahb_expression=this_segment_lines[0].ahb_expression or "",
-                    )
-                    for data_element_key, data_element_lines in groupby(
-                        this_segment_lines, key=lambda line: line.data_element
-                    ):
-                        if data_element_key is None:
-                            continue
-                        data_element = merge_lines_with_same_data_element(list(data_element_lines))
-                        segment.data_elements.append(data_element)  # type:ignore[union-attr] # yes, it's not none
-                    sg_draft.segments.append(  # type:ignore[union-attr] # yes, we ensured above that it's a list
-                        segment
-                    )
                 result.append(sg_draft)
     return result
 
