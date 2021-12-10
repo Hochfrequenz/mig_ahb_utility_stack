@@ -323,10 +323,118 @@ class TestAhb:
                         name=None,
                     ),
                 ],
-                {"Foo", "Bar", None},
+                ["Foo", "Bar", None],
             )
         ],
     )
     def test_get_segment_groups(self, lines: List[AhbLine], expected_group_names: Set[Optional[str]]):
         actual = FlatAnwendungshandbuch._get_available_segment_groups(lines)
         assert actual == expected_group_names
+
+    @pytest.mark.parametrize(
+        "unsorted_input, sg_order, expected_result",
+        [
+            pytest.param(
+                [
+                    AhbLine(
+                        segment_group="Foo",
+                        guid=uuid.UUID("12b1a98a-edf5-4177-89e5-a6d8a92c5fdc"),
+                        segment=None,
+                        data_element=None,
+                        value_pool_entry=None,
+                        ahb_expression=None,
+                        name=None,
+                    ),
+                    AhbLine(
+                        segment_group="Bar",
+                        guid=uuid.UUID("9ec5ddb3-3721-48be-9d57-8742e08aa7cf"),
+                        segment=None,
+                        data_element=None,
+                        value_pool_entry=None,
+                        ahb_expression=None,
+                        name=None,
+                    ),
+                    AhbLine(
+                        segment_group=None,
+                        guid=uuid.UUID("7beb2471-0fd2-4b6b-8aae-a5d1f153972d"),
+                        segment=None,
+                        data_element=None,
+                        value_pool_entry=None,
+                        ahb_expression=None,
+                        name=None,
+                    ),
+                    AhbLine(
+                        segment_group="Bar",
+                        guid=uuid.UUID("365e1f9d-0bb9-43ab-921b-9ffa16b6df86"),
+                        segment=None,
+                        data_element=None,
+                        value_pool_entry=None,
+                        ahb_expression=None,
+                        name=None,
+                    ),
+                    AhbLine(
+                        segment_group="Foo",
+                        guid=uuid.UUID("8874a7c9-0143-4aa5-b7fe-5225bb25d2c5"),
+                        segment=None,
+                        data_element=None,
+                        value_pool_entry=None,
+                        ahb_expression=None,
+                        name=None,
+                    ),
+                ],
+                ["Foo", "Bar", None],
+                [
+                    AhbLine(
+                        segment_group="Foo",
+                        guid=uuid.UUID("12b1a98a-edf5-4177-89e5-a6d8a92c5fdc"),
+                        segment=None,
+                        data_element=None,
+                        value_pool_entry=None,
+                        ahb_expression=None,
+                        name=None,
+                    ),
+                    AhbLine(
+                        segment_group="Foo",
+                        guid=uuid.UUID("8874a7c9-0143-4aa5-b7fe-5225bb25d2c5"),
+                        segment=None,
+                        data_element=None,
+                        value_pool_entry=None,
+                        ahb_expression=None,
+                        name=None,
+                    ),
+                    AhbLine(
+                        segment_group="Bar",
+                        guid=uuid.UUID("9ec5ddb3-3721-48be-9d57-8742e08aa7cf"),
+                        segment=None,
+                        data_element=None,
+                        value_pool_entry=None,
+                        ahb_expression=None,
+                        name=None,
+                    ),
+                    AhbLine(
+                        segment_group="Bar",
+                        guid=uuid.UUID("365e1f9d-0bb9-43ab-921b-9ffa16b6df86"),
+                        segment=None,
+                        data_element=None,
+                        value_pool_entry=None,
+                        ahb_expression=None,
+                        name=None,
+                    ),
+                    AhbLine(
+                        segment_group=None,
+                        guid=uuid.UUID("7beb2471-0fd2-4b6b-8aae-a5d1f153972d"),
+                        segment=None,
+                        data_element=None,
+                        value_pool_entry=None,
+                        ahb_expression=None,
+                        name=None,
+                    ),
+                ],
+            )
+        ],
+    )
+    def test_sorted_segment_groups(
+        self, unsorted_input: List[AhbLine], sg_order: List[str], expected_result: List[AhbLine]
+    ):
+        actual = FlatAnwendungshandbuch._sorted_lines_by_segment_groups(unsorted_input, sg_order)
+        assert actual == expected_result

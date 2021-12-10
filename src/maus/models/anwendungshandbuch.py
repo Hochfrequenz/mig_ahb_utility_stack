@@ -7,7 +7,7 @@ structure.
 another segment group)
 """
 
-from typing import List, Optional, Set
+from typing import List, Optional
 from uuid import UUID
 
 import attr
@@ -127,20 +127,69 @@ class FlatAnwendungshandbuch:
     meta: AhbMetaInformation  #: information about this AHB
     lines: List[AhbLine]  #: ordered list lines as they occur in the AHB
 
-    def get_segment_groups(self):
+    def get_segment_groups(self) -> List[Optional[str]]:
         """
-        :return: a set with all segment groups in this AHB
+        :return: a set with all segment groups in this AHB in the order in which they occur
         """
         return FlatAnwendungshandbuch._get_available_segment_groups(self.lines)
 
     @staticmethod
-    def _get_available_segment_groups(lines: List[AhbLine]) -> Set[Optional[str]]:
+    def _get_available_segment_groups(lines: List[AhbLine]) -> List[Optional[str]]:
         """
         extracts the distinct segment groups from a list of ahb lines
         :param lines:
-        :return: distinct segment groups, including None
+        :return: distinct segment groups, including None in the order in which they occur
         """
-        return {line.segment_group for line in lines if lines}
+        # this code is in a static method to make it easily accessible for fine grained unit testing
+        result: List[Optional[str]] = []
+        for line in lines:
+            if line.segment_group not in result:
+                # an "in" check against a set would be faster but we want to preserve both order and readability
+                result.append(line.segment_group)
+        return result
+
+    def sort_lines_by_segment_groups(self):
+        """
+        sorts lines by segment groups while preserving the order inside the groups and the order between the groups.
+        """
+        self.lines = FlatAnwendungshandbuch._sorted_lines_by_segment_groups(self.lines, self.get_segment_groups())
+
+    @staticmethod
+    def _sorted_lines_by_segment_groups(ahb_lines: List[AhbLine], sg_order: List[str]) -> List[AhbLine]:
+        """
+        Calls sorted(...) on the provided list and returns a new list.
+        Its purpose is, that if a segment group in the AHB (read from top to bottom in the flat ahb/pdf) is interrupted
+        by other segment groups, the lines belonging to the same group will be next to each other.
+        This is useful to later use a groupby aggregation that only returns one group key per segment group.
+
+        The sort is stable such that the existing order inside the segment groups is maintained.
+
+        Note that this also means, that the order of the return lines no longer the same as in the flat AHB.
+
+        If you provide this function a list:
+        [
+            (SG2, Foo),
+            (SG2, Bar),
+            (SG3, ABC),
+            (SG3, DEF),
+            (SG2, SomethingElse)
+        ]
+        The result will be:
+        [
+            (SG2, Foo),
+            (SG2, Bar),
+            (SG2, SomethingElse)
+            (SG3, ABC),
+            (SG3, DEF)
+        ]
+
+        See the unittests for details.
+        """
+
+        # this code is in a static method to make it easily accessible for fine grained unit testing
+        result: List[AhbLine] = sorted(ahb_lines, key=lambda x: x.segment_group or "")
+        result.sort(key=lambda ahb_line: sg_order.index(ahb_line.segment_group))
+        return result
 
 
 class FlatAnwendungshandbuchSchema(Schema):

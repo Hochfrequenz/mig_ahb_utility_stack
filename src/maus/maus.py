@@ -44,6 +44,8 @@ def group_lines_by_segment_group(
     """
     result: List[SegmentGroup] = []
     for hierarchy_segment_group, _ in segment_group_hierarchy.flattened():  # flatten = ignore hierarchy, preserve order
+        # here we assume, that the ahb_lines are easily groupable
+        # (meaning, the ran through FlatAhb.sort_lines_by_segment_groups once)
         for segment_group_key, sg_group in groupby(ahb_lines, key=lambda line: line.segment_group):
             if hierarchy_segment_group == segment_group_key:
                 this_sg = list(sg_group)
@@ -100,6 +102,7 @@ def to_deep_ahb(
     Converts a flat ahb into a nested ahb using the provided segment hierarchy
     """
     result = DeepAnwendungshandbuch(meta=flat_ahb.meta, lines=[])
+    flat_ahb.sort_lines_by_segment_groups()
     flat_groups = group_lines_by_segment_group(flat_ahb.lines, segment_group_hierarchy)
     # in a first step we group the lines by their segment groups but ignore the actual hierarchy except for the order
     result.lines = nest_segment_groups_into_each_other(flat_groups, segment_group_hierarchy)

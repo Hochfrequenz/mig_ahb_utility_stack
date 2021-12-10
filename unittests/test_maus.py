@@ -200,6 +200,48 @@ class TestMaus:
                     )
                 ],
             ),
+            pytest.param(
+                [
+                    AhbLine(
+                        segment_group="SG4",
+                        segment="FOO",
+                        ahb_expression="X",
+                        data_element="0333",
+                        value_pool_entry="E01",
+                        name="Das Eine",
+                        guid=None,
+                    ),
+                    AhbLine(
+                        segment_group="SG4",
+                        segment="FOO",
+                        ahb_expression="X",
+                        data_element="0333",
+                        value_pool_entry="E02",
+                        name="Das Andere",
+                        guid=None,
+                    ),
+                ],
+                SegmentGroupHierarchy(segment_group="SG4", sub_hierarchy=None, opening_segment="FOO"),
+                [
+                    SegmentGroup(
+                        discriminator="SG4",
+                        ahb_expression="X",
+                        segments=[
+                            Segment(
+                                discriminator="FOO",
+                                ahb_expression="X",
+                                data_elements=[
+                                    DataElementValuePool(
+                                        discriminator="SG4->FOO->0333",
+                                        value_pool={"E01": "Das Eine", "E02": "Das Andere"},
+                                    )
+                                ],
+                            )
+                        ],
+                        segment_groups=[],
+                    )
+                ],
+            ),
         ],
     )
     def test_group_lines_by_segment_group(
