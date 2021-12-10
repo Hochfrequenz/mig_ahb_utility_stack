@@ -50,19 +50,25 @@ def group_lines_by_segment_group(
             if hierarchy_segment_group == segment_group_key:
                 this_sg = list(sg_group)
                 sg_draft = SegmentGroup(
-                    discriminator=segment_group_key,  # type:ignore[arg-type] # because the SGH only contains str
+                    discriminator=segment_group_key,  # type:ignore[arg-type] # might be None now, will be replace later
                     ahb_expression=this_sg[0].ahb_expression or "",
                     segments=[],
                     segment_groups=[],
                 )
                 for segment_key, segments in groupby(this_sg, key=lambda line: line.segment):
+                    if segment_key is None:
+                        continue  # filter out segment group level
                     this_segment_lines = list(segments)
                     segment = Segment(
                         discriminator=segment_key,  # type:ignore[arg-type] # shall not be none after sanitizing
                         data_elements=[],
                         ahb_expression=this_segment_lines[0].ahb_expression or "",
                     )
-                    for _, data_element_lines in groupby(this_segment_lines, key=lambda line: line.data_element):
+                    for data_element_key, data_element_lines in groupby(
+                        this_segment_lines, key=lambda line: line.data_element
+                    ):
+                        if data_element_key is None:
+                            continue
                         data_element = merge_lines_with_same_data_element(list(data_element_lines))
                         segment.data_elements.append(data_element)  # type:ignore[union-attr] # yes, it's not none
                     sg_draft.segments.append(  # type:ignore[union-attr] # yes, we ensured above that it's a list
@@ -106,4 +112,9 @@ def to_deep_ahb(
     flat_groups = group_lines_by_segment_group(flat_ahb.lines, segment_group_hierarchy)
     # in a first step we group the lines by their segment groups but ignore the actual hierarchy except for the order
     result.lines = nest_segment_groups_into_each_other(flat_groups, segment_group_hierarchy)
+    for segment_group in result.lines:
+        if not isinstance(segment_group, SegmentGroup):
+            continue
+        if segment_group.discriminator is None:
+            segment_group.discriminator = "root"
     return result

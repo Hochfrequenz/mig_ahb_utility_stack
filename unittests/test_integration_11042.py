@@ -24,7 +24,8 @@ class TestIntegration11042:
         flat_ahb = reader.to_flat_ahb()
         with open(datafiles / "sgh_utilmd.json", "r", encoding="utf-8") as sgh_file:
             sgh = SegmentGroupHierarchySchema().loads(sgh_file.read())
+        actual = to_deep_ahb(flat_ahb, sgh)
         with open(datafiles / "11042_deep.json", "r", encoding="utf-8") as deep_ahb_file:
             expected_deep_ahb = DeepAnwendungshandbuchSchema().loads(deep_ahb_file.read())
-        actual = to_deep_ahb(flat_ahb, sgh)
+        # actual_json = DeepAnwendungshandbuchSchema().dumps(actual, ensure_ascii=False, sort_keys=True)
         assert actual == expected_deep_ahb
