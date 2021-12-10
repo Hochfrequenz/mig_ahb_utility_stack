@@ -7,7 +7,7 @@ structure.
 another segment group)
 """
 
-from typing import List, Optional
+from typing import List, Optional, Sequence
 from uuid import UUID
 
 import attr
@@ -155,7 +155,7 @@ class FlatAnwendungshandbuch:
         self.lines = FlatAnwendungshandbuch._sorted_lines_by_segment_groups(self.lines, self.get_segment_groups())
 
     @staticmethod
-    def _sorted_lines_by_segment_groups(ahb_lines: List[AhbLine], sg_order: List[Optional[str]]) -> List[AhbLine]:
+    def _sorted_lines_by_segment_groups(ahb_lines: Sequence[AhbLine], sg_order: List[Optional[str]]) -> List[AhbLine]:
         """
         Calls sorted(...) on the provided list and returns a new list.
         Its purpose is, that if a segment group in the AHB (read from top to bottom in the flat ahb/pdf) is interrupted
