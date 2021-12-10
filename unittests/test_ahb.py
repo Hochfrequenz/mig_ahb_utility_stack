@@ -67,6 +67,51 @@ class TestAhb:
         assert_serialization_roundtrip(ahb_line, AhbLineSchema(), expected_json_dict)
 
     @pytest.mark.parametrize(
+        "ahb_line, expected_holds_any_information",
+        [
+            pytest.param(
+                AhbLine(
+                    ahb_expression="Muss [1] O [2]",
+                    segment_group="SG2",
+                    segment="NAD",
+                    data_element="3039",
+                    value_pool_entry="E01",
+                    name="MP-ID",
+                    guid=uuid.UUID("12b1a98a-edf5-4177-89e5-a6d8a92c5fdc"),
+                ),
+                True,
+            ),
+            pytest.param(
+                AhbLine(
+                    ahb_expression=None,
+                    segment_group=None,
+                    segment=None,
+                    data_element=None,
+                    value_pool_entry=None,
+                    name=None,
+                    guid=uuid.UUID("12b1a98a-edf5-4177-89e5-a6d8a92c5fdc"),
+                ),
+                False,
+            ),
+            pytest.param(
+                AhbLine(
+                    ahb_expression=" ",
+                    segment_group="",
+                    segment="",
+                    data_element="   ",
+                    value_pool_entry="",
+                    name="",
+                    guid=uuid.UUID("12b1a98a-edf5-4177-89e5-a6d8a92c5fdc"),
+                ),
+                False,
+            ),
+        ],
+    )
+    def test_ahbline_holds_any_information(self, ahb_line: AhbLine, expected_holds_any_information: bool):
+        actual = ahb_line.holds_any_information()
+        assert actual == expected_holds_any_information
+
+    @pytest.mark.parametrize(
         "ahb_line, include_name, expected_discriminator",
         [
             pytest.param(

@@ -39,6 +39,20 @@ class AhbLine:
 
     # note: to parse expressions from AHBs consider using AHBicht: https://github.com/Hochfrequenz/ahbicht/
 
+    def holds_any_information(self) -> bool:
+        """
+        Returns true iff the line holds any information exception for just a GUID.
+        This is useful to filter out empty lines which are artefacts remaining from the scraping process.
+        """
+        return (
+            (self.segment_group is not None and len(self.segment_group.strip()) > 0)
+            or (self.segment is not None and len(self.segment.strip()) > 0)
+            or (self.data_element is not None and len(self.data_element.strip()) > 0)
+            or (self.value_pool_entry is not None and len(self.value_pool_entry.strip()) > 0)
+            or (self.name is not None and len(self.name.strip()) > 0)
+            or (self.ahb_expression is not None and len(self.ahb_expression.strip()) > 0)
+        )
+
     def get_discriminator(self, include_name: bool = True) -> str:
         """
         Generate a unique yet readable discriminator for this given line
