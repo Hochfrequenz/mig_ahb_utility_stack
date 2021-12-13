@@ -56,4 +56,4 @@ opening a pull request against the main branch.
 .. |Linting status badge| image:: https://github.com/Hochfrequenz/mig_ahb_utility_stack/workflows/Linting/badge.svg
 .. |Black status badge| image:: https://github.com/Hochfrequenz/mig_ahb_utility_stack/workflows/Black/badge.svg
 .. |pypy status badge| image:: https://img.shields.io/pypi/v/maus
-.. |read the docs| image:: https://readthedocs.org/projects/maus/badge/?version=latest&style=plastic
+.. |read the docs| image:: https://readthedocs.org/projects/mig-ahb-utility-stack/badge/?version=latest&style=plastic
