@@ -32,7 +32,11 @@ class AhbLine:
     segment: Optional[str]  #: the segment, e.g. "IDE"
     data_element: Optional[str]  #: the data element ID, e.g. "3224"
     value_pool_entry: Optional[str]  #: one of (possible multiple) allowed values, e.g. "E01" or "293"
-    name: Optional[str]  #: the name, e.g. "Meldepunkt"
+    name: Optional[str]  #: the name, e.g. "Meldepunkt". It can be both the description of a field but also its meaning.
+    # Check the unittest test_csv_file_reading_11042 to see the different values of name. It's not only the grey fields
+    # where user input is expected but also the meanings / values of value pool entries. This means the exact meaning of
+    # name can only be determined in the context in which it is used. This is one of many shortcoming of the current AHB
+    # structure: Things in the same column don't necessarily mean the same thing.
     ahb_expression: Optional[
         str
     ]  #: a requirement indicator + an optional condition ("ahb expression"), f.e. "Muss [123] O [456]"
