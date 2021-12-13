@@ -220,7 +220,9 @@ class SegmentSchema(SegmentLevelSchema):
 @attr.s(auto_attribs=True, kw_only=True)
 class SegmentGroup(SegmentLevel):
     """
-    A segment group that contains segments and nested groups
+    A segment group that contains segments and nested groups.
+    On root level of a message there might be a "virtual" segment group of all segments that formally don't have a group
+    This group has the key "root".
     """
 
     segments: Optional[List[Segment]]  #: the segments inside this very group
