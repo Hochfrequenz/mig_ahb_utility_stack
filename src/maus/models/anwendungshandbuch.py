@@ -59,7 +59,9 @@ class AhbLine:
 
     def get_discriminator(self, include_name: bool = True) -> str:
         """
-        Generate a unique yet readable discriminator for this given line
+        Generate a unique yet readable discriminator for this given line.
+        This discriminator is generated just from the line itself without any information on where it occurs.
+        It does neither know its position inside the AHB nor parent or sub groups.
         """
         result: str
         if self.segment_group:
