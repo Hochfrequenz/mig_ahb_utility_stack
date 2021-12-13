@@ -1,0 +1,51 @@
+{
+  "segment_group": null,
+  "opening_segment": "UNB",
+  "sub_hierarchy": [
+    { "segment_group": "SG1", "opening_segment": "RFF", "sub_hierarchy": null },
+    {
+      "segment_group": "SG2",
+      "opening_segment": "NAD",
+      "sub_hierarchy": [
+        {
+          "segment_group": "SG4",
+          "opening_segment": "CTA",
+          "sub_hierarchy": null
+        }
+      ]
+    },
+    {
+      "segment_group": "SG5",
+      "opening_segment": "NAD",
+      "sub_hierarchy": [
+        {
+          "segment_group": "SG6",
+          "opening_segment": "LOC",
+          "sub_hierarchy": [
+            {
+              "segment_group": "SG7",
+              "opening_segment": "RFF",
+              "sub_hierarchy": null
+            },
+            {
+              "segment_group": "SG8",
+              "opening_segment": "CCI",
+              "sub_hierarchy": null
+            },
+            {
+              "segment_group": "SG9",
+              "opening_segment": "LIN",
+              "sub_hierarchy": [
+                {
+                  "segment_group": "SG10",
+                  "opening_segment": "QTY",
+                  "sub_hierarchy": null
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
