@@ -3,6 +3,12 @@ MIG AHB Utility Stack (MAUS) 🐁
 
 | |Unittests status badge| |Coverage status badge| |Linting status badge| |Black status badge| |pypy status badge| |read the docs|
 
+.. image:: https://raw.githubusercontent.com/Hochfrequenz/mig_ahb_utility_stack/main/docs/_static/maus-logo.png
+   :target: https://mig-ahb-utility-stack.readthedocs.io/en/stable/apidoc/maus.html
+   :align: right
+   :alt: maus logo
+   :width: 150px
+
 | This repository contains the Python package ``maus``.
 | MAUS is an acronym for **M**\ IG **A**\ HB **U**\ tility **S**\ tack where MIG stands for **M**\ essage **I**\ mplementation **G**\ uide and AHB stands for **A**\ nwendungs\ **h**\ and\ **b**\ uch.
 | The maus package allows matching single lines from the AHB with fields specified in the MIG.
