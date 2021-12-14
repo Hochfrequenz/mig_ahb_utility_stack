@@ -4,10 +4,13 @@ maus.reader package
 Submodules
 ----------
 
-.. toctree::
-   :maxdepth: 4
+maus.reader.ahb\_csv\_reader module
+-----------------------------------
 
-   maus.reader.ahb_csv_reader
+.. automodule:: maus.reader.ahb_csv_reader
+   :members:
+   :undoc-members:
+   :show-inheritance:
 
 Module contents
 ---------------

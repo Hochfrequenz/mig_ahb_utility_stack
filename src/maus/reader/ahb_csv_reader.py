@@ -16,6 +16,7 @@ _value_pool_entry_pattern = re.compile(r"^[A-Z0-9]{3,}$")
 _segment_group_pattern = re.compile(r"^SG\d+$")
 
 
+# pylint:disable=too-few-public-methods
 class AhbReader(ABC):
     """
     An AHB Reader reads AHB data from a source and is able to convert them to a :class:`.FlatAnwendungshandbuch`

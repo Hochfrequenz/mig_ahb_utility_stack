@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest  # type:ignore[import]
 
-from maus.maus import to_deep_ahb
+from maus import to_deep_ahb
 from maus.models.anwendungshandbuch import DeepAnwendungshandbuchSchema
 from maus.models.message_implementation_guide import SegmentGroupHierarchySchema
 from maus.reader.ahb_csv_reader import AhbCsvReader
