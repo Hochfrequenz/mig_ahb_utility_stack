@@ -5,6 +5,7 @@ import csv
 import logging
 import re
 import uuid
+from abc import ABC
 from pathlib import Path
 from typing import List, Optional, Sequence, TextIO, Tuple
 
@@ -15,7 +16,20 @@ _value_pool_entry_pattern = re.compile(r"^[A-Z0-9]{3,}$")
 _segment_group_pattern = re.compile(r"^SG\d+$")
 
 
-class AhbCsvReader:
+class AhbReader(ABC):
+    """
+    An AHB Reader reads AHB data from a source and is able to convert them to a :class:`.FlatAnwendungshandbuch`
+    """
+
+    def to_flat_ahb(self) -> FlatAnwendungshandbuch:
+        """
+        convert the read data into a flat anwendungshandbuch
+        :return:
+        """
+        raise NotImplementedError("The inheriting class has to implement this method")
+
+
+class AhbCsvReader(AhbReader):
     """
     reads csv files and returns AHBs
     """

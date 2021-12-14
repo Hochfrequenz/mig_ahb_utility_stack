@@ -1,5 +1,6 @@
 """
-MAUS is the MIG AHB Utility Stack. It merges/joins data from Message Implementation Guide and Anwendungshandbuch.
+MAUS is the MIG AHB Utility Stack.
+It merges/joins data from Message Implementation Guide and Anwendungshandbuch.
 """
 from itertools import groupby
 from typing import List, Sequence
