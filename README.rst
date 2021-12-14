@@ -4,7 +4,7 @@ MIG AHB Utility Stack (MAUS) 🐁
 | |Unittests status badge| |Coverage status badge| |Linting status badge| |Black status badge| |pypy status badge| |read the docs|
 
 .. image:: https://raw.githubusercontent.com/Hochfrequenz/mig_ahb_utility_stack/main/docs/_static/maus-logo.png
-   :target: https://mig-ahb-utility-stack.readthedocs.io/en/stable/apidoc/maus.html
+   :target: https://mig-ahb-utility-stack.readthedocs.io/en/stable/api/maus.html
    :align: right
    :alt: maus logo
    :width: 150px
