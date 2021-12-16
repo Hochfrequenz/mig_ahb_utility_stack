@@ -5,7 +5,7 @@ import csv
 import logging
 import re
 import uuid
-from abc import ABC
+from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import List, Optional, Sequence, TextIO, Tuple
 
@@ -17,11 +17,12 @@ _segment_group_pattern = re.compile(r"^SG\d+$")
 
 
 # pylint:disable=too-few-public-methods
-class AhbReader(ABC):
+class FlatAhbReader(ABC):
     """
     An AHB Reader reads AHB data from a source and is able to convert them to a :class:`.FlatAnwendungshandbuch`
     """
 
+    @abstractmethod
     def to_flat_ahb(self) -> FlatAnwendungshandbuch:
         """
         convert the read data into a flat anwendungshandbuch
@@ -30,7 +31,7 @@ class AhbReader(ABC):
         raise NotImplementedError("The inheriting class has to implement this method")
 
 
-class AhbCsvReader(AhbReader):
+class FlatAhbCsvReader(FlatAhbReader):
     """
     reads csv files and returns AHBs
     """
@@ -55,7 +56,7 @@ class AhbCsvReader(AhbReader):
         """
         reader = csv.DictReader(file_handle, delimiter=self.delimiter)
         if not self.pruefidentifikator:
-            self.pruefidentifikator = AhbCsvReader._get_name_of_expression_column(reader.fieldnames)
+            self.pruefidentifikator = FlatAhbCsvReader._get_name_of_expression_column(reader.fieldnames)
         if not self.pruefidentifikator:
             raise ValueError("Cannot find column name for ahb expression")
         return list(reader)
@@ -66,11 +67,11 @@ class AhbCsvReader(AhbReader):
         Returns None for rows that are skipped.
         Override this method is your column names/input data structure differs.
         """
-        value_pool_entry, description = AhbCsvReader.separate_value_pool_entry_and_name(
+        value_pool_entry, description = FlatAhbCsvReader.separate_value_pool_entry_and_name(
             ahb_row["Codes und Qualifier"], ahb_row["Beschreibung"]
         )
         segment_group: Optional[str] = None
-        if AhbCsvReader._is_segment_group(ahb_row["Segment Gruppe"]):
+        if FlatAhbCsvReader._is_segment_group(ahb_row["Segment Gruppe"]):
             segment_group = ahb_row["Segment Gruppe"]
         elif len(ahb_row["Segment Gruppe"]) >= 3:
             current_section_name = ahb_row["Segment Gruppe"] or None
@@ -97,7 +98,7 @@ class AhbCsvReader(AhbReader):
         This function returns a value_pool_entry at index 0, a possible description at index 1, even if they're mixed up
         in the source files.
         """
-        if AhbCsvReader._is_value_pool_entry(x) and not AhbCsvReader._is_value_pool_entry(y):
+        if FlatAhbCsvReader._is_value_pool_entry(x) and not FlatAhbCsvReader._is_value_pool_entry(y):
             return x, y or None
         return y or None, x or None
 

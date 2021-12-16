@@ -5,7 +5,7 @@ import pytest  # type:ignore[import]
 from maus import to_deep_ahb
 from maus.models.anwendungshandbuch import DeepAnwendungshandbuchSchema
 from maus.models.message_implementation_guide import SegmentGroupHierarchySchema
-from maus.reader.ahb_csv_reader import AhbCsvReader
+from maus.reader.flat_ahb_reader import FlatAhbCsvReader
 from unittests.test_mig import ALL_SGH_FILES  # type:ignore[import]
 
 
@@ -20,7 +20,7 @@ class TestIntegration11042:
     @pytest.mark.datafiles("./unittests/ahbs/FV2204/UTILMD/11042_deep.json")
     def test_csv_file_reading_11042(self, datafiles):
         path_to_csv: Path = datafiles / "11042.csv"
-        reader = AhbCsvReader(file_path=path_to_csv)
+        reader = FlatAhbCsvReader(file_path=path_to_csv)
         flat_ahb = reader.to_flat_ahb()
         with open(datafiles / "sgh_utilmd.json", "r", encoding="utf-8") as sgh_file:
             sgh = SegmentGroupHierarchySchema().loads(sgh_file.read())
