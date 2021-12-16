@@ -10,14 +10,6 @@ Subpackages
    maus.models
    maus.reader
 
-Submodules
-----------
-
-.. toctree::
-   :maxdepth: 4
-
-   maus.maus
-
 Module contents
 ---------------
 

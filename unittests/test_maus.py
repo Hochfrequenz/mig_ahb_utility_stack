@@ -2,7 +2,7 @@ from typing import List
 
 import pytest  # type:ignore[import]
 
-from maus.maus import group_lines_by_segment_group, merge_lines_with_same_data_element, to_deep_ahb
+from maus import group_lines_by_segment_group, merge_lines_with_same_data_element, to_deep_ahb
 from maus.models.anwendungshandbuch import AhbLine, AhbMetaInformation, DeepAnwendungshandbuch, FlatAnwendungshandbuch
 from maus.models.edifact_components import DataElement, DataElementFreeText, DataElementValuePool, Segment, SegmentGroup
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
