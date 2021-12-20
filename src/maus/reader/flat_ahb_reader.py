@@ -80,8 +80,8 @@ class FlatAhbCsvReader(FlatAhbReader):
             # this is different from segment group = None which is value for e.g. the UNH
         result: AhbLine = AhbLine(
             guid=uuid.uuid4(),
-            segment_group=segment_group,
-            segment=ahb_row["Segment"] or None,
+            segment_group_key=segment_group,
+            segment_code=ahb_row["Segment"] or None,
             data_element=ahb_row["Datenelement"] or None,
             value_pool_entry=value_pool_entry,
             ahb_expression=ahb_row[self.pruefidentifikator] or None,

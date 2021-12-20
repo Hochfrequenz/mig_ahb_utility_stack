@@ -42,7 +42,7 @@ def group_lines_by_segment(segment_group_lines: List[AhbLine]) -> List[Segment]:
     convert the given lines (which are assumed to be from the same segment group) into single segments
     """
     result: List[Segment] = []
-    for segment_key, segments in groupby(segment_group_lines, key=lambda line: line.segment):
+    for segment_key, segments in groupby(segment_group_lines, key=lambda line: line.segment_code):
         if segment_key is None:
             continue  # filter out segment group level
         this_segment_lines = list(segments)
@@ -70,7 +70,7 @@ def group_lines_by_segment_group(
     for hierarchy_segment_group, _ in segment_group_hierarchy.flattened():  # flatten = ignore hierarchy, preserve order
         # here we assume, that the ahb_lines are easily groupable
         # (meaning, the ran through FlatAhb.sort_lines_by_segment_groups once)
-        for segment_group_key, sg_group in groupby(ahb_lines, key=lambda line: line.segment_group):
+        for segment_group_key, sg_group in groupby(ahb_lines, key=lambda line: line.segment_group_key):
             if hierarchy_segment_group == segment_group_key:
                 this_sg = list(sg_group)
                 sg_draft = SegmentGroup(

@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import List, Optional, Union
 from xml.etree.ElementTree import Element
 
+import attr
 from lxml import etree  # type:ignore[import]
 
 from maus import SegmentGroupHierarchy
@@ -40,6 +41,18 @@ class MigReader(ABC):
         return False
 
 
+# pylint:disable=too-few-public-methods
+@attr.s(auto_attribs=True, kw_only=True)
+class _XQueryPathResult:
+    """
+    the (internal) result of a query path search inside the tree.
+    """
+
+    is_unique: Optional[bool]  #: True iff unique, None for no results, False for >1 result
+    unique_result: Optional[Element]  #: unique element if there is any; None otherwise
+    candidates: Optional[List[Element]]  #: list of candidates if there is >1 result
+
+
 # pylint:disable=c-extension-no-member
 class MigXmlReader(MigReader):
     """
@@ -62,12 +75,12 @@ class MigXmlReader(MigReader):
         """
         return self.root.tag
 
-    def absolute_xpath_to_edifact_seed_path(self, xpath: str) -> str:
+    def element_to_edifact_seed_path(self, element: Element) -> str:
         """
-        extract the edifact seed path from the given xpath
-        :param xpath: absolute xpath (no filters, just key and indexes)
+        extract the edifact seed path from the given element
         :return:
         """
+        xpath = self.tree.getpath(element)
         result_list: List[str] = []
         iter_path = "/" + xpath.split("/")[1]
         for leaf in xpath.split("/")[2:]:
@@ -75,6 +88,20 @@ class MigXmlReader(MigReader):
             leaf_element = self.root.xpath(iter_path)[0]  # type:ignore[attr-defined]
             result_list.append(leaf_element.attrib["name"])
         return "->".join(result_list)
+
+    def get_unique_result_by_xpath(self, query_path: str) -> _XQueryPathResult:
+        """
+        Tries to find an element for the given query path.
+        If there's exactly 1 result, it is returned.
+        If there are 0 or >1 results a ValueError is raised.
+        """
+        candidates = list(self.root.xpath(query_path))
+        if len(candidates) == 0:
+            return _XQueryPathResult(candidates=None, is_unique=None, unique_result=None)
+            # the == 1 case is handled last
+        if len(candidates) > 1:
+            return _XQueryPathResult(candidates=candidates, is_unique=False, unique_result=None)
+        return _XQueryPathResult(candidates=None, is_unique=True, unique_result=candidates[0])
 
     # pylint:disable=unused-argument
     def get_edifact_seed_path(
@@ -84,20 +111,22 @@ class MigXmlReader(MigReader):
         get the edifact seed path for the given segment_group, segment... combination
         :return:
         """
-        xpath = f".//*[@meta.id='{data_element_id}' and starts-with(@ref, '{segment_key}')]"
-        candidates = list(self.root.xpath(xpath))  # type:ignore[attr-defined]
-        if len(candidates) == 0:
-            raise ValueError(f"There's no match for ''{xpath}''")
-        if len(candidates) == 1:
-            return candidates[0]
-        if name:
-            filtered_by_names = [x for x in candidates if MigReader.are_similar_names(x.attrib["name"], name)]
-            if len(filtered_by_names) > 1:
-                raise ValueError(f"There are multiple results for '{name}'")
+        segment_de_result = self.get_unique_result_by_xpath(
+            f".//*[@meta.id='{data_element_id}' and starts-with(@ref, '{segment_key}')]"
+        )
+        if segment_de_result.is_unique:
+            return self.element_to_edifact_seed_path(segment_de_result.unique_result)
+        if segment_de_result.is_unique is False:
+            filtered_by_names = [
+                x for x in segment_de_result.candidates if MigReader.are_similar_names(x.attrib["name"], name)
+            ]
             if len(filtered_by_names) == 0:
-                raise ValueError(f"There is no match for name '{name}'")
-            absolute_path = self.tree.getpath(filtered_by_names[0])
-            return self.absolute_xpath_to_edifact_seed_path(absolute_path)
+                # try to find by parents name
+                via_parents_name_result = self.get_unique_result_by_xpath(
+                    f".//class[@name='{name}']/*[@meta.id='{data_element_id}' and starts-with(@ref, '{segment_key}')]"
+                )
+                if via_parents_name_result.is_unique:
+                    return self.element_to_edifact_seed_path(via_parents_name_result.unique_result)
         raise ValueError("No idea")
 
     def to_segment_group_hierarchy(self) -> SegmentGroupHierarchy:

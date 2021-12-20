@@ -44,7 +44,7 @@ class TestMigXmlReader:
     @pytest.mark.parametrize(
         "segment_group_key, segment_key, data_element_id, name, expected_path",
         [
-            pytest.param("SG1", "RFF", "1154", "ID", "Dokument->Nachricht->Prüfidentifikator->ID"),
+            pytest.param("SG1", "RFF", "1154", "Prüfidentifikator", "Dokument->Nachricht->Prüfidentifikator->ID"),
         ],
     )
     def test_simple_paths(

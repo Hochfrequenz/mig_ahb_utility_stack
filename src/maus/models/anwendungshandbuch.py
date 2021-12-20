@@ -28,8 +28,8 @@ class AhbLine:
     ]  #: optional key
     # because the combination (segment group, segment, data element, name) is not guaranteed to be unique
     # yes, it's actually that bad already
-    segment_group: Optional[str]  #: the segment group, e.g. "SG5"
-    segment: Optional[str]  #: the segment, e.g. "IDE"
+    segment_group_key: Optional[str]  #: the segment group, e.g. "SG5"
+    segment_code: Optional[str]  #: the segment, e.g. "IDE"
     data_element: Optional[str]  #: the data element ID, e.g. "3224"
     value_pool_entry: Optional[str]  #: one of (possible multiple) allowed values, e.g. "E01" or "293"
     name: Optional[str]  #: the name, e.g. "Meldepunkt". It can be both the description of a field but also its meaning.
@@ -49,8 +49,8 @@ class AhbLine:
         This is useful to filter out empty lines which are artefacts remaining from the scraping process.
         """
         return (
-            (self.segment_group is not None and len(self.segment_group.strip()) > 0)
-            or (self.segment is not None and len(self.segment.strip()) > 0)
+            (self.segment_group_key is not None and len(self.segment_group_key.strip()) > 0)
+            or (self.segment_code is not None and len(self.segment_code.strip()) > 0)
             or (self.data_element is not None and len(self.data_element.strip()) > 0)
             or (self.value_pool_entry is not None and len(self.value_pool_entry.strip()) > 0)
             or (self.name is not None and len(self.name.strip()) > 0)
@@ -64,11 +64,11 @@ class AhbLine:
         It does neither know its position inside the AHB nor parent or sub groups.
         """
         result: str
-        if self.segment_group:
-            result = f"{self.segment_group}->"
+        if self.segment_group_key:
+            result = f"{self.segment_group_key}->"
         else:
             result = ""
-        result += f"{self.segment}->{self.data_element}"
+        result += f"{self.segment_code}->{self.data_element}"
         if self.name and include_name:
             result += f" ({self.name})"
         return result
@@ -80,8 +80,8 @@ class AhbLineSchema(Schema):
     """
 
     guid = fields.UUID(required=False, load_default=None)
-    segment_group = fields.String(required=False, load_default=None)
-    segment = fields.String(required=False, load_default=None)
+    segment_group_key = fields.String(required=False, load_default=None)
+    segment_code = fields.String(required=False, load_default=None)
     data_element = fields.String(required=False, load_default=None)
     value_pool_entry = fields.String(required=False, load_default=None)
     name = fields.String(required=False, load_default=None)
@@ -149,9 +149,9 @@ class FlatAnwendungshandbuch:
         # this code is in a static method to make it easily accessible for fine grained unit testing
         result: List[Optional[str]] = []
         for line in lines:
-            if line.segment_group not in result:
+            if line.segment_group_key not in result:
                 # an "in" check against a set would be faster but we want to preserve both order and readability
-                result.append(line.segment_group)
+                result.append(line.segment_group_key)
         return result
 
     def sort_lines_by_segment_groups(self):
@@ -193,8 +193,8 @@ class FlatAnwendungshandbuch:
         """
 
         # this code is in a static method to make it easily accessible for fine grained unit testing
-        result: List[AhbLine] = sorted(ahb_lines, key=lambda x: x.segment_group or "")
-        result.sort(key=lambda ahb_line: sg_order.index(ahb_line.segment_group))
+        result: List[AhbLine] = sorted(ahb_lines, key=lambda x: x.segment_group_key or "")
+        result.sort(key=lambda ahb_line: sg_order.index(ahb_line.segment_group_key))
         return result
 
 

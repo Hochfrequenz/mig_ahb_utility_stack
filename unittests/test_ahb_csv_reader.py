@@ -87,12 +87,12 @@ class TestAhbCsvReader:
         assert len(reader.rows) == 846
         # first row assertions
         first_row = reader.rows[0]
-        assert first_row.segment == "UNH"
+        assert first_row.segment_code == "UNH"
         assert first_row.ahb_expression == "Muss"
 
         # last row assertions
         last_row = reader.rows[845]
-        assert last_row.segment == "UNT"
+        assert last_row.segment_code == "UNT"
         assert last_row.data_element == "0062"
         assert last_row.name == "Nachrichten-Referenznummer"
         assert last_row.ahb_expression == "X"

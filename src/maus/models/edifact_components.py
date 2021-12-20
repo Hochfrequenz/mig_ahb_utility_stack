@@ -250,3 +250,22 @@ class SegmentGroupSchema(SegmentLevelSchema):
         Converts the barely typed data dictionary into an actual :class:`.SegmentGroup`
         """
         return SegmentGroup(**data)
+
+
+@attr.s(auto_attribs=True, kw_only=True)
+class EdifactStack:
+    """
+    The edifact stack describes where inside an EDIFACT message an information is located.
+    It's closely related to parts of the :class:`.AhbLine` but merges data from multiple lines from the original AHB.
+    """
+
+    segment_group_key: str  #: e.g. 'SG2'; data without a segment group are assigned to the the virtual group "root"
+    segment_code: str  #: e.g. 'DTM'
+    qualifier: str
+    """
+    The qualifier can either be the key of an DataElementValuePool entry or the qualifier that is leading/occurs before
+    e.g. 'MS' (this is the main difference to the AHB where qualifier and data element span >1 line)
+    """
+
+    name: str  #: .e.g "MP-ID"
+    format_string: str  # e.g. '203' to specify how a datetime has to be parsed
