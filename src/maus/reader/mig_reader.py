@@ -60,7 +60,7 @@ class MigXmlReader(MigReader):
     """
 
     def __init__(self, init_param: Union[str, Path]):
-        self.root: Element
+        self.root: etree._Element
         if isinstance(init_param, str):
             self.root = etree.fromstring(init_param)
         elif isinstance(init_param, Path):
@@ -75,7 +75,7 @@ class MigXmlReader(MigReader):
         """
         return self.root.tag
 
-    def element_to_edifact_seed_path(self, element: Element) -> str:
+    def element_to_edifact_seed_path(self, element: etree._Element) -> str:
         """
         extract the edifact seed path from the given element
         :return:
@@ -116,7 +116,7 @@ class MigXmlReader(MigReader):
         )
         if segment_de_result.is_unique:
             return self.element_to_edifact_seed_path(segment_de_result.unique_result)
-        if segment_de_result.is_unique is False:
+        if segment_de_result.is_unique is False and segment_de_result.candidates is not None:
             filtered_by_names = [
                 x for x in segment_de_result.candidates if MigReader.are_similar_names(x.attrib["name"], name)
             ]
