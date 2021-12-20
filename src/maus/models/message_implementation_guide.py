@@ -27,8 +27,10 @@ class SegmentGroupHierarchy:
     It'll make sense then.
     """
 
-    segment_group: Optional[str]  #: segment group name, f.e. "SG4" or "SG5"
-    opening_segment: str  #: first segment in group, f.e. "IDE" or "LOC"
+    segment_group: Optional[str] = attr.ib(validator=attr.validators.optional(attr.validators.instance_of(str)))
+    """segment group name, f.e. "SG4" or "SG5" """
+    opening_segment: str = attr.ib(validator=attr.validators.instance_of(str))
+    """first segment in group, f.e. 'IDE' or 'LOC' """
     sub_hierarchy: Optional[
         List["SegmentGroupHierarchy"]
     ]  #: segment groups below this level, f.e.[(SG5, LOG), (SG6,RFF), (SG8, SEQ), ...]

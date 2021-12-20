@@ -25,21 +25,42 @@ class AhbLine:
     guid: Optional[
         UUID
         # pylint: disable=line-too-long
-    ]  #: optional key
+    ] = attr.ib(
+        validator=attr.validators.optional(attr.validators.instance_of(UUID))
+    )  #: optional key
     # because the combination (segment group, segment, data element, name) is not guaranteed to be unique
     # yes, it's actually that bad already
-    segment_group_key: Optional[str]  #: the segment group, e.g. "SG5"
-    segment_code: Optional[str]  #: the segment, e.g. "IDE"
-    data_element: Optional[str]  #: the data element ID, e.g. "3224"
-    value_pool_entry: Optional[str]  #: one of (possible multiple) allowed values, e.g. "E01" or "293"
-    name: Optional[str]  #: the name, e.g. "Meldepunkt". It can be both the description of a field but also its meaning.
+    segment_group_key: Optional[str] = attr.ib(
+        validator=attr.validators.optional(validator=attr.validators.instance_of(str))
+    )
+    """ the segment group, e.g. 'SG5' """
+
+    segment_code: Optional[str] = attr.ib(
+        validator=attr.validators.optional(validator=attr.validators.instance_of(str))
+    )
+    """the segment, e.g. 'IDE'"""
+
+    data_element: Optional[str] = attr.ib(
+        validator=attr.validators.optional(validator=attr.validators.instance_of(str))
+    )
+    """ the data element ID, e.g. '3224' """
+
+    value_pool_entry: Optional[str] = attr.ib(
+        validator=attr.validators.optional(validator=attr.validators.instance_of(str))
+    )
+    """ one of (possible multiple) allowed values, e.g. 'E01' or '293' """
+
+    name: Optional[str] = attr.ib(validator=attr.validators.optional(validator=attr.validators.instance_of(str)))
+    """the name, e.g. 'Meldepunkt'. It can be both the description of a field but also its meaning"""
+
     # Check the unittest test_csv_file_reading_11042 to see the different values of name. It's not only the grey fields
     # where user input is expected but also the meanings / values of value pool entries. This means the exact meaning of
     # name can only be determined in the context in which it is used. This is one of many shortcoming of the current AHB
     # structure: Things in the same column don't necessarily mean the same thing.
-    ahb_expression: Optional[
-        str
-    ]  #: a requirement indicator + an optional condition ("ahb expression"), f.e. "Muss [123] O [456]"
+    ahb_expression: Optional[str] = attr.ib(
+        validator=attr.validators.optional(validator=attr.validators.instance_of(str))
+    )
+    """a requirement indicator + an optional condition ("ahb expression"), f.e. 'Muss [123] O [456]' """
 
     # note: to parse expressions from AHBs consider using AHBicht: https://github.com/Hochfrequenz/ahbicht/
 
@@ -130,8 +151,14 @@ class FlatAnwendungshandbuch:
     You can create instances of this class without knowing anything about the "under the hood" structure of AHBs or MIGs
     """
 
-    meta: AhbMetaInformation  #: information about this AHB
-    lines: List[AhbLine]  #: ordered list lines as they occur in the AHB
+    meta: AhbMetaInformation = attr.ib(validator=attr.validators.instance_of(AhbMetaInformation))
+    """information about this AHB"""
+
+    lines: List[AhbLine] = attr.ib(
+        validator=attr.validators.deep_iterable(
+            member_validator=attr.validators.instance_of(AhbLine), iterable_validator=attr.validators.instance_of(list)
+        )
+    )  #: ordered list lines as they occur in the AHB
 
     def get_segment_groups(self) -> List[Optional[str]]:
         """
@@ -221,8 +248,15 @@ class DeepAnwendungshandbuch:
     The data of the AHB nested as described in the MIG.
     """
 
-    meta: AhbMetaInformation  #: information about this AHB
-    lines: List[SegmentGroup]  #: the nested data
+    meta: AhbMetaInformation = attr.ib(validator=attr.validators.instance_of(AhbMetaInformation))
+    """information about this AHB"""
+
+    lines: List[SegmentGroup] = attr.ib(
+        validator=attr.validators.deep_iterable(
+            member_validator=attr.validators.instance_of(SegmentGroup),
+            iterable_validator=attr.validators.instance_of(list),
+        )
+    )  #: the nested data
 
 
 class DeepAnwendungshandbuchSchema(Schema):

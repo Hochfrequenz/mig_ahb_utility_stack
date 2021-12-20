@@ -18,7 +18,8 @@ class DataElement(ABC):
     For example in UTILMD the data element that holds the 13 digit market partner ID is data element '3039'
     """
 
-    discriminator: str  #: The discriminator uniquely identifies the data element. This _might_ be its key
+    discriminator: str = attr.ib(validator=attr.validators.instance_of(str))
+    """ The discriminator uniquely identifies the data element. This _might_ be its key """
     # but could also be a reference or a name
 
 
@@ -37,8 +38,10 @@ class DataElementFreeText(DataElement):
     This is the main difference to the :class:`DataElementValuePool` which has a finite set of allowed values attached.
     """
 
-    ahb_expression: str  #: any freetext data element has an ahb expression attached. Could be 'X' but also 'M [13]'.
-    entered_input: Optional[str]  #: If the message contains data for this data element, this is not None.
+    ahb_expression: str = attr.ib(validator=attr.validators.instance_of(str))
+    """any freetext data element has an ahb expression attached. Could be 'X' but also 'M [13]'"""
+    entered_input: Optional[str] = attr.ib(validator=attr.validators.optional(attr.validators.instance_of(str)))
+    """If the message contains data for this data element, this is not None."""
 
 
 class DataElementFreeTextSchema(DataElementSchema):
@@ -99,8 +102,12 @@ class _FreeTextOrValuePool:
         self.free_text = free_text
         self.value_pool = value_pool
 
-    free_text: Optional[DataElementFreeText]
-    value_pool: Optional[DataElementValuePool]
+    free_text: Optional[DataElementFreeText] = attr.ib(
+        validator=attr.validators.optional(attr.validators.instance_of(DataElementFreeText))
+    )
+    value_pool: Optional[DataElementValuePool] = attr.ib(
+        validator=attr.validators.optional(attr.validators.instance_of(DataElementValuePool))
+    )
 
 
 class _FreeTextOrValuePoolSchema(Schema):
@@ -225,7 +232,14 @@ class SegmentGroup(SegmentLevel):
     This group has the key "root".
     """
 
-    segments: Optional[List[Segment]]  #: the segments inside this very group
+    segments: Optional[List[Segment]] = attr.ib(
+        validator=attr.validators.optional(
+            attr.validators.deep_iterable(
+                member_validator=attr.validators.instance_of(Segment),
+                iterable_validator=attr.validators.instance_of(list),
+            )
+        )
+    )  #: the segments inside this very group
     segment_groups: Optional[List["SegmentGroup"]]  #: groups that are nested into this group
 
 
@@ -259,13 +273,16 @@ class EdifactStack:
     It's closely related to parts of the :class:`.AhbLine` but merges data from multiple lines from the original AHB.
     """
 
-    segment_group_key: str  #: e.g. 'SG2'; data without a segment group are assigned to the the virtual group "root"
-    segment_code: str  #: e.g. 'DTM'
-    qualifier: str
+    segment_group_key: str = attr.ib(validator=attr.validators.instance_of(str))
+    """ e.g. 'SG2'; data without a segment group are assigned to the the virtual group 'root' """
+    segment_code: str = attr.ib(validator=attr.validators.instance_of(str))
+    """ e.g. 'DTM' """
+    qualifier: str = attr.ib(validator=attr.validators.instance_of(str))
     """
     The qualifier can either be the key of an DataElementValuePool entry or the qualifier that is leading/occurs before
     e.g. 'MS' (this is the main difference to the AHB where qualifier and data element span >1 line)
     """
 
-    name: str  #: .e.g "MP-ID"
-    format_string: str  # e.g. '203' to specify how a datetime has to be parsed
+    name: str = attr.ib(validator=attr.validators.instance_of(str))  #: .e.g "MP-ID"
+    format_string: str = attr.ib(validator=attr.validators.instance_of(str))
+    """e.g. '203' to specify how a datetime has to be parsed"""
