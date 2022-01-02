@@ -266,23 +266,59 @@ class SegmentGroupSchema(SegmentLevelSchema):
         return SegmentGroup(**data)
 
 
+# @attr.s(auto_attribs=True, kw_only=True)
+# class EdifactStack:
+#    """
+#    The edifact stack describes where inside an EDIFACT message an information is located.
+#    It's closely related to parts of the :class:`.AhbLine` but merges data from multiple lines from the original AHB.
+#    """
+#    segment_group_key: str = attr.ib(validator=attr.validators.instance_of(str))
+#    """ e.g. 'SG2'; data without a segment group are assigned to the the virtual group 'root' """
+#    segment_code: str = attr.ib(validator=attr.validators.instance_of(str))
+#    """ e.g. 'DTM' """
+#    qualifier: str = attr.ib(validator=attr.validators.instance_of(str))
+#    """
+#    The qualifier can either be the key of an DataElementValuePool entry or the qualifier that is leading/occurs before
+#    e.g. 'MS' (this is the main difference to the AHB where qualifier and data element span >1 line)
+#    """
+#    name: str = attr.ib(validator=attr.validators.instance_of(str))  #: .e.g "MP-ID"
+#    format_string: str = attr.ib(validator=attr.validators.instance_of(str))
+#    """e.g. '203' to specify how a datetime has to be parsed"""
+
+
+@attr.s(auto_attribs=True, kw_only=True)
+class EdifactStackLevel:
+    """
+    The EDIFACT stack level describes the hierarchy level of information inside an EDIFACT message.
+    """
+
+    #: the name of the level, f.e. 'Dokument' or 'Nachricht' or 'Meldepunkt'
+    name: str = attr.ib(validator=attr.validators.instance_of(str))
+    #: describes if this level is groupable / if there are multiple instances of this level within the same message
+    is_groupable: bool = attr.ib(validator=attr.validators.instance_of(bool))
+
+
 @attr.s(auto_attribs=True, kw_only=True)
 class EdifactStack:
     """
-    The edifact stack describes where inside an EDIFACT message an information is located.
-    It's closely related to parts of the :class:`.AhbLine` but merges data from multiple lines from the original AHB.
+    The EdifactStack describes where inside an EDIFACT message data are found.
+    The stack is independent of the actual implementation used to create the EDIFACT (be it XML, JSON whatever).
     """
 
-    segment_group_key: str = attr.ib(validator=attr.validators.instance_of(str))
-    """ e.g. 'SG2'; data without a segment group are assigned to the the virtual group 'root' """
-    segment_code: str = attr.ib(validator=attr.validators.instance_of(str))
-    """ e.g. 'DTM' """
-    qualifier: str = attr.ib(validator=attr.validators.instance_of(str))
-    """
-    The qualifier can either be the key of an DataElementValuePool entry or the qualifier that is leading/occurs before
-    e.g. 'MS' (this is the main difference to the AHB where qualifier and data element span >1 line)
-    """
+    levels: List[EdifactStackLevel] = attr.ib(
+        validator=attr.validators.deep_iterable(
+            member_validator=attr.validators.instance_of(EdifactStackLevel),
+            iterable_validator=attr.validators.instance_of(list),
+        )
+    )
 
-    name: str = attr.ib(validator=attr.validators.instance_of(str))  #: .e.g "MP-ID"
-    format_string: str = attr.ib(validator=attr.validators.instance_of(str))
-    """e.g. '203' to specify how a datetime has to be parsed"""
+    def to_json_path(self) -> str:
+        """
+        Transforms this instance into a JSON Path.
+        """
+        result: str = "$"
+        for level in self.levels:
+            result += '["' + level.name + '"]'
+            if level.is_groupable:
+                result += "[0]"
+        return result

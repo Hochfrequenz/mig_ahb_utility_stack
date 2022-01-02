@@ -10,6 +10,7 @@ import attr
 from lxml import etree  # type:ignore[import]
 
 from maus import SegmentGroupHierarchy
+from maus.models.edifact_components import EdifactStack, EdifactStackLevel
 
 
 class MigReader(ABC):
@@ -81,13 +82,15 @@ class MigXmlReader(MigReader):
         :return:
         """
         xpath = self.tree.getpath(element)
-        result_list: List[str] = []
+        stack = EdifactStack(levels=[])
         iter_path = "/" + xpath.split("/")[1]
         for leaf in xpath.split("/")[2:]:
             iter_path += "/" + leaf
             leaf_element = self.root.xpath(iter_path)[0]  # type:ignore[attr-defined]
-            result_list.append(leaf_element.attrib["name"])
-        return "->".join(result_list)
+            stack.levels.append(
+                EdifactStackLevel(name=leaf_element.attrib["name"], is_groupable=leaf_element.tag == "class")
+            )
+        return stack.to_json_path()
 
     def get_unique_result_by_xpath(self, query_path: str) -> _XQueryPathResult:
         """
