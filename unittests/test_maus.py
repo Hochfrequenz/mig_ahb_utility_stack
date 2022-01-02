@@ -22,8 +22,8 @@ class TestMaus:
                 # refer to the same data element but have different value pool entries.
                 [
                     AhbLine(
-                        segment_group="SG4",
-                        segment="FOO",
+                        segment_group_key="SG4",
+                        segment_code="FOO",
                         ahb_expression="X",
                         data_element="0333",
                         value_pool_entry="E01",
@@ -31,8 +31,8 @@ class TestMaus:
                         guid=None,
                     ),
                     AhbLine(
-                        segment_group="SG4",
-                        segment="FOO",
+                        segment_group_key="SG4",
+                        segment_code="FOO",
                         ahb_expression="X",
                         data_element="0333",
                         value_pool_entry="E02",
@@ -48,8 +48,8 @@ class TestMaus:
                 # The following single lines should result in a single DataElement with free text option
                 [
                     AhbLine(
-                        segment_group="SG4",
-                        segment="FOO",
+                        segment_group_key="SG4",
+                        segment_code="FOO",
                         ahb_expression="X",
                         data_element="0333",
                         value_pool_entry=None,
@@ -71,8 +71,8 @@ class TestMaus:
             pytest.param(
                 [
                     AhbLine(
-                        segment_group="SG4",
-                        segment="FOO",
+                        segment_group_key="SG4",
+                        segment_code="FOO",
                         ahb_expression="X",
                         data_element="0333",
                         value_pool_entry="E01",
@@ -80,8 +80,8 @@ class TestMaus:
                         guid=None,
                     ),
                     AhbLine(
-                        segment_group="SG4",
-                        segment="FOO",
+                        segment_group_key="SG4",
+                        segment_code="FOO",
                         ahb_expression="X",
                         data_element="0334",
                         value_pool_entry="E02",
@@ -106,8 +106,8 @@ class TestMaus:
                 # refer to the same data element but have different value pool entries.
                 [
                     AhbLine(
-                        segment_group="SG4",
-                        segment="FOO",
+                        segment_group_key="SG4",
+                        segment_code="FOO",
                         ahb_expression="X",
                         data_element="0333",
                         value_pool_entry="E01",
@@ -115,8 +115,8 @@ class TestMaus:
                         guid=None,
                     ),
                     AhbLine(
-                        segment_group="SG4",
-                        segment="FOO",
+                        segment_group_key="SG4",
+                        segment_code="FOO",
                         ahb_expression="X",
                         data_element="0333",
                         value_pool_entry="E02",
@@ -132,8 +132,8 @@ class TestMaus:
                 # The following single lines should result in a single DataElement with free text option
                 [
                     AhbLine(
-                        segment_group="SG4",
-                        segment="FOO",
+                        segment_group_key="SG4",
+                        segment_code="FOO",
                         ahb_expression="X",
                         data_element="0333",
                         value_pool_entry=None,
@@ -155,8 +155,8 @@ class TestMaus:
             pytest.param(
                 [
                     AhbLine(
-                        segment_group="SG4",
-                        segment="FOO",
+                        segment_group_key="SG4",
+                        segment_code="FOO",
                         ahb_expression="X",
                         data_element="0333",
                         value_pool_entry="E01",
@@ -164,8 +164,8 @@ class TestMaus:
                         guid=None,
                     ),
                     AhbLine(
-                        segment_group="SG4",
-                        segment="FOO",
+                        segment_group_key="SG4",
+                        segment_code="FOO",
                         ahb_expression="X",
                         data_element="0333",
                         value_pool_entry="E02",
@@ -197,8 +197,8 @@ class TestMaus:
             pytest.param(
                 [
                     AhbLine(
-                        segment_group="SG4",
-                        segment="FOO",
+                        segment_group_key="SG4",
+                        segment_code="FOO",
                         ahb_expression="X",
                         data_element="0333",
                         value_pool_entry="E01",
@@ -206,8 +206,8 @@ class TestMaus:
                         guid=None,
                     ),
                     AhbLine(
-                        segment_group="SG4",
-                        segment="FOO",
+                        segment_group_key="SG4",
+                        segment_code="FOO",
                         ahb_expression="X",
                         data_element="0333",
                         value_pool_entry="E02",
@@ -283,8 +283,8 @@ class TestMaus:
                     lines=[
                         # this segment should stay at the beginning, alone
                         AhbLine(
-                            segment_group=None,
-                            segment="UNH",
+                            segment_group_key=None,
+                            segment_code="UNH",
                             ahb_expression="X",
                             data_element="1234",
                             value_pool_entry=None,
@@ -294,8 +294,8 @@ class TestMaus:
                         # The following two lines should be merged into a single data element value pool because they
                         # refer to the same data element but have different value pool entries.
                         AhbLine(
-                            segment_group="SG4",
-                            segment="FOO",
+                            segment_group_key="SG4",
+                            segment_code="FOO",
                             ahb_expression="X",
                             data_element="0333",
                             value_pool_entry="E01",
@@ -303,8 +303,8 @@ class TestMaus:
                             guid=None,
                         ),
                         AhbLine(
-                            segment_group="SG4",
-                            segment="FOO",
+                            segment_group_key="SG4",
+                            segment_code="FOO",
                             ahb_expression="X",
                             data_element="0333",
                             value_pool_entry="E02",
@@ -312,8 +312,8 @@ class TestMaus:
                             guid=None,
                         ),
                         AhbLine(
-                            segment_group="SG5",
-                            segment="BAR",
+                            segment_group_key="SG5",
+                            segment_code="BAR",
                             ahb_expression="X",
                             data_element="1234",
                             name="Die fünfte Gruppe",
@@ -321,8 +321,8 @@ class TestMaus:
                             value_pool_entry=None,
                         ),
                         AhbLine(
-                            segment_group="SG6",
-                            segment="irgendwas",
+                            segment_group_key="SG6",
+                            segment_code="irgendwas",
                             ahb_expression="X",
                             data_element="7889",
                             name="Die sechste Gruppe",
@@ -330,8 +330,8 @@ class TestMaus:
                             value_pool_entry=None,
                         ),
                         AhbLine(
-                            segment_group="SG7",
-                            segment="ASD",
+                            segment_group_key="SG7",
+                            segment_code="ASD",
                             ahb_expression="X",
                             data_element="0123",
                             name="Die siebte Gruppe",

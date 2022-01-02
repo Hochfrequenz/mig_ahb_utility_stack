@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!-- a stripped down template file for MSCONS data element 1154 testcases -->
+<MSCONS>
+    <class name="Dokument" ref="/" key="UNB:5:0">
+        <class name="Nachricht" ref="UNH" key="UNH:1:0">
+            <class name="Prüfidentifikator" ref="SG1" key="RFF:1:1[RFF:1:0=Z13]">
+                <field name="ID" ref="RFF:1:1" meta.id="1154"/>
+            </class>
+            <class name="Referenz Anfrage" ref="SG1" key="RFF:1:1[RFF:1:0=AGI]" ahbName="Referenzangaben">
+                <field name="Referenz Anfrage" ref="RFF:1:1[RFF:1:0=AGI]" meta.id="1154"/>
+            </class>
+            <class name="Referenz Storno" ref="SG1" key="RFF:1:1[RFF:1:0=ACW]" ahbName="Referenzangaben">
+                <field name="Referenz Storno" ref="RFF:1:1[RFF:1:0=ACW]" meta.id="1154"/>
+            </class>
+            <class name="Vorgang" ref="SG5" key="LOC:2:0" ahbName="Name und Adresse">
+                <class name="Zeitreihe" ref="SG6" ahbName="Identifikationsangabe" max="9999">
+                    <class name="Zaehlernummer" ref="SG7" key="RFF:1:1[1:0=MG]" ahbName="Gerätenummer">
+                        <field name="Nummer" ref="RFF:1:1" meta.id="1154"/>
+                    </class>
+                </class>
+            </class>
+        </class>
+    </class>
+</MSCONS>

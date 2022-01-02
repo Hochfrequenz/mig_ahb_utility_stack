@@ -6,8 +6,8 @@ from maus.models.message_implementation_guide import SegmentGroupHierarchy, Segm
 from unittests.serialization_test_helper import assert_serialization_roundtrip  # type:ignore[import]
 
 ALL_SGH_FILES = pytest.mark.datafiles(
-    "./unittests/migs/FV2204/sgh_mscons.json",
-    "./unittests/migs/FV2204/sgh_utilmd.json",
+    "./unittests/migs/FV2204/segment_group_hierarchies/sgh_mscons.json",
+    "./unittests/migs/FV2204/segment_group_hierarchies/sgh_utilmd.json",
 )
 
 
