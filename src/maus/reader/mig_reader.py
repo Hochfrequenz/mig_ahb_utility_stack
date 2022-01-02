@@ -76,7 +76,7 @@ class MigXmlReader(MigReader):
         """
         return self.root.tag
 
-    def element_to_edifact_seed_path(self, element: etree._Element) -> str:
+    def element_to_edifact_stack(self, element: etree._Element) -> EdifactStack:
         """
         extract the edifact seed path from the given element
         :return:
@@ -90,7 +90,7 @@ class MigXmlReader(MigReader):
             stack.levels.append(
                 EdifactStackLevel(name=leaf_element.attrib["name"], is_groupable=leaf_element.tag == "class")
             )
-        return stack.to_json_path()
+        return stack
 
     def get_unique_result_by_xpath(self, query_path: str) -> _XQueryPathResult:
         """
@@ -107,18 +107,18 @@ class MigXmlReader(MigReader):
         return _XQueryPathResult(candidates=None, is_unique=True, unique_result=candidates[0])
 
     # pylint:disable=unused-argument
-    def get_edifact_seed_path(
+    def get_edifact_stack(
         self, segment_group_key: str, segment_key: str, data_element_id: str, name: Optional[str] = None
-    ) -> str:
+    ) -> EdifactStack:
         """
-        get the edifact seed path for the given segment_group, segment... combination
+        get the edifact stack for the given segment_group, segment... combination
         :return:
         """
         segment_de_result = self.get_unique_result_by_xpath(
             f".//*[@meta.id='{data_element_id}' and starts-with(@ref, '{segment_key}')]"
         )
         if segment_de_result.is_unique:
-            return self.element_to_edifact_seed_path(segment_de_result.unique_result)
+            return self.element_to_edifact_stack(segment_de_result.unique_result)
         if segment_de_result.is_unique is False and segment_de_result.candidates is not None:
             filtered_by_names = [
                 x for x in segment_de_result.candidates if MigReader.are_similar_names(x.attrib["name"], name)
@@ -129,7 +129,7 @@ class MigXmlReader(MigReader):
                     f".//class[@name='{name}']/*[@meta.id='{data_element_id}' and starts-with(@ref, '{segment_key}')]"
                 )
                 if via_parents_name_result.is_unique:
-                    return self.element_to_edifact_seed_path(via_parents_name_result.unique_result)
+                    return self.element_to_edifact_stack(via_parents_name_result.unique_result)
         raise ValueError("No idea")
 
     def to_segment_group_hierarchy(self) -> SegmentGroupHierarchy:

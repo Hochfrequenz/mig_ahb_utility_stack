@@ -64,4 +64,5 @@ class TestMigXmlReader:
     ):
         reader = MigXmlReader(Path(datafiles) / "mscons_1154.xml")
         assert reader.get_format_name() == "MSCONS"
-        assert reader.get_edifact_seed_path(segment_group_key, segment_key, data_element_id, name) == expected_path
+        actual_stack = reader.get_edifact_stack(segment_group_key, segment_key, data_element_id, name)
+        assert actual_stack.to_json_path() == expected_path
