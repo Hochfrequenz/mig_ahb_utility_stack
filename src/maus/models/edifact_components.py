@@ -305,6 +305,7 @@ class EdifactStack:
     The stack is independent of the actual implementation used to create the EDIFACT (be it XML, JSON whatever).
     """
 
+    #: levels describe the nesting inside an edifact message
     levels: List[EdifactStackLevel] = attr.ib(
         validator=attr.validators.deep_iterable(
             member_validator=attr.validators.instance_of(EdifactStackLevel),

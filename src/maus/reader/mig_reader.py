@@ -39,7 +39,18 @@ class MigReader(ABC):
             return True
         if name_x.lower() == name_y.lower():  # type:ignore[union-attr]
             return True
+        if name_x.lower().replace(" ", "") == name_y.lower().replace(" ", ""):  # type:ignore[union-attr]
+            return True
         return False
+
+    @abstractmethod
+    def get_edifact_stack(
+        self, segment_group_key: str, segment_key: str, data_element_id: str, name: Optional[str] = None
+    ) -> EdifactStack:
+        """
+        Returns the edifact stack for the given combination of segment group, key, data element and name
+        """
+        raise NotImplementedError("The inheriting class has to implement this method")
 
 
 # pylint:disable=too-few-public-methods
@@ -76,7 +87,7 @@ class MigXmlReader(MigReader):
         """
         return self.root.tag
 
-    def element_to_edifact_stack(self, element: etree._Element) -> EdifactStack:
+    def element_to_edifact_stack(self, element: etree.Element) -> EdifactStack:
         """
         extract the edifact seed path from the given element
         :return:
@@ -87,9 +98,12 @@ class MigXmlReader(MigReader):
         for leaf in xpath.split("/")[2:]:
             iter_path += "/" + leaf
             leaf_element = self.root.xpath(iter_path)[0]  # type:ignore[attr-defined]
-            stack.levels.append(
-                EdifactStackLevel(name=leaf_element.attrib["name"], is_groupable=leaf_element.tag == "class")
-            )
+            level_name: str
+            if "ahbName" in leaf_element.attrib:
+                level_name = leaf_element.attrib["ahbName"]
+            else:
+                level_name = leaf_element.attrib["name"]
+            stack.levels.append(EdifactStackLevel(name=level_name, is_groupable=leaf_element.tag == "class"))
         return stack
 
     def get_unique_result_by_xpath(self, query_path: str) -> _XQueryPathResult:
@@ -121,15 +135,32 @@ class MigXmlReader(MigReader):
             return self.element_to_edifact_stack(segment_de_result.unique_result)
         if segment_de_result.is_unique is False and segment_de_result.candidates is not None:
             filtered_by_names = [
-                x for x in segment_de_result.candidates if MigReader.are_similar_names(x.attrib["name"], name)
+                x
+                for x in segment_de_result.candidates
+                if MigReader.are_similar_names(x.attrib["name"], name)
+                or ("ahbName" in x.attrib and MigReader.are_similar_names(x.attrib["ahbName"], name))
             ]
             if len(filtered_by_names) == 0:
                 # try to find by parents name
                 via_parents_name_result = self.get_unique_result_by_xpath(
+                    # todo: start ignoring white space and casing in ahbname comparison
                     f".//class[@name='{name}']/*[@meta.id='{data_element_id}' and starts-with(@ref, '{segment_key}')]"
                 )
                 if via_parents_name_result.is_unique:
                     return self.element_to_edifact_stack(via_parents_name_result.unique_result)
+                elif via_parents_name_result.candidates is None:
+                    via_parents_ahb_name_result = self.get_unique_result_by_xpath(
+                        # todo: start ignoring white space and casing in ahbname comparison
+                        f".//class[@ahbName='{name}']/*[@meta.id='{data_element_id}' and starts-with(@ref, '{segment_key}')]"
+                    )
+                    if via_parents_ahb_name_result.is_unique:
+                        return self.element_to_edifact_stack(via_parents_name_result.unique_result)
+                    else:
+                        raise ValueError("No idea")
+                else:
+                    raise ValueError("No idea")
+            elif len(filtered_by_names) == 1:
+                return self.element_to_edifact_stack(filtered_by_names[0])
         raise ValueError("No idea")
 
     def to_segment_group_hierarchy(self) -> SegmentGroupHierarchy:

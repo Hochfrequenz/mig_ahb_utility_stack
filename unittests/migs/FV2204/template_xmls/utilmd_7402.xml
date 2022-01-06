@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!-- a stripped down template file for UTILMD data element 7402 testcases -->
+<UTILMD>
+  <class name="Dokument" ref="/" key="UNB:5:0">
+    <class name="Nachricht" ref="UNH" key="UNH:1:0" max="9999" meta.type="group">
+      <class name="Vorgang" ref="SG4" key="IDE:2:0" max="99999" meta.type="group" groupKey="Vorgangsnummer">
+        <field name="Vorgangsnummer" ref="IDE:2:0" meta.id="7402"/>
+      </class>
+    </class>
+  </class>
+</UTILMD>

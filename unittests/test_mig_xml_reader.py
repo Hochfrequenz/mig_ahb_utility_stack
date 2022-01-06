@@ -7,6 +7,9 @@ from maus.reader.mig_reader import MigXmlReader
 
 ALL_MIG_XML_FILES = pytest.mark.datafiles(
     "./unittests/migs/FV2204/template_xmls/mscons_1154.xml",
+    "./unittests/migs/FV2204/template_xmls/utilmd_1154.xml",
+    "./unittests/migs/FV2204/template_xmls/utilmd_2380.xml",
+    "./unittests/migs/FV2204/template_xmls/utilmd_7402.xml",
 )
 
 
@@ -34,6 +37,10 @@ class TestMigXmlReader:
             pytest.param("X", "X", True),
             pytest.param("X", "x", True),
             pytest.param("X", "y", False),
+            pytest.param("Gültigkeit, Beginndatum", "Gültigkeit,Beginndatum", True),
+            pytest.param(
+                "Referenz Vorgangsnummer (aus Anfragenachricht)", "Referenz Vorgangsnummer (aus Anfragenachricht)", True
+            ),
         ],
     )
     def test_are_similar_names(self, x: Optional[str], y: Optional[str], expected_result: bool):
@@ -42,27 +49,62 @@ class TestMigXmlReader:
 
     @ALL_MIG_XML_FILES
     @pytest.mark.parametrize(
-        "segment_group_key, segment_key, data_element_id, name, expected_path",
+        "mig_xml_path, segment_group_key, segment_key, data_element_id, name, expected_path",
         [
             pytest.param(
+                "mscons_1154.xml",
                 "SG1",
                 "RFF",
                 "1154",
                 "Prüfidentifikator",
                 '$["Dokument"][0]["Nachricht"][0]["Prüfidentifikator"][0]["ID"]',
             ),
+            pytest.param(
+                "utilmd_7402.xml",
+                "SG4",
+                "IDE",
+                "7402",
+                "Vorgangsnummer",
+                '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Vorgangsnummer"]',
+            ),
+            pytest.param(
+                "utilmd_2380.xml",
+                "root",
+                "DTM",
+                "2380",
+                "Gültigkeit, Beginndatum",
+                '$["Dokument"][0]["Nachricht"][0]["Gültigkeit,Beginndatum"]',
+                id="gueltigkeit,beginndatum",
+            ),
+            pytest.param(
+                "utilmd_2380.xml",
+                "SG4",
+                "DTM",
+                "2380",
+                "Bilanzierungsbeginn",
+                '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Bilanzierungsbeginn"]',
+            ),
+            pytest.param(
+                "utilmd_1154.xml",
+                "SG6",
+                "RFF",
+                "1154",
+                "Referenz Vorgangsnummer(aus Anfragenachricht)",
+                '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Referenz Vorgangsnummer (aus Anfragenachricht)"][0]["Referenz"]',
+                id="referenz aus anfragenachricht",
+            ),
         ],
     )
     def test_simple_paths(
         self,
         datafiles,
+        mig_xml_path: str,
         segment_group_key: str,
         segment_key: str,
         data_element_id: str,
         name: Optional[str],
         expected_path: str,
     ):
-        reader = MigXmlReader(Path(datafiles) / "mscons_1154.xml")
-        assert reader.get_format_name() == "MSCONS"
+        reader = MigXmlReader(Path(datafiles) / mig_xml_path)
         actual_stack = reader.get_edifact_stack(segment_group_key, segment_key, data_element_id, name)
         assert actual_stack.to_json_path() == expected_path
