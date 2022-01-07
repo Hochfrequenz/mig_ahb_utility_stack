@@ -62,7 +62,12 @@ class MigReader(ABC):
 
     @abstractmethod
     def get_edifact_stack(
-        self, segment_group_key: str, segment_key: str, data_element_id: str, name: str
+        self,
+        segment_group_key: str,
+        segment_key: str,
+        data_element_id: str,
+        name: str,
+        previous_qualifier: Optional[str] = None,
     ) -> EdifactStack:
         """
         Returns the edifact stack for the given combination of segment group, key, data element and name
@@ -135,6 +140,15 @@ class MigXmlReader(MigReader):
             stack.levels.append(EdifactStackLevel(name=level_name, is_groupable=leaf_element.tag == "class"))
         return stack
 
+    @staticmethod
+    def _list_to_xquerypathresult(candidates: List[Element]) -> _XQueryPathResult:
+        if len(candidates) == 0:
+            return _XQueryPathResult(candidates=None, is_unique=None, unique_result=None)
+            # the == 1 case is handled last
+        if len(candidates) > 1:
+            return _XQueryPathResult(candidates=candidates, is_unique=False, unique_result=None)
+        return _XQueryPathResult(candidates=None, is_unique=True, unique_result=candidates[0])
+
     def get_unique_result_by_xpath(self, query_path: str, use_sanitized_tree: bool) -> _XQueryPathResult:
         """
         Tries to find an element for the given query path.
@@ -146,16 +160,66 @@ class MigXmlReader(MigReader):
             candidates = list(self._sanitized_root.xpath(query_path))
         else:
             candidates = list(self._original_root.xpath(query_path))
-        if len(candidates) == 0:
-            return _XQueryPathResult(candidates=None, is_unique=None, unique_result=None)
-            # the == 1 case is handled last
-        if len(candidates) > 1:
-            return _XQueryPathResult(candidates=candidates, is_unique=False, unique_result=None)
-        return _XQueryPathResult(candidates=None, is_unique=True, unique_result=candidates[0])
+        return MigXmlReader._list_to_xquerypathresult(candidates)
+
+    def get_unique_result_by_segment_group(
+        self, candidates: List[Element], segment_group_key: str, use_sanitized_tree: bool
+    ) -> _XQueryPathResult:
+        """
+        keep those elements that have the correct segment_group_key
+        """
+        filtered = [
+            e
+            for e in candidates
+            if self.get_parent_segment_group_key(e, use_sanitized_tree=use_sanitized_tree) == segment_group_key
+        ]
+        return MigXmlReader._list_to_xquerypathresult(filtered)
+
+    @staticmethod
+    def _get_segment_group_key_or_none(element: Element) -> Optional[str]:
+        """
+        returns the segment group of element if present; None otherwise
+        """
+        if "ref" in element.attrib and element.attrib["ref"].startswith("SG"):
+            # the trivial case
+            return element.attrib["ref"]
+        return None
+
+    def get_parent_segment_group_key(self, element: Element, use_sanitized_tree: bool) -> Optional[str]:
+        """
+        iterate from element towards root and return the first segment group found (the one closes to element).
+        returns None if no segment group was found
+        """
+        segment_group_key = MigXmlReader._get_segment_group_key_or_none(element)
+        if segment_group_key is not None:
+            return segment_group_key
+        if use_sanitized_tree:
+            xpath = self._sanitized_tree.getpath(element)
+        else:
+            xpath = self._original_tree.getpath(element)
+        segment_group_key: str
+        path_parts = list(xpath.split("/"))
+        sub_paths: List[str] = []
+        for n in range(2, len(path_parts)):
+            sub_path = "/".join(path_parts[0:n])
+            sub_paths.append(sub_path)
+        # if xpath was "/foo/bar/asd/xyz", sub_paths is ["/foo", "/foo/bar", "/foo/bar/asd"] now (xyz is not contained!)
+        sub_paths.reverse()
+        for sub_path in sub_paths:
+            leaf_element = self._original_root.xpath(sub_path)[0]  # type:ignore[attr-defined]
+            segment_group_key = MigXmlReader._get_segment_group_key_or_none(leaf_element)
+            if segment_group_key is not None:
+                return segment_group_key
+        return None
 
     # pylint:disable=unused-argument
     def get_edifact_stack(
-        self, segment_group_key: str, segment_key: str, data_element_id: str, name: str
+        self,
+        segment_group_key: str,
+        segment_key: str,
+        data_element_id: str,
+        name: str,
+        previous_qualifier: Optional[str] = None,
     ) -> EdifactStack:
         """
         get the edifact stack for the given segment_group, segment... combination
@@ -194,6 +258,14 @@ class MigXmlReader(MigReader):
                         )
             elif len(filtered_by_names) == 1:
                 return self.element_to_edifact_stack(filtered_by_names[0], use_sanitized_tree=False)
+            else:  # len(filtered_by_names) >1
+                if previous_qualifier is not None:
+                    filtered_by_sg = self.get_unique_result_by_segment_group(
+                        filtered_by_names, segment_group_key, use_sanitized_tree=False
+                    )
+                    if filtered_by_sg.is_unique:
+                        return self.element_to_edifact_stack(filtered_by_sg.unique_result, use_sanitized_tree=False)
+
         raise ValueError("No idea")
 
     def to_segment_group_hierarchy(self) -> SegmentGroupHierarchy:

@@ -67,7 +67,7 @@ class TestMigXmlReader:
 
     @ALL_MIG_XML_FILES
     @pytest.mark.parametrize(
-        "mig_xml_path, segment_group_key, segment_key, data_element_id, name, expected_path",
+        "mig_xml_path, segment_group_key, segment_key, data_element_id, name, previous_qualifier, expected_path",
         [
             pytest.param(
                 "mscons_1154.xml",
@@ -76,6 +76,7 @@ class TestMigXmlReader:
                 "1154",
                 "Prüfidentifikator",
                 '$["Dokument"][0]["Nachricht"][0]["Prüfidentifikator"][0]["ID"]',
+                None,
                 id="mscons pruefi",
             ),
             pytest.param(
@@ -85,6 +86,7 @@ class TestMigXmlReader:
                 "7402",
                 "Vorgangsnummer",
                 '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Vorgangsnummer"]',
+                None,
                 id="utilmd vorgangsnummer",
             ),
             pytest.param(
@@ -94,6 +96,7 @@ class TestMigXmlReader:
                 "2380",
                 "Gültigkeit, Beginndatum",
                 '$["Dokument"][0]["Nachricht"][0]["Gültigkeit,Beginndatum"]',
+                None,
                 id="gueltigkeit,beginndatum",
             ),
             pytest.param(
@@ -103,6 +106,7 @@ class TestMigXmlReader:
                 "2380",
                 "Bilanzierungsbeginn",
                 '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Bilanzierungsbeginn"]',
+                None,
                 id="utilmd bilanzierungsbeginn",
             ),
             pytest.param(
@@ -112,7 +116,18 @@ class TestMigXmlReader:
                 "1154",
                 "Referenz Vorgangsnummer(aus Anfragenachricht)",
                 '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Referenz Vorgangsnummer (aus Anfragenachricht)"][0]["Referenz"]',
+                None,
                 id="referenz aus anfragenachricht",
+            ),
+            pytest.param(
+                "utilmd_1154.xml",
+                "SG8",
+                "RFF",
+                "1154",
+                "Referenz auf die ID einer Messlokation",
+                "Z19",
+                '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Referenz Vorgangsnummer (aus Anfragenachricht)"][0]["Referenz"]',
+                id="referenz auf melo-id",
             ),
         ],
     )
@@ -124,8 +139,11 @@ class TestMigXmlReader:
         segment_key: str,
         data_element_id: str,
         name: str,
+        previous_qualifier: Optional[str],
         expected_path: str,
     ):
         reader = MigXmlReader(Path(datafiles) / mig_xml_path)
-        actual_stack = reader.get_edifact_stack(segment_group_key, segment_key, data_element_id, name)
+        actual_stack = reader.get_edifact_stack(
+            segment_group_key, segment_key, data_element_id, name, previous_qualifier
+        )
         assert actual_stack.to_json_path() == expected_path
