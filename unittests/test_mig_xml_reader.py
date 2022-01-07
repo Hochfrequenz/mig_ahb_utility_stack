@@ -75,8 +75,8 @@ class TestMigXmlReader:
                 "RFF",
                 "1154",
                 "Prüfidentifikator",
-                '$["Dokument"][0]["Nachricht"][0]["Prüfidentifikator"][0]["ID"]',
                 None,
+                '$["Dokument"][0]["Nachricht"][0]["Prüfidentifikator"][0]["ID"]',
                 id="mscons pruefi",
             ),
             pytest.param(
@@ -85,8 +85,8 @@ class TestMigXmlReader:
                 "IDE",
                 "7402",
                 "Vorgangsnummer",
-                '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Vorgangsnummer"]',
                 None,
+                '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Vorgangsnummer"]',
                 id="utilmd vorgangsnummer",
             ),
             pytest.param(
@@ -95,8 +95,8 @@ class TestMigXmlReader:
                 "DTM",
                 "2380",
                 "Gültigkeit, Beginndatum",
-                '$["Dokument"][0]["Nachricht"][0]["Gültigkeit,Beginndatum"]',
                 None,
+                '$["Dokument"][0]["Nachricht"][0]["Gültigkeit,Beginndatum"]',
                 id="gueltigkeit,beginndatum",
             ),
             pytest.param(
@@ -105,8 +105,8 @@ class TestMigXmlReader:
                 "DTM",
                 "2380",
                 "Bilanzierungsbeginn",
-                '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Bilanzierungsbeginn"]',
                 None,
+                '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Bilanzierungsbeginn"]',
                 id="utilmd bilanzierungsbeginn",
             ),
             pytest.param(
@@ -115,8 +115,8 @@ class TestMigXmlReader:
                 "RFF",
                 "1154",
                 "Referenz Vorgangsnummer(aus Anfragenachricht)",
-                '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Referenz Vorgangsnummer (aus Anfragenachricht)"][0]["Referenz"]',
                 None,
+                '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Referenz Vorgangsnummer (aus Anfragenachricht)"][0]["Referenz"]',
                 id="referenz aus anfragenachricht",
             ),
             pytest.param(
@@ -126,7 +126,7 @@ class TestMigXmlReader:
                 "1154",
                 "Referenz auf die ID einer Messlokation",
                 "Z19",
-                '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Referenz Vorgangsnummer (aus Anfragenachricht)"][0]["Referenz"]',
+                '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Erforderliche OBIS-Daten der Messlokation"][0]["Referenz auf die ID einer Messlokation"]',
                 id="referenz auf melo-id",
             ),
         ],
@@ -144,6 +144,6 @@ class TestMigXmlReader:
     ):
         reader = MigXmlReader(Path(datafiles) / mig_xml_path)
         actual_stack = reader.get_edifact_stack(
-            segment_group_key, segment_key, data_element_id, name, previous_qualifier
+            segment_group_key, segment_key, data_element_id, name  # , previous_qualifier
         )
         assert actual_stack.to_json_path() == expected_path

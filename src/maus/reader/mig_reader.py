@@ -67,7 +67,7 @@ class MigReader(ABC):
         segment_key: str,
         data_element_id: str,
         name: str,
-        previous_qualifier: Optional[str] = None,
+        #    previous_qualifier: Optional[str] = None,
     ) -> EdifactStack:
         """
         Returns the edifact stack for the given combination of segment group, key, data element and name
@@ -197,11 +197,10 @@ class MigXmlReader(MigReader):
             xpath = self._sanitized_tree.getpath(element)
         else:
             xpath = self._original_tree.getpath(element)
-        segment_group_key: str
         path_parts = list(xpath.split("/"))
         sub_paths: List[str] = []
-        for n in range(2, len(path_parts)):
-            sub_path = "/".join(path_parts[0:n])
+        for depth in range(2, len(path_parts)):
+            sub_path = "/".join(path_parts[0:depth])
             sub_paths.append(sub_path)
         # if xpath was "/foo/bar/asd/xyz", sub_paths is ["/foo", "/foo/bar", "/foo/bar/asd"] now (xyz is not contained!)
         sub_paths.reverse()
@@ -219,7 +218,7 @@ class MigXmlReader(MigReader):
         segment_key: str,
         data_element_id: str,
         name: str,
-        previous_qualifier: Optional[str] = None,
+        #       previous_qualifier: Optional[str] = None,
     ) -> EdifactStack:
         """
         get the edifact stack for the given segment_group, segment... combination
@@ -259,12 +258,11 @@ class MigXmlReader(MigReader):
             elif len(filtered_by_names) == 1:
                 return self.element_to_edifact_stack(filtered_by_names[0], use_sanitized_tree=False)
             else:  # len(filtered_by_names) >1
-                if previous_qualifier is not None:
-                    filtered_by_sg = self.get_unique_result_by_segment_group(
-                        filtered_by_names, segment_group_key, use_sanitized_tree=False
-                    )
-                    if filtered_by_sg.is_unique:
-                        return self.element_to_edifact_stack(filtered_by_sg.unique_result, use_sanitized_tree=False)
+                filtered_by_sg = self.get_unique_result_by_segment_group(
+                    filtered_by_names, segment_group_key, use_sanitized_tree=False
+                )
+                if filtered_by_sg.is_unique:
+                    return self.element_to_edifact_stack(filtered_by_sg.unique_result, use_sanitized_tree=False)
 
         raise ValueError("No idea")
 
