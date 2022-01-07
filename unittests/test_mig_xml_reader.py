@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Optional
 
 import pytest  # type:ignore[import]
+from lxml import etree  # type:ignore[import]
 
 from maus.reader.mig_reader import MigXmlReader
 
@@ -47,6 +48,23 @@ class TestMigXmlReader:
         actual = MigXmlReader.are_similar_names(x, y)
         assert actual == expected_result
 
+    def test_make_tree_names_comparable(self):
+        orig_xml = """<?xml version="1.0"?>
+        <hello>
+        <einfield name="Foo "/>
+        <einclass ahbName="Hallo-Welt">
+            <einfield name=" DiGiTaLiSiErUnG" ahbName="(ZuKunFt)"/>
+        </einclass>
+        </hello>
+        """
+        tree = etree.ElementTree(etree.fromstring(orig_xml))
+        MigXmlReader.make_tree_names_comparable(tree)
+        for element in tree.iter():
+            if "name" in element.attrib:
+                assert element.attrib["name"] == MigXmlReader.make_name_comparable(element.attrib["name"])
+            if "ahbName" in element.attrib:
+                assert element.attrib["ahbName"] == MigXmlReader.make_name_comparable(element.attrib["ahbName"])
+
     @ALL_MIG_XML_FILES
     @pytest.mark.parametrize(
         "mig_xml_path, segment_group_key, segment_key, data_element_id, name, expected_path",
@@ -58,6 +76,7 @@ class TestMigXmlReader:
                 "1154",
                 "Prüfidentifikator",
                 '$["Dokument"][0]["Nachricht"][0]["Prüfidentifikator"][0]["ID"]',
+                id="mscons pruefi",
             ),
             pytest.param(
                 "utilmd_7402.xml",
@@ -66,6 +85,7 @@ class TestMigXmlReader:
                 "7402",
                 "Vorgangsnummer",
                 '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Vorgangsnummer"]',
+                id="utilmd vorgangsnummer",
             ),
             pytest.param(
                 "utilmd_2380.xml",
@@ -83,6 +103,7 @@ class TestMigXmlReader:
                 "2380",
                 "Bilanzierungsbeginn",
                 '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Bilanzierungsbeginn"]',
+                id="utilmd bilanzierungsbeginn",
             ),
             pytest.param(
                 "utilmd_1154.xml",
@@ -102,7 +123,7 @@ class TestMigXmlReader:
         segment_group_key: str,
         segment_key: str,
         data_element_id: str,
-        name: Optional[str],
+        name: str,
         expected_path: str,
     ):
         reader = MigXmlReader(Path(datafiles) / mig_xml_path)
