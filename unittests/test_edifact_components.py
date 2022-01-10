@@ -5,6 +5,8 @@ from maus.models.edifact_components import (
     DataElementFreeTextSchema,
     DataElementValuePool,
     DataElementValuePoolSchema,
+    EdifactStack,
+    EdifactStackLevel,
     Segment,
     SegmentGroup,
     SegmentGroupSchema,
@@ -137,3 +139,51 @@ class TestEdifactComponents:
     )
     def test_segment_group_serialization_roundtrip(self, segment_group: SegmentGroup, expected_json_dict: dict):
         assert_serialization_roundtrip(segment_group, SegmentGroupSchema(), expected_json_dict)
+
+    @pytest.mark.parametrize(
+        "stack_x, stack_y, x_is_sub_stack_of_y, x_is_parent_of_y",
+        [
+            pytest.param(EdifactStack(levels=[]), EdifactStack(levels=[]), True, True, id="equality"),
+            pytest.param(
+                EdifactStack(levels=[EdifactStackLevel(name="x", is_groupable=False)]),
+                EdifactStack(levels=[]),
+                True,
+                id="any stack is sub stack of root",
+            ),
+            pytest.param(
+                EdifactStack(levels=[]),
+                EdifactStack(levels=[EdifactStackLevel(name="x", is_groupable=False)]),
+                False,
+                id="other too deep",
+            ),
+            pytest.param(
+                EdifactStack(levels=[EdifactStackLevel(name="x", is_groupable=True)]),
+                EdifactStack(levels=[EdifactStackLevel(name="x", is_groupable=False)]),
+                False,
+                id="different groubability",
+            ),
+            pytest.param(
+                EdifactStack(levels=[EdifactStackLevel(name="x", is_groupable=True)]),
+                EdifactStack(levels=[EdifactStackLevel(name="y", is_groupable=True)]),
+                False,
+                id="different name",
+            ),
+            pytest.param(
+                EdifactStack(
+                    levels=[
+                        EdifactStackLevel(name="a", is_groupable=True),
+                        EdifactStackLevel(name="b", is_groupable=True),
+                    ]
+                ),
+                EdifactStack(levels=[EdifactStackLevel(name="a", is_groupable=True)]),
+                True,
+                False,
+                id="yes",
+            ),
+        ],
+    )
+    def test_is_sub_stack_of(
+        self, stack_x: EdifactStack, stack_y: EdifactStack, x_is_sub_stack_of_y: bool, x_is_parent_of_y: bool
+    ):
+        assert stack_x.is_sub_stack_of(stack_y) == x_is_sub_stack_of_y
+        assert stack_x.is_parent_of(stack_y) == x_is_parent_of_y
