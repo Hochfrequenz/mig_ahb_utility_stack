@@ -321,8 +321,9 @@ class EdifactStack:
         if len(other.levels) > len(self.levels):
             # self cannot be a sub path of other if other is "deeper"
             return False
-        for level_self, level_other in zip(other.levels, self.levels, strict=False):
-            # strict is False because it's ok if we stop the iteration if self.levels is "exhausted"
+        for level_self, level_other in zip(other.levels, self.levels, strict=False):  # type:ignore[call-overload]
+            # strict is False because it's ok if we stop the iteration if self.levels is "exhausted"; explicit is better
+            # the type-ignore for the strict=False is necessary for Python<3.10
             if level_self != level_other:
                 return False
         # the iteration stopped meaning that for all levels that both other and self share, they are identical.

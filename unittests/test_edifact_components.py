@@ -148,23 +148,27 @@ class TestEdifactComponents:
                 EdifactStack(levels=[EdifactStackLevel(name="x", is_groupable=False)]),
                 EdifactStack(levels=[]),
                 True,
+                False,
                 id="any stack is sub stack of root",
             ),
             pytest.param(
                 EdifactStack(levels=[]),
                 EdifactStack(levels=[EdifactStackLevel(name="x", is_groupable=False)]),
                 False,
+                True,
                 id="other too deep",
             ),
             pytest.param(
                 EdifactStack(levels=[EdifactStackLevel(name="x", is_groupable=True)]),
                 EdifactStack(levels=[EdifactStackLevel(name="x", is_groupable=False)]),
                 False,
+                False,
                 id="different groubability",
             ),
             pytest.param(
                 EdifactStack(levels=[EdifactStackLevel(name="x", is_groupable=True)]),
                 EdifactStack(levels=[EdifactStackLevel(name="y", is_groupable=True)]),
+                False,
                 False,
                 id="different name",
             ),
@@ -182,7 +186,7 @@ class TestEdifactComponents:
             ),
         ],
     )
-    def test_is_sub_stack_of(
+    def test_edifact_stack_is_sub_or_parent_of(
         self, stack_x: EdifactStack, stack_y: EdifactStack, x_is_sub_stack_of_y: bool, x_is_parent_of_y: bool
     ):
         assert stack_x.is_sub_stack_of(stack_y) == x_is_sub_stack_of_y
