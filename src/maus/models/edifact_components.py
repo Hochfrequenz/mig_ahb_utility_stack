@@ -3,6 +3,7 @@
 EDIFACT components are data structures on different hierarchical levels inside an EDIFACT message.
 Components contain not only EDIFACT composits but also segments and segment groups.
 """
+import re
 from abc import ABC
 from typing import Dict, List, Optional, Type
 
@@ -296,6 +297,12 @@ class EdifactStackLevel:
     name: str = attr.ib(validator=attr.validators.instance_of(str))
     #: describes if this level is groupable / if there are multiple instances of this level within the same message
     is_groupable: bool = attr.ib(validator=attr.validators.instance_of(bool))
+    #: the index if present (f.e. 0)
+    index: Optional[int] = attr.ib(default=None, validator=attr.validators.optional(attr.validators.instance_of(int)))
+
+
+#: a pattern that matches parts of the json path: https://regex101.com/r/iQzdXK/1
+_level_pattern = re.compile(r"\[\"(?P<level_name>[^\[\]]+?)\"\](?:\[(?P<index>\d+)\])?")
 
 
 @attr.s(auto_attribs=True, kw_only=True)
@@ -312,6 +319,19 @@ class EdifactStack:
             iterable_validator=attr.validators.instance_of(list),
         )
     )
+
+    @staticmethod
+    def from_json_path(json_path: str) -> "EdifactStack":
+        """
+        reads a json path as it is created by "to_json_path" and returns the corresponding edifact stack
+        """
+        levels: List[EdifactStackLevel] = []
+        for level_match in _level_pattern.finditer(json_path):
+            level = EdifactStackLevel(name=level_match["level_name"], is_groupable=level_match["index"] is not None)
+            if level.is_groupable:
+                level.index = int(level_match["index"])
+            levels.append(level)
+        return EdifactStack(levels=levels)
 
     def is_sub_stack_of(self, other: "EdifactStack") -> bool:
         """
@@ -343,6 +363,8 @@ class EdifactStack:
         result: str = "$"
         for level in self.levels:
             result += '["' + level.name + '"]'
-            if level.is_groupable:
+            if level.index is not None:
+                result += f"[{level.index}]"
+            elif level.is_groupable:
                 result += "[0]"
         return result

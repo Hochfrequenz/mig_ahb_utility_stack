@@ -191,3 +191,14 @@ class TestEdifactComponents:
     ):
         assert stack_x.is_sub_stack_of(stack_y) == x_is_sub_stack_of_y
         assert stack_x.is_parent_of(stack_y) == x_is_parent_of_y
+
+    @pytest.mark.parametrize(
+        "json_path",
+        [
+            pytest.param('$["foo"][0]["asd"]["bar"][29]["sss(asd)"][2]'),
+            pytest.param('$["asd"][223239102]["Hallo ()asd90e34A)SD=A)D"]["bar"][29]["sss(asd)"][2]'),
+        ],
+    )
+    def test_edifact_stack_to_from_json_path(self, json_path: str):
+        stack = EdifactStack.from_json_path(json_path)
+        assert stack.to_json_path() == json_path
