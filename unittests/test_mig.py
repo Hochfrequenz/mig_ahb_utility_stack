@@ -8,6 +8,7 @@ from unittests.serialization_test_helper import assert_serialization_roundtrip  
 ALL_SGH_FILES = pytest.mark.datafiles(
     "./unittests/migs/FV2204/segment_group_hierarchies/sgh_mscons.json",
     "./unittests/migs/FV2204/segment_group_hierarchies/sgh_utilmd.json",
+    "./unittests/migs/FV2204/segment_group_hierarchies/sgh_reqote.json",
 )
 
 
@@ -130,6 +131,16 @@ class TestMig:
                     ("SG8", "CCI"),
                     ("SG9", "LIN"),
                     ("SG10", "QTY"),
+                ],
+            ),
+            pytest.param(
+                "sgh_reqote.json",
+                [
+                    (None, "UNH"),
+                    ("SG1", "RFF"),
+                    ("SG11", "NAD"),
+                    ("SG14", "CTA"),
+                    ("SG27", "LIN"),
                 ],
             ),
         ],

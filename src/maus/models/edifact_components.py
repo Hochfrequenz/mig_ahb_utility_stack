@@ -22,6 +22,8 @@ class DataElement(ABC):
     discriminator: str = attr.ib(validator=attr.validators.instance_of(str))
     """ The discriminator uniquely identifies the data element. This _might_ be its key """
     # but could also be a reference or a name
+    #: the the ID of the data element (f.e. "0062") for the Nachrichten-Referenznummer
+    data_element_id: str = attr.ib(validator=attr.validators.matches_re(r"\d{4}"))
 
 
 class DataElementSchema(Schema):
@@ -30,6 +32,7 @@ class DataElementSchema(Schema):
     """
 
     discriminator = fields.String(required=True)
+    data_element_id = fields.String(required=True)
 
 
 @attr.s(auto_attribs=True, kw_only=True)

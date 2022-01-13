@@ -22,8 +22,17 @@ def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElem
         )
     result: DataElement
     if ahb_lines[0].value_pool_entry is not None:
-        result = DataElementValuePool(discriminator=ahb_lines[0].get_discriminator(include_name=False), value_pool={})
+        result = DataElementValuePool(
+            discriminator=ahb_lines[0].get_discriminator(include_name=False),
+            value_pool={},
+            data_element_id=ahb_lines[0].data_element,  # type:ignore[arg-type]
+        )
         for data_element_value_entry in ahb_lines:
+            if data_element_value_entry.name is None:
+                # pylint:disable=fixme
+                # todo: this is line where there is only a description and nothing else. i hate it
+                # f.e. there is 35001: https://github.com/Hochfrequenz/mig_ahb_utility_stack/issues/21
+                continue
             result.value_pool[
                 data_element_value_entry.value_pool_entry  # type:ignore[index]
             ] = data_element_value_entry.name.strip()  # type:ignore[assignment,union-attr]
@@ -31,7 +40,8 @@ def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElem
         result = DataElementFreeText(
             entered_input=None,
             ahb_expression=ahb_lines[0].ahb_expression or "",
-            discriminator=ahb_lines[0].get_discriminator(include_name=True),
+            discriminator=ahb_lines[0].name or ahb_lines[0].get_discriminator(include_name=True),
+            data_element_id=ahb_lines[0].data_element,  # type:ignore[arg-type]
         )
         # a free text field never spans more than 1 line
     return result

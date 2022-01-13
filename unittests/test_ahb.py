@@ -213,10 +213,15 @@ class TestAhb:
                                     discriminator="disc B",
                                     data_elements=[
                                         DataElementValuePool(
-                                            value_pool={"hello": "world", "maus": "rocks"}, discriminator="baz"
+                                            value_pool={"hello": "world", "maus": "rocks"},
+                                            discriminator="baz",
+                                            data_element_id="0123",
                                         ),
                                         DataElementFreeText(
-                                            ahb_expression="Muss [1]", entered_input="Hello Maus", discriminator="bar"
+                                            ahb_expression="Muss [1]",
+                                            entered_input="Hello Maus",
+                                            discriminator="bar",
+                                            data_element_id="4567",
                                         ),
                                     ],
                                 ),
@@ -249,11 +254,16 @@ class TestAhb:
                                     "ahb_expression": "expr B",
                                     "discriminator": "disc B",
                                     "data_elements": [
-                                        {"value_pool": {"hello": "world", "maus": "rocks"}, "discriminator": "baz"},
+                                        {
+                                            "value_pool": {"hello": "world", "maus": "rocks"},
+                                            "discriminator": "baz",
+                                            "data_element_id": "0123",
+                                        },
                                         {
                                             "ahb_expression": "Muss [1]",
                                             "entered_input": "Hello Maus",
                                             "discriminator": "bar",
+                                            "data_element_id": "4567",
                                         },
                                     ],
                                 }
