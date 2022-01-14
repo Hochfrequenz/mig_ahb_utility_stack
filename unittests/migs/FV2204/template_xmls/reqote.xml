@@ -17,11 +17,11 @@
                    groupBy="Beginn der Nachricht" groupKey="true"/>
             <field name="Nachrichtendatum" ref="DTM:1:1[1:0=137]" meta.id="2380" meta.format="203"
                    meta.type="date-time"/>
-            <field name="Ausführungsdatum" ref="DTM:1:1[1:0=203]" meta.id="2380" meta.foGmat="102"
+            <field name="Ausführungsdatum" ref="DTM:1:1[1:0=203]" meta.id="2380" meta.format="102"
                    meta.type="date-time"/>
             <field name="Beginn zum (nächstmöglichen Termin)" ref="DTM:1:1[1:0=469]" meta.id="2380" meta.format="102"
                    meta.type="date-time"/>
-            <field name="Lieferdatum" ref="DTM:1:1[1:0=76]" meta.format="102" meta.type="date-time"
+            <field name="Lieferdatum" ref="DTM:1:1[1:0=76]" meta.id="2380" meta.format="102" meta.type="date-time"
                    ahbName="Datum zum geplanten Leistungsbeginn"/>
             <class name="Prüfidentifikator" ref="SG1" key="RFF:1:1[RFF:1:0=Z13]" max="1">
                 <field name="ID" ref="RFF:1:1" meta.id="1154"/>

@@ -68,7 +68,7 @@ class TestMigXmlReader:
 
     @ALL_MIG_XML_FILES
     @pytest.mark.parametrize(
-        "mig_xml_path, segment_group_key, segment_key, data_element_id, name, previous_qualifier, expected_path",
+        "mig_xml_path, segment_group_key, segment_key, data_element_id, name, predecessor_qualifier, expected_path",
         [
             pytest.param(
                 "mscons_1154.xml",
@@ -130,6 +130,16 @@ class TestMigXmlReader:
                 '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Erforderliche OBIS-Daten der Messlokation"][0]["Referenz auf die ID einer Messlokation"]',
                 id="referenz auf melo-id",
             ),
+            pytest.param(
+                "reqote.xml",
+                "root",
+                "DTM",
+                "2380",
+                "Datum oder Uhrzeit oderZeitspanne, Wert",  # <-- the messed up spaces are due to line breaks in the PDF
+                "76",
+                '$["Dokument"][0]["Nachricht"][0]["Datum zum geplanten Leistungsbeginn"]',
+                id="reqote lieferdatum",
+            ),
         ],
     )
     def test_simple_paths(
@@ -140,11 +150,11 @@ class TestMigXmlReader:
         segment_key: str,
         data_element_id: str,
         name: str,
-        previous_qualifier: Optional[str],
+        predecessor_qualifier: Optional[str],
         expected_path: str,
     ):
         reader = MigXmlReader(Path(datafiles) / mig_xml_path)
         actual_stack = reader.get_edifact_stack(
-            segment_group_key, segment_key, data_element_id, name  # , previous_qualifier
+            segment_group_key, segment_key, data_element_id, name, predecessor_qualifier
         )
         assert actual_stack.to_json_path() == expected_path

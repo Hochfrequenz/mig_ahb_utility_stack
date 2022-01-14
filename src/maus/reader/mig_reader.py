@@ -60,6 +60,7 @@ class MigReader(ABC):
                 if attrib_key in {"name", "ahbName"}:
                     element.attrib[attrib_key] = MigXmlReader.make_name_comparable(attrib_value)
 
+    # pylint:disable=too-many-arguments
     @abstractmethod
     def get_edifact_stack(
         self,
@@ -67,7 +68,7 @@ class MigReader(ABC):
         segment_key: str,
         data_element_id: str,
         name: str,
-        #    previous_qualifier: Optional[str] = None,
+        predecessor_qualifier: Optional[str] = None,
     ) -> EdifactStack:
         """
         Returns the edifact stack for the given combination of segment group, key, data element and name
@@ -211,14 +212,14 @@ class MigXmlReader(MigReader):
                 return segment_group_key
         return None
 
-    # pylint:disable=unused-argument
+    # pylint:disable=too-many-arguments # yeah. i feel like 6 are still ok
     def get_edifact_stack(
         self,
         segment_group_key: str,
         segment_key: str,
         data_element_id: str,
         name: str,
-        #       previous_qualifier: Optional[str] = None,
+        predecessor_qualifier: Optional[str] = None,
     ) -> EdifactStack:
         """
         get the edifact stack for the given segment_group, segment... combination
@@ -255,6 +256,22 @@ class MigXmlReader(MigReader):
                         return self.element_to_edifact_stack(
                             via_parents_ahb_name_result.unique_result, use_sanitized_tree=True
                         )
+                    if not via_parents_name_result.candidates and predecessor_qualifier:
+                        # This happens if fields have a completely different name in the MIG vs. AHB.
+                        # For example for REQOTE Lieferdatum: Its name in the AHB is
+                        # 'Datum oder Uhrzeit oderZeitspanne, Wert'.
+                        # So basically its name is the same name as all dates in the AHB.
+                        # Now we have to start over again doing something differently.
+                        # We use the predecessor because for dates the predecessor has a meaning,
+                        # the field itself has not. Predecessor "Lieferdatum", Actual line: "Datum oder Uhrzeit oder..."
+                        filtered_by_predecessor = [
+                            x
+                            for x in segment_de_result.candidates
+                            if x.attrib["ref"].endswith(f"{predecessor_qualifier}]")
+                        ]  # that's a bit dirty, better parse the ref properly instead of string-matching
+                        if len(filtered_by_predecessor) == 1:
+                            return self.element_to_edifact_stack(filtered_by_predecessor[0], use_sanitized_tree=False)
+                        raise ValueError("Try predecessor")
             elif len(filtered_by_names) == 1:
                 return self.element_to_edifact_stack(filtered_by_names[0], use_sanitized_tree=False)
             else:  # len(filtered_by_names) >1
