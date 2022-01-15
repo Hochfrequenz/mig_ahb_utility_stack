@@ -22,6 +22,7 @@ class TestIntegration35001:
     @ALL_MIG_XML_FILES
     @pytest.mark.datafiles("./unittests/ahbs/FV2204/REQOTE/35001.csv")
     @pytest.mark.datafiles("./unittests/ahbs/FV2204/REQOTE/35001_deep.json")
+    @pytest.mark.datafiles("./unittests/ahbs/FV2204/REQOTE/35001_maus.json")
     def test_csv_file_reading_35001(self, datafiles):
         path_to_csv: Path = datafiles / "35001.csv"
         reader = FlatAhbCsvReader(file_path=path_to_csv)
@@ -31,8 +32,12 @@ class TestIntegration35001:
         actual_deep_ahb = to_deep_ahb(flat_ahb, sgh)
         with open(datafiles / "35001_deep.json", "r", encoding="utf-8") as deep_ahb_file:
             expected_deep_ahb = DeepAnwendungshandbuchSchema().loads(deep_ahb_file.read())
-        actual_json = DeepAnwendungshandbuchSchema().dumps(actual_deep_ahb, ensure_ascii=True, sort_keys=True)
+        actual_ahb_json = DeepAnwendungshandbuchSchema().dumps(actual_deep_ahb, ensure_ascii=True, sort_keys=True)
         assert actual_deep_ahb == expected_deep_ahb
         mig_reader = MigXmlReader(Path(datafiles) / Path("reqote.xml"))
         assert mig_reader is not None
         replace_discriminators_with_edifact_stack(actual_deep_ahb, mig_reader)
+        actual_maus_json = DeepAnwendungshandbuchSchema().dumps(actual_deep_ahb, ensure_ascii=True, sort_keys=True)
+        with open(datafiles / "35001_maus.json", "r", encoding="utf-8") as maus_file:
+            expected_maus = DeepAnwendungshandbuchSchema().loads(maus_file.read())
+        assert actual_deep_ahb == expected_maus

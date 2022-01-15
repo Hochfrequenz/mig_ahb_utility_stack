@@ -107,10 +107,9 @@ class FlatAhbCsvReader(FlatAhbReader):
         return y or None, x or None
 
     @staticmethod
-    def _is_value_pool_entry(candidate: Optional[str], allow_short_codes: bool = False) -> bool:
+    def _is_value_pool_entry(candidate: Optional[str]) -> bool:
         """
         Returns true iff the provided candidate is a possible value pool entry.
-        By default we don't want single digits to match but the caller can override this behaviour.
         """
         if not candidate:
             return False

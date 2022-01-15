@@ -49,6 +49,20 @@ class TestMigXmlReader:
         actual = MigXmlReader.are_similar_names(x, y)
         assert actual == expected_result
 
+    @pytest.mark.parametrize(
+        "segment_code,expected_is_boilerplate",
+        [
+            pytest.param(None, True),
+            pytest.param("UNH", False),
+            pytest.param("UNT", True),
+            pytest.param("UNZ", True),
+            pytest.param("DTM", False),
+        ],
+    )
+    def test_is_boilerplate_segment(self, segment_code: Optional[str], expected_is_boilerplate: bool):
+        actual_is_boilerplate = MigXmlReader.is_edifact_boilerplate(segment_code)
+        assert actual_is_boilerplate == expected_is_boilerplate
+
     def test_make_tree_names_comparable(self):
         orig_xml = """<?xml version="1.0"?>
         <hello>

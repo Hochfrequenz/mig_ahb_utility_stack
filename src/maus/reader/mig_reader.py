@@ -60,6 +60,15 @@ class MigReader(ABC):
                 if attrib_key in {"name", "ahbName"}:
                     element.attrib[attrib_key] = MigXmlReader.make_name_comparable(attrib_value)
 
+    @staticmethod
+    def is_edifact_boilerplate(segment_code: Optional[str]) -> bool:
+        """
+        returns true iff this segment is not relevant in a sense that it has to be validated or merged with the AHB
+        """
+        if not segment_code:
+            return True
+        return segment_code.strip() in {"UNT", "UNZ"}
+
     # pylint:disable=too-many-arguments
     @abstractmethod
     def get_edifact_stack(
@@ -220,10 +229,9 @@ class MigXmlReader(MigReader):
         data_element_id: str,
         name: str,
         predecessor_qualifier: Optional[str] = None,
-    ) -> EdifactStack:
+    ) -> Optional[EdifactStack]:
         """
-        get the edifact stack for the given segment_group, segment... combination
-        :return:
+        get the edifact stack for the given segment_group, segment... combination or None if there is no match
         """
         segment_de_result = self.get_unique_result_by_xpath(
             f".//*[@meta.id='{data_element_id}' and starts-with(@ref, '{segment_key}')]", use_sanitized_tree=False
@@ -281,7 +289,7 @@ class MigXmlReader(MigReader):
                 if filtered_by_sg.is_unique:
                     return self.element_to_edifact_stack(filtered_by_sg.unique_result, use_sanitized_tree=False)
 
-        raise ValueError("No idea")
+        return None  # there is no match
 
     def to_segment_group_hierarchy(self) -> SegmentGroupHierarchy:
         """
