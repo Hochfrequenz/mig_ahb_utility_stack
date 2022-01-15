@@ -103,7 +103,7 @@
                   "value_pool": {
                     "293": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",
                     "332": "DE, DVGW Service & Consult GmbH",
-                    "GS1": "9"
+                    "9": "GS1"
                   }
                 }
               ],
@@ -130,7 +130,7 @@
                   "value_pool": {
                     "293": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",
                     "332": "DE, DVGW Service & Consult GmbH",
-                    "GS1": "9"
+                    "9": "GS1"
                   }
                 }
               ],
@@ -264,12 +264,12 @@
             {
               "data_element_id": "2379",
               "discriminator": "DTM->2379",
-              "value_pool": { "CCYYMMDDHHMMZZZ": "303" }
+              "value_pool": { "303": "CCYYMMDDHHMMZZZ" }
             },
             {
               "data_element_id": "2005",
               "discriminator": "DTM->2005",
-              "value_pool": { "Lieferdatum/-zeit, geplant": "76" }
+              "value_pool": { "76": "Lieferdatum/-zeit, geplant" }
             },
             {
               "ahb_expression": "X [UB3]",
@@ -280,7 +280,7 @@
             {
               "data_element_id": "2379",
               "discriminator": "DTM->2379",
-              "value_pool": { "CCYYMMDDHHMMZZZ": "303" }
+              "value_pool": { "303": "CCYYMMDDHHMMZZZ" }
             }
           ],
           "discriminator": "DTM"

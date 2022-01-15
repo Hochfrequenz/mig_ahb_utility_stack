@@ -65,6 +65,18 @@ class TestAhbCsvReader:
         "csv_code, csv_beschreibung, expected_code, expected_beschreibung",
         [
             pytest.param("Nachrichten-Referenznummer", None, None, "Nachrichten-Referenznummer"),
+            pytest.param("137", "Dokumenten-/Nachrichtendatum/-zeit", "137", "Dokumenten-/Nachrichtendatum/-zeit"),
+            pytest.param(
+                "Datum oder Uhrzeit oderZeitspanne, Wert", None, None, "Datum oder Uhrzeit oderZeitspanne, Wert"
+            ),
+            pytest.param("303", "CCYYMMDDHHMMZZZ", "303", "CCYYMMDDHHMMZZZ"),
+            pytest.param("9", "GS1", "9", "GS1"),
+            pytest.param(
+                "293",
+                "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",
+                "293",
+                "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",
+            ),
         ],
     )
     def test_code_description_separation(

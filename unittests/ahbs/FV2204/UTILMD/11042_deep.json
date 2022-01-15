@@ -79,7 +79,7 @@
                   "value_pool": {
                     "293": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",
                     "332": "DE, DVGW Service & Consult GmbH",
-                    "GS1": "9"
+                    "9": "GS1"
                   }
                 }
               ],
@@ -105,7 +105,7 @@
                   "value_pool": {
                     "293": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",
                     "332": "DE, DVGW Service & Consult GmbH",
-                    "GS1": "9"
+                    "9": "GS1"
                   }
                 }
               ],
@@ -217,7 +217,7 @@
                     {
                       "data_element_id": "2379",
                       "discriminator": "SG6->DTM->2379",
-                      "value_pool": { "104": "MMWW-MMWW", "MMDD": "106" }
+                      "value_pool": { "104": "MMWW-MMWW", "106": "MMDD" }
                     }
                   ],
                   "discriminator": "DTM"
@@ -300,7 +300,7 @@
                     {
                       "data_element_id": "2379",
                       "discriminator": "SG6->DTM->2379",
-                      "value_pool": { "104": "MMWW-MMWW", "MMDD": "106" }
+                      "value_pool": { "104": "MMWW-MMWW", "106": "MMDD" }
                     }
                   ],
                   "discriminator": "DTM"
@@ -373,7 +373,7 @@
                           "data_element_id": "6063",
                           "discriminator": "SG9->QTY->6063",
                           "value_pool": {
-                            "VeranschlagteJahresmenge Gesamt": "31"
+                            "31": "VeranschlagteJahresmenge Gesamt"
                           }
                         },
                         {
@@ -396,7 +396,7 @@
                         {
                           "data_element_id": "6063",
                           "discriminator": "SG9->QTY->6063",
-                          "value_pool": { "Aufteilungsmenge": "11" }
+                          "value_pool": { "11": "Aufteilungsmenge" }
                         },
                         {
                           "ahb_expression": "",
@@ -489,7 +489,7 @@
                         {
                           "data_element_id": "7111",
                           "discriminator": "SG10->CAV->7111",
-                          "value_pool": { "MSB": "Z91" }
+                          "value_pool": { "Z91": "MSB" }
                         },
                         {
                           "ahb_expression": "",
@@ -567,7 +567,7 @@
                         {
                           "data_element_id": "7059",
                           "discriminator": "SG10->CCI->7059",
-                          "value_pool": { "Verantwortlicher": "6" }
+                          "value_pool": { "6": "Verantwortlicher" }
                         },
                         {
                           "data_element_id": "7037",
@@ -1079,7 +1079,7 @@
                         {
                           "data_element_id": "7111",
                           "discriminator": "SG10->CAV->7111",
-                          "value_pool": { "MSB": "Z91" }
+                          "value_pool": { "Z91": "MSB" }
                         },
                         {
                           "ahb_expression": "",
@@ -1104,7 +1104,7 @@
                         {
                           "data_element_id": "7111",
                           "discriminator": "SG10->CAV->7111",
-                          "value_pool": { "MSBA": "ZB4" }
+                          "value_pool": { "ZB4": "MSBA" }
                         },
                         {
                           "ahb_expression": "",
@@ -1354,8 +1354,8 @@
                           "data_element_id": "7110",
                           "discriminator": "SG10->CAV->7110",
                           "value_pool": {
-                            "EDL21": "Z02",
-                            "EDL40": "Z01",
+                            "Z01": "EDL40",
+                            "Z02": "EDL21",
                             "Z03": "sonstiger EHZ",
                             "Z04": "Standard",
                             "Z05": "MeDa-Z\u00e4hler"
@@ -1605,7 +1605,7 @@
                         {
                           "data_element_id": "7059",
                           "discriminator": "SG10->CCI->7059",
-                          "value_pool": { "Produkt": "11" }
+                          "value_pool": { "11": "Produkt" }
                         },
                         {
                           "data_element_id": "7037",
@@ -1919,7 +1919,7 @@
                           "discriminator": "SG10->CCI->3055",
                           "value_pool": {
                             "293": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",
-                            "Vergeben vom H\u00e4ndler (hier Netzbetreiber)": "89"
+                            "89": "Vergeben vom H\u00e4ndler (hier Netzbetreiber)"
                           }
                         }
                       ],
@@ -2046,7 +2046,7 @@
                     {
                       "data_element_id": "4347",
                       "discriminator": "SG8->PIA->4347",
-                      "value_pool": { "Produktidentifikation": "5" }
+                      "value_pool": { "5": "Produktidentifikation" }
                     },
                     {
                       "ahb_expression": "",
@@ -2376,7 +2376,7 @@
                     {
                       "data_element_id": "4347",
                       "discriminator": "SG8->PIA->4347",
-                      "value_pool": { "Produktidentifikation": "5" }
+                      "value_pool": { "5": "Produktidentifikation" }
                     },
                     {
                       "ahb_expression": "",
@@ -2987,7 +2987,7 @@
                 {
                   "data_element_id": "7495",
                   "discriminator": "SG4->IDE->7495",
-                  "value_pool": { "Transaktion": "24" }
+                  "value_pool": { "24": "Transaktion" }
                 },
                 {
                   "ahb_expression": "X",
@@ -3004,7 +3004,7 @@
                 {
                   "data_element_id": "2005",
                   "discriminator": "SG4->DTM->2005",
-                  "value_pool": { "Lieferdatum/-zeit, geplant": "76" }
+                  "value_pool": { "76": "Lieferdatum/-zeit, geplant" }
                 },
                 {
                   "ahb_expression": "X [UB3]",
@@ -3015,7 +3015,7 @@
                 {
                   "data_element_id": "2379",
                   "discriminator": "SG4->DTM->2379",
-                  "value_pool": { "CCYYMMDDHHMMZZZ": "303" }
+                  "value_pool": { "303": "CCYYMMDDHHMMZZZ" }
                 }
               ],
               "discriminator": "DTM"
@@ -3026,7 +3026,7 @@
                 {
                   "data_element_id": "9015",
                   "discriminator": "SG4->STS->9015",
-                  "value_pool": { "Transaktionsgrund": "7" }
+                  "value_pool": { "7": "Transaktionsgrund" }
                 },
                 {
                   "data_element_id": "9013",
@@ -3074,7 +3074,7 @@
                 {
                   "data_element_id": "7431",
                   "discriminator": "SG4->AGR->7431",
-                  "value_pool": { "Vertrag": "9" }
+                  "value_pool": { "9": "Vertrag" }
                 },
                 {
                   "data_element_id": "7433",
@@ -3164,7 +3164,7 @@
             {
               "data_element_id": "2379",
               "discriminator": "DTM->2379",
-              "value_pool": { "CCYYMMDDHHMMZZZ": "303" }
+              "value_pool": { "303": "CCYYMMDDHHMMZZZ" }
             }
           ],
           "discriminator": "DTM"

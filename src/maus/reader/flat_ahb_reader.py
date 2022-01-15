@@ -100,16 +100,22 @@ class FlatAhbCsvReader(FlatAhbReader):
         """
         if FlatAhbCsvReader._is_value_pool_entry(x) and not FlatAhbCsvReader._is_value_pool_entry(y):
             return x, y or None
+        if FlatAhbCsvReader._is_value_pool_entry(x) and FlatAhbCsvReader._is_value_pool_entry(y):
+            # Both look like a value pool entry. This typically happens f.e. for date qualifiers or code lists
+            return x, y
         return y or None, x or None
 
     @staticmethod
-    def _is_value_pool_entry(candidate: Optional[str]) -> bool:
+    def _is_value_pool_entry(candidate: Optional[str], allow_short_codes: bool = False) -> bool:
         """
         Returns true iff the provided candidate is a possible value pool entry.
+        By default we don't want single digits to match but the caller can override this behaviour.
         """
         if not candidate:
             return False
-        return _value_pool_entry_pattern.match(candidate) is not None
+        if _value_pool_entry_pattern.match(candidate) is not None:
+            return True
+        return candidate.isdigit()  # numbers alone might be value pool entries even if they don't match the regex
 
     @staticmethod
     def _is_segment_group(candidate: Optional[str]) -> bool:

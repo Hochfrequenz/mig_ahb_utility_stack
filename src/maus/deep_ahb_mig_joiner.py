@@ -28,6 +28,6 @@ def replace_discriminators_with_edifact_stack(deep_ahb: DeepAnwendungshandbuch, 
                 if isinstance(data_element, DataElementValuePool):
                     # todo: general handling
                     if len(data_element.value_pool) == 1:
-                        predecessor_qualifier = list(data_element.value_pool.values())[0]
+                        predecessor_qualifier = list(data_element.value_pool.keys())[0]
                     else:
                         predecessor_qualifier = None

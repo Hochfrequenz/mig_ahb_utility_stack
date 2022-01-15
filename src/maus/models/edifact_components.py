@@ -74,9 +74,12 @@ class DataElementValuePool(DataElement):
     The set of values allowed according to the AHB is always a subset of the values allowed according to the MIG.
     """
 
-    value_pool: Dict[str, str]  #: The value pool contains the allowed values as key and their meaning as value.
+    value_pool: Dict[str, str]
+    """
+    The value pool contains the allowed values as key and their meaning as value.
     # for example data element 3055 in UTILMD (used in NAD+MR and NAD+MS) has the value pool:
     # { "9": "GS1", "293": "DE, BDEW", "332": "DE, DVGW" }
+    """
 
 
 class DataElementValuePoolSchema(DataElementSchema):
