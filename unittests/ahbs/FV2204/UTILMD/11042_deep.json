@@ -19,7 +19,7 @@
                     {
                       "data_element_id": "3139",
                       "discriminator": "SG3->CTA->3139",
-                      "value_pool": { "Informationskontakt": "IC" }
+                      "value_pool": { "IC": "Informationskontakt" }
                     },
                     {
                       "ahb_expression": "X",
@@ -43,11 +43,11 @@
                       "data_element_id": "3155",
                       "discriminator": "SG3->COM->3155",
                       "value_pool": {
-                        "Elektronische Post": "EM",
-                        "Handy": "AL",
-                        "Telefax": "FX",
-                        "Telefon": "TE",
-                        "weiteres Telefon": "AJ"
+                        "AJ": "weiteres Telefon",
+                        "AL": "Handy",
+                        "EM": "Elektronische Post",
+                        "FX": "Telefax",
+                        "TE": "Telefon"
                       }
                     }
                   ],
@@ -91,7 +91,7 @@
                 {
                   "data_element_id": "3035",
                   "discriminator": "SG2->NAD->3035",
-                  "value_pool": { "Nachrichtenempf\u00e4nger": "MR" }
+                  "value_pool": { "MR": "Nachrichtenempf\u00e4nger" }
                 },
                 {
                   "ahb_expression": "X",
@@ -172,7 +172,7 @@
                     {
                       "data_element_id": "1153",
                       "discriminator": "SG6->RFF->1153",
-                      "value_pool": { "Transaktions-Referenznummer": "TN" }
+                      "value_pool": { "TN": "Transaktions-Referenznummer" }
                     },
                     {
                       "ahb_expression": "",
@@ -407,7 +407,7 @@
                         {
                           "data_element_id": "6411",
                           "discriminator": "SG9->QTY->6411",
-                          "value_pool": { "Prozent": "P1" }
+                          "value_pool": { "P1": "Prozent" }
                         }
                       ],
                       "discriminator": "QTY"
@@ -1384,14 +1384,14 @@
                             "G250": "Gasz\u00e4hler G250",
                             "G2500": "Gasz\u00e4hler G2500",
                             "G350": "Gasz\u00e4hler G350",
+                            "G4": "Gasz\u00e4hler G4",
                             "G40": "Gasz\u00e4hler G40",
                             "G400": "Gasz\u00e4hler G400",
                             "G4000": "Gasz\u00e4hler G4000",
+                            "G6": "Gasz\u00e4hler G6",
                             "G65": "Gasz\u00e4hler G65",
                             "G650": "Gasz\u00e4hler G650",
-                            "Gasz\u00e4hler G2.5": "G2.5",
-                            "Gasz\u00e4hler G4": "G4",
-                            "Gasz\u00e4hler G6": "G6"
+                            "Gasz\u00e4hler G2.5": "G2.5"
                           }
                         }
                       ],
@@ -2290,7 +2290,7 @@
                       "data_element_id": "1153",
                       "discriminator": "SG8->RFF->1153",
                       "value_pool": {
-                        "Ger\u00e4tenummer desZ\u00e4hlers": "MG"
+                        "MG": "Ger\u00e4tenummer desZ\u00e4hlers"
                       }
                     },
                     {
@@ -2322,7 +2322,7 @@
                       "data_element_id": "1153",
                       "discriminator": "SG8->RFF->1153",
                       "value_pool": {
-                        "Ger\u00e4tenummer des Z\u00e4hlers": "MG",
+                        "MG": "Ger\u00e4tenummer des Z\u00e4hlers",
                         "Z11": "Ger\u00e4tenummer des Mengenumwerters",
                         "Z14": "Smartmeter-Gateway"
                       }
@@ -2410,7 +2410,7 @@
                       "data_element_id": "1153",
                       "discriminator": "SG8->RFF->1153",
                       "value_pool": {
-                        "Ger\u00e4tenummer desZ\u00e4hlers": "MG"
+                        "MG": "Ger\u00e4tenummer desZ\u00e4hlers"
                       }
                     },
                     {
@@ -2440,7 +2440,7 @@
                       "data_element_id": "1153",
                       "discriminator": "SG8->RFF->1153",
                       "value_pool": {
-                        "Ger\u00e4tenummer desZ\u00e4hlers": "MG"
+                        "MG": "Ger\u00e4tenummer desZ\u00e4hlers"
                       }
                     },
                     {
@@ -2472,7 +2472,7 @@
                       "data_element_id": "1153",
                       "discriminator": "SG8->RFF->1153",
                       "value_pool": {
-                        "Ger\u00e4tenummer desZ\u00e4hlers": "MG"
+                        "MG": "Ger\u00e4tenummer desZ\u00e4hlers"
                       }
                     },
                     {
@@ -3118,7 +3118,7 @@
             {
               "data_element_id": "0051",
               "discriminator": "UNH->0051",
-              "value_pool": { "UN/CEFACT": "UN" }
+              "value_pool": { "UN": "UN/CEFACT" }
             },
             {
               "data_element_id": "0057",

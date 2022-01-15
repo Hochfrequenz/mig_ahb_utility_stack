@@ -12,7 +12,8 @@ from typing import List, Optional, Sequence, TextIO, Tuple
 from maus.models.anwendungshandbuch import AhbLine, AhbMetaInformation, FlatAnwendungshandbuch
 
 _pruefi_pattern = re.compile(r"^\d{5}$")  #: five digits
-_value_pool_entry_pattern = re.compile(r"^[A-Z0-9]{3,}$")
+_value_pool_entry_pattern = re.compile(r"^[A-Z0-9]{2,}$")
+_numeric_value_pool_entry_pattern = re.compile(r"^\d+(?:\.\d+)?$")
 _segment_group_pattern = re.compile(r"^SG\d+$")
 
 
@@ -115,7 +116,9 @@ class FlatAhbCsvReader(FlatAhbReader):
             return False
         if _value_pool_entry_pattern.match(candidate) is not None:
             return True
-        return candidate.isdigit()  # numbers alone might be value pool entries even if they don't match the regex
+        # numbers alone might be value pool entries even if they don't match the regex
+        # we don't use "isdigit" because isdigit f.e. does not match '1.2'
+        return _numeric_value_pool_entry_pattern.match(candidate) is not None
 
     @staticmethod
     def _is_segment_group(candidate: Optional[str]) -> bool:

@@ -69,11 +69,11 @@
                       "data_element_id": "3155",
                       "discriminator": "SG14->COM->3155",
                       "value_pool": {
-                        "Elektronische Post": "EM",
-                        "Handy": "AL",
-                        "Telefax": "FX",
-                        "Telefon": "TE",
-                        "weiteres Telefon": "AJ"
+                        "AJ": "weiteres Telefon",
+                        "AL": "Handy",
+                        "EM": "Elektronische Post",
+                        "FX": "Telefax",
+                        "TE": "Telefon"
                       }
                     }
                   ],
@@ -216,13 +216,13 @@
             {
               "data_element_id": "0051",
               "discriminator": "UNH->0051",
-              "value_pool": { "UN/CEFACT": "UN" }
+              "value_pool": { "UN": "UN/CEFACT" }
             },
             {
               "data_element_id": "0057",
               "discriminator": "UNH->0057",
               "value_pool": {
-                "Versionsnummer derzugrundeliegendenBDEW-Nachrichtenbeschreibung": "1.2"
+                "1.2": "Versionsnummer derzugrundeliegendenBDEW-Nachrichtenbeschreibung"
               }
             }
           ],

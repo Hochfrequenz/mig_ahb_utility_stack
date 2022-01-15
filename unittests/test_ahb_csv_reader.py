@@ -71,11 +71,26 @@ class TestAhbCsvReader:
             ),
             pytest.param("303", "CCYYMMDDHHMMZZZ", "303", "CCYYMMDDHHMMZZZ"),
             pytest.param("9", "GS1", "9", "GS1"),
+            pytest.param("IC", "Informationskontakt", "IC", "Informationskontakt"),
+            pytest.param(
+                "MS",
+                "Dokumenten-/Nachrichtenausstellerbzw. -absender",
+                "MS",
+                "Dokumenten-/Nachrichtenausstellerbzw. -absender",
+            ),
+            pytest.param("TN", "Transaktions-Referenznummer", "TN", "Transaktions-Referenznummer"),
             pytest.param(
                 "293",
                 "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",
                 "293",
                 "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",
+            ),
+            pytest.param(
+                "1.2",
+                "Versionsnummer derzugrundeliegendenBDEW-Nachrichtenbeschreibung",
+                "1.2",
+                "Versionsnummer derzugrundeliegendenBDEW-Nachrichtenbeschreibung",
+                id="format version reqote",
             ),
         ],
     )
