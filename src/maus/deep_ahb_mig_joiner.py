@@ -13,6 +13,7 @@ def replace_discriminators_with_edifact_stack(deep_ahb: DeepAnwendungshandbuch, 
     """
     for segment_group_index, segment_group in enumerate(deep_ahb.lines):
         current_segment_group_key = segment_group.discriminator
+        # todo: also loop over the segment groups inside the segment group
         for segment_index, segment in enumerate(segment_group.segments):  # type:ignore[union-attr]
             if mig_reader.is_edifact_boilerplate(segment.discriminator):
                 continue

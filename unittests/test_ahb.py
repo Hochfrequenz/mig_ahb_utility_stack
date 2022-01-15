@@ -16,6 +16,32 @@ from maus.models.anwendungshandbuch import (
 from maus.models.edifact_components import DataElementFreeText, DataElementValuePool, Segment, SegmentGroup
 from unittests.serialization_test_helper import assert_serialization_roundtrip  # type:ignore[import]
 
+meta_x = AhbMetaInformation(
+    pruefidentifikator="11042",
+)
+meta_y = AhbMetaInformation(
+    pruefidentifikator="11043",
+)
+
+line_x = AhbLine(
+    ahb_expression="Muss [1] O [2]",
+    segment_group_key="SG2",
+    segment_code="NAD",
+    data_element="3039",
+    value_pool_entry="E01",
+    name="MP-ID",
+    guid=uuid.UUID("12b1a98a-edf5-4177-89e5-a6d8a92c5fdc"),
+)
+line_y = AhbLine(
+    ahb_expression="Muss [3] O [4]",
+    segment_group_key="SG2",
+    segment_code="NAD",
+    data_element="3039",
+    value_pool_entry="E01",
+    name="MP-ID",
+    guid=uuid.UUID("12b1a98a-edf5-4177-89e5-a6d8a92c5fdc"),
+)
+
 
 class TestAhb:
     """
@@ -37,6 +63,17 @@ class TestAhb:
     )
     def test_ahb_meta_information_serialization_roundtrip(self, ahb: AhbMetaInformation, expected_json_dict: dict):
         assert_serialization_roundtrip(ahb, AhbMetaInformationSchema(), expected_json_dict)
+
+    @pytest.mark.parametrize(
+        "ahb_x, ahb_y, are_equal",
+        [
+            pytest.param(meta_x, AhbMetaInformationSchema().loads(AhbMetaInformationSchema().dumps(meta_x)), True),
+            pytest.param(meta_x, meta_y, False),
+        ],
+    )
+    def test_ahb_meta_information_equality(self, ahb_x: AhbMetaInformation, ahb_y: AhbMetaInformation, are_equal: bool):
+        actual = ahb_x == ahb_y
+        assert actual == are_equal
 
     @pytest.mark.parametrize(
         "ahb_line, expected_json_dict",
@@ -65,6 +102,17 @@ class TestAhb:
     )
     def test_ahbline_serialization_roundtrip(self, ahb_line: AhbLine, expected_json_dict: dict):
         assert_serialization_roundtrip(ahb_line, AhbLineSchema(), expected_json_dict)
+
+    @pytest.mark.parametrize(
+        "line_x, line_y, are_equal",
+        [
+            pytest.param(line_x, AhbLineSchema().loads(AhbLineSchema().dumps(line_x)), True),
+            pytest.param(line_x, line_y, False),
+        ],
+    )
+    def test_ahb_line_equality(self, line_x: AhbLine, line_y: AhbLine, are_equal: bool):
+        actual = line_x == line_y
+        assert actual == are_equal
 
     @pytest.mark.parametrize(
         "ahb_line, expected_holds_any_information",
@@ -198,6 +246,50 @@ class TestAhb:
         assert_serialization_roundtrip(flat_ahb, FlatAnwendungshandbuchSchema(), expected_json_dict)
 
     @pytest.mark.parametrize(
+        "ahb_x, ahb_y, are_equal",
+        [
+            pytest.param(
+                FlatAnwendungshandbuch(
+                    meta=meta_x,
+                    lines=[line_x],
+                ),
+                FlatAnwendungshandbuch(
+                    meta=meta_x,
+                    lines=[line_x],
+                ),
+                True,
+            ),
+            pytest.param(
+                FlatAnwendungshandbuch(
+                    meta=meta_x,
+                    lines=[line_x],
+                ),
+                FlatAnwendungshandbuch(
+                    meta=meta_y,
+                    lines=[line_x],
+                ),
+                False,
+                id="different meta",
+            ),
+            pytest.param(
+                FlatAnwendungshandbuch(
+                    meta=meta_x,
+                    lines=[line_x],
+                ),
+                FlatAnwendungshandbuch(
+                    meta=meta_x,
+                    lines=[line_y],
+                ),
+                False,
+                id="different line",
+            ),
+        ],
+    )
+    def test_flat_ahb_equality(self, ahb_x: FlatAnwendungshandbuch, ahb_y: FlatAnwendungshandbuch, are_equal: bool):
+        actual = ahb_x == ahb_y
+        assert actual == are_equal
+
+    @pytest.mark.parametrize(
         "deep_ahb, expected_json_dict",
         [
             pytest.param(
@@ -290,6 +382,77 @@ class TestAhb:
     )
     def test_deepahb_serialization_roundtrip(self, deep_ahb: DeepAnwendungshandbuch, expected_json_dict: dict):
         assert_serialization_roundtrip(deep_ahb, DeepAnwendungshandbuchSchema(), expected_json_dict)
+
+    @pytest.mark.parametrize(
+        "ahb_x, ahb_y, are_equal",
+        [
+            pytest.param(
+                DeepAnwendungshandbuch(
+                    meta=AhbMetaInformation(pruefidentifikator="11042"),
+                    lines=[
+                        SegmentGroup(
+                            ahb_expression="expr A",
+                            discriminator="disc A",
+                            segments=[
+                                Segment(
+                                    ahb_expression="expr B",
+                                    discriminator="disc B",
+                                    data_elements=[
+                                        DataElementValuePool(
+                                            value_pool={"hello": "world", "maus": "rocks"},
+                                            discriminator="baz",
+                                            data_element_id="0123",
+                                        ),
+                                        DataElementFreeText(
+                                            ahb_expression="Muss [1]",
+                                            entered_input="Hello Maus",
+                                            discriminator="bar",
+                                            data_element_id="4567",
+                                        ),
+                                    ],
+                                ),
+                            ],
+                            segment_groups=[],
+                        ),
+                    ],
+                ),
+                DeepAnwendungshandbuch(
+                    meta=AhbMetaInformation(pruefidentifikator="11042"),
+                    lines=[
+                        SegmentGroup(
+                            ahb_expression="expr A",
+                            discriminator="disc A",
+                            segments=[
+                                Segment(
+                                    ahb_expression="expr B",
+                                    discriminator="disc B",
+                                    data_elements=[
+                                        DataElementValuePool(
+                                            value_pool={"hello": "moon", "maus": "rocks"},
+                                            discriminator="baz",
+                                            data_element_id="0123",
+                                        ),
+                                        DataElementFreeText(
+                                            ahb_expression="Muss [1]",
+                                            entered_input="Hello Mice",
+                                            discriminator="bar",
+                                            data_element_id="4567",
+                                        ),
+                                    ],
+                                ),
+                            ],
+                            segment_groups=[],
+                        ),
+                    ],
+                ),
+                False,
+                id="different lines",
+            ),
+        ],
+    )
+    def test_deep_ahb_equality(self, ahb_x: DeepAnwendungshandbuch, ahb_y: DeepAnwendungshandbuch, are_equal: bool):
+        actual = ahb_x == ahb_y
+        assert actual == are_equal
 
     @pytest.mark.parametrize(
         "lines, expected_group_names",
