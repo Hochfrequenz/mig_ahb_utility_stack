@@ -117,7 +117,9 @@ class FlatAhbCsvReader(FlatAhbReader):
             return True
         # numbers alone might be value pool entries even if they don't match the regex
         # we don't use "isdigit" because isdigit f.e. does not match '1.2'
-        return _numeric_value_pool_entry_pattern.match(candidate) is not None
+        if _numeric_value_pool_entry_pattern.match(candidate) is not None:
+            return True
+        return len(candidate) == 1 and candidate.upper() == candidate
 
     @staticmethod
     def _is_segment_group(candidate: Optional[str]) -> bool:

@@ -32,7 +32,7 @@
 29,SG11,NAD,,,,Muss,
 30,SG11,NAD,3035,,Nachrichtenaussteller bzw.,,MS
 31,,,,,-absender,,
-32,SG11,NAD,3039,"Beteiligter, Identifikation",,X,
+32,SG11,NAD,3039,"MP-ID",,X,
 33,SG11,NAD,3055,9,GS1,X,
 34,SG11,NAD,3055,293,"DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",X,
 35,SG11,NAD,3055,332,"DE, DVGW Service & Consult GmbH",X,

@@ -3108,7 +3108,7 @@
             {
               "data_element_id": "0052",
               "discriminator": "UNH->0052",
-              "value_pool": { "Entwurfs-Version": "D" }
+              "value_pool": { "D": "Entwurfs-Version" }
             },
             {
               "data_element_id": "0054",

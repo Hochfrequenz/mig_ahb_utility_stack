@@ -92,6 +92,13 @@ class TestAhbCsvReader:
                 "Versionsnummer derzugrundeliegendenBDEW-Nachrichtenbeschreibung",
                 id="format version reqote",
             ),
+            pytest.param(
+                "D",
+                "Entwurfs-Version",
+                "D",
+                "Entwurfs-Version",
+                id="entwurfs version reqote",
+            ),
         ],
     )
     def test_code_description_separation(
