@@ -273,26 +273,6 @@ class SegmentGroupSchema(SegmentLevelSchema):
         return SegmentGroup(**data)
 
 
-# @attr.s(auto_attribs=True, kw_only=True)
-# class EdifactStack:
-#    """
-#    The edifact stack describes where inside an EDIFACT message an information is located.
-#    It's closely related to parts of the :class:`.AhbLine` but merges data from multiple lines from the original AHB.
-#    """
-#    segment_group_key: str = attr.ib(validator=attr.validators.instance_of(str))
-#    """ e.g. 'SG2'; data without a segment group are assigned to the the virtual group 'root' """
-#    segment_code: str = attr.ib(validator=attr.validators.instance_of(str))
-#    """ e.g. 'DTM' """
-#    qualifier: str = attr.ib(validator=attr.validators.instance_of(str))
-#    """
-#    The qualifier can either be the key of an DataElementValuePool entry or the qualifier that is leading/occurs before
-#    e.g. 'MS' (this is the main difference to the AHB where qualifier and data element span >1 line)
-#    """
-#    name: str = attr.ib(validator=attr.validators.instance_of(str))  #: .e.g "MP-ID"
-#    format_string: str = attr.ib(validator=attr.validators.instance_of(str))
-#    """e.g. '203' to specify how a datetime has to be parsed"""
-
-
 @attr.s(auto_attribs=True, kw_only=True)
 class EdifactStackLevel:
     """
@@ -374,3 +354,28 @@ class EdifactStack:
             elif level.is_groupable:
                 result += "[0]"
         return result
+
+
+@attr.s(auto_attribs=True, kw_only=True)
+class EdifactStackQuery:
+    """
+    The EdifactStackQuery contains the data you need to provide to a MIG reader to return you the :class:`EdifactStack`
+    of an element
+    """
+
+    #: the key of the segment group, f.e. 'root' or 'SG5' or 'SG12'
+    segment_group_key: str = attr.ib(validator=attr.validators.instance_of(str))
+    #: the segment code, f.e. 'NAD' or 'DTM'
+    segment_code: str = attr.ib(validator=attr.validators.matches_re("^[A-Z]+$"))
+    #: the data element id, f.e. '0068'
+    data_element_id: str = attr.ib(validator=attr.validators.matches_re(r"^\d{4}$"))
+    #: the name of the element, f.e. "MP-ID" or "Kundennummer" or "Identifikator"
+    name: str = attr.ib(validator=attr.validators.instance_of(str))
+    predecessor_qualifier: Optional[str] = attr.ib(
+        default=None, validator=attr.validators.optional(attr.validators.matches_re(r"^[A-Z\d]+$"))
+    )
+    """
+    Some names are not really unique. F.e. all date time fields carry more or less the same name in the AHB.
+    So to distinguish between them you may provide the predecissing qualifier.
+    In case of 'DTM+137++what_youre_looking_for' the predecessor qualifier is '137'
+    """

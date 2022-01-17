@@ -10,7 +10,7 @@ import attr
 from lxml import etree  # type:ignore[import]
 
 from maus import SegmentGroupHierarchy
-from maus.models.edifact_components import EdifactStack, EdifactStackLevel
+from maus.models.edifact_components import EdifactStack, EdifactStackLevel, EdifactStackQuery
 
 
 class MigReader(ABC):
@@ -71,14 +71,7 @@ class MigReader(ABC):
 
     # pylint:disable=too-many-arguments
     @abstractmethod
-    def get_edifact_stack(
-        self,
-        segment_group_key: str,
-        segment_key: str,
-        data_element_id: str,
-        name: str,
-        predecessor_qualifier: Optional[str] = None,
-    ) -> EdifactStack:
+    def get_edifact_stack(self, query: EdifactStackQuery) -> Optional[EdifactStack]:
         """
         Returns the edifact stack for the given combination of segment group, key, data element and name
         """
@@ -221,20 +214,13 @@ class MigXmlReader(MigReader):
                 return segment_group_key
         return None
 
-    # pylint:disable=too-many-arguments # yeah. i feel like 6 are still ok
-    def get_edifact_stack(
-        self,
-        segment_group_key: str,
-        segment_key: str,
-        data_element_id: str,
-        name: str,
-        predecessor_qualifier: Optional[str] = None,
-    ) -> Optional[EdifactStack]:
+    def get_edifact_stack(self, query: EdifactStackQuery) -> Optional[EdifactStack]:
         """
         get the edifact stack for the given segment_group, segment... combination or None if there is no match
         """
         segment_de_result = self.get_unique_result_by_xpath(
-            f".//*[@meta.id='{data_element_id}' and starts-with(@ref, '{segment_key}')]", use_sanitized_tree=False
+            f".//*[@meta.id='{query.data_element_id}' and starts-with(@ref, '{query.segment_code}')]",
+            use_sanitized_tree=False,
         )
         if segment_de_result.is_unique:
             return self.element_to_edifact_stack(segment_de_result.unique_result, use_sanitized_tree=False)
@@ -242,14 +228,14 @@ class MigXmlReader(MigReader):
             filtered_by_names = [
                 x
                 for x in segment_de_result.candidates
-                if MigReader.are_similar_names(x.attrib["name"], name)
-                or ("ahbName" in x.attrib and MigReader.are_similar_names(x.attrib["ahbName"], name))
+                if MigReader.are_similar_names(x.attrib["name"], query.name)
+                or ("ahbName" in x.attrib and MigReader.are_similar_names(x.attrib["ahbName"], query.name))
             ]
             if len(filtered_by_names) == 0:
                 # try to find by parents name
                 via_parents_name_result = self.get_unique_result_by_xpath(
                     # pylint:disable=line-too-long
-                    f".//class[@name='{MigReader.make_name_comparable(name)}']/*[@meta.id='{data_element_id}' and starts-with(@ref, '{segment_key}')]",
+                    f".//class[@name='{MigReader.make_name_comparable(query.name)}']/*[@meta.id='{query.data_element_id}' and starts-with(@ref, '{query.segment_code}')]",
                     use_sanitized_tree=True,
                 )
                 if via_parents_name_result.is_unique:
@@ -257,14 +243,14 @@ class MigXmlReader(MigReader):
                 if via_parents_name_result.candidates is None:
                     via_parents_ahb_name_result = self.get_unique_result_by_xpath(
                         # pylint:disable=line-too-long
-                        f".//class[@ahbName='{MigReader.make_name_comparable(name)}']/*[@meta.id='{data_element_id}' and starts-with(@ref, '{segment_key}')]",
+                        f".//class[@ahbName='{MigReader.make_name_comparable(query.name)}']/*[@meta.id='{query.data_element_id}' and starts-with(@ref, '{query.segment_code}')]",
                         use_sanitized_tree=True,
                     )
                     if via_parents_ahb_name_result.is_unique:
                         return self.element_to_edifact_stack(
                             via_parents_ahb_name_result.unique_result, use_sanitized_tree=True
                         )
-                    if not via_parents_name_result.candidates and predecessor_qualifier:
+                    if not via_parents_name_result.candidates and query.predecessor_qualifier:
                         # This happens if fields have a completely different name in the MIG vs. AHB.
                         # For example for REQOTE Lieferdatum: Its name in the AHB is
                         # 'Datum oder Uhrzeit oderZeitspanne, Wert'.
@@ -275,7 +261,7 @@ class MigXmlReader(MigReader):
                         filtered_by_predecessor = [
                             x
                             for x in segment_de_result.candidates
-                            if x.attrib["ref"].endswith(f"{predecessor_qualifier}]")
+                            if x.attrib["ref"].endswith(f"{query.predecessor_qualifier}]")
                         ]  # that's a bit dirty, better parse the ref properly instead of string-matching
                         if len(filtered_by_predecessor) == 1:
                             return self.element_to_edifact_stack(filtered_by_predecessor[0], use_sanitized_tree=False)
@@ -284,10 +270,21 @@ class MigXmlReader(MigReader):
                 return self.element_to_edifact_stack(filtered_by_names[0], use_sanitized_tree=False)
             else:  # len(filtered_by_names) >1
                 filtered_by_sg = self.get_unique_result_by_segment_group(
-                    filtered_by_names, segment_group_key, use_sanitized_tree=False
+                    filtered_by_names, query.segment_group_key, use_sanitized_tree=False
                 )
                 if filtered_by_sg.is_unique:
                     return self.element_to_edifact_stack(filtered_by_sg.unique_result, use_sanitized_tree=False)
+                if len(filtered_by_sg.candidates) > 1:
+                    filtered_by_predecessor = [
+                        x
+                        for x in filtered_by_sg.candidates
+                        if x.attrib["ref"].endswith(f"{query.predecessor_qualifier}]")
+                    ]  # that's a bit dirty, better parse the ref properly instead of string-matching
+                    if len(filtered_by_predecessor) == 1:
+                        return self.element_to_edifact_stack(filtered_by_predecessor[0], use_sanitized_tree=False)
+                    if len(filtered_by_predecessor) > 1:
+                        raise ValueError("check parents")
+                    raise ValueError("Try predecessor")
 
         return None  # there is no match
 

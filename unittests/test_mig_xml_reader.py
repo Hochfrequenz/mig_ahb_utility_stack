@@ -4,6 +4,7 @@ from typing import Optional
 import pytest  # type:ignore[import]
 from lxml import etree  # type:ignore[import]
 
+from maus.models.edifact_components import EdifactStackQuery
 from maus.reader.mig_reader import MigXmlReader
 
 ALL_MIG_XML_FILES = pytest.mark.datafiles(
@@ -82,77 +83,86 @@ class TestMigXmlReader:
 
     @ALL_MIG_XML_FILES
     @pytest.mark.parametrize(
-        "mig_xml_path, segment_group_key, segment_key, data_element_id, name, predecessor_qualifier, expected_path",
+        "mig_xml_path, query, expected_path",
         [
             pytest.param(
                 "mscons_1154.xml",
-                "SG1",
-                "RFF",
-                "1154",
-                "Prüfidentifikator",
-                None,
+                EdifactStackQuery(
+                    segment_group_key="SG1", segment_code="RFF", data_element_id="1154", name="Prüfidentifikator"
+                ),
                 '$["Dokument"][0]["Nachricht"][0]["Prüfidentifikator"][0]["ID"]',
                 id="mscons pruefi",
             ),
             pytest.param(
                 "utilmd_7402.xml",
-                "SG4",
-                "IDE",
-                "7402",
-                "Vorgangsnummer",
-                None,
+                EdifactStackQuery(
+                    segment_group_key="SG4", segment_code="IDE", data_element_id="7402", name="Vorgangsnummer"
+                ),
                 '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Vorgangsnummer"]',
                 id="utilmd vorgangsnummer",
             ),
             pytest.param(
                 "utilmd_2380.xml",
-                "root",
-                "DTM",
-                "2380",
-                "Gültigkeit, Beginndatum",
-                None,
+                EdifactStackQuery(
+                    segment_group_key="root", segment_code="DTM", data_element_id="2380", name="Gültigkeit, Beginndatum"
+                ),
                 '$["Dokument"][0]["Nachricht"][0]["Gültigkeit,Beginndatum"]',
                 id="gueltigkeit,beginndatum",
             ),
             pytest.param(
                 "utilmd_2380.xml",
-                "SG4",
-                "DTM",
-                "2380",
-                "Bilanzierungsbeginn",
-                None,
+                EdifactStackQuery(
+                    segment_group_key="SG4", segment_code="DTM", data_element_id="2380", name="Bilanzierungsbeginn"
+                ),
                 '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Bilanzierungsbeginn"]',
                 id="utilmd bilanzierungsbeginn",
             ),
             pytest.param(
                 "utilmd_1154.xml",
-                "SG6",
-                "RFF",
-                "1154",
-                "Referenz Vorgangsnummer(aus Anfragenachricht)",
-                None,
+                EdifactStackQuery(
+                    segment_group_key="SG6",
+                    segment_code="RFF",
+                    data_element_id="1154",
+                    name="Referenz Vorgangsnummer(aus Anfragenachricht)",
+                ),
                 '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Referenz Vorgangsnummer (aus Anfragenachricht)"][0]["Referenz"]',
                 id="referenz aus anfragenachricht",
             ),
             pytest.param(
                 "utilmd_1154.xml",
-                "SG8",
-                "RFF",
-                "1154",
-                "Referenz auf die ID einer Messlokation",
-                "Z19",
+                EdifactStackQuery(
+                    segment_group_key="SG8",
+                    segment_code="RFF",
+                    data_element_id="1154",
+                    name="Referenz auf die ID einer Messlokation",
+                    predecessor_qualifier="Z19",
+                ),
                 '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Erforderliche OBIS-Daten der Messlokation"][0]["Referenz auf die ID einer Messlokation"]',
                 id="referenz auf melo-id",
             ),
             pytest.param(
                 "reqote.xml",
-                "root",
-                "DTM",
-                "2380",
-                "Datum oder Uhrzeit oderZeitspanne, Wert",  # <-- the messed up spaces are due to line breaks in the PDF
-                "76",
+                EdifactStackQuery(
+                    segment_group_key="root",
+                    segment_code="DTM",
+                    data_element_id="2380",
+                    name="Datum oder Uhrzeit oderZeitspanne, Wert",  # <-- the messed up spaces are due to line breaks in the PDF
+                    predecessor_qualifier="76",
+                ),
                 '$["Dokument"][0]["Nachricht"][0]["Datum zum geplanten Leistungsbeginn"]',
                 id="reqote lieferdatum",
+            ),
+            pytest.param(
+                "reqote.xml",
+                EdifactStackQuery(
+                    segment_group_key="SG11",
+                    segment_code="NAD",
+                    data_element_id="3039",
+                    name="MP-ID",  # <-- this used to be "Beteiligter, Identifikation"... don't know why
+                    predecessor_qualifier="MS",
+                ),
+                '$["Dokument"][0]["Nachricht"][0]["MP-ID Absender"]["MP-ID"]',
+                id="reqote absender",
             ),
         ],
     )
@@ -160,15 +170,9 @@ class TestMigXmlReader:
         self,
         datafiles,
         mig_xml_path: str,
-        segment_group_key: str,
-        segment_key: str,
-        data_element_id: str,
-        name: str,
-        predecessor_qualifier: Optional[str],
+        query: EdifactStackQuery,
         expected_path: str,
     ):
         reader = MigXmlReader(Path(datafiles) / mig_xml_path)
-        actual_stack = reader.get_edifact_stack(
-            segment_group_key, segment_key, data_element_id, name, predecessor_qualifier
-        )
+        actual_stack = reader.get_edifact_stack(query)
         assert actual_stack.to_json_path() == expected_path
