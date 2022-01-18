@@ -54,7 +54,7 @@
 51,SG11,,,,,Muss,
 52,SG11,NAD,,,,Muss,
 53,SG11,NAD,3035,MR,Absender,
-54,SG11,NAD,3039,"Beteiligter, Identifikation",,X,
+54,SG11,NAD,3039,"MP-ID",,X,
 55,SG11,NAD,3055,9,GS1,X,
 56,SG11,NAD,3055,293,"DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",X,
 57,SG11,NAD,3055,332,"DE, DVGW Service & Consult GmbH",X,

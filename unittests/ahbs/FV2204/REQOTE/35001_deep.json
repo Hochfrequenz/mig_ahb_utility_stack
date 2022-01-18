@@ -120,7 +120,7 @@
                 {
                   "ahb_expression": "X",
                   "data_element_id": "3039",
-                  "discriminator": "Beteiligter, Identifikation",
+                  "discriminator": "MP-ID",
                   "entered_input": null
                 },
                 {
