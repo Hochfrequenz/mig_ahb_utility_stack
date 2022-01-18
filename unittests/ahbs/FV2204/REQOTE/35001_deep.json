@@ -89,7 +89,7 @@
                 {
                   "data_element_id": "3035",
                   "discriminator": "SG11->NAD->3035",
-                  "value_pool": {}
+                  "value_pool": { "MS": "Nachrichtenaussteller bzw." }
                 },
                 {
                   "ahb_expression": "X",
@@ -113,10 +113,9 @@
               "ahb_expression": "Muss",
               "data_elements": [
                 {
-                  "ahb_expression": "",
                   "data_element_id": "3035",
                   "discriminator": "SG11->NAD->3035",
-                  "entered_input": null
+                  "value_pool": { "MR": "Absender" }
                 },
                 {
                   "ahb_expression": "X",

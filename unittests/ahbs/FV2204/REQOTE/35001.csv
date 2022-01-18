@@ -30,7 +30,7 @@
 27,MP-ID Absender,,,,,,
 28,SG11,,,,,Muss,
 29,SG11,NAD,,,,Muss,
-30,SG11,NAD,3035,,Nachrichtenaussteller bzw.,,MS
+30,SG11,NAD,3035,MS,Nachrichtenaussteller bzw.,,
 31,,,,,-absender,,
 32,SG11,NAD,3039,"MP-ID",,X,
 33,SG11,NAD,3055,9,GS1,X,
@@ -53,7 +53,7 @@
 50,MP-ID Empfänger,,,,,,
 51,SG11,,,,,Muss,
 52,SG11,NAD,,,,Muss,
-53,SG11,NAD,3035,,,,MR
+53,SG11,NAD,3035,MR,Absender,
 54,SG11,NAD,3039,"Beteiligter, Identifikation",,X,
 55,SG11,NAD,3055,9,GS1,X,
 56,SG11,NAD,3055,293,"DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",X,
