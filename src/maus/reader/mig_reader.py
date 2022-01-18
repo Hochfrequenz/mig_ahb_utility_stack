@@ -122,7 +122,7 @@ class _EdifactStackSearchStrategy:
         """
         filter_result: _XQueryPathResult = self.filter(query, pre_selection)
         if filter_result.is_unique is True:
-            return self.unique_result_strategy(filter_result.unique_result)
+            return self.unique_result_strategy(filter_result.unique_result)  # type:ignore[arg-type]
         if filter_result.candidates and len(filter_result.candidates) > 1:
             if self.multiple_results_strategy is not None:
                 return self.multiple_results_strategy.apply(query, filter_result.candidates)
@@ -250,6 +250,9 @@ class MigXmlReader(MigReader):
 
     @staticmethod
     def get_unique_result_by_name(name: str, candidates: List[Element]):
+        """
+        returns those elements that have the given name
+        """
         filtered_by_names = [
             x
             for x in candidates
