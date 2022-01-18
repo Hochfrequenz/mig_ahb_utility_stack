@@ -12,7 +12,8 @@ from typing import List, Optional, Sequence, TextIO, Tuple
 from maus.models.anwendungshandbuch import AhbLine, AhbMetaInformation, FlatAnwendungshandbuch
 
 _pruefi_pattern = re.compile(r"^\d{5}$")  #: five digits
-_value_pool_entry_pattern = re.compile(r"^[A-Z0-9]{3,}$")
+_value_pool_entry_pattern = re.compile(r"^[A-Z0-9]{2,}$")
+_numeric_value_pool_entry_pattern = re.compile(r"^\d+(?:\.\d+)?$")
 _segment_group_pattern = re.compile(r"^SG\d+$")
 
 
@@ -100,6 +101,9 @@ class FlatAhbCsvReader(FlatAhbReader):
         """
         if FlatAhbCsvReader._is_value_pool_entry(x) and not FlatAhbCsvReader._is_value_pool_entry(y):
             return x, y or None
+        if FlatAhbCsvReader._is_value_pool_entry(x) and FlatAhbCsvReader._is_value_pool_entry(y):
+            # Both look like a value pool entry. This typically happens f.e. for date qualifiers or code lists
+            return x, y
         return y or None, x or None
 
     @staticmethod
@@ -109,7 +113,13 @@ class FlatAhbCsvReader(FlatAhbReader):
         """
         if not candidate:
             return False
-        return _value_pool_entry_pattern.match(candidate) is not None
+        if _value_pool_entry_pattern.match(candidate) is not None:
+            return True
+        # numbers alone might be value pool entries even if they don't match the regex
+        # we don't use "isdigit" because isdigit f.e. does not match '1.2'
+        if _numeric_value_pool_entry_pattern.match(candidate) is not None:
+            return True
+        return len(candidate) == 1 and candidate.upper() == candidate
 
     @staticmethod
     def _is_segment_group(candidate: Optional[str]) -> bool:

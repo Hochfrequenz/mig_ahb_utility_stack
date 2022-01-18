@@ -1,0 +1,62 @@
+﻿<REQOTE>
+    <class name="Dokument" ref="/" key="UNB:5:0">
+        <field name="Absender" ref="UNB:2:0" ahbName="Absender.Code"/>
+        <field name="Absender_Code_UNB" ref="UNB:2:1" ahbName="Absender.Codeliste"/>
+        <field name="Empfaenger" ref="UNB:3:0" ahbName="Empfänger.Code"/>
+        <field name="Empfaenger_Code_UNB" ref="UNB:3:1" ahbName="Empfänger.Codeliste"/>
+        <field name="Dokumentendatum" ref="UNB:4:0"/>
+        <field name="Dokumentenuhrzeit" ref="UNB:4:1"/>
+        <field name="Datenaustauschreferenz" ref="UNB:5:0"/>
+        <class name="Nachricht" ref="UNH" key="UNH:1:0">
+            <field name="Nachrichten-Referenznummer" ref="UNH:1:0" meta.id="0062" meta.link="Nachrichten-Kopfdaten"/>
+            <field name="Kategorie" migName="Beginn der Nachricht" meta.id="1001" ref="BGM:1:0"
+                   groupBy="Beginn der Nachricht"
+                   meta.help="Hier wird die Kategorie der gesamten Nachricht für alle Vorgänge angegeben."
+                   meta.type="repository" meta.typeInfo="Kategorierepository"/>
+            <field name="BGMKey" migName="Beginn der Nachricht" meta.id="1004" ref="BGM:2:0" ahbName="Dokumentennummer"
+                   groupBy="Beginn der Nachricht" groupKey="true"/>
+            <field name="Nachrichtendatum" ref="DTM:1:1[1:0=137]" meta.id="2380" meta.format="203"
+                   meta.type="date-time"/>
+            <field name="Ausführungsdatum" ref="DTM:1:1[1:0=203]" meta.id="2380" meta.format="102"
+                   meta.type="date-time"/>
+            <field name="Beginn zum (nächstmöglichen Termin)" ref="DTM:1:1[1:0=469]" meta.id="2380" meta.format="102"
+                   meta.type="date-time"/>
+            <field name="Lieferdatum" ref="DTM:1:1[1:0=76]" meta.id="2380" meta.format="102" meta.type="date-time"
+                   ahbName="Datum zum geplanten Leistungsbeginn"/>
+            <class name="Prüfidentifikator" ref="SG1" key="RFF:1:1[RFF:1:0=Z13]" max="1">
+                <field name="ID" ref="RFF:1:1" meta.id="1154"/>
+            </class>
+            <class name="Absender_NAD" ref="SG11" max="1" key="NAD:2:0[1:0=MS]" ahbName="MP-ID Absender"
+                   meta.type="group" meta.objType="Marktpartner">
+                <field name="ID" ref="NAD:2:0" ahbName="MP-ID" meta.id="3039"/>
+                <field name="Codeliste" ref="NAD:2:2" meta.id="3055"/>
+                <class name="Ansprechpartner" ref="SG14" max="1">
+                    <class name="Kontakt" ref="CTA" key="CTA:2:1" meta.virtualKey="Ansprechpartner" max="5"
+                           meta.virtual="true">
+                        <field name="Name" ref="CTA:2:1" meta.id="3412"/>
+                    </class>
+                    <class name="Kommunikationsverbindung" ref="COM" max="5">
+                        <field name="ID" ref="COM:1:1" meta.id="3148" ahbName="Art des Kommunikationsmittels"/>
+                        <field name="Adresse" ref="COM:1:0" meta.id="3155" ahbName="Nummer / Adresse"/>
+                    </class>
+                </class>
+            </class>
+            <class name="Empfaenger_NAD" migName="MP-ID Empfänger" max="1" ahbName="MP-ID Empfänger" ref="SG11"
+                   key="NAD:2:0[1:0=MR]" meta.objType="Marktpartner">
+                <field name="ID" ref="NAD:2:0" ahbName="MP-ID" meta.id="3039"/>
+                <field name="Codeliste" ref="NAD:2:2" meta.id="3055"/>
+            </class>
+            <class name="Lieferanschrift" ref="SG11" key="NAD:1:0[1:0=DP]" ahbName="Meldepunkt" meta.virtual="true"
+                   max="9999" meta.groupKey="ID">
+                <class name="Zaehlpunkt" ref="LOC" key="LOC:2:0[1:0=172]" ahbName="Meldepunkt"
+                       meta.objType="Meldepunkte" max="1" meta.virtual="true">
+                    <field name="ID" ref="LOC:2:0" meta.id="3225" meta.objType="Meldepunkte"/>
+                </class>
+            </class>
+            <class name="Position" ref="SG27" key="LIN:1:0" ahbName="Positionsdaten" groupCounterKey="Positionsnummer"
+                   max="1">
+                <field name="Positionsnummer" ref="LIN:1:0" meta.id="1082"/>
+            </class>
+        </class>
+    </class>
+</REQOTE>

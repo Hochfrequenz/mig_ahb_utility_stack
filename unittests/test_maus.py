@@ -41,7 +41,9 @@ class TestMaus:
                     ),
                 ],
                 DataElementValuePool(
-                    discriminator="SG4->FOO->0333", value_pool={"E01": "Das Eine", "E02": "Das Andere"}
+                    discriminator="SG4->FOO->0333",
+                    value_pool={"E01": "Das Eine", "E02": "Das Andere"},
+                    data_element_id="0333",
                 ),
             ),
             pytest.param(
@@ -57,7 +59,12 @@ class TestMaus:
                         guid=None,
                     ),
                 ],
-                DataElementFreeText(discriminator="SG4->FOO->0333 (Das Eine)", ahb_expression="X", entered_input=None),
+                DataElementFreeText(
+                    discriminator="Das Eine",
+                    ahb_expression="X",
+                    entered_input=None,
+                    data_element_id="0333",
+                ),
             ),
         ],
     )
@@ -125,7 +132,9 @@ class TestMaus:
                     ),
                 ],
                 DataElementValuePool(
-                    discriminator="SG4->FOO->0333", value_pool={"E01": "Das Eine", "E02": "Das Andere"}
+                    discriminator="SG4->FOO->0333",
+                    value_pool={"E01": "Das Eine", "E02": "Das Andere"},
+                    data_element_id="0333",
                 ),
             ),
             pytest.param(
@@ -141,7 +150,12 @@ class TestMaus:
                         guid=None,
                     ),
                 ],
-                DataElementFreeText(discriminator="SG4->FOO->0333 (Das Eine)", ahb_expression="X", entered_input=None),
+                DataElementFreeText(
+                    discriminator="Das Eine",
+                    ahb_expression="X",
+                    entered_input=None,
+                    data_element_id="0333",
+                ),
             ),
         ],
     )
@@ -186,6 +200,7 @@ class TestMaus:
                                     DataElementValuePool(
                                         discriminator="SG4->FOO->0333",
                                         value_pool={"E01": "Das Eine", "E02": "Das Andere"},
+                                        data_element_id="0333",
                                     )
                                 ],
                             )
@@ -228,6 +243,7 @@ class TestMaus:
                                     DataElementValuePool(
                                         discriminator="SG4->FOO->0333",
                                         value_pool={"E01": "Das Eine", "E02": "Das Andere"},
+                                        data_element_id="0333",
                                     )
                                 ],
                             )
@@ -353,9 +369,10 @@ class TestMaus:
                                     ahb_expression="X",
                                     data_elements=[
                                         DataElementFreeText(
-                                            discriminator="UNH->1234 (Nachrichten-Startsegment)",
+                                            discriminator="Nachrichten-Startsegment",
                                             ahb_expression="X",
                                             entered_input=None,
+                                            data_element_id="1234",
                                         )
                                     ],
                                 )
@@ -372,6 +389,7 @@ class TestMaus:
                                                 DataElementValuePool(
                                                     discriminator="SG4->FOO->0333",
                                                     value_pool={"E01": "Das andere", "E02": "Das Eine"},
+                                                    data_element_id="0333",
                                                 )
                                             ],
                                         )
@@ -386,9 +404,10 @@ class TestMaus:
                                                     ahb_expression="X",
                                                     data_elements=[
                                                         DataElementFreeText(
-                                                            discriminator="SG5->BAR->1234 (Die fünfte Gruppe)",
+                                                            discriminator="Die fünfte Gruppe",
                                                             ahb_expression="X",
                                                             entered_input=None,
+                                                            data_element_id="1234",
                                                         )
                                                     ],
                                                 )
@@ -403,9 +422,10 @@ class TestMaus:
                                                             ahb_expression="X",
                                                             data_elements=[
                                                                 DataElementFreeText(
-                                                                    discriminator="SG6->irgendwas->7889 (Die sechste Gruppe)",
+                                                                    discriminator="Die sechste Gruppe",
                                                                     ahb_expression="X",
                                                                     entered_input=None,
+                                                                    data_element_id="7889",
                                                                 )
                                                             ],
                                                         )
@@ -423,9 +443,10 @@ class TestMaus:
                                                     ahb_expression="X",
                                                     data_elements=[
                                                         DataElementFreeText(
-                                                            discriminator="SG7->ASD->0123 (Die siebte Gruppe)",
+                                                            discriminator="Die siebte Gruppe",
                                                             ahb_expression="X",
                                                             entered_input=None,
+                                                            data_element_id="0123",
                                                         )
                                                     ],
                                                 )
