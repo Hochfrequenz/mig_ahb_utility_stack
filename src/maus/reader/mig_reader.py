@@ -91,6 +91,47 @@ class _XQueryPathResult:
     candidates: Optional[List[Element]]  #: list of candidates if there is >1 result
 
 
+# pylint:disable=too-few-public-methods
+@attr.s(auto_attribs=True, kw_only=True)
+class _EdifactStackSearchStrategy:
+    """
+    The search strategy allows to have a compact yet descriptive representation on how the edifact stack search works.
+    The alternative to this is a very nested and hard to understand if/else/then structure with lots of branches.
+    Any step inside the strategy has three possible outcomes which are represented by the :class:`_XQueryPathResult`:
+    1. There is exactly one unique result => return/exit
+    2. There are no results => start over again
+    3. There are >1 results => apply additional filters
+    """
+
+    #: name, f.e. "filter by data element id"
+    name: str = attr.ib(validator=attr.validators.instance_of(str))
+    #: the filter is the function that describes the strategy. It consumes the query and (optionally) a list of elements
+    filter: Callable[[EdifactStackQuery, Optional[List[Element]]], _XQueryPathResult] = attr.ib(
+        validator=attr.validators.is_callable()
+    )
+    #: The unique result strategy is to return an edifact stack for the unique result element
+    unique_result_strategy: Callable[[Element], EdifactStack] = attr.ib(validator=attr.validators.is_callable())
+    #: the no result strategy is to apply another filter based on those candidates that lead to no result (fallback)
+    no_result_strategy: Optional["_EdifactStackSearchStrategy"]
+    #: in case of multiple results the next strategy uses the multiple results as input (sharpen)
+    multiple_results_strategy: Optional["_EdifactStackSearchStrategy"]
+
+    def apply(self, query: EdifactStackQuery, pre_selection: Optional[List[Element]] = None) -> Optional[EdifactStack]:
+        """
+        Apply the defined strategy until we either have no ideas left or a unique result is found
+        """
+        filter_result: _XQueryPathResult = self.filter(query, pre_selection)
+        if filter_result.is_unique is True:
+            return self.unique_result_strategy(filter_result.unique_result)
+        if filter_result.candidates and len(filter_result.candidates) > 1:
+            if self.multiple_results_strategy is not None:
+                return self.multiple_results_strategy.apply(query, filter_result.candidates)
+            return None
+        if self.no_result_strategy is not None:
+            return self.no_result_strategy.apply(query, pre_selection)
+        return None
+
+
 #: a regex to match a ref-segment: https://regex101.com/r/KY25AH/1
 _nested_qualifier_pattern = re.compile(r"^(?P<segment_code>[A-Z]+):\d+:\d+\[(?:\w+:)+\w+:?=(?P<qualifier>[A-Z\d]+)\]$")
 TResult = TypeVar("TResult")  #: is a type var to indicate an "arbitrary but same" type in a generic function
@@ -208,6 +249,16 @@ class MigXmlReader(MigReader):
         return MigXmlReader._list_to_xquerypathresult(filtered_by_predecessor)
 
     @staticmethod
+    def get_unique_result_by_name(name: str, candidates: List[Element]):
+        filtered_by_names = [
+            x
+            for x in candidates
+            if MigReader.are_similar_names(x.attrib["name"], name)
+            or ("ahbName" in x.attrib and MigReader.are_similar_names(x.attrib["ahbName"], name))
+        ]
+        return MigXmlReader._list_to_xquerypathresult(filtered_by_names)
+
+    @staticmethod
     def _get_segment_group_key_or_none(element: Element) -> Optional[str]:
         """
         returns the segment group of element if present; None otherwise
@@ -274,93 +325,118 @@ class MigXmlReader(MigReader):
             element, lambda c: MigXmlReader._get_nested_qualifier("key", c), use_sanitized_tree=use_sanitized_tree
         )
 
+    def _handle_predecessor_if_present(self, query: EdifactStackQuery) -> Optional[_EdifactStackSearchStrategy]:
+        """
+        return a strategy for the predecessor if it's present in the query
+        """
+        if not query.predecessor_qualifier:
+            return None
+        return _EdifactStackSearchStrategy(
+            name="filter by predecessor",
+            filter=lambda q, c: self.get_unique_result_by_predecessor(c, q.predecessor_qualifier),
+            unique_result_strategy=lambda unique_result: self.element_to_edifact_stack(
+                unique_result, use_sanitized_tree=False
+            ),
+            no_result_strategy=None,
+            multiple_results_strategy=None,
+        )
+
+    def _multiple_data_element_matches_handling(
+        self, query: EdifactStackQuery
+    ) -> Optional[_EdifactStackSearchStrategy]:
+        if query.name is not None:
+            return _EdifactStackSearchStrategy(
+                name="filter by element name and ahb name",
+                filter=lambda q, c: self.get_unique_result_by_name(q.name, c),
+                unique_result_strategy=lambda unique_result: self.element_to_edifact_stack(
+                    unique_result, use_sanitized_tree=False
+                ),
+                no_result_strategy=_EdifactStackSearchStrategy(
+                    name="filter by parents name because direct name lead to no result",
+                    filter=lambda q, _: self.get_unique_result_by_xpath(
+                        # pylint:disable=line-too-long
+                        f".//class[@name='{MigReader.make_name_comparable(query.name)}']/*[@meta.id='{query.data_element_id}' and starts-with(@ref, '{query.segment_code}')]",
+                        use_sanitized_tree=True,
+                    ),
+                    unique_result_strategy=lambda unique_result: self.element_to_edifact_stack(
+                        unique_result, use_sanitized_tree=True
+                    ),
+                    no_result_strategy=_EdifactStackSearchStrategy(
+                        name="filter by parents ahb name",
+                        filter=lambda q, _: self.get_unique_result_by_xpath(
+                            # pylint:disable=line-too-long
+                            f".//class[@ahbName='{MigReader.make_name_comparable(query.name)}']/*[@meta.id='{query.data_element_id}' and starts-with(@ref, '{query.segment_code}')]",
+                            use_sanitized_tree=True,
+                        ),
+                        unique_result_strategy=lambda unique_result: self.element_to_edifact_stack(
+                            unique_result, use_sanitized_tree=True
+                        ),
+                        multiple_results_strategy=None,
+                        no_result_strategy=self._handle_predecessor_if_present(query),
+                    ),
+                    multiple_results_strategy=None,
+                ),
+                multiple_results_strategy=_EdifactStackSearchStrategy(
+                    name="filter by segment group",
+                    filter=lambda q, c: self.get_unique_result_by_segment_group(
+                        c, q.segment_group_key, use_sanitized_tree=False
+                    ),
+                    unique_result_strategy=lambda unique_result: self.element_to_edifact_stack(
+                        unique_result, use_sanitized_tree=False
+                    ),
+                    multiple_results_strategy=_EdifactStackSearchStrategy(
+                        name="filter by predecessor after segment group filter was not unique",
+                        filter=lambda q, c: self.get_unique_result_by_predecessor(c, q.predecessor_qualifier),
+                        unique_result_strategy=lambda unique_result: self.element_to_edifact_stack(
+                            unique_result, use_sanitized_tree=False
+                        ),
+                        multiple_results_strategy=None,  # raise ValueError("Predecessor B"),
+                        no_result_strategy=_EdifactStackSearchStrategy(
+                            name="filter by parent predecessor after predecessor lead to no result",
+                            filter=lambda q, c: self.get_unique_result_by_parent_predecessor(
+                                c, q.predecessor_qualifier
+                            ),
+                            no_result_strategy=None,
+                            multiple_results_strategy=None,
+                            unique_result_strategy=lambda unique_result: self.element_to_edifact_stack(
+                                unique_result, use_sanitized_tree=False
+                            ),
+                        ),
+                    ),
+                    no_result_strategy=None,
+                ),
+            )
+        if query.name is None and query.predecessor_qualifier is not None:
+            return _EdifactStackSearchStrategy(
+                name="filter by parent predecessor (no fallback)",
+                filter=lambda q, c: self.get_unique_result_by_parent_predecessor(c, q.predecessor_qualifier),
+                unique_result_strategy=lambda unique_result: self.element_to_edifact_stack(
+                    unique_result, use_sanitized_tree=False
+                ),
+                no_result_strategy=None,
+                multiple_results_strategy=None,
+            )
+        return None
+
     def get_edifact_stack(self, query: EdifactStackQuery) -> Optional[EdifactStack]:
         """
         get the edifact stack for the given segment_group, segment... combination or None if there is no match
         """
-        filtered_by_de = self.get_unique_result_by_xpath(
-            f".//*[@meta.id='{query.data_element_id}' and starts-with(@ref, '{query.segment_code}')]",
-            use_sanitized_tree=False,
+        strategy = _EdifactStackSearchStrategy(
+            name="filter by data element id",
+            filter=lambda q, _: (
+                self.get_unique_result_by_xpath(
+                    f".//*[@meta.id='{q.data_element_id}' and starts-with(@ref, '{q.segment_code}')]",
+                    use_sanitized_tree=False,
+                )
+            ),
+            unique_result_strategy=lambda unique_result: self.element_to_edifact_stack(
+                unique_result, use_sanitized_tree=False
+            ),
+            no_result_strategy=None,  # if there is no matching data element, there's no chance to find a stack
+            multiple_results_strategy=self._multiple_data_element_matches_handling(query),
         )
-        if filtered_by_de.is_unique is True:
-            return self.element_to_edifact_stack(filtered_by_de.unique_result, use_sanitized_tree=False)
-        if filtered_by_de.is_unique is False and filtered_by_de.candidates is not None and query.name is not None:
-            filtered_by_names = [
-                x
-                for x in filtered_by_de.candidates
-                if MigReader.are_similar_names(x.attrib["name"], query.name)
-                or ("ahbName" in x.attrib and MigReader.are_similar_names(x.attrib["ahbName"], query.name))
-            ]
-            if len(filtered_by_names) == 0:
-                # try to find by parents name
-                via_parents_name_result = self.get_unique_result_by_xpath(
-                    # pylint:disable=line-too-long
-                    f".//class[@name='{MigReader.make_name_comparable(query.name)}']/*[@meta.id='{query.data_element_id}' and starts-with(@ref, '{query.segment_code}')]",
-                    use_sanitized_tree=True,
-                )
-                if via_parents_name_result.is_unique is True:
-                    return self.element_to_edifact_stack(via_parents_name_result.unique_result, use_sanitized_tree=True)
-                if via_parents_name_result.candidates is None:
-                    via_parents_ahb_name_result = self.get_unique_result_by_xpath(
-                        # pylint:disable=line-too-long
-                        f".//class[@ahbName='{MigReader.make_name_comparable(query.name)}']/*[@meta.id='{query.data_element_id}' and starts-with(@ref, '{query.segment_code}')]",
-                        use_sanitized_tree=True,
-                    )
-                    if via_parents_ahb_name_result.is_unique is True:
-                        return self.element_to_edifact_stack(
-                            via_parents_ahb_name_result.unique_result, use_sanitized_tree=True
-                        )
-                    if not via_parents_name_result.candidates and query.predecessor_qualifier:
-                        # This happens if fields have a completely different name in the MIG vs. AHB.
-                        # For example for REQOTE Lieferdatum: Its name in the AHB is
-                        # 'Datum oder Uhrzeit oderZeitspanne, Wert'.
-                        # So basically its name is the same name as all dates in the AHB.
-                        # Now we have to start over again doing something differently.
-                        # We use the predecessor because for dates the predecessor has a meaning,
-                        # the field itself has not. Predecessor "Lieferdatum", Actual line: "Datum oder Uhrzeit oder..."
-                        filtered_by_predecessor = self.get_unique_result_by_predecessor(
-                            filtered_by_de.candidates, predecessor_qualifier=query.predecessor_qualifier
-                        )
-                        if filtered_by_predecessor.is_unique is True:
-                            return self.element_to_edifact_stack(
-                                filtered_by_predecessor.unique_result, use_sanitized_tree=False
-                            )
-                        raise ValueError("Try predecessor A")
-            elif len(filtered_by_names) == 1:
-                return self.element_to_edifact_stack(filtered_by_names[0], use_sanitized_tree=False)
-            else:  # len(filtered_by_names) >1
-                filtered_by_sg = self.get_unique_result_by_segment_group(
-                    filtered_by_names, query.segment_group_key, use_sanitized_tree=False
-                )
-                if filtered_by_sg.is_unique is True:
-                    return self.element_to_edifact_stack(filtered_by_sg.unique_result, use_sanitized_tree=False)
-                if filtered_by_sg.candidates is not None and len(filtered_by_sg.candidates) > 1:
-                    filtered_by_predecessor = self.get_unique_result_by_predecessor(
-                        filtered_by_sg.candidates, query.predecessor_qualifier  # type:ignore[arg-type]
-                    )
-                    if filtered_by_predecessor.is_unique is True:
-                        return self.element_to_edifact_stack(
-                            filtered_by_predecessor.unique_result, use_sanitized_tree=False
-                        )
-                    if filtered_by_predecessor.candidates:
-                        raise ValueError("Try predecessor B")
-                    filtered_by_parent_predecessor = self.get_unique_result_by_parent_predecessor(
-                        filtered_by_sg.candidates, query.predecessor_qualifier  # type:ignore[arg-type]
-                    )
-                    if filtered_by_parent_predecessor.is_unique is True:
-                        return self.element_to_edifact_stack(
-                            filtered_by_parent_predecessor.unique_result, use_sanitized_tree=False
-                        )
-                    raise ValueError("whaat?")
-        if filtered_by_de.candidates and query.name is None and query.predecessor_qualifier is not None:
-            filtered_by_parent_predecessor = self.get_unique_result_by_parent_predecessor(
-                filtered_by_de.candidates, query.predecessor_qualifier
-            )
-            if filtered_by_parent_predecessor.is_unique is True:
-                return self.element_to_edifact_stack(
-                    filtered_by_parent_predecessor.unique_result, use_sanitized_tree=False
-                )
-        return None  # there is no match
+        return strategy.apply(query)
 
     def to_segment_group_hierarchy(self) -> SegmentGroupHierarchy:
         """
