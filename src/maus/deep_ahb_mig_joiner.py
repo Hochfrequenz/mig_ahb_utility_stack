@@ -33,17 +33,18 @@ def _replace_disciminators_with_edifact_stack_segments(
                 else:
                     raise ValueError(f"Couldn't find a stack for {query}")
             if isinstance(data_element, DataElementValuePool):
-                edifact_stack = mig_reader.get_edifact_stack(
-                    EdifactStackQuery(
-                        segment_group_key=segment_group_key,
-                        segment_code=current_segment_key,
-                        data_element_id=data_element.data_element_id,
-                        name=None,
-                        predecessor_qualifier=predecessor_qualifier,
-                    )
+                query = EdifactStackQuery(
+                    segment_group_key=segment_group_key,
+                    segment_code=current_segment_key,
+                    data_element_id=data_element.data_element_id,
+                    name=None,
+                    predecessor_qualifier=predecessor_qualifier,
                 )
+                edifact_stack = mig_reader.get_edifact_stack(query)
                 if edifact_stack is not None:
                     result[segment_index].data_elements[de_index].discriminator = edifact_stack.to_json_path()
+                if edifact_stack is None and len(data_element.value_pool) > 1:
+                    raise ValueError(f"Any value pool with more than 1 entry has to have an edifact stack {query}")
                 if len(data_element.value_pool) == 1:
                     predecessor_qualifier = list(data_element.value_pool.keys())[0]
                 else:
