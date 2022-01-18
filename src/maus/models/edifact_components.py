@@ -369,8 +369,8 @@ class EdifactStackQuery:
     segment_code: str = attr.ib(validator=attr.validators.matches_re("^[A-Z]+$"))
     #: the data element id, f.e. '0068'
     data_element_id: str = attr.ib(validator=attr.validators.matches_re(r"^\d{4}$"))
-    #: the name of the element, f.e. "MP-ID" or "Kundennummer" or "Identifikator"
-    name: str = attr.ib(validator=attr.validators.instance_of(str))
+    #: the name of the element, f.e. "MP-ID" or "Kundennummer" or "Identifikator"; Is None for Value Pools
+    name: Optional[str] = attr.ib(validator=attr.validators.optional(attr.validators.instance_of(str)))
     predecessor_qualifier: Optional[str] = attr.ib(
         default=None, validator=attr.validators.optional(attr.validators.matches_re(r"^[A-Z\d]+$"))
     )

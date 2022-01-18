@@ -19,22 +19,26 @@ def _replace_disciminators_with_edifact_stack_segments(
         predecessor_qualifier: Optional[str] = None
         for de_index, data_element in enumerate(segment.data_elements):
             if isinstance(data_element, DataElementFreeText):
-                result[segment_index].data_elements[de_index].discriminator = mig_reader.get_edifact_stack(
-                    EdifactStackQuery(
-                        segment_group_key=segment_group_key,
-                        segment_code=current_segment_key,
-                        data_element_id=data_element.data_element_id,
-                        name=data_element.discriminator,
-                        predecessor_qualifier=predecessor_qualifier,
-                    )
-                ).to_json_path()
+                query = EdifactStackQuery(
+                    segment_group_key=segment_group_key,
+                    segment_code=current_segment_key,
+                    data_element_id=data_element.data_element_id,
+                    name=data_element.discriminator,
+                    predecessor_qualifier=predecessor_qualifier,
+                )
+                stack = mig_reader.get_edifact_stack(query)
+                # for easy error analysis set a conditional break point here for 'stack is None'
+                if stack is not None:
+                    result[segment_index].data_elements[de_index].discriminator = stack.to_json_path()
+                else:
+                    raise ValueError(f"Couldn't find a stack for {query}")
             if isinstance(data_element, DataElementValuePool):
                 edifact_stack = mig_reader.get_edifact_stack(
                     EdifactStackQuery(
                         segment_group_key=segment_group_key,
                         segment_code=current_segment_key,
                         data_element_id=data_element.data_element_id,
-                        name=data_element.discriminator,
+                        name=None,
                         predecessor_qualifier=predecessor_qualifier,
                     )
                 )

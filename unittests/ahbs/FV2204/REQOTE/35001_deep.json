@@ -42,10 +42,9 @@
                   "ahb_expression": "Muss",
                   "data_elements": [
                     {
-                      "ahb_expression": "",
                       "data_element_id": "3139",
                       "discriminator": "SG14->CTA->3139",
-                      "entered_input": null
+                      "value_pool": { "IC": "Informationskontakt" }
                     },
                     {
                       "ahb_expression": "X [500]",
@@ -150,10 +149,9 @@
               "ahb_expression": "Muss",
               "data_elements": [
                 {
-                  "ahb_expression": "",
                   "data_element_id": "3227",
                   "discriminator": "SG11->LOC->3227",
-                  "entered_input": null
+                  "value_pool": { "172": "Meldepunkt" }
                 },
                 {
                   "ahb_expression": "X [951] [503]",

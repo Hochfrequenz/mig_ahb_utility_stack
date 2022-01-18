@@ -161,8 +161,20 @@ class TestMigXmlReader:
                     name="MP-ID",  # <-- this used to be "Beteiligter, Identifikation"... don't know why
                     predecessor_qualifier="MS",
                 ),
-                '$["Dokument"][0]["Nachricht"][0]["MP-ID Absender"]["MP-ID"]',
+                '$["Dokument"][0]["Nachricht"][0]["MP-ID Absender"][0]["MP-ID"]',
                 id="reqote absender",
+            ),
+            pytest.param(
+                "reqote.xml",
+                EdifactStackQuery(
+                    segment_group_key="SG11",
+                    segment_code="NAD",
+                    data_element_id="3055",
+                    name=None,
+                    predecessor_qualifier="MS",
+                ),
+                '$["Dokument"][0]["Nachricht"][0]["MP-ID Absender"][0]["Codeliste"]',
+                id="reqote absender codeliste",
             ),
         ],
     )
@@ -175,4 +187,5 @@ class TestMigXmlReader:
     ):
         reader = MigXmlReader(Path(datafiles) / mig_xml_path)
         actual_stack = reader.get_edifact_stack(query)
-        assert actual_stack.to_json_path() == expected_path
+        assert actual_stack is not None
+        assert actual_stack.to_json_path() == expected_path  # type:ignore[union-attr]

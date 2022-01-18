@@ -39,7 +39,7 @@
 36,Ansprechpartner,,,,,,
 37,SG14,,,,,Muss,
 38,SG14,CTA,,,,Muss,
-39,SG14,CTA,3139,,,,IC
+39,SG14,CTA,3139,IC,Informationskontakt,,
 40,SG14,CTA,3412,Kontakt,,X [500],[500] Hinweis: Angabe eines technischen Ansprechpartners für die Geräteübernahme
 41,Kommunikationsverbindung,,,,,,
 42,SG14,,,,,,
@@ -65,7 +65,7 @@
 62,Meldepunkt,,,,,,
 63,SG11,,,,,,
 64,SG11,LOC,,,,Muss,
-65,SG11,LOC,3227,,,,172
+65,SG11,LOC,3227,172,Meldepunkt,,
 66,SG11,LOC,3225,Identifikator,,X [951] [503],"[503] Hinweis: Verwendung der ID der Messlokation
 [951] Format: Zählpunktbezeichnung"
 67,Positionsdaten,,,,,,

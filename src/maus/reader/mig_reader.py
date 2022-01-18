@@ -1,9 +1,10 @@
 """
 Classes that allow to read XML files that contain structural information (Message Implementation Guide information)
 """
+import re
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import List, Optional, Union
+from typing import Callable, List, Literal, Optional, TypeVar, Union
 from xml.etree.ElementTree import Element
 
 import attr
@@ -88,6 +89,11 @@ class _XQueryPathResult:
     is_unique: Optional[bool]  #: True iff unique, None for no results, False for >1 result
     unique_result: Optional[Element]  #: unique element if there is any; None otherwise
     candidates: Optional[List[Element]]  #: list of candidates if there is >1 result
+
+
+#: a regex to match a ref-segment: https://regex101.com/r/KY25AH/1
+_nested_qualifier_pattern = re.compile(r"^(?P<segment_code>[A-Z]+):\d+:\d+\[(?:\w+:?)+=(?P<qualifier>[A-Z\d]+)\]$")
+TResult = TypeVar("TResult")  #: is a type var to indicate an "arbitrary but same" type in a generic function
 
 
 # pylint:disable=c-extension-no-member
@@ -178,6 +184,29 @@ class MigXmlReader(MigReader):
         ]
         return MigXmlReader._list_to_xquerypathresult(filtered)
 
+    # pylint:disable=no-self-use
+    def get_unique_result_by_predecessor(
+        self, candidates: List[Element], predecessor_qualifier: str
+    ) -> _XQueryPathResult:
+        """
+        Keep those elements that have (in the field) the given predecessor qualifier
+        """
+        filtered_by_predecessor = [
+            x for x in candidates if x.attrib["ref"].endswith(f"{predecessor_qualifier}]")
+        ]  # that's a bit dirty, better parse the ref properly instead of string-matching
+        return MigXmlReader._list_to_xquerypathresult(filtered_by_predecessor)
+
+    def get_unique_result_by_parent_predecessor(
+        self, candidates: List[Element], predecessor_qualifier: str
+    ) -> _XQueryPathResult:
+        """
+        Keep those elements that have (in the parent class) the given predecessor qualifier
+        """
+        filtered_by_predecessor = [
+            c for c in candidates if self.get_parent_predecessor(c, use_sanitized_tree=False) == predecessor_qualifier
+        ]
+        return MigXmlReader._list_to_xquerypathresult(filtered_by_predecessor)
+
     @staticmethod
     def _get_segment_group_key_or_none(element: Element) -> Optional[str]:
         """
@@ -188,14 +217,27 @@ class MigXmlReader(MigReader):
             return element.attrib["ref"]
         return None
 
-    def get_parent_segment_group_key(self, element: Element, use_sanitized_tree: bool) -> Optional[str]:
+    @staticmethod
+    def _get_nested_qualifier(attrib_key: Literal["ref", "key"], element: Element) -> Optional[str]:
         """
-        iterate from element towards root and return the first segment group found (the one closes to element).
-        returns None if no segment group was found
+        returns the nested qualifier of an element if present; None otherwise
         """
-        segment_group_key = MigXmlReader._get_segment_group_key_or_none(element)
-        if segment_group_key is not None:
-            return segment_group_key
+        if attrib_key in element.attrib:
+            match = _nested_qualifier_pattern.match(element.attrib[attrib_key])
+            if match:
+                return match["qualifier"]
+        return None
+
+    def _get_parent_x(
+        self, element: Element, evaluator: Callable[[Element], TResult], use_sanitized_tree: bool
+    ) -> Optional[TResult]:
+        """
+        get the 'X' property of the parent where 'X' is the result of the evaluator when applied to an element.
+        returns None if not found
+        """
+        result = evaluator(element)
+        if result is not None:
+            return result
         if use_sanitized_tree:
             xpath = self._sanitized_tree.getpath(element)
         else:
@@ -207,27 +249,45 @@ class MigXmlReader(MigReader):
             sub_paths.append(sub_path)
         # if xpath was "/foo/bar/asd/xyz", sub_paths is ["/foo", "/foo/bar", "/foo/bar/asd"] now (xyz is not contained!)
         sub_paths.reverse()
-        for sub_path in sub_paths:
+        for sub_path in sub_paths:  # loop from inner to root
             leaf_element = self._original_root.xpath(sub_path)[0]  # type:ignore[attr-defined]
-            segment_group_key = MigXmlReader._get_segment_group_key_or_none(leaf_element)
-            if segment_group_key is not None:
-                return segment_group_key
+            result = evaluator(leaf_element)
+            if result is not None:
+                return result
         return None
+
+    def get_parent_segment_group_key(self, element: Element, use_sanitized_tree: bool) -> Optional[str]:
+        """
+        iterate from element towards root and return the first segment group found (the one closes to element).
+        returns None if no segment group was found
+        """
+        return self._get_parent_x(
+            element, MigXmlReader._get_segment_group_key_or_none, use_sanitized_tree=use_sanitized_tree
+        )
+
+    def get_parent_predecessor(self, element: Element, use_sanitized_tree: bool) -> Optional[str]:
+        """
+        iterate from element towards root and return the first segment group found (the one closes to element).
+        returns None if no segment group was found
+        """
+        return self._get_parent_x(
+            element, lambda c: MigXmlReader._get_nested_qualifier("key", c), use_sanitized_tree=use_sanitized_tree
+        )
 
     def get_edifact_stack(self, query: EdifactStackQuery) -> Optional[EdifactStack]:
         """
         get the edifact stack for the given segment_group, segment... combination or None if there is no match
         """
-        segment_de_result = self.get_unique_result_by_xpath(
+        filtered_by_de = self.get_unique_result_by_xpath(
             f".//*[@meta.id='{query.data_element_id}' and starts-with(@ref, '{query.segment_code}')]",
             use_sanitized_tree=False,
         )
-        if segment_de_result.is_unique:
-            return self.element_to_edifact_stack(segment_de_result.unique_result, use_sanitized_tree=False)
-        if segment_de_result.is_unique is False and segment_de_result.candidates is not None:
+        if filtered_by_de.is_unique is True:
+            return self.element_to_edifact_stack(filtered_by_de.unique_result, use_sanitized_tree=False)
+        if filtered_by_de.is_unique is False and filtered_by_de.candidates is not None and query.name is not None:
             filtered_by_names = [
                 x
-                for x in segment_de_result.candidates
+                for x in filtered_by_de.candidates
                 if MigReader.are_similar_names(x.attrib["name"], query.name)
                 or ("ahbName" in x.attrib and MigReader.are_similar_names(x.attrib["ahbName"], query.name))
             ]
@@ -238,7 +298,7 @@ class MigXmlReader(MigReader):
                     f".//class[@name='{MigReader.make_name_comparable(query.name)}']/*[@meta.id='{query.data_element_id}' and starts-with(@ref, '{query.segment_code}')]",
                     use_sanitized_tree=True,
                 )
-                if via_parents_name_result.is_unique:
+                if via_parents_name_result.is_unique is True:
                     return self.element_to_edifact_stack(via_parents_name_result.unique_result, use_sanitized_tree=True)
                 if via_parents_name_result.candidates is None:
                     via_parents_ahb_name_result = self.get_unique_result_by_xpath(
@@ -246,7 +306,7 @@ class MigXmlReader(MigReader):
                         f".//class[@ahbName='{MigReader.make_name_comparable(query.name)}']/*[@meta.id='{query.data_element_id}' and starts-with(@ref, '{query.segment_code}')]",
                         use_sanitized_tree=True,
                     )
-                    if via_parents_ahb_name_result.is_unique:
+                    if via_parents_ahb_name_result.is_unique is True:
                         return self.element_to_edifact_stack(
                             via_parents_ahb_name_result.unique_result, use_sanitized_tree=True
                         )
@@ -258,34 +318,48 @@ class MigXmlReader(MigReader):
                         # Now we have to start over again doing something differently.
                         # We use the predecessor because for dates the predecessor has a meaning,
                         # the field itself has not. Predecessor "Lieferdatum", Actual line: "Datum oder Uhrzeit oder..."
-                        filtered_by_predecessor = [
-                            x
-                            for x in segment_de_result.candidates
-                            if x.attrib["ref"].endswith(f"{query.predecessor_qualifier}]")
-                        ]  # that's a bit dirty, better parse the ref properly instead of string-matching
-                        if len(filtered_by_predecessor) == 1:
-                            return self.element_to_edifact_stack(filtered_by_predecessor[0], use_sanitized_tree=False)
-                        raise ValueError("Try predecessor")
+                        filtered_by_predecessor = self.get_unique_result_by_predecessor(
+                            filtered_by_de.candidates, predecessor_qualifier=query.predecessor_qualifier
+                        )
+                        if filtered_by_predecessor.is_unique is True:
+                            return self.element_to_edifact_stack(
+                                filtered_by_predecessor.unique_result, use_sanitized_tree=False
+                            )
+                        raise ValueError("Try predecessor A")
             elif len(filtered_by_names) == 1:
                 return self.element_to_edifact_stack(filtered_by_names[0], use_sanitized_tree=False)
             else:  # len(filtered_by_names) >1
                 filtered_by_sg = self.get_unique_result_by_segment_group(
                     filtered_by_names, query.segment_group_key, use_sanitized_tree=False
                 )
-                if filtered_by_sg.is_unique:
+                if filtered_by_sg.is_unique is True:
                     return self.element_to_edifact_stack(filtered_by_sg.unique_result, use_sanitized_tree=False)
-                if len(filtered_by_sg.candidates) > 1:
-                    filtered_by_predecessor = [
-                        x
-                        for x in filtered_by_sg.candidates
-                        if x.attrib["ref"].endswith(f"{query.predecessor_qualifier}]")
-                    ]  # that's a bit dirty, better parse the ref properly instead of string-matching
-                    if len(filtered_by_predecessor) == 1:
-                        return self.element_to_edifact_stack(filtered_by_predecessor[0], use_sanitized_tree=False)
-                    if len(filtered_by_predecessor) > 1:
-                        raise ValueError("check parents")
-                    raise ValueError("Try predecessor")
-
+                if filtered_by_sg.candidates is not None and len(filtered_by_sg.candidates) > 1:
+                    filtered_by_predecessor = self.get_unique_result_by_predecessor(
+                        filtered_by_sg.candidates, query.predecessor_qualifier  # type:ignore[arg-type]
+                    )
+                    if filtered_by_predecessor.is_unique is True:
+                        return self.element_to_edifact_stack(
+                            filtered_by_predecessor.unique_result, use_sanitized_tree=False
+                        )
+                    if filtered_by_predecessor.candidates:
+                        raise ValueError("Try predecessor B")
+                    filtered_by_parent_predecessor = self.get_unique_result_by_parent_predecessor(
+                        filtered_by_sg.candidates, query.predecessor_qualifier  # type:ignore[arg-type]
+                    )
+                    if filtered_by_parent_predecessor.is_unique is True:
+                        return self.element_to_edifact_stack(
+                            filtered_by_parent_predecessor.unique_result, use_sanitized_tree=False
+                        )
+                    raise ValueError("whaat?")
+        if filtered_by_de.candidates and query.name is None and query.predecessor_qualifier is not None:
+            filtered_by_parent_predecessor = self.get_unique_result_by_parent_predecessor(
+                filtered_by_de.candidates, query.predecessor_qualifier
+            )
+            if filtered_by_parent_predecessor.is_unique is True:
+                return self.element_to_edifact_stack(
+                    filtered_by_parent_predecessor.unique_result, use_sanitized_tree=False
+                )
         return None  # there is no match
 
     def to_segment_group_hierarchy(self) -> SegmentGroupHierarchy:
