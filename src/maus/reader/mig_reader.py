@@ -92,7 +92,7 @@ class _XQueryPathResult:
 
 
 #: a regex to match a ref-segment: https://regex101.com/r/KY25AH/1
-_nested_qualifier_pattern = re.compile(r"^(?P<segment_code>[A-Z]+):\d+:\d+\[(?:\w+:?)+=(?P<qualifier>[A-Z\d]+)\]$")
+_nested_qualifier_pattern = re.compile(r"^(?P<segment_code>[A-Z]+):\d+:\d+\[(?:\w+?:?)+=(?P<qualifier>[A-Z\d]+)\]$")
 TResult = TypeVar("TResult")  #: is a type var to indicate an "arbitrary but same" type in a generic function
 
 
