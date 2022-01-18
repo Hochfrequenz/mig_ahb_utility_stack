@@ -61,7 +61,7 @@
 58,Marktlokation bzw. Messlokation,,,,,,
 59,SG11,,,,,Muss,
 60,SG11,NAD,,,,Muss,
-61,SG11,NAD,3035,,,,DP
+61,SG11,NAD,3035,DP,Lieferanschrift,,
 62,Meldepunkt,,,,,,
 63,SG11,,,,,,
 64,SG11,LOC,,,,Muss,

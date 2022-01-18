@@ -139,10 +139,9 @@
               "ahb_expression": "Muss",
               "data_elements": [
                 {
-                  "ahb_expression": "",
                   "data_element_id": "3035",
                   "discriminator": "SG11->NAD->3035",
-                  "entered_input": null
+                  "value_pool": { "DP": "Lieferanschrift" }
                 }
               ],
               "discriminator": "NAD"
