@@ -99,6 +99,13 @@ class TestAhbCsvReader:
                 "Entwurfs-Version",
                 id="entwurfs version reqote",
             ),
+            pytest.param(
+                "Dokumenten-/Nachrichtenausstellerbzw. -absender",
+                "MS ",  # <-- has a trailing white space
+                "MS",  # <-- has no trailing whitespace
+                "Dokumenten-/Nachrichtenausstellerbzw. -absender",
+                id="strip inputs; utilmd absender",
+            ),
         ],
     )
     def test_code_description_separation(

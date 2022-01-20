@@ -64,7 +64,7 @@
                   "data_element_id": "3035",
                   "discriminator": "SG2->NAD->3035",
                   "value_pool": {
-                    "Dokumenten-/Nachrichtenausstellerbzw. -absender": "MS"
+                    "MS": "Dokumenten-/Nachrichtenausstellerbzw. -absender"
                   }
                 },
                 {

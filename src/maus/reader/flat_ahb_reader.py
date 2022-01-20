@@ -99,6 +99,10 @@ class FlatAhbCsvReader(FlatAhbReader):
         This function returns a value_pool_entry at index 0, a possible description at index 1, even if they're mixed up
         in the source files.
         """
+        if x is not None:
+            x = x.strip()
+        if y is not None:
+            y = y.strip()
         if FlatAhbCsvReader._is_value_pool_entry(x) and not FlatAhbCsvReader._is_value_pool_entry(y):
             return x, y or None
         if FlatAhbCsvReader._is_value_pool_entry(x) and FlatAhbCsvReader._is_value_pool_entry(y):

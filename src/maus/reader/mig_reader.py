@@ -81,9 +81,9 @@ class MigReader(ABC):
 
 # pylint:disable=too-few-public-methods
 @attr.s(auto_attribs=True, kw_only=True)
-class _XQueryPathResult:
+class _MigFilterResult:
     """
-    the (internal) result of a query path search inside the tree.
+    the (internal) result of a query path search inside the tree
     """
 
     is_unique: Optional[bool]  #: True iff unique, None for no results, False for >1 result
@@ -106,7 +106,7 @@ class _EdifactStackSearchStrategy:
     #: name, f.e. "filter by data element id"
     name: str = attr.ib(validator=attr.validators.instance_of(str))
     #: the filter is the function that describes the strategy. It consumes the query and (optionally) a list of elements
-    filter: Callable[[EdifactStackQuery, Optional[List[Element]]], _XQueryPathResult] = attr.ib(
+    filter: Callable[[EdifactStackQuery, Optional[List[Element]]], _MigFilterResult] = attr.ib(
         validator=attr.validators.is_callable()
     )
     #: The unique result strategy is to return an edifact stack for the unique result element
@@ -120,7 +120,7 @@ class _EdifactStackSearchStrategy:
         """
         Apply the defined strategy until we either have no ideas left or a unique result is found
         """
-        filter_result: _XQueryPathResult = self.filter(query, pre_selection)
+        filter_result: _MigFilterResult = self.filter(query, pre_selection)
         if filter_result.is_unique is True:
             return self.unique_result_strategy(filter_result.unique_result)  # type:ignore[arg-type]
         if filter_result.candidates and len(filter_result.candidates) > 1:
@@ -191,15 +191,15 @@ class MigXmlReader(MigReader):
         return stack
 
     @staticmethod
-    def _list_to_xquerypathresult(candidates: List[Element]) -> _XQueryPathResult:
+    def _list_to_xquerypathresult(candidates: List[Element]) -> _MigFilterResult:
         if len(candidates) == 0:
-            return _XQueryPathResult(candidates=None, is_unique=None, unique_result=None)
+            return _MigFilterResult(candidates=None, is_unique=None, unique_result=None)
             # the == 1 case is handled last
         if len(candidates) > 1:
-            return _XQueryPathResult(candidates=candidates, is_unique=False, unique_result=None)
-        return _XQueryPathResult(candidates=None, is_unique=True, unique_result=candidates[0])
+            return _MigFilterResult(candidates=candidates, is_unique=False, unique_result=None)
+        return _MigFilterResult(candidates=None, is_unique=True, unique_result=candidates[0])
 
-    def get_unique_result_by_xpath(self, query_path: str, use_sanitized_tree: bool) -> _XQueryPathResult:
+    def get_unique_result_by_xpath(self, query_path: str, use_sanitized_tree: bool) -> _MigFilterResult:
         """
         Tries to find an element for the given query path.
         If there's exactly 1 result, it is returned.
@@ -214,7 +214,7 @@ class MigXmlReader(MigReader):
 
     def get_unique_result_by_segment_group(
         self, candidates: List[Element], segment_group_key: str, use_sanitized_tree: bool
-    ) -> _XQueryPathResult:
+    ) -> _MigFilterResult:
         """
         keep those elements that have the correct segment_group_key
         """
@@ -228,18 +228,18 @@ class MigXmlReader(MigReader):
     # pylint:disable=no-self-use
     def get_unique_result_by_predecessor(
         self, candidates: List[Element], predecessor_qualifier: str
-    ) -> _XQueryPathResult:
+    ) -> _MigFilterResult:
         """
         Keep those elements that have (in the field) the given predecessor qualifier
         """
         filtered_by_predecessor = [
-            x for x in candidates if x.attrib["ref"].endswith(f"{predecessor_qualifier}]")
+            c for c in candidates if MigXmlReader._get_nested_qualifier("ref", c) == predecessor_qualifier
         ]  # that's a bit dirty, better parse the ref properly instead of string-matching
         return MigXmlReader._list_to_xquerypathresult(filtered_by_predecessor)
 
     def get_unique_result_by_parent_predecessor(
         self, candidates: List[Element], predecessor_qualifier: str
-    ) -> _XQueryPathResult:
+    ) -> _MigFilterResult:
         """
         Keep those elements that have (in the parent class) the given predecessor qualifier
         """
@@ -342,7 +342,17 @@ class MigXmlReader(MigReader):
             unique_result_strategy=lambda unique_result: self.element_to_edifact_stack(
                 unique_result, use_sanitized_tree=False
             ),
-            no_result_strategy=None,
+            no_result_strategy=_EdifactStackSearchStrategy(
+                name="filter by parent predecessor after predecessor lead to no result",
+                filter=lambda q, c: self.get_unique_result_by_parent_predecessor(
+                    c, q.predecessor_qualifier  # type:ignore[arg-type]
+                ),
+                no_result_strategy=None,
+                multiple_results_strategy=None,
+                unique_result_strategy=lambda unique_result: self.element_to_edifact_stack(
+                    unique_result, use_sanitized_tree=False
+                ),
+            ),
             multiple_results_strategy=None,
         )
 
@@ -422,7 +432,17 @@ class MigXmlReader(MigReader):
                 unique_result_strategy=lambda unique_result: self.element_to_edifact_stack(
                     unique_result, use_sanitized_tree=False
                 ),
-                no_result_strategy=None,
+                no_result_strategy=_EdifactStackSearchStrategy(
+                    name="filter by predecessor after parent predecessor lead to no result",
+                    filter=lambda q, c: self.get_unique_result_by_predecessor(
+                        c, q.predecessor_qualifier  # type:ignore[arg-type]
+                    ),
+                    unique_result_strategy=lambda unique_result: self.element_to_edifact_stack(
+                        unique_result, use_sanitized_tree=False
+                    ),
+                    multiple_results_strategy=None,
+                    no_result_strategy=None,
+                ),
                 multiple_results_strategy=None,
             )
         return None
