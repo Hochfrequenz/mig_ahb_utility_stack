@@ -4,13 +4,13 @@ from typing import Optional
 import pytest  # type:ignore[import]
 from lxml import etree  # type:ignore[import]
 
-from maus.division_helper import Division
 from maus.models.edifact_components import EdifactStackQuery
 from maus.reader.mig_reader import MigXmlReader
 
 ALL_MIG_XML_FILES = pytest.mark.datafiles(
     "./unittests/migs/FV2204/template_xmls/mscons_1154.xml",
     "./unittests/migs/FV2204/template_xmls/utilmd_1154.xml",
+    "./unittests/migs/FV2204/template_xmls/utilmd_2379.xml",
     "./unittests/migs/FV2204/template_xmls/utilmd_2380.xml",
     "./unittests/migs/FV2204/template_xmls/utilmd_7402.xml",
     "./unittests/migs/FV2204/template_xmls/utilmd_3225.xml",
@@ -230,6 +230,20 @@ class TestMigXmlReader:
                 ),
                 '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Geplante Turnusablesung des MSB (Strom)"]',
                 id="UTILMD geplante Turnusablesung 752",
+            ),
+            pytest.param(
+                "utilmd_2379.xml",
+                EdifactStackQuery(
+                    segment_group_key="SG6",
+                    segment_code="DTM",
+                    data_element_id="2379",
+                    name=None,
+                    predecessor_qualifier="752",
+                    section_name="Geplante Turnusablesung des MSB (Strom)",
+                ),
+                "$['foo']",
+                id="UTILMD geplante Turnusablesung (Qualifier)",
+                # https://github.com/Hochfrequenz/edifact-templates/issues/24
             ),
         ],
     )

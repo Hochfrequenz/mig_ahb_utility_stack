@@ -25,6 +25,7 @@ def _replace_disciminators_with_edifact_stack_segments(
                     data_element_id=data_element.data_element_id,
                     name=data_element.discriminator,
                     predecessor_qualifier=predecessor_qualifier,
+                    section_name=segment.section_name,
                 )
                 stack = mig_reader.get_edifact_stack(query)
                 # for easy error analysis set a conditional break point here for 'stack is None'
@@ -39,6 +40,7 @@ def _replace_disciminators_with_edifact_stack_segments(
                     data_element_id=data_element.data_element_id,
                     name=None,
                     predecessor_qualifier=predecessor_qualifier,
+                    section_name=segment.section_name,
                 )
                 edifact_stack = mig_reader.get_edifact_stack(query)
                 if edifact_stack is not None:

@@ -105,7 +105,6 @@
                         <field name="Beginn Messperiode" ref="DTM:1:2[1:0=163]" meta.id="2380" meta.format="203"/>
                         <field name="Ende Messperiode" ref="DTM:1:2[1:0=164]" meta.id="2380" meta.format="203"/>
                     </class>
-
                 </class>
             </class>
         </class>
