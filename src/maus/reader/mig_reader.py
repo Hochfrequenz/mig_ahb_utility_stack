@@ -230,8 +230,15 @@ class MigXmlReader(MigReader):
         """
         Keep those elements that have (in the field) the given predecessor qualifier
         """
+        relevant_attribute: Literal["key", "ref"]
+        if query.segment_code == "RFF":
+            relevant_attribute = "key"
+        else:
+            relevant_attribute = "ref"
         filtered_by_predecessor = [
-            c for c in candidates if MigXmlReader._get_nested_qualifier("ref", c) == query.predecessor_qualifier
+            c
+            for c in candidates
+            if MigXmlReader._get_nested_qualifier(relevant_attribute, c) == query.predecessor_qualifier
         ]  # that's a bit dirty, better parse the ref properly instead of string-matching
         return MigXmlReader._list_to_mig_filter_result(filtered_by_predecessor)
 
@@ -241,10 +248,17 @@ class MigXmlReader(MigReader):
         """
         Keep those elements that have (in the parent class) the given predecessor qualifier
         """
+        relevant_parent_attribute: Literal["key", "ref"]
+        # if query.segment_code == "RFF":
+        #    relevant_parent_attribute = "key"
+        # else:
+        #    relevant_parent_attribute = "ref"
+        relevant_parent_attribute = "key"
         filtered_by_predecessor = [
             c
             for c in candidates
-            if self.get_parent_predecessor(c, use_sanitized_tree=False) == query.predecessor_qualifier
+            if self.get_parent_predecessor(c, relevant_parent_attribute, use_sanitized_tree=False)
+            == query.predecessor_qualifier
         ]
         return MigXmlReader._list_to_mig_filter_result(filtered_by_predecessor)
 
@@ -254,12 +268,12 @@ class MigXmlReader(MigReader):
         """
         Keep those elements that have (in the parent class) the given segment group key
         """
-        filtered_by_predecessor = [
+        filtered_by_segment_group_key = [
             c
             for c in candidates
             if self.get_parent_segment_group_key(c, use_sanitized_tree=False) == query.segment_group_key
         ]
-        return MigXmlReader._list_to_mig_filter_result(filtered_by_predecessor)
+        return MigXmlReader._list_to_mig_filter_result(filtered_by_segment_group_key)
 
     @staticmethod
     def get_unique_result_by_name(candidates: List[Element], query: EdifactStackQuery):
@@ -332,7 +346,9 @@ class MigXmlReader(MigReader):
             element, MigXmlReader._get_segment_group_key_or_none, use_sanitized_tree=use_sanitized_tree
         )
 
-    def get_parent_predecessor(self, element: Element, use_sanitized_tree: bool) -> Optional[str]:
+    def get_parent_predecessor(
+        self, element: Element, relevant_attribute: Literal["key", "ref"], use_sanitized_tree: bool
+    ) -> Optional[str]:
         """
         iterate from element towards root and return the first segment group found (the one closes to element).
         returns None if no segment group was found
@@ -348,7 +364,7 @@ class MigXmlReader(MigReader):
         if not query.predecessor_qualifier:
             return None
         return _EdifactStackSearchStrategy(
-            name="filter by predecessor",
+            name="I filter by predecessor",
             filter=lambda q, c: self.get_unique_result_by_predecessor(
                 c, q  # type:ignore[arg-type]
             ),
@@ -356,17 +372,26 @@ class MigXmlReader(MigReader):
                 unique_result, use_sanitized_tree=False
             ),
             no_result_strategy=_EdifactStackSearchStrategy(
-                name="filter by parent predecessor after predecessor lead to no result",
+                name="J filter by parent predecessor after predecessor lead to no result",
                 filter=lambda q, c: self.get_unique_result_by_parent_predecessor(
                     c, q  # type:ignore[arg-type]
                 ),
                 no_result_strategy=None,
-                multiple_results_strategy=None,
                 unique_result_strategy=lambda unique_result: self.element_to_edifact_stack(
                     unique_result, use_sanitized_tree=False
                 ),
+                multiple_results_strategy=None,  # Z18 goes here
             ),
-            multiple_results_strategy=None,
+            multiple_results_strategy=_EdifactStackSearchStrategy(
+                # doe snot work yet
+                name="L filter by parents segment group because parent predecessor is not unique",
+                filter=lambda q, c: self.get_unique_result_by_parent_segment_group(c, q),
+                unique_result_strategy=lambda unique_result: self.element_to_edifact_stack(
+                    unique_result, use_sanitized_tree=False
+                ),
+                multiple_results_strategy=None,
+                no_result_strategy=None,
+            ),
         )
 
     def _multiple_data_element_matches_handling(
@@ -374,13 +399,13 @@ class MigXmlReader(MigReader):
     ) -> Optional[_EdifactStackSearchStrategy]:
         if query.name is not None:
             return _EdifactStackSearchStrategy(
-                name="filter by element name and ahb name",
+                name="A filter by element name and ahb name",
                 filter=lambda q, c: self.get_unique_result_by_name(c, q),  # type:ignore[arg-type]
                 unique_result_strategy=lambda unique_result: self.element_to_edifact_stack(
                     unique_result, use_sanitized_tree=False
                 ),
                 no_result_strategy=_EdifactStackSearchStrategy(
-                    name="filter by parents name because direct name lead to no result",
+                    name="B filter by parents name because direct name lead to no result",
                     filter=lambda q, _: self.get_unique_result_by_xpath(
                         # pylint:disable=line-too-long
                         f".//class[@name='{MigReader.make_name_comparable(query.name)}']/*[@meta.id='{query.data_element_id}' and starts-with(@ref, '{query.segment_code}')]",  # type:ignore[arg-type]
@@ -390,7 +415,7 @@ class MigXmlReader(MigReader):
                         unique_result, use_sanitized_tree=True
                     ),
                     no_result_strategy=_EdifactStackSearchStrategy(
-                        name="filter by parents ahb name",
+                        name="C filter by parents ahb name",
                         filter=lambda q, _: self.get_unique_result_by_xpath(
                             # pylint:disable=line-too-long
                             f".//class[@ahbName='{MigReader.make_name_comparable(query.name)}']/*[@meta.id='{query.data_element_id}' and starts-with(@ref, '{query.segment_code}')]",  # type:ignore[arg-type]
@@ -405,7 +430,7 @@ class MigXmlReader(MigReader):
                     multiple_results_strategy=None,
                 ),
                 multiple_results_strategy=_EdifactStackSearchStrategy(
-                    name="filter by segment group",
+                    name="D filter by segment group",
                     filter=lambda q, c: self.get_unique_result_by_segment_group(
                         c, q, use_sanitized_tree=False  # type:ignore[arg-type]
                     ),
@@ -413,7 +438,7 @@ class MigXmlReader(MigReader):
                         unique_result, use_sanitized_tree=False
                     ),
                     multiple_results_strategy=_EdifactStackSearchStrategy(
-                        name="filter by predecessor after segment group filter was not unique",
+                        name="E filter by predecessor after segment group filter was not unique",
                         filter=lambda q, c: self.get_unique_result_by_predecessor(
                             c, q  # type:ignore[arg-type]
                         ),
@@ -422,7 +447,7 @@ class MigXmlReader(MigReader):
                         ),
                         multiple_results_strategy=None,  # raise ValueError("Predecessor B"),
                         no_result_strategy=_EdifactStackSearchStrategy(
-                            name="filter by parent predecessor after predecessor lead to no result",
+                            name="F filter by parent predecessor after predecessor lead to no result",
                             filter=lambda q, c: self.get_unique_result_by_parent_predecessor(
                                 c, q  # type:ignore[arg-type]
                             ),
@@ -438,7 +463,7 @@ class MigXmlReader(MigReader):
             )
         if query.name is None and query.predecessor_qualifier is not None:
             return _EdifactStackSearchStrategy(
-                name="filter by parent predecessor (no fallback)",
+                name="G filter by parent predecessor (no fallback)",
                 filter=lambda q, c: self.get_unique_result_by_parent_predecessor(
                     c, q  # type:ignore[arg-type]
                 ),
@@ -446,7 +471,7 @@ class MigXmlReader(MigReader):
                     unique_result, use_sanitized_tree=False
                 ),
                 no_result_strategy=_EdifactStackSearchStrategy(
-                    name="filter by predecessor after parent predecessor lead to no result",
+                    name="H filter by predecessor after parent predecessor lead to no result",
                     filter=lambda q, c: self.get_unique_result_by_predecessor(
                         c, q  # type:ignore[arg-type]
                     ),
