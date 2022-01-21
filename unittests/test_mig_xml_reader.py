@@ -216,6 +216,18 @@ class TestMigXmlReader:
                 '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Referenz auf die ID der Marktlokation für Termine der Marktlokation"][0]["ID"]',
                 id="UTILMD: LOC ID der MaLo Z18",
             ),
+            pytest.param(
+                "utilmd_2380.xml",
+                EdifactStackQuery(
+                    segment_group_key="SG6",
+                    segment_code="DTM",
+                    data_element_id="2380",
+                    name="Datum oder Uhrzeit oderZeitspanne, Wert",
+                    predecessor_qualifier="752",
+                ),
+                '$["Dokument"][0]',  # todo: add proper path here
+                id="UTILMD geplante Turnusablesung 752",
+            ),
         ],
     )
     def test_simple_paths(
