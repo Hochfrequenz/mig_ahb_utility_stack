@@ -59,6 +59,7 @@ class TestEdifactComponents:
             pytest.param(
                 Segment(
                     ahb_expression="X",
+                    section_name="foo",
                     data_elements=[
                         DataElementValuePool(
                             value_pool={"hello": "world", "maus": "rocks"}, discriminator="baz", data_element_id="0329"
@@ -74,6 +75,7 @@ class TestEdifactComponents:
                 ),
                 {
                     "ahb_expression": "X",
+                    "section_name": "foo",
                     "data_elements": [
                         {
                             "value_pool": {"hello": "world", "maus": "rocks"},
@@ -106,6 +108,7 @@ class TestEdifactComponents:
                         Segment(
                             ahb_expression="expr B",
                             discriminator="disc B",
+                            section_name="bar",
                             data_elements=[
                                 DataElementValuePool(
                                     value_pool={"hello": "world", "maus": "rocks"},
@@ -127,6 +130,7 @@ class TestEdifactComponents:
                             ahb_expression="expr C",
                             segments=[
                                 Segment(
+                                    section_name="foo",
                                     ahb_expression="expr Y",
                                     discriminator="disc Y",
                                     data_elements=[],
@@ -141,6 +145,7 @@ class TestEdifactComponents:
                     "discriminator": "disc A",
                     "segments": [
                         {
+                            "section_name": "bar",
                             "ahb_expression": "expr B",
                             "discriminator": "disc B",
                             "data_elements": [
@@ -164,6 +169,7 @@ class TestEdifactComponents:
                             "discriminator": "disc C",
                             "segments": [
                                 {
+                                    "section_name": "foo",
                                     "ahb_expression": "expr Y",
                                     "discriminator": "disc Y",
                                     "data_elements": [],

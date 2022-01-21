@@ -61,8 +61,14 @@ class AhbLine:
         validator=attr.validators.optional(validator=attr.validators.instance_of(str))
     )
     """a requirement indicator + an optional condition ("ahb expression"), f.e. 'Muss [123] O [456]' """
-
     # note: to parse expressions from AHBs consider using AHBicht: https://github.com/Hochfrequenz/ahbicht/
+
+    section_name: Optional[str] = attr.ib(
+        validator=attr.validators.optional(validator=attr.validators.instance_of(str)), default=None
+    )
+    """
+    The section name describes the purpose of a segment, f.e. "Nachrichten-Kopfsegment" or "Beginn der Nachricht"
+    """
 
     def holds_any_information(self) -> bool:
         """
@@ -107,6 +113,7 @@ class AhbLineSchema(Schema):
     value_pool_entry = fields.String(required=False, load_default=None)
     name = fields.String(required=False, load_default=None)
     ahb_expression = fields.String(required=False, load_default=None)
+    section_name = fields.String(required=False, load_default=None)
 
     # pylint:disable=unused-argument,no-self-use
     @post_load

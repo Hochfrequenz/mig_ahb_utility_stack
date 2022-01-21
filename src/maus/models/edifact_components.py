@@ -213,14 +213,23 @@ class Segment(SegmentLevel):
     """
 
     data_elements: List[DataElement]
+    section_name: Optional[str] = attr.ib(
+        validator=attr.validators.optional(attr.validators.instance_of(str)), default=None
+    )
+    """
+    For the MIG matching it might be necessary to know the section in which the data element occured in the AHB.
+    This might be necessary to e.g. distinguish gas and electricity fields which look the same otherwise.
+    See f.e. UTILMD 'Geplante Turnusablesung des MSB (Strom)' vs. 'Geplante Turnusablesung des NB (Gas)'
+    """
 
 
 class SegmentSchema(SegmentLevelSchema):
     """
-    A Schema to serialize Segments.
+    A Schema to serialize Segments
     """
 
     data_elements = fields.List(fields.Nested(_FreeTextOrValuePoolSchema))
+    section_name = fields.String(required=False)
 
     # pylint:disable=unused-argument,no-self-use
     @post_load
