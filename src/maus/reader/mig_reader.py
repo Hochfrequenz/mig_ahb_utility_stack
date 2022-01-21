@@ -191,7 +191,7 @@ class MigXmlReader(MigReader):
         return stack
 
     @staticmethod
-    def _list_to_xquerypathresult(candidates: List[Element]) -> _MigFilterResult:
+    def _list_to_mig_filter_result(candidates: List[Element]) -> _MigFilterResult:
         if len(candidates) == 0:
             return _MigFilterResult(candidates=None, is_unique=None, unique_result=None)
             # the == 1 case is handled last
@@ -210,7 +210,7 @@ class MigXmlReader(MigReader):
             candidates = list(self._sanitized_root.xpath(query_path))
         else:
             candidates = list(self._original_root.xpath(query_path))
-        return MigXmlReader._list_to_xquerypathresult(candidates)
+        return MigXmlReader._list_to_mig_filter_result(candidates)
 
     def get_unique_result_by_segment_group(
         self, candidates: List[Element], segment_group_key: str, use_sanitized_tree: bool
@@ -223,7 +223,7 @@ class MigXmlReader(MigReader):
             for e in candidates
             if self.get_parent_segment_group_key(e, use_sanitized_tree=use_sanitized_tree) == segment_group_key
         ]
-        return MigXmlReader._list_to_xquerypathresult(filtered)
+        return MigXmlReader._list_to_mig_filter_result(filtered)
 
     # pylint:disable=no-self-use
     def get_unique_result_by_predecessor(
@@ -235,7 +235,7 @@ class MigXmlReader(MigReader):
         filtered_by_predecessor = [
             c for c in candidates if MigXmlReader._get_nested_qualifier("ref", c) == predecessor_qualifier
         ]  # that's a bit dirty, better parse the ref properly instead of string-matching
-        return MigXmlReader._list_to_xquerypathresult(filtered_by_predecessor)
+        return MigXmlReader._list_to_mig_filter_result(filtered_by_predecessor)
 
     def get_unique_result_by_parent_predecessor(
         self, candidates: List[Element], predecessor_qualifier: str
@@ -246,7 +246,18 @@ class MigXmlReader(MigReader):
         filtered_by_predecessor = [
             c for c in candidates if self.get_parent_predecessor(c, use_sanitized_tree=False) == predecessor_qualifier
         ]
-        return MigXmlReader._list_to_xquerypathresult(filtered_by_predecessor)
+        return MigXmlReader._list_to_mig_filter_result(filtered_by_predecessor)
+
+    def get_unique_result_by_parent_segment_group(
+        self, candidates: List[Element], segment_group_key: str
+    ) -> _MigFilterResult:
+        """
+        Keep those elements that have (in the parent class) the given segment group key
+        """
+        filtered_by_predecessor = [
+            c for c in candidates if self.get_parent_segment_group_key(c, use_sanitized_tree=False) == segment_group_key
+        ]
+        return MigXmlReader._list_to_mig_filter_result(filtered_by_predecessor)
 
     @staticmethod
     def get_unique_result_by_name(name: str, candidates: List[Element]):
@@ -259,7 +270,7 @@ class MigXmlReader(MigReader):
             if MigReader.are_similar_names(x.attrib["name"], name)
             or ("ahbName" in x.attrib and MigReader.are_similar_names(x.attrib["ahbName"], name))
         ]
-        return MigXmlReader._list_to_xquerypathresult(filtered_by_names)
+        return MigXmlReader._list_to_mig_filter_result(filtered_by_names)
 
     @staticmethod
     def _get_segment_group_key_or_none(element: Element) -> Optional[str]:
