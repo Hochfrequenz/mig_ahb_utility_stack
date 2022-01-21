@@ -213,7 +213,7 @@ class TestMigXmlReader:
                     name="ID der Marktlokation",  # <-- name in AHB != name in MIG ("ID")
                     predecessor_qualifier="Z18",
                 ),
-                '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Referenz auf die ID der Marktlokation für Termine der Marktlokation"][0]["ID"]',  # double check this
+                '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Referenz auf die ID der Marktlokation für Termine der Marktlokation"][0]["ID"]',
                 id="UTILMD: LOC ID der MaLo Z18",
             ),
         ],

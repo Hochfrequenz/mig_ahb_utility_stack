@@ -248,17 +248,15 @@ class MigXmlReader(MigReader):
         """
         Keep those elements that have (in the parent class) the given predecessor qualifier
         """
-        relevant_parent_attribute: Literal["key", "ref"]
+        # relevant_parent_attribute: Literal["key", "ref"]
         # if query.segment_code == "RFF":
         #    relevant_parent_attribute = "key"
         # else:
         #    relevant_parent_attribute = "ref"
-        relevant_parent_attribute = "key"
         filtered_by_predecessor = [
             c
             for c in candidates
-            if self.get_parent_predecessor(c, relevant_parent_attribute, use_sanitized_tree=False)
-            == query.predecessor_qualifier
+            if self.get_parent_predecessor(c, use_sanitized_tree=False) == query.predecessor_qualifier
         ]
         return MigXmlReader._list_to_mig_filter_result(filtered_by_predecessor)
 
@@ -346,9 +344,7 @@ class MigXmlReader(MigReader):
             element, MigXmlReader._get_segment_group_key_or_none, use_sanitized_tree=use_sanitized_tree
         )
 
-    def get_parent_predecessor(
-        self, element: Element, relevant_attribute: Literal["key", "ref"], use_sanitized_tree: bool
-    ) -> Optional[str]:
+    def get_parent_predecessor(self, element: Element, use_sanitized_tree: bool) -> Optional[str]:
         """
         iterate from element towards root and return the first segment group found (the one closes to element).
         returns None if no segment group was found
@@ -380,12 +376,22 @@ class MigXmlReader(MigReader):
                 unique_result_strategy=lambda unique_result: self.element_to_edifact_stack(
                     unique_result, use_sanitized_tree=False
                 ),
-                multiple_results_strategy=None,  # Z18 goes here
+                multiple_results_strategy=_EdifactStackSearchStrategy(
+                    name="K filter by parents segment group",
+                    filter=lambda q, c: self.get_unique_result_by_parent_segment_group(
+                        c, q  # type:ignore[arg-type]
+                    ),
+                    no_result_strategy=None,
+                    unique_result_strategy=lambda unique_result: self.element_to_edifact_stack(
+                        unique_result, use_sanitized_tree=False
+                    ),
+                    multiple_results_strategy=None,
+                ),  # Z18 goes here
             ),
             multiple_results_strategy=_EdifactStackSearchStrategy(
                 # doe snot work yet
                 name="L filter by parents segment group because parent predecessor is not unique",
-                filter=lambda q, c: self.get_unique_result_by_parent_segment_group(c, q),
+                filter=lambda q, c: self.get_unique_result_by_parent_segment_group(c, q),  # type:ignore[arg-type]
                 unique_result_strategy=lambda unique_result: self.element_to_edifact_stack(
                     unique_result, use_sanitized_tree=False
                 ),
