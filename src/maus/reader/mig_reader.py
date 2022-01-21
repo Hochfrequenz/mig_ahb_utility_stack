@@ -287,6 +287,20 @@ class MigXmlReader(MigReader):
         return MigXmlReader._list_to_mig_filter_result(filtered_by_names)
 
     @staticmethod
+    def get_unique_result_by_section_name(candidates: List[Element], query: EdifactStackQuery):
+        """
+        keeps those elements from the candidates whose where the name matches the query section name.
+        Does _not_ create a new xpath.
+        """
+        filtered_by_names = [
+            x
+            for x in candidates
+            if MigReader.are_similar_names(x.attrib["name"], query.section_name)
+            # or ("ahbName" in x.attrib and MigReader.are_similar_names(x.attrib["ahbName"], query.name))
+        ]
+        return MigXmlReader._list_to_mig_filter_result(filtered_by_names)
+
+    @staticmethod
     def _get_segment_group_key_or_none(element: Element) -> Optional[str]:
         """
         returns the segment group of element if present; None otherwise
@@ -372,7 +386,15 @@ class MigXmlReader(MigReader):
                 filter=lambda q, c: self.get_unique_result_by_parent_predecessor(
                     c, q  # type:ignore[arg-type]
                 ),
-                no_result_strategy=None,
+                no_result_strategy=_EdifactStackSearchStrategy(
+                    name="M filter by section_name==field name",
+                    filter=lambda q, c: MigXmlReader.get_unique_result_by_section_name(c, q),  # type:ignore[arg-type]
+                    unique_result_strategy=lambda unique_result: self.element_to_edifact_stack(
+                        unique_result, use_sanitized_tree=False
+                    ),
+                    no_result_strategy=None,
+                    multiple_results_strategy=None,
+                ),
                 unique_result_strategy=lambda unique_result: self.element_to_edifact_stack(
                     unique_result, use_sanitized_tree=False
                 ),

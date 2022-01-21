@@ -225,9 +225,10 @@ class TestMigXmlReader:
                     data_element_id="2380",
                     name="Datum oder Uhrzeit oderZeitspanne, Wert",
                     predecessor_qualifier="752",
-                    division=Division.ELECTRICITY,
+                    section_name="Geplante Turnusablesung des MSB (Strom)"
+                    # division=Division.ELECTRICITY,
                 ),
-                '$["Dokument"][0]',  # todo: add proper path here
+                '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Geplante Turnusablesung des MSB (Strom)"]',
                 id="UTILMD geplante Turnusablesung 752",
             ),
         ],
