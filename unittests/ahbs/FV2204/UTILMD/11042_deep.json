@@ -28,7 +28,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "CTA"
+                  "discriminator": "CTA",
+                  "section_name": "Ansprechpartner"
                 },
                 {
                   "ahb_expression": "Muss",
@@ -51,7 +52,8 @@
                       }
                     }
                   ],
-                  "discriminator": "COM"
+                  "discriminator": "COM",
+                  "section_name": "Kommunikationsverbindung"
                 }
               ]
             }
@@ -83,7 +85,8 @@
                   }
                 }
               ],
-              "discriminator": "NAD"
+              "discriminator": "NAD",
+              "section_name": "MP-ID Absender"
             },
             {
               "ahb_expression": "Muss",
@@ -109,7 +112,8 @@
                   }
                 }
               ],
-              "discriminator": "NAD"
+              "discriminator": "NAD",
+              "section_name": "MP-ID Empf\u00e4nger"
             }
           ]
         },
@@ -137,7 +141,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "LOC"
+                  "discriminator": "LOC",
+                  "section_name": "Meldepunkt"
                 }
               ]
             },
@@ -164,7 +169,8 @@
                       }
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Pr\u00fcfidentifikator"
                 },
                 {
                   "ahb_expression": "",
@@ -181,7 +187,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz Vorgangsnummer (aus Anfragenachricht)"
                 },
                 {
                   "ahb_expression": "",
@@ -198,7 +205,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Marktlokation f\u00fcr Termine der Marktlokation"
                 },
                 {
                   "ahb_expression": "",
@@ -220,7 +228,8 @@
                       "value_pool": { "104": "MMWW-MMWW", "106": "MMDD" }
                     }
                   ],
-                  "discriminator": "DTM"
+                  "discriminator": "DTM",
+                  "section_name": "Geplante Turnusablesung des MSB (Strom)"
                 },
                 {
                   "ahb_expression": "",
@@ -242,7 +251,8 @@
                       "value_pool": { "802": "Monat" }
                     }
                   ],
-                  "discriminator": "DTM"
+                  "discriminator": "DTM",
+                  "section_name": "Turnusableseintervall des MSB (Strom)"
                 },
                 {
                   "ahb_expression": "",
@@ -264,7 +274,8 @@
                       "value_pool": { "802": "Monat" }
                     }
                   ],
-                  "discriminator": "DTM"
+                  "discriminator": "DTM",
+                  "section_name": "Abrechnungsintervall des LF"
                 },
                 {
                   "ahb_expression": "",
@@ -281,7 +292,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Messlokation f\u00fcr Termine der Messlokation"
                 },
                 {
                   "ahb_expression": "",
@@ -303,7 +315,8 @@
                       "value_pool": { "104": "MMWW-MMWW", "106": "MMDD" }
                     }
                   ],
-                  "discriminator": "DTM"
+                  "discriminator": "DTM",
+                  "section_name": "Geplante Turnusablesung des NB (Gas)"
                 },
                 {
                   "ahb_expression": "",
@@ -325,7 +338,8 @@
                       "value_pool": { "802": "Monat" }
                     }
                   ],
-                  "discriminator": "DTM"
+                  "discriminator": "DTM",
+                  "section_name": "Turnusableseintervall des NB (Gas)"
                 }
               ]
             },
@@ -364,7 +378,8 @@
                           }
                         }
                       ],
-                      "discriminator": "QTY"
+                      "discriminator": "QTY",
+                      "section_name": "Arbeit / Leistung f\u00fcr tagesparameterabh\u00e4ngige Marktlokation"
                     },
                     {
                       "ahb_expression": "",
@@ -388,7 +403,8 @@
                           "value_pool": { "KWH": "Kilowattstunde" }
                         }
                       ],
-                      "discriminator": "QTY"
+                      "discriminator": "QTY",
+                      "section_name": "Veranschlagte Jahresmenge gesamt"
                     },
                     {
                       "ahb_expression": "",
@@ -410,7 +426,8 @@
                           "value_pool": { "P1": "Prozent" }
                         }
                       ],
-                      "discriminator": "QTY"
+                      "discriminator": "QTY",
+                      "section_name": "Prozentualer Anteil der Tranche an der erzeugenden Marktlokation"
                     }
                   ]
                 },
@@ -436,7 +453,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Lieferrichtung"
                     },
                     {
                       "ahb_expression": "",
@@ -447,7 +465,8 @@
                           "value_pool": { "ZB3": "ZugeordneterMarktpartner" }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Zugeordnete Marktpartner"
                     },
                     {
                       "ahb_expression": "",
@@ -464,7 +483,8 @@
                           "entered_input": null
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Lieferant"
                     },
                     {
                       "ahb_expression": "",
@@ -481,7 +501,8 @@
                           "entered_input": null
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "\u00dcbertragungsnetzbetreiber"
                     },
                     {
                       "ahb_expression": "",
@@ -506,7 +527,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Messstellenbetreiber"
                     },
                     {
                       "ahb_expression": "",
@@ -519,7 +541,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Spannungsebene der Marktlokation"
                     },
                     {
                       "ahb_expression": "",
@@ -535,7 +558,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Spannungsebene der Marktlokation"
                     },
                     {
                       "ahb_expression": "",
@@ -548,7 +572,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Messtechnische Einordnung der Marktlokation"
                     },
                     {
                       "ahb_expression": "",
@@ -559,7 +584,8 @@
                           "value_pool": { "Z52": "iMS", "Z53": "kME / mME" }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Messtechnische Einordnung der Marktlokation"
                     },
                     {
                       "ahb_expression": "",
@@ -575,7 +601,8 @@
                           "value_pool": { "ZA8": "NB", "ZA9": "\u00dcNB" }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Aggregationsverantwortung in MaBiS"
                     },
                     {
                       "ahb_expression": "",
@@ -589,7 +616,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Prognosegrundlage der Marktlokation"
                     },
                     {
                       "ahb_expression": "",
@@ -604,7 +632,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Details der Prognosegrundlage"
                     },
                     {
                       "ahb_expression": "",
@@ -617,7 +646,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Art der erzeugenden Marktlokation"
                     },
                     {
                       "ahb_expression": "",
@@ -634,7 +664,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Art der erzeugenden Marktlokation"
                     },
                     {
                       "ahb_expression": "",
@@ -647,7 +678,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Versorgungsart der Marktlokation"
                     },
                     {
                       "ahb_expression": "",
@@ -660,7 +692,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Beschreibung erforderlicher Wert"
                     },
                     {
                       "ahb_expression": "",
@@ -674,7 +707,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Wert"
                     },
                     {
                       "ahb_expression": "",
@@ -689,7 +723,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Wertegranularit\u00e4t"
                     },
                     {
                       "ahb_expression": "",
@@ -705,7 +740,8 @@
                           "value_pool": { "0": "Code der Z\u00e4hlzeitZ61" }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Zugeordnete Z\u00e4hlzeit"
                     },
                     {
                       "ahb_expression": "",
@@ -716,7 +752,8 @@
                           "value_pool": { "ZA8": "NB" }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Wert f\u00fcr Netzbetreiber relevant"
                     },
                     {
                       "ahb_expression": "",
@@ -734,7 +771,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Verwendungszweck des Wertes"
                     },
                     {
                       "ahb_expression": "",
@@ -745,7 +783,8 @@
                           "value_pool": { "ZA7": "LF" }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Wert f\u00fcr Lieferant relevant"
                     },
                     {
                       "ahb_expression": "",
@@ -763,7 +802,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Verwendungszweck des Wertes"
                     },
                     {
                       "ahb_expression": "",
@@ -774,7 +814,8 @@
                           "value_pool": { "ZA9": "\u00dcNB" }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Wert f\u00fcr \u00dcbertragungsnetzbetreiber relevant"
                     },
                     {
                       "ahb_expression": "",
@@ -788,7 +829,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Verwendungszweck des Wertes"
                     },
                     {
                       "ahb_expression": "",
@@ -805,7 +847,8 @@
                           "entered_input": null
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Zugeordnete Z\u00e4hlzeit"
                     },
                     {
                       "ahb_expression": "",
@@ -824,7 +867,8 @@
                           "entered_input": null
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Zugeordnete Z\u00e4hlzeitregister"
                     },
                     {
                       "ahb_expression": "",
@@ -835,7 +879,8 @@
                           "value_pool": { "ZA8": "NB" }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "OBIS Daten f\u00fcr Netzbetreiber relevant"
                     },
                     {
                       "ahb_expression": "",
@@ -853,7 +898,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Werte"
                     },
                     {
                       "ahb_expression": "",
@@ -864,7 +910,8 @@
                           "value_pool": { "ZA7": "LF" }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "OBIS Daten f\u00fcr Lieferant relevant"
                     },
                     {
                       "ahb_expression": "",
@@ -876,7 +923,8 @@
                           "entered_input": null
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Verwendungszweck der Werte"
                     },
                     {
                       "ahb_expression": "",
@@ -887,7 +935,8 @@
                           "value_pool": { "ZA9": "\u00dcNB" }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "OBIS Daten f\u00fcr \u00dcbertragungsnetzbetreiber relevant"
                     },
                     {
                       "ahb_expression": "",
@@ -901,7 +950,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Verwendungszweck der Werte"
                     },
                     {
                       "ahb_expression": "",
@@ -912,7 +962,8 @@
                           "value_pool": { "ZB3": "ZugeordneterMarktpartner" }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Zugeordnete Marktpartner"
                     },
                     {
                       "ahb_expression": "",
@@ -929,7 +980,8 @@
                           "entered_input": null
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Lieferant"
                     },
                     {
                       "ahb_expression": "",
@@ -950,7 +1002,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Basis zur Bildung der Tranchengr\u00f6\u00dfe"
                     },
                     {
                       "ahb_expression": "",
@@ -963,7 +1016,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Beschreibung erforderlicher Wert"
                     },
                     {
                       "ahb_expression": "",
@@ -974,7 +1028,8 @@
                           "value_pool": { "ZC2": "Wirkarbeit" }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Wert"
                     },
                     {
                       "ahb_expression": "",
@@ -985,7 +1040,8 @@
                           "value_pool": { "ZC5": "1/4 Stunde" }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Wertegranularit\u00e4t"
                     },
                     {
                       "ahb_expression": "",
@@ -996,7 +1052,8 @@
                           "value_pool": { "ZA8": "NB" }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Werte f\u00fcr Netzbetreiber relevant"
                     },
                     {
                       "ahb_expression": "",
@@ -1010,7 +1067,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Verwendungszweck der Werte"
                     },
                     {
                       "ahb_expression": "",
@@ -1021,7 +1079,8 @@
                           "value_pool": { "ZA7": "LF" }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "OBIS Daten f\u00fcr Lieferant relevant"
                     },
                     {
                       "ahb_expression": "",
@@ -1035,7 +1094,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Verwendungszweck der Werte"
                     },
                     {
                       "ahb_expression": "",
@@ -1046,7 +1106,8 @@
                           "value_pool": { "ZA9": "\u00dcNB" }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "OBIS Daten f\u00fcr \u00dcbertragungsnetzbetreiber relevant"
                     },
                     {
                       "ahb_expression": "",
@@ -1060,7 +1121,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Verwendungszweck der Werte"
                     },
                     {
                       "ahb_expression": "",
@@ -1071,7 +1133,8 @@
                           "value_pool": { "ZB3": "ZugeordneterMarktpartner" }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Zugeordnete Marktpartner"
                     },
                     {
                       "ahb_expression": "",
@@ -1096,7 +1159,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Messstellenbetreiber"
                     },
                     {
                       "ahb_expression": "",
@@ -1113,7 +1177,8 @@
                           "entered_input": null
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Messstellenbetreiber Alt"
                     },
                     {
                       "ahb_expression": "",
@@ -1126,7 +1191,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Spannungsebene der Messlokation"
                     },
                     {
                       "ahb_expression": "",
@@ -1142,7 +1208,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Spannungsebene der Messlokation"
                     },
                     {
                       "ahb_expression": "",
@@ -1153,7 +1220,8 @@
                           "value_pool": { "Y02": "Gasqualit\u00e4t" }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Gasqualit\u00e4t"
                     },
                     {
                       "ahb_expression": "",
@@ -1164,7 +1232,8 @@
                           "value_pool": { "Y04": "H-Gas", "Y05": "L-Gas" }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Gasqualit\u00e4t"
                     },
                     {
                       "ahb_expression": "",
@@ -1183,7 +1252,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Verwendungsumfang"
                     },
                     {
                       "ahb_expression": "",
@@ -1205,7 +1275,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Betriebszustand der Messlokation"
                     },
                     {
                       "ahb_expression": "",
@@ -1218,7 +1289,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Beschreibung erforderlicher Wert"
                     },
                     {
                       "ahb_expression": "",
@@ -1232,7 +1304,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Wert"
                     },
                     {
                       "ahb_expression": "",
@@ -1248,7 +1321,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Wertegranularit\u00e4t"
                     },
                     {
                       "ahb_expression": "",
@@ -1262,7 +1336,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Energieflussrichtung"
                     },
                     {
                       "ahb_expression": "",
@@ -1283,7 +1358,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Notwendigkeit einer zweiten Messung"
                     },
                     {
                       "ahb_expression": "",
@@ -1299,7 +1375,8 @@
                           "value_pool": { "Z06": "vorhanden" }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Werte\u00fcbermittlung an den NB aufgrund weiterem Verwendungszweck"
                     },
                     {
                       "ahb_expression": "",
@@ -1315,7 +1392,8 @@
                           "value_pool": { "0": "Code der Z\u00e4hlzeitZ61" }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Zugeordnete Z\u00e4hlzeit"
                     },
                     {
                       "ahb_expression": "Muss",
@@ -1326,7 +1404,8 @@
                           "value_pool": { "E13": "Z\u00e4hlertyp" }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Z\u00e4hlertyp"
                     },
                     {
                       "ahb_expression": "",
@@ -1362,7 +1441,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Z\u00e4hlertyp"
                     },
                     {
                       "ahb_expression": "",
@@ -1395,7 +1475,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Z\u00e4hlergr\u00f6\u00dfe (Gas)"
                     },
                     {
                       "ahb_expression": "Muss",
@@ -1412,7 +1493,8 @@
                           "entered_input": null
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Identifikation / Nummer des Ger\u00e4tes"
                     },
                     {
                       "ahb_expression": "",
@@ -1427,7 +1509,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Registeranzahl"
                     },
                     {
                       "ahb_expression": "",
@@ -1441,7 +1524,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Energierichtung"
                     },
                     {
                       "ahb_expression": "",
@@ -1462,7 +1546,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Fernschaltung der Z\u00e4hleinrichtung"
                     },
                     {
                       "ahb_expression": "",
@@ -1478,7 +1563,8 @@
                           "value_pool": { "Z16": "Hochfrequenzsonde" }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Art der Volumenerfassung (Gas)"
                     },
                     {
                       "ahb_expression": "",
@@ -1491,7 +1577,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Befestigungsart Z\u00e4hleinrichtung"
                     },
                     {
                       "ahb_expression": "",
@@ -1508,7 +1595,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Z\u00e4hleinrichtung"
                     },
                     {
                       "ahb_expression": "",
@@ -1521,7 +1609,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Messwerterfassung an der Z\u00e4hleinrichtung"
                     },
                     {
                       "ahb_expression": "",
@@ -1535,7 +1624,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Messwerterfassung an der Z\u00e4hleinrichtung"
                     },
                     {
                       "ahb_expression": "",
@@ -1546,7 +1636,8 @@
                           "value_pool": { "Z64": "Mengenumwerter" }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Mengenumwerter"
                     },
                     {
                       "ahb_expression": "",
@@ -1563,7 +1654,8 @@
                           "entered_input": null
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Identifikation / Nummer des Ger\u00e4tes"
                     },
                     {
                       "ahb_expression": "",
@@ -1578,7 +1670,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Mengenumwertertyp"
                     },
                     {
                       "ahb_expression": "",
@@ -1597,7 +1690,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Art der Volumenerfassung (Gas)"
                     },
                     {
                       "ahb_expression": "",
@@ -1615,7 +1709,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Vor- und Nachkommastellen des Z\u00e4hlwerks"
                     },
                     {
                       "ahb_expression": "",
@@ -1627,7 +1722,8 @@
                           "entered_input": null
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Vor- und Nachkommastellen des Z\u00e4hlwerks"
                     },
                     {
                       "ahb_expression": "",
@@ -1638,7 +1734,8 @@
                           "value_pool": { "Z25": "Wandler" }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Wandler"
                     },
                     {
                       "ahb_expression": "",
@@ -1655,7 +1752,8 @@
                           "entered_input": null
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Identifikation / Nummer des Ger\u00e4tes"
                     },
                     {
                       "ahb_expression": "",
@@ -1677,7 +1775,8 @@
                           "entered_input": null
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Wandlertyp und Faktor"
                     },
                     {
                       "ahb_expression": "",
@@ -1688,7 +1787,8 @@
                           "value_pool": { "Z26": "Kommunikationseinrichtung" }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Kommunikationseinrichtung"
                     },
                     {
                       "ahb_expression": "",
@@ -1705,7 +1805,8 @@
                           "entered_input": null
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Identifikation / Nummer des Ger\u00e4tes"
                     },
                     {
                       "ahb_expression": "",
@@ -1723,7 +1824,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "styp"
                     },
                     {
                       "ahb_expression": "",
@@ -1734,7 +1836,8 @@
                           "value_pool": { "Z27": "TechnischeSteuereinrichtung" }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Technische Steuereinrichtung"
                     },
                     {
                       "ahb_expression": "",
@@ -1751,7 +1854,8 @@
                           "entered_input": null
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Identifikation / Nummer des Ger\u00e4tes"
                     },
                     {
                       "ahb_expression": "",
@@ -1765,7 +1869,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Technische Steuereinrichtungstyp"
                     },
                     {
                       "ahb_expression": "",
@@ -1776,7 +1881,8 @@
                           "value_pool": { "Z75": "Smartmeter-Gateway" }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Smartmeter-Gateway"
                     },
                     {
                       "ahb_expression": "",
@@ -1793,7 +1899,8 @@
                           "entered_input": null
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Identifikation / Nummer des Ger\u00e4tes"
                     },
                     {
                       "ahb_expression": "",
@@ -1804,7 +1911,8 @@
                           "value_pool": { "Z76": "Steuerbox" }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Steuerbox"
                     },
                     {
                       "ahb_expression": "",
@@ -1821,7 +1929,8 @@
                           "entered_input": null
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Identifikation / Nummer des Ger\u00e4tes"
                     },
                     {
                       "ahb_expression": "",
@@ -1843,7 +1952,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Normiertes Profil (Strom)"
                     },
                     {
                       "ahb_expression": "",
@@ -1855,7 +1965,8 @@
                           "entered_input": null
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Normiertes Profil (Strom)"
                     },
                     {
                       "ahb_expression": "",
@@ -1877,7 +1988,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Normiertes Profil"
                     },
                     {
                       "ahb_expression": "",
@@ -1889,7 +2001,8 @@
                           "entered_input": null
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Normiertes Profil"
                     },
                     {
                       "ahb_expression": "",
@@ -1923,7 +2036,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Klimazone / Temperaturmessstelle"
                     },
                     {
                       "ahb_expression": "",
@@ -1936,7 +2050,8 @@
                           }
                         }
                       ],
-                      "discriminator": "CCI"
+                      "discriminator": "CCI",
+                      "section_name": "Referenzprofil"
                     },
                     {
                       "ahb_expression": "",
@@ -1948,7 +2063,8 @@
                           "entered_input": null
                         }
                       ],
-                      "discriminator": "CAV"
+                      "discriminator": "CAV",
+                      "section_name": "Referenzprofil"
                     }
                   ]
                 }
@@ -1963,7 +2079,8 @@
                       "value_pool": { "Z01": "Daten der Marktlokation" }
                     }
                   ],
-                  "discriminator": "SEQ"
+                  "discriminator": "SEQ",
+                  "section_name": "Daten der Marktlokation"
                 },
                 {
                   "ahb_expression": "",
@@ -1980,7 +2097,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Marktlokation"
                 },
                 {
                   "ahb_expression": "",
@@ -1993,7 +2111,8 @@
                       }
                     }
                   ],
-                  "discriminator": "SEQ"
+                  "discriminator": "SEQ",
+                  "section_name": "Erforderlicher Wert der Marktlokation"
                 },
                 {
                   "ahb_expression": "",
@@ -2010,7 +2129,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Marktlokation"
                 },
                 {
                   "ahb_expression": "",
@@ -2021,7 +2141,8 @@
                       "value_pool": { "Z02": "OBIS-Daten derMarktlokation" }
                     }
                   ],
-                  "discriminator": "SEQ"
+                  "discriminator": "SEQ",
+                  "section_name": "OBIS-Daten der Marktlokation"
                 },
                 {
                   "ahb_expression": "",
@@ -2038,7 +2159,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Marktlokation"
                 },
                 {
                   "ahb_expression": "",
@@ -2060,7 +2182,8 @@
                       "value_pool": { "SRW": "OBIS-Kennzahl" }
                     }
                   ],
-                  "discriminator": "PIA"
+                  "discriminator": "PIA",
+                  "section_name": "OBIS-Kennzahl der Marktlokation"
                 },
                 {
                   "ahb_expression": "",
@@ -2071,7 +2194,8 @@
                       "value_pool": { "Z15": "Daten der Tranche" }
                     }
                   ],
-                  "discriminator": "SEQ"
+                  "discriminator": "SEQ",
+                  "section_name": "Daten der Tranche"
                 },
                 {
                   "ahb_expression": "",
@@ -2088,7 +2212,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Tranche"
                 },
                 {
                   "ahb_expression": "",
@@ -2105,7 +2230,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die Marktlokation der Tranche"
                 },
                 {
                   "ahb_expression": "",
@@ -2116,7 +2242,8 @@
                       "value_pool": { "Z16": "Erforderlicher Wert derTranche" }
                     }
                   ],
-                  "discriminator": "SEQ"
+                  "discriminator": "SEQ",
+                  "section_name": "Erforderlicher Wert der Tranche"
                 },
                 {
                   "ahb_expression": "",
@@ -2133,7 +2260,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Tranche"
                 },
                 {
                   "ahb_expression": "",
@@ -2144,7 +2272,8 @@
                       "value_pool": { "Z18": "Daten der Messlokation" }
                     }
                   ],
-                  "discriminator": "SEQ"
+                  "discriminator": "SEQ",
+                  "section_name": "Daten der Messlokation"
                 },
                 {
                   "ahb_expression": "",
@@ -2161,7 +2290,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Messlokation"
                 },
                 {
                   "ahb_expression": "",
@@ -2178,7 +2308,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die der Messlokation zugeordneten Marktlokation"
                 },
                 {
                   "ahb_expression": "",
@@ -2191,7 +2322,8 @@
                       }
                     }
                   ],
-                  "discriminator": "SEQ"
+                  "discriminator": "SEQ",
+                  "section_name": "Erforderlicher Wert der Messlokation"
                 },
                 {
                   "ahb_expression": "",
@@ -2208,7 +2340,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Messlokation"
                 },
                 {
                   "ahb_expression": "",
@@ -2225,7 +2358,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID einer Marktlokation"
                 },
                 {
                   "ahb_expression": "Muss",
@@ -2236,7 +2370,8 @@
                       "value_pool": { "Z03": "Z\u00e4hleinrichtungsdaten" }
                     }
                   ],
-                  "discriminator": "SEQ"
+                  "discriminator": "SEQ",
+                  "section_name": "Z\u00e4hleinrichtungsdaten"
                 },
                 {
                   "ahb_expression": "",
@@ -2253,7 +2388,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID einer Messlokation"
                 },
                 {
                   "ahb_expression": "",
@@ -2270,7 +2406,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf das Smartmeter-Gateway"
                 },
                 {
                   "ahb_expression": "",
@@ -2281,7 +2418,8 @@
                       "value_pool": { "Z09": "Mengenumwerter-Daten" }
                     }
                   ],
-                  "discriminator": "SEQ"
+                  "discriminator": "SEQ",
+                  "section_name": "Mengenumwerterdaten"
                 },
                 {
                   "ahb_expression": "",
@@ -2300,7 +2438,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die Ger\u00e4tenummer"
                 },
                 {
                   "ahb_expression": "",
@@ -2313,7 +2452,8 @@
                       }
                     }
                   ],
-                  "discriminator": "SEQ"
+                  "discriminator": "SEQ",
+                  "section_name": "OBIS-Daten der Z\u00e4hleinrichtung / Mengenumwerter / Smartmeter-Gateway"
                 },
                 {
                   "ahb_expression": "",
@@ -2334,7 +2474,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die Ger\u00e4tenummer"
                 },
                 {
                   "ahb_expression": "",
@@ -2351,7 +2492,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID einer Marktlokation"
                 },
                 {
                   "ahb_expression": "",
@@ -2368,7 +2510,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Konfigurnations-ID"
                 },
                 {
                   "ahb_expression": "",
@@ -2390,7 +2533,8 @@
                       "value_pool": { "SRW": "OBIS-Kennzahl" }
                     }
                   ],
-                  "discriminator": "PIA"
+                  "discriminator": "PIA",
+                  "section_name": "OBIS-Kennzahl der Z\u00e4hleinrichtung / Mengenumwerter / Smartmeter-Gateway"
                 },
                 {
                   "ahb_expression": "",
@@ -2401,7 +2545,8 @@
                       "value_pool": { "Z04": "Wandler-Daten" }
                     }
                   ],
-                  "discriminator": "SEQ"
+                  "discriminator": "SEQ",
+                  "section_name": "Wandlerdaten"
                 },
                 {
                   "ahb_expression": "",
@@ -2420,7 +2565,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die Ger\u00e4tenummer"
                 },
                 {
                   "ahb_expression": "",
@@ -2431,7 +2577,8 @@
                       "value_pool": { "Z05": "Kommunikationseinrichtungsdaten" }
                     }
                   ],
-                  "discriminator": "SEQ"
+                  "discriminator": "SEQ",
+                  "section_name": "Kommunikationseinrichtung sdaten"
                 },
                 {
                   "ahb_expression": "",
@@ -2450,7 +2597,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die Ger\u00e4tenummer"
                 },
                 {
                   "ahb_expression": "",
@@ -2463,7 +2611,8 @@
                       }
                     }
                   ],
-                  "discriminator": "SEQ"
+                  "discriminator": "SEQ",
+                  "section_name": "Daten der technischen Steuereinrichtung"
                 },
                 {
                   "ahb_expression": "",
@@ -2482,7 +2631,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die Ger\u00e4tenummer"
                 },
                 {
                   "ahb_expression": "",
@@ -2493,7 +2643,8 @@
                       "value_pool": { "Z13": "Smartmeter-Gateway" }
                     }
                   ],
-                  "discriminator": "SEQ"
+                  "discriminator": "SEQ",
+                  "section_name": "Smartmeter-Gateway"
                 },
                 {
                   "ahb_expression": "",
@@ -2504,7 +2655,8 @@
                       "value_pool": { "Z14": "Steuerbox" }
                     }
                   ],
-                  "discriminator": "SEQ"
+                  "discriminator": "SEQ",
+                  "section_name": "Daten der Steuerbox"
                 },
                 {
                   "ahb_expression": "",
@@ -2521,7 +2673,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf das Smartmeter-Gateway"
                 },
                 {
                   "ahb_expression": "",
@@ -2538,7 +2691,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Marktlokation"
                 },
                 {
                   "ahb_expression": "",
@@ -2549,7 +2703,8 @@
                       "value_pool": { "Z21": "Profildaten" }
                     }
                   ],
-                  "discriminator": "SEQ"
+                  "discriminator": "SEQ",
+                  "section_name": "Profildaten (Strom)"
                 },
                 {
                   "ahb_expression": "",
@@ -2566,7 +2721,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Marktlokation"
                 },
                 {
                   "ahb_expression": "",
@@ -2577,7 +2733,8 @@
                       "value_pool": { "Z08": "Profilschardaten" }
                     }
                   ],
-                  "discriminator": "SEQ"
+                  "discriminator": "SEQ",
+                  "section_name": "Profilschardaten"
                 },
                 {
                   "ahb_expression": "",
@@ -2594,7 +2751,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Marktlokation"
                 },
                 {
                   "ahb_expression": "",
@@ -2605,7 +2763,8 @@
                       "value_pool": { "Z38": "Referenzprofildaten" }
                     }
                   ],
-                  "discriminator": "SEQ"
+                  "discriminator": "SEQ",
+                  "section_name": "Referenzprofildaten"
                 },
                 {
                   "ahb_expression": "",
@@ -2622,7 +2781,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Marktlokation"
                 }
               ]
             },
@@ -2654,7 +2814,8 @@
                       }
                     }
                   ],
-                  "discriminator": "NAD"
+                  "discriminator": "NAD",
+                  "section_name": "Kunde des Lieferanten"
                 },
                 {
                   "ahb_expression": "",
@@ -2671,7 +2832,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Marktlokation"
                 },
                 {
                   "ahb_expression": "",
@@ -2722,7 +2884,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "NAD"
+                  "discriminator": "NAD",
+                  "section_name": "Korrespondenzanschrift des Kunden des Lieferanten"
                 },
                 {
                   "ahb_expression": "",
@@ -2739,7 +2902,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Marktlokation"
                 },
                 {
                   "ahb_expression": "Muss",
@@ -2764,7 +2928,8 @@
                       }
                     }
                   ],
-                  "discriminator": "NAD"
+                  "discriminator": "NAD",
+                  "section_name": "Kunde des Messstellenbetreibers"
                 },
                 {
                   "ahb_expression": "",
@@ -2781,7 +2946,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Messlokation"
                 },
                 {
                   "ahb_expression": "Muss",
@@ -2832,7 +2998,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "NAD"
+                  "discriminator": "NAD",
+                  "section_name": "Messstellenbetreibers"
                 },
                 {
                   "ahb_expression": "",
@@ -2849,7 +3016,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Marktlokation"
                 },
                 {
                   "ahb_expression": "Muss",
@@ -2890,7 +3058,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "NAD"
+                  "discriminator": "NAD",
+                  "section_name": "Messlokationsadresse"
                 },
                 {
                   "ahb_expression": "",
@@ -2907,7 +3076,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID einer Messlokation"
                 },
                 {
                   "ahb_expression": "Muss",
@@ -2958,7 +3128,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "NAD"
+                  "discriminator": "NAD",
+                  "section_name": "Name und Adresse f\u00fcr die Ablesekarte"
                 },
                 {
                   "ahb_expression": "Kann",
@@ -2975,7 +3146,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "RFF"
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID einer Messlokation"
                 }
               ]
             }
@@ -2996,7 +3168,8 @@
                   "entered_input": null
                 }
               ],
-              "discriminator": "IDE"
+              "discriminator": "IDE",
+              "section_name": "Vorgang"
             },
             {
               "ahb_expression": "Muss",
@@ -3018,7 +3191,8 @@
                   "value_pool": { "303": "CCYYMMDDHHMMZZZ" }
                 }
               ],
-              "discriminator": "DTM"
+              "discriminator": "DTM",
+              "section_name": "Datum zum geplanten Leistungsbeginn"
             },
             {
               "ahb_expression": "Muss [61]",
@@ -3039,7 +3213,8 @@
                   }
                 }
               ],
-              "discriminator": "STS"
+              "discriminator": "STS",
+              "section_name": "Transaktionsgrund"
             },
             {
               "ahb_expression": "",
@@ -3066,7 +3241,8 @@
                   }
                 }
               ],
-              "discriminator": "STS"
+              "discriminator": "STS",
+              "section_name": "Status der Antwort"
             },
             {
               "ahb_expression": "Kann",
@@ -3085,7 +3261,8 @@
                   }
                 }
               ],
-              "discriminator": "AGR"
+              "discriminator": "AGR",
+              "section_name": "Beauftragung oder Beendigung liegt vor"
             }
           ]
         }
@@ -3128,7 +3305,8 @@
               }
             }
           ],
-          "discriminator": "UNH"
+          "discriminator": "UNH",
+          "section_name": "Nachrichten-Kopfsegment"
         },
         {
           "ahb_expression": "Muss",
@@ -3145,7 +3323,8 @@
               "entered_input": null
             }
           ],
-          "discriminator": "BGM"
+          "discriminator": "BGM",
+          "section_name": "Beginn der Nachricht"
         },
         {
           "ahb_expression": "Muss",
@@ -3167,7 +3346,8 @@
               "value_pool": { "303": "CCYYMMDDHHMMZZZ" }
             }
           ],
-          "discriminator": "DTM"
+          "discriminator": "DTM",
+          "section_name": "Nachrichtendatum"
         },
         {
           "ahb_expression": "Muss",
@@ -3185,7 +3365,8 @@
               "entered_input": null
             }
           ],
-          "discriminator": "UNT"
+          "discriminator": "UNT",
+          "section_name": "Nachrichten-Endesegment"
         }
       ]
     }
