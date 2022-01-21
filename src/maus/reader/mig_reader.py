@@ -366,16 +366,7 @@ class MigXmlReader(MigReader):
                     unique_result, use_sanitized_tree=False
                 ),
             ),
-            multiple_results_strategy=_EdifactStackSearchStrategy(
-                # doe snot work yet
-                name="filter by parents segment group because parent predecessor is not unique",
-                filter=lambda q, c: self.get_unique_result_by_parent_segment_group(c, q),
-                unique_result_strategy=lambda unique_result: self.element_to_edifact_stack(
-                    unique_result, use_sanitized_tree=False
-                ),
-                multiple_results_strategy=None,
-                no_result_strategy=None,
-            ),
+            multiple_results_strategy=None,
         )
 
     def _multiple_data_element_matches_handling(
