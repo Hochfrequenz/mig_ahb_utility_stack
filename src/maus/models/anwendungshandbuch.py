@@ -16,6 +16,7 @@ from marshmallow import Schema, fields, post_load  # type:ignore[import]
 from maus.models.edifact_components import SegmentGroup, SegmentGroupSchema
 
 
+# pylint:disable=too-many-instance-attributes
 @attr.s(auto_attribs=True, kw_only=True)
 class AhbLine:
     """
