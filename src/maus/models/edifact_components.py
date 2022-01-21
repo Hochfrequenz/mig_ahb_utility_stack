@@ -10,6 +10,8 @@ from typing import Dict, List, Optional, Type
 import attr
 from marshmallow import Schema, fields, post_dump, post_load, pre_dump, pre_load  # type:ignore[import]
 
+from maus.division_helper import Division
+
 
 @attr.s(auto_attribs=True, kw_only=True)
 class DataElement(ABC):
@@ -387,4 +389,10 @@ class EdifactStackQuery:
     Some names are not really unique. F.e. all date time fields carry more or less the same name in the AHB.
     So to distinguish between them you may provide the predecissing qualifier.
     In case of 'DTM+137++what_youre_looking_for' the predecessor qualifier is '137'
+    """
+    division: Optional[Division] = attr.ib(
+        validator=attr.validators.optional(attr.validators.instance_of(Division)), default=None
+    )
+    """
+    Is set (not None) iff the division we're looking for is known
     """

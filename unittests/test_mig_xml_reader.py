@@ -4,6 +4,7 @@ from typing import Optional
 import pytest  # type:ignore[import]
 from lxml import etree  # type:ignore[import]
 
+from maus.division_helper import Division
 from maus.models.edifact_components import EdifactStackQuery
 from maus.reader.mig_reader import MigXmlReader
 
@@ -224,6 +225,7 @@ class TestMigXmlReader:
                     data_element_id="2380",
                     name="Datum oder Uhrzeit oderZeitspanne, Wert",
                     predecessor_qualifier="752",
+                    division=Division.ELECTRICITY,
                 ),
                 '$["Dokument"][0]',  # todo: add proper path here
                 id="UTILMD geplante Turnusablesung 752",
