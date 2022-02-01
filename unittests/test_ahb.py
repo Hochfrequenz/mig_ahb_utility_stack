@@ -357,14 +357,14 @@ class TestAhb:
                                             "value_pool": {"hello": "world", "maus": "rocks"},
                                             "discriminator": "baz",
                                             "data_element_id": "0123",
-                                            "data_type": "VALUE_POOL",
+                                            "value_type": "VALUE_POOL",
                                         },
                                         {
                                             "ahb_expression": "Muss [1]",
                                             "entered_input": "Hello Maus",
                                             "discriminator": "bar",
                                             "data_element_id": "4567",
-                                            "data_type": "TEXT",
+                                            "value_type": "TEXT",
                                         },
                                     ],
                                 }
