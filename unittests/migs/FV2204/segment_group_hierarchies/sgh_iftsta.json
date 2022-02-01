@@ -1,0 +1,60 @@
+{
+  "opening_segment": "UNH",
+  "segment_group": null,
+  "sub_hierarchy": [
+    {
+      "opening_segment": "NAD",
+      "segment_group": "SG1",
+      "sub_hierarchy": [
+        {
+          "opening_segment": "CTA",
+          "segment_group": "SG2",
+          "sub_hierarchy": []
+        }
+      ]
+    },
+    {
+      "opening_segment": "EQD",
+      "segment_group": "SG4",
+      "sub_hierarchy": [
+        {
+          "opening_segment": "LOC",
+          "segment_group": "SG6",
+          "sub_hierarchy": []
+        },
+        {
+          "opening_segment": "STS",
+          "segment_group": "SG7",
+          "sub_hierarchy": []
+        }
+      ]
+    },
+    {
+      "opening_segment": "CNI",
+      "segment_group": "SG15",
+      "sub_hierarchy": [
+        {
+          "opening_segment": "EFI",
+          "segment_group": "SG16",
+          "sub_hierarchy": []
+        },
+        {
+          "opening_segment": "NAD",
+          "segment_group": "SG17",
+          "sub_hierarchy": [
+            {
+              "opening_segment": "CTA",
+              "segment_group": "SG18",
+              "sub_hierarchy": []
+            }
+          ]
+        },
+        {
+          "opening_segment": "GID",
+          "segment_group": "SG25",
+          "sub_hierarchy": []
+        }
+      ]
+    }
+  ]
+}
