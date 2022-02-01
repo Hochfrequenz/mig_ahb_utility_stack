@@ -17,6 +17,7 @@ ALL_MIG_XML_FILES = pytest.mark.datafiles(
     "./unittests/migs/FV2204/template_xmls/utilmd_9013.xml",
     "./unittests/migs/FV2204/template_xmls/reqote.xml",
     # "./unittests/migs/FV2204/template_xmls/utilmd.xml",
+    # "./unittests/migs/FV2204/template_xmls/iftsta.xml",
 )
 
 

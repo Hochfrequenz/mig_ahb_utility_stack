@@ -3301,7 +3301,7 @@
               "data_element_id": "0057",
               "discriminator": "UNH->0057",
               "value_pool": {
-                "Versionsnummer derzugrundeliegendenBDEW-Nachrichtenbeschreibung": "5.2d"
+                "5.2d": "Versionsnummer derzugrundeliegendenBDEW-Nachrichtenbeschreibung"
               }
             }
           ],

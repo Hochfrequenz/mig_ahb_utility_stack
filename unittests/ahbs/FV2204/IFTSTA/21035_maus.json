@@ -1,0 +1,424 @@
+{
+  "lines": [
+    {
+      "ahb_expression": "Muss",
+      "discriminator": "root",
+      "segment_groups": [
+        {
+          "ahb_expression": "Muss",
+          "discriminator": "SG1",
+          "segment_groups": [
+            {
+              "ahb_expression": "Kann",
+              "discriminator": "SG2",
+              "segment_groups": [],
+              "segments": [
+                {
+                  "ahb_expression": "Muss",
+                  "data_elements": [
+                    {
+                      "data_element_id": "3139",
+                      "discriminator": "SG2->CTA->3139",
+                      "value_pool": { "IC": "Informationskontakt" }
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3412",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"MP-ID Absender\"][0][\"Ansprechpartner\"][0][\"Kontakt\"][0][\"Name\"]",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "CTA",
+                  "section_name": "Ansprechpartner"
+                },
+                {
+                  "ahb_expression": "Muss",
+                  "data_elements": [
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3148",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"MP-ID Absender\"][0][\"Ansprechpartner\"][0][\"Kommunikationsverbindung\"][0][\"Art des Kommunikationsmittels\"]",
+                      "entered_input": null
+                    },
+                    {
+                      "data_element_id": "3155",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"MP-ID Absender\"][0][\"Ansprechpartner\"][0][\"Kommunikationsverbindung\"][0][\"Nummer / Adresse\"]",
+                      "value_pool": {
+                        "AJ": "weiteres Telefon",
+                        "AL": "Handy",
+                        "EM": "E-Mail",
+                        "FX": "Telefax",
+                        "TE": "Telefon"
+                      }
+                    }
+                  ],
+                  "discriminator": "COM",
+                  "section_name": "Kommunikationsverbindung"
+                }
+              ]
+            }
+          ],
+          "segments": [
+            {
+              "ahb_expression": "Muss",
+              "data_elements": [
+                {
+                  "data_element_id": "3035",
+                  "discriminator": "SG1->NAD->3035",
+                  "value_pool": { "MR": "Nachrichtenempf\u00e4nger" }
+                },
+                {
+                  "ahb_expression": "X [27]",
+                  "data_element_id": "3039",
+                  "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"MP-ID Empf\u00e4nger\"][0][\"MP-ID\"]",
+                  "entered_input": null
+                },
+                {
+                  "data_element_id": "3055",
+                  "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"MP-ID Empf\u00e4nger\"][0][\"Codeliste\"]",
+                  "value_pool": {
+                    "293": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",
+                    "9": "GS1"
+                  }
+                }
+              ],
+              "discriminator": "NAD",
+              "section_name": "MP-ID Empf\u00e4nger"
+            },
+            {
+              "ahb_expression": "Muss",
+              "data_elements": [
+                {
+                  "data_element_id": "3035",
+                  "discriminator": "SG1->NAD->3035",
+                  "value_pool": { "MS": "Nachrichtenaussteller bzw.-absender" }
+                },
+                {
+                  "ahb_expression": "X [27]",
+                  "data_element_id": "3039",
+                  "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"MP-ID Absender\"][0][\"MP-ID\"]",
+                  "entered_input": null
+                },
+                {
+                  "data_element_id": "3055",
+                  "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"MP-ID Absender\"][0][\"Codeliste\"]",
+                  "value_pool": {
+                    "293": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",
+                    "9": "GS1"
+                  }
+                }
+              ],
+              "discriminator": "NAD",
+              "section_name": "MP-ID Absender"
+            }
+          ]
+        },
+        {
+          "ahb_expression": "Muss",
+          "discriminator": "SG15",
+          "segment_groups": [
+            {
+              "ahb_expression": "Muss [23]",
+              "discriminator": "SG16",
+              "segment_groups": [],
+              "segments": [
+                {
+                  "ahb_expression": "Muss",
+                  "data_elements": [
+                    {
+                      "data_element_id": "7008",
+                      "discriminator": "SG16->EFI->7008",
+                      "value_pool": { "Z01": "Ansicht des Senders" }
+                    }
+                  ],
+                  "discriminator": "EFI",
+                  "section_name": "Weitere Information"
+                },
+                {
+                  "ahb_expression": "Muss [31]",
+                  "data_elements": [
+                    {
+                      "data_element_id": "2005",
+                      "discriminator": "SG16->DTM->2005",
+                      "value_pool": { "163": "Verarbeitung,Beginndatum/-zeit" }
+                    },
+                    {
+                      "ahb_expression": "X [UB1]",
+                      "data_element_id": "2380",
+                      "discriminator": "Datum oder Uhrzeit oderZeitspanne, Wert",
+                      "entered_input": null
+                    },
+                    {
+                      "data_element_id": "2379",
+                      "discriminator": "SG16->DTM->2379",
+                      "value_pool": { "303": "CCYYMMDDHHMMZZZ" }
+                    }
+                  ],
+                  "discriminator": "DTM",
+                  "section_name": "Beginn Messperiode"
+                },
+                {
+                  "ahb_expression": "Muss [33]",
+                  "data_elements": [
+                    {
+                      "data_element_id": "2005",
+                      "discriminator": "SG16->DTM->2005",
+                      "value_pool": { "164": "Verarbeitung,Endedatum/-zeit" }
+                    },
+                    {
+                      "ahb_expression": "X [UB1]",
+                      "data_element_id": "2380",
+                      "discriminator": "Datum oder Uhrzeit oderZeitspanne, Wert",
+                      "entered_input": null
+                    },
+                    {
+                      "data_element_id": "2379",
+                      "discriminator": "SG16->DTM->2379",
+                      "value_pool": { "303": "CCYYMMDDHHMMZZZ" }
+                    }
+                  ],
+                  "discriminator": "DTM",
+                  "section_name": "Ende Messperiode"
+                },
+                {
+                  "ahb_expression": "Muss [32]",
+                  "data_elements": [
+                    {
+                      "data_element_id": "2005",
+                      "discriminator": "SG16->DTM->2005",
+                      "value_pool": { "306": "Leistungsperiode" }
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "2380",
+                      "discriminator": "Datum oder Uhrzeit oderZeitspanne, Wert",
+                      "entered_input": null
+                    },
+                    {
+                      "data_element_id": "2379",
+                      "discriminator": "SG16->DTM->2379",
+                      "value_pool": { "610": "CCYYMM" }
+                    }
+                  ],
+                  "discriminator": "DTM",
+                  "section_name": "Leistungsperiode"
+                },
+                {
+                  "ahb_expression": "Muss",
+                  "data_elements": [
+                    {
+                      "data_element_id": "6063",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Sendungsdaten\"][0][\"Status des Lieferscheins\"][0][\"Weitere Information\"][0][\"Menge\"][0][\"Qualifier\"]",
+                      "value_pool": {
+                        "Z20": "Tarifstufe 0",
+                        "Z21": "Tarifstufe 1",
+                        "Z22": "Tarifstufe 2",
+                        "Z23": "Tarifstufe 3",
+                        "Z24": "Tarifstufe 4",
+                        "Z25": "Tarifstufe 5",
+                        "Z26": "Tarifstufe 6",
+                        "Z27": "Tarifstufe 7",
+                        "Z28": "Tarifstufe 8",
+                        "Z29": "Tarifstufe 9"
+                      }
+                    },
+                    {
+                      "ahb_expression": "X [902]",
+                      "data_element_id": "6060",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Sendungsdaten\"][0][\"Status des Lieferscheins\"][0][\"Weitere Information\"][0][\"Menge\"][0][\"Menge\"]",
+                      "entered_input": null
+                    },
+                    {
+                      "data_element_id": "6411",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Sendungsdaten\"][0][\"Status des Lieferscheins\"][0][\"Weitere Information\"][0][\"Menge\"][0][\"Einheit\"]",
+                      "value_pool": {
+                        "K3": "kilovolt ampere reactive hour",
+                        "K5": "kilovolt ampere (reactive)",
+                        "KWH": "kilowatt hour",
+                        "KWT": "kilowatt"
+                      }
+                    }
+                  ],
+                  "discriminator": "QTY",
+                  "section_name": "Menge"
+                }
+              ]
+            }
+          ],
+          "segments": [
+            {
+              "ahb_expression": "Muss",
+              "data_elements": [
+                {
+                  "data_element_id": "9015",
+                  "discriminator": "SG15->STS->9015",
+                  "value_pool": { "Z25": "Status des Lieferscheins" }
+                },
+                {
+                  "data_element_id": "4405",
+                  "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Sendungsdaten\"][0][\"Status des Lieferscheins\"][0][\"Code\"]",
+                  "value_pool": { "Z30": "zugestimmt", "Z31": "widersprochen" }
+                },
+                {
+                  "ahb_expression": "X [49] o [50]",
+                  "data_element_id": "9013",
+                  "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Sendungsdaten\"][0][\"Status des Lieferscheins\"][0][\"Code des Pr\u00fcfschritts\"]",
+                  "entered_input": null
+                },
+                {
+                  "data_element_id": "1131",
+                  "discriminator": "SG15->STS->1131",
+                  "value_pool": { "E_0456": "EBD Nr. E_0456" }
+                }
+              ],
+              "discriminator": "STS",
+              "section_name": "Status des Lieferscheins"
+            },
+            {
+              "ahb_expression": "Muss",
+              "data_elements": [
+                {
+                  "data_element_id": "1153",
+                  "discriminator": "SG15->RFF->1153",
+                  "value_pool": { "Z13": "Pr\u00fcfidentifikator" }
+                },
+                {
+                  "data_element_id": "1154",
+                  "discriminator": "SG15->RFF->1154",
+                  "value_pool": {
+                    "21035": "GPKE / R\u00fcckmeldung aufLieferschein"
+                  }
+                }
+              ],
+              "discriminator": "RFF",
+              "section_name": "Pr\u00fcfidentifikator"
+            },
+            {
+              "ahb_expression": "Muss",
+              "data_elements": [
+                {
+                  "data_element_id": "1153",
+                  "discriminator": "SG15->RFF->1153",
+                  "value_pool": {
+                    "ACW": "Referenznummer einervorangegangenenNachricht"
+                  }
+                },
+                {
+                  "ahb_expression": "X [512]",
+                  "data_element_id": "1154",
+                  "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Sendungsdaten\"][0][\"Status des Lieferscheins\"][0][\"Lieferschein\"][0][\"Referenznummer\"]",
+                  "entered_input": null
+                }
+              ],
+              "discriminator": "RFF",
+              "section_name": "Lieferschein"
+            }
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "ahb_expression": "Muss",
+          "data_elements": [
+            {
+              "ahb_expression": "X",
+              "data_element_id": "0062",
+              "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Nachrichten-Referenznummer\"]",
+              "entered_input": null
+            },
+            {
+              "data_element_id": "0065",
+              "discriminator": "UNH->0065",
+              "value_pool": { "IFTSTA": "Multimodaler Statusbericht" }
+            },
+            {
+              "data_element_id": "0052",
+              "discriminator": "UNH->0052",
+              "value_pool": { "D": "Entwurfs-Version" }
+            },
+            {
+              "data_element_id": "0054",
+              "discriminator": "UNH->0054",
+              "value_pool": { "18A": "Ausgabe 2018 - A" }
+            },
+            {
+              "data_element_id": "0051",
+              "discriminator": "UNH->0051",
+              "value_pool": { "UN": "UN/CEFACT" }
+            },
+            {
+              "data_element_id": "0057",
+              "discriminator": "UNH->0057",
+              "value_pool": {
+                "2.0d": "Versionsnummer derzugrundeliegendenBDEW-Nachrichtenbeschreibung"
+              }
+            }
+          ],
+          "discriminator": "UNH",
+          "section_name": "Nachrichten-Kopfsegment"
+        },
+        {
+          "ahb_expression": "Muss",
+          "data_elements": [
+            {
+              "data_element_id": "1001",
+              "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Kategorie\"]",
+              "value_pool": { "Z33": "GPKE Meldung(en)" }
+            },
+            {
+              "ahb_expression": "X",
+              "data_element_id": "1004",
+              "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Dokumentennummer\"]",
+              "entered_input": null
+            }
+          ],
+          "discriminator": "BGM",
+          "section_name": "Beginn der Nachricht"
+        },
+        {
+          "ahb_expression": "Muss",
+          "data_elements": [
+            {
+              "data_element_id": "2005",
+              "discriminator": "DTM->2005",
+              "value_pool": { "137": "Dokumenten-/Nachrichtendatum/-zeit" }
+            },
+            {
+              "ahb_expression": "X [931] u [494]",
+              "data_element_id": "2380",
+              "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Dokumentendatum\"]",
+              "entered_input": null
+            },
+            {
+              "data_element_id": "2379",
+              "discriminator": "DTM->2379",
+              "value_pool": { "303": "CCYYMMDDHHMMZZZ" }
+            }
+          ],
+          "discriminator": "DTM",
+          "section_name": "Dokumentendatum"
+        },
+        {
+          "ahb_expression": "Muss",
+          "data_elements": [
+            {
+              "ahb_expression": "X",
+              "data_element_id": "0074",
+              "discriminator": "Anzahl der Segmente in einerNachricht",
+              "entered_input": null
+            },
+            {
+              "ahb_expression": "X",
+              "data_element_id": "0062",
+              "discriminator": "Nachrichten-Referenznummer",
+              "entered_input": null
+            }
+          ],
+          "discriminator": "UNT",
+          "section_name": "Nachrichten-Endesegment"
+        }
+      ]
+    }
+  ],
+  "meta": { "pruefidentifikator": "21035" }
+}
