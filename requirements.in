@@ -1,3 +1,4 @@
 attrs
 marshmallow
+marshmallow_enum
 lxml
