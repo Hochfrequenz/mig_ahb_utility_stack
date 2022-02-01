@@ -16,7 +16,7 @@ from marshmallow_enum import EnumField  # type:ignore[import]
 class DataElementDataType(str, Enum):
     """
     The Data Element Data Type describes with which kind of data element we're dealing with in a data element.
-    This information is not used anywhere inside MAUS directly but more of a "service" to downstream services.
+    This information is set but not used anywhere inside MAUS directly but more of a "service" to downstream code.
     """
 
     TEXT = "TEXT"  #: plain text, f.e. a name
