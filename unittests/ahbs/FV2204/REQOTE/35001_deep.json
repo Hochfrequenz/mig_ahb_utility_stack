@@ -25,7 +25,8 @@
                   }
                 }
               ],
-              "discriminator": "RFF"
+              "discriminator": "RFF",
+              "section_name": "Pr\u00fcfidentifikator"
             }
           ]
         },
@@ -53,7 +54,8 @@
                       "entered_input": null
                     }
                   ],
-                  "discriminator": "CTA"
+                  "discriminator": "CTA",
+                  "section_name": "Ansprechpartner"
                 },
                 {
                   "ahb_expression": "Muss",
@@ -76,7 +78,8 @@
                       }
                     }
                   ],
-                  "discriminator": "COM"
+                  "discriminator": "COM",
+                  "section_name": "Kommunikationsverbindung"
                 }
               ]
             }
@@ -106,7 +109,8 @@
                   }
                 }
               ],
-              "discriminator": "NAD"
+              "discriminator": "NAD",
+              "section_name": "MP-ID Absender"
             },
             {
               "ahb_expression": "Muss",
@@ -132,7 +136,8 @@
                   }
                 }
               ],
-              "discriminator": "NAD"
+              "discriminator": "NAD",
+              "section_name": "MP-ID Empf\u00e4nger"
             },
             {
               "ahb_expression": "Muss",
@@ -143,7 +148,8 @@
                   "value_pool": { "DP": "Lieferanschrift" }
                 }
               ],
-              "discriminator": "NAD"
+              "discriminator": "NAD",
+              "section_name": "Marktlokation bzw. Messlokation"
             },
             {
               "ahb_expression": "Muss",
@@ -160,7 +166,8 @@
                   "entered_input": null
                 }
               ],
-              "discriminator": "LOC"
+              "discriminator": "LOC",
+              "section_name": "Meldepunkt"
             }
           ]
         },
@@ -179,7 +186,8 @@
                   "entered_input": null
                 }
               ],
-              "discriminator": "LIN"
+              "discriminator": "LIN",
+              "section_name": "Positionsdaten"
             }
           ]
         }
@@ -222,7 +230,8 @@
               }
             }
           ],
-          "discriminator": "UNH"
+          "discriminator": "UNH",
+          "section_name": "Nachrichten-Kopfsegment"
         },
         {
           "ahb_expression": "Muss",
@@ -241,7 +250,8 @@
               "entered_input": null
             }
           ],
-          "discriminator": "BGM"
+          "discriminator": "BGM",
+          "section_name": "Beginn der Nachricht"
         },
         {
           "ahb_expression": "Muss",
@@ -279,7 +289,8 @@
               "value_pool": { "303": "CCYYMMDDHHMMZZZ" }
             }
           ],
-          "discriminator": "DTM"
+          "discriminator": "DTM",
+          "section_name": "Nachrichtendatum"
         },
         {
           "ahb_expression": "Muss",
@@ -290,7 +301,8 @@
               "value_pool": {}
             }
           ],
-          "discriminator": "UNS"
+          "discriminator": "UNS",
+          "section_name": "Abschnitts-Kontrollsegment"
         },
         {
           "ahb_expression": "Muss",
@@ -308,7 +320,8 @@
               "entered_input": null
             }
           ],
-          "discriminator": "UNT"
+          "discriminator": "UNT",
+          "section_name": "Nachrichten-Endesegment"
         }
       ]
     }

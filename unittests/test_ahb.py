@@ -86,6 +86,7 @@ class TestAhb:
                     data_element="3039",
                     value_pool_entry="E01",
                     name="MP-ID",
+                    section_name="Foo",
                     guid=uuid.UUID("12b1a98a-edf5-4177-89e5-a6d8a92c5fdc"),
                 ),
                 {
@@ -96,6 +97,7 @@ class TestAhb:
                     "value_pool_entry": "E01",
                     "name": "MP-ID",
                     "guid": "12b1a98a-edf5-4177-89e5-a6d8a92c5fdc",
+                    "section_name": "Foo",
                 },
             ),
         ],
@@ -222,6 +224,7 @@ class TestAhb:
                             value_pool_entry="E01",
                             name="MP-ID",
                             guid=uuid.UUID("12b1a98a-edf5-4177-89e5-a6d8a92c5fdc"),
+                            section_name="MP-ID Absender",
                         )
                     ],
                 ),
@@ -236,6 +239,7 @@ class TestAhb:
                             "value_pool_entry": "E01",
                             "name": "MP-ID",
                             "guid": "12b1a98a-edf5-4177-89e5-a6d8a92c5fdc",
+                            "section_name": "MP-ID Absender",
                         }
                     ],
                 },
@@ -303,6 +307,7 @@ class TestAhb:
                                 Segment(
                                     ahb_expression="expr B",
                                     discriminator="disc B",
+                                    section_name="foo",
                                     data_elements=[
                                         DataElementValuePool(
                                             value_pool={"hello": "world", "maus": "rocks"},
@@ -324,6 +329,7 @@ class TestAhb:
                                     ahb_expression="expr C",
                                     segments=[
                                         Segment(
+                                            section_name="bar",
                                             ahb_expression="expr Y",
                                             discriminator="disc Y",
                                             data_elements=[],
@@ -343,6 +349,7 @@ class TestAhb:
                             "discriminator": "disc A",
                             "segments": [
                                 {
+                                    "section_name": "foo",
                                     "ahb_expression": "expr B",
                                     "discriminator": "disc B",
                                     "data_elements": [
@@ -366,6 +373,7 @@ class TestAhb:
                                     "discriminator": "disc C",
                                     "segments": [
                                         {
+                                            "section_name": "bar",
                                             "ahb_expression": "expr Y",
                                             "discriminator": "disc Y",
                                             "data_elements": [],
@@ -380,7 +388,7 @@ class TestAhb:
             ),
         ],
     )
-    def test_deepahb_serialization_roundtrip(self, deep_ahb: DeepAnwendungshandbuch, expected_json_dict: dict):
+    def test_deep_ahb_serialization_roundtrip(self, deep_ahb: DeepAnwendungshandbuch, expected_json_dict: dict):
         assert_serialization_roundtrip(deep_ahb, DeepAnwendungshandbuchSchema(), expected_json_dict)
 
     @pytest.mark.parametrize(

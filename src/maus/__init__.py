@@ -60,6 +60,7 @@ def group_lines_by_segment(segment_group_lines: List[AhbLine]) -> List[Segment]:
             discriminator=segment_key,  # type:ignore[arg-type] # shall not be none after sanitizing
             data_elements=[],
             ahb_expression=this_segment_lines[0].ahb_expression or "",
+            section_name=this_segment_lines[0].section_name,
         )
         for data_element_key, data_element_lines in groupby(this_segment_lines, key=lambda line: line.data_element):
             if data_element_key is None:

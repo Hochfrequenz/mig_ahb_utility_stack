@@ -10,9 +10,13 @@ from maus.reader.mig_reader import MigXmlReader
 ALL_MIG_XML_FILES = pytest.mark.datafiles(
     "./unittests/migs/FV2204/template_xmls/mscons_1154.xml",
     "./unittests/migs/FV2204/template_xmls/utilmd_1154.xml",
+    "./unittests/migs/FV2204/template_xmls/utilmd_2379.xml",
     "./unittests/migs/FV2204/template_xmls/utilmd_2380.xml",
     "./unittests/migs/FV2204/template_xmls/utilmd_7402.xml",
+    "./unittests/migs/FV2204/template_xmls/utilmd_3225.xml",
+    "./unittests/migs/FV2204/template_xmls/utilmd_9013.xml",
     "./unittests/migs/FV2204/template_xmls/reqote.xml",
+    # "./unittests/migs/FV2204/template_xmls/utilmd.xml",
 )
 
 
@@ -146,7 +150,8 @@ class TestMigXmlReader:
                     segment_group_key="root",
                     segment_code="DTM",
                     data_element_id="2380",
-                    name="Datum oder Uhrzeit oderZeitspanne, Wert",  # <-- the messed up spaces are due to line breaks in the PDF
+                    name="Datum oder Uhrzeit oderZeitspanne, Wert",
+                    # <-- the messed up spaces are due to line breaks in the PDF
                     predecessor_qualifier="76",
                 ),
                 '$["Dokument"][0]["Nachricht"][0]["Datum zum geplanten Leistungsbeginn"]',
@@ -176,6 +181,78 @@ class TestMigXmlReader:
                 '$["Dokument"][0]["Nachricht"][0]["MP-ID Absender"][0]["Codeliste"]',
                 id="reqote absender codeliste",
             ),
+            pytest.param(
+                "utilmd_9013.xml",
+                EdifactStackQuery(
+                    segment_group_key="SG4",
+                    segment_code="STS",
+                    data_element_id="9013",
+                    name=None,
+                    predecessor_qualifier="7",
+                ),
+                '$["Dokument"][0]["Vorgang"][0]["Transaktionsgrund"]',
+                id="UTILMD Transaktionsgrund",
+            ),
+            pytest.param(
+                "utilmd_3225.xml",
+                EdifactStackQuery(
+                    segment_group_key="SG5",
+                    segment_code="LOC",
+                    data_element_id="3225",
+                    name="Identifikator",  # <-- name in AHB != name in MIG ("ID")
+                    predecessor_qualifier="172",
+                ),
+                '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Meldepunkt"][0]["ID"]',
+                id="UTILMD: LOC ID vs. Identifikator",
+            ),
+            pytest.param(
+                "utilmd_1154.xml",
+                EdifactStackQuery(
+                    segment_group_key="SG6",
+                    segment_code="RFF",  # this is a reference
+                    data_element_id="1154",
+                    name="ID der Marktlokation",  # <-- name in AHB != name in MIG ("ID")
+                    predecessor_qualifier="Z18",
+                ),
+                '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Referenz auf die ID der Marktlokation für Termine der Marktlokation"][0]["ID"]',
+                id="UTILMD: LOC ID der MaLo Z18",
+            ),
+            pytest.param(
+                "utilmd_2380.xml",
+                EdifactStackQuery(
+                    segment_group_key="SG6",
+                    segment_code="DTM",
+                    data_element_id="2380",
+                    name="Datum oder Uhrzeit oderZeitspanne, Wert",
+                    predecessor_qualifier="752",
+                    section_name="Geplante Turnusablesung des MSB (Strom)"
+                    # division=Division.ELECTRICITY,
+                ),
+                '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Geplante Turnusablesung des MSB (Strom)"]',
+                id="UTILMD geplante Turnusablesung 752",
+            ),
+            # pytest.param( # unsolved
+            #    "utilmd_1154.xml",
+            # EdifactStackQuery(segment_group_key='SG8', segment_code='RFF', data_element_id='1154',
+            #                  name='ID der Marktlokation', predecessor_qualifier='Z18',
+            #                  section_name='Referenz auf die ID der Marktlokation'),
+            #    '$["Dokument"][0]["Vorgang"]["0"]["Daten der Marktlokation"][0]["Referenz auf die ID der Marktlokation"]',
+            #    id="Referenz auf die ID der Marktlokation"
+            # )
+            # pytest.param( # unsolved
+            #    "utilmd_2379.xml",
+            #    EdifactStackQuery(
+            #        segment_group_key="SG6",
+            #        segment_code="DTM",
+            #        data_element_id="2379",
+            #        name=None,
+            #        predecessor_qualifier="752",
+            #        section_name="Geplante Turnusablesung des MSB (Strom)",
+            #    ),
+            #    "$['foo']",
+            #    id="UTILMD geplante Turnusablesung (Qualifier)",
+            #    # https://github.com/Hochfrequenz/edifact-templates/issues/24
+            # ),
         ],
     )
     def test_simple_paths(

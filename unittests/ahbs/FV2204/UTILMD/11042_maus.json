@@ -24,7 +24,7 @@
                     {
                       "ahb_expression": "X",
                       "data_element_id": "3412",
-                      "discriminator": "Name vom Ansprechpartner",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"MP-ID Absender\"][0][\"Ansprechpartner\"][0][\"Kontakt\"][0][\"Name\"]",
                       "entered_input": null
                     }
                   ],
@@ -37,12 +37,12 @@
                     {
                       "ahb_expression": "X",
                       "data_element_id": "3148",
-                      "discriminator": "Nummer / Adresse",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"MP-ID Absender\"][0][\"Ansprechpartner\"][0][\"Kommunikationsverbindung\"][0][\"Art des Kommunikationsmittels\"]",
                       "entered_input": null
                     },
                     {
                       "data_element_id": "3155",
-                      "discriminator": "SG3->COM->3155",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"MP-ID Absender\"][0][\"Ansprechpartner\"][0][\"Kommunikationsverbindung\"][0][\"Nummer / Adresse\"]",
                       "value_pool": {
                         "AJ": "weiteres Telefon",
                         "AL": "Handy",
@@ -72,12 +72,12 @@
                 {
                   "ahb_expression": "X",
                   "data_element_id": "3039",
-                  "discriminator": "MP-ID",
+                  "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"MP-ID Absender\"][0][\"MP-ID\"]",
                   "entered_input": null
                 },
                 {
                   "data_element_id": "3055",
-                  "discriminator": "SG2->NAD->3055",
+                  "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"MP-ID Absender\"][0][\"Codeliste\"]",
                   "value_pool": {
                     "293": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",
                     "332": "DE, DVGW Service & Consult GmbH",
@@ -99,12 +99,12 @@
                 {
                   "ahb_expression": "X",
                   "data_element_id": "3039",
-                  "discriminator": "MP-ID",
+                  "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"MP-ID Empf\u00e4nger\"][0][\"MP-ID\"]",
                   "entered_input": null
                 },
                 {
                   "data_element_id": "3055",
-                  "discriminator": "SG2->NAD->3055",
+                  "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"MP-ID Empf\u00e4nger\"][0][\"Codeliste\"]",
                   "value_pool": {
                     "293": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",
                     "332": "DE, DVGW Service & Consult GmbH",
@@ -137,7 +137,7 @@
                     {
                       "ahb_expression": "X [953]",
                       "data_element_id": "3225",
-                      "discriminator": "Identifikator",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Meldepunkt\"][0][\"ID\"]",
                       "entered_input": null
                     }
                   ],
@@ -161,7 +161,7 @@
                     },
                     {
                       "data_element_id": "1154",
-                      "discriminator": "SG6->RFF->1154",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Pr\u00fcfidentifikator\"][0][\"ID\"]",
                       "value_pool": {
                         "11042": "WiM / Anmeldung MSB",
                         "11043": "WiM / Best\u00e4tigung Anmeldung MSB",
@@ -183,7 +183,7 @@
                     {
                       "ahb_expression": "",
                       "data_element_id": "1154",
-                      "discriminator": "Vorgangsnummer",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Referenz Vorgangsnummer (aus Anfragenachricht)\"][0][\"Referenz\"]",
                       "entered_input": null
                     }
                   ],
@@ -201,7 +201,7 @@
                     {
                       "ahb_expression": "",
                       "data_element_id": "1154",
-                      "discriminator": "ID der Marktlokation",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Referenz auf die ID der Marktlokation f\u00fcr Termine der Marktlokation\"][0][\"ID\"]",
                       "entered_input": null
                     }
                   ],
@@ -219,7 +219,7 @@
                     {
                       "ahb_expression": "",
                       "data_element_id": "2380",
-                      "discriminator": "Datum oder Uhrzeit oderZeitspanne, Wert",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Geplante Turnusablesung des MSB (Strom)\"]",
                       "entered_input": null
                     },
                     {
@@ -265,7 +265,7 @@
                     {
                       "ahb_expression": "",
                       "data_element_id": "2380",
-                      "discriminator": "Datum oder Uhrzeit oderZeitspanne, Wert",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Abrechnungsintervall des LF\"]",
                       "entered_input": null
                     },
                     {
@@ -288,7 +288,7 @@
                     {
                       "ahb_expression": "",
                       "data_element_id": "1154",
-                      "discriminator": "ID der Messlokation",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Referenz auf die ID der Messlokation f\u00fcr Termine der Messlokation\"][0][\"ID\"]",
                       "entered_input": null
                     }
                   ],
@@ -306,7 +306,7 @@
                     {
                       "ahb_expression": "",
                       "data_element_id": "2380",
-                      "discriminator": "Datum oder Uhrzeit oderZeitspanne, Wert",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Geplante Turnusablesung des NB (Gas)\"]",
                       "entered_input": null
                     },
                     {
@@ -446,7 +446,7 @@
                         },
                         {
                           "data_element_id": "7037",
-                          "discriminator": "SG10->CCI->7037",
+                          "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Daten der Marktlokation\"][0][\"Lieferrichtung\"][0][\"Richtung\"]",
                           "value_pool": {
                             "Z06": "Erzeugung",
                             "Z07": "Verbrauch"
@@ -479,7 +479,7 @@
                         {
                           "ahb_expression": "",
                           "data_element_id": "1131",
-                          "discriminator": "MP-ID",
+                          "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Daten der Marktlokation\"][0][\"Zugeordnete Marktpartner\"][0][\"Lieferant\"]",
                           "entered_input": null
                         }
                       ],
@@ -497,7 +497,7 @@
                         {
                           "ahb_expression": "",
                           "data_element_id": "1131",
-                          "discriminator": "MP-ID",
+                          "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Daten der Marktlokation\"][0][\"Zugeordnete Marktpartner\"][0][\"\u00dcbertragungsnetzbetreiber\"]",
                           "entered_input": null
                         }
                       ],
@@ -597,7 +597,7 @@
                         },
                         {
                           "data_element_id": "7037",
-                          "discriminator": "SG10->CCI->7037",
+                          "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Daten der Marktlokation\"][0][\"Aggregationsverantwortung in MaBiS\"][0][\"Code\"]",
                           "value_pool": { "ZA8": "NB", "ZA9": "\u00dcNB" }
                         }
                       ],
@@ -976,7 +976,7 @@
                         {
                           "ahb_expression": "",
                           "data_element_id": "1131",
-                          "discriminator": "MP-ID",
+                          "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Daten der Marktlokation\"][0][\"Zugeordnete Marktpartner\"][0][\"Lieferant\"]",
                           "entered_input": null
                         }
                       ],
@@ -1173,7 +1173,7 @@
                         {
                           "ahb_expression": "",
                           "data_element_id": "1131",
-                          "discriminator": "MP-ID",
+                          "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Daten der Messlokation\"][0][\"Zugeordnete Marktpartner\"][0][\"Messstellenbetreiber Alt\"]",
                           "entered_input": null
                         }
                       ],
@@ -1267,7 +1267,7 @@
                         },
                         {
                           "data_element_id": "7037",
-                          "discriminator": "SG10->CCI->7037",
+                          "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Daten der Messlokation\"][0][\"Betriebszustand der Messlokation\"][0][\"Zustand\"]",
                           "value_pool": {
                             "ZC1": "Messlokation gesperrt und darf nicht entsperrt werden",
                             "ZC2": "Messlokation gesperrt und darf entsperrt werden",
@@ -1539,7 +1539,7 @@
                         },
                         {
                           "data_element_id": "7110",
-                          "discriminator": "SG10->CAV->7110",
+                          "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Z\u00e4hleinrichtungsdaten\"][0][\"Z\u00e4hlertyp\"][0][\"Fernschaltung der Z\u00e4hleinrichtung\"]",
                           "value_pool": {
                             "Z06": "vorhanden",
                             "Z07": "nicht vorhanden"
@@ -1771,7 +1771,7 @@
                         {
                           "ahb_expression": "",
                           "data_element_id": "7110",
-                          "discriminator": "Wandlerfaktor",
+                          "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Wandlerdaten\"][0][\"Wandler\"][0][\"Wandlertyp und Faktor\"][0][\"Wandlerfaktor\"]",
                           "entered_input": null
                         }
                       ],
@@ -2178,7 +2178,7 @@
                     },
                     {
                       "data_element_id": "7143",
-                      "discriminator": "SG8->PIA->7143",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Profilschardaten\"][0][\"Berechnung Tagesmitteltemperatur\"][0][\"Art\"]",
                       "value_pool": { "SRW": "OBIS-Kennzahl" }
                     }
                   ],
@@ -2208,7 +2208,7 @@
                     {
                       "ahb_expression": "",
                       "data_element_id": "1154",
-                      "discriminator": "ID der Tranche",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"OBIS-Daten der Z\u00e4hleinrichtung / Mengenumwerter\"][0][\"Referenz auf die Ger\u00e4tenummer\"][0][\"Nummer\"]",
                       "entered_input": null
                     }
                   ],
@@ -2256,7 +2256,7 @@
                     {
                       "ahb_expression": "",
                       "data_element_id": "1154",
-                      "discriminator": "ID einer Tranche",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"OBIS-Daten der Z\u00e4hleinrichtung / Mengenumwerter\"][0][\"Referenz auf die Ger\u00e4tenummer\"][0][\"Nummer\"]",
                       "entered_input": null
                     }
                   ],
@@ -2286,7 +2286,7 @@
                     {
                       "ahb_expression": "",
                       "data_element_id": "1154",
-                      "discriminator": "ID der Messlokation",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Erforderliche OBIS-Daten der Messlokation\"][0][\"Referenz auf die ID einer Messlokation\"]",
                       "entered_input": null
                     }
                   ],
@@ -2304,7 +2304,7 @@
                     {
                       "ahb_expression": "",
                       "data_element_id": "1154",
-                      "discriminator": "ID der Marktlokation",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Daten der Messlokation\"][0][\"Referenz auf die der Messlokation zugeordneten Marktlokation\"]",
                       "entered_input": null
                     }
                   ],
@@ -2336,7 +2336,7 @@
                     {
                       "ahb_expression": "",
                       "data_element_id": "1154",
-                      "discriminator": "ID einer Messlokation",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Erforderliche OBIS-Daten der Messlokation\"][0][\"Referenz auf die ID einer Messlokation\"]",
                       "entered_input": null
                     }
                   ],
@@ -2384,7 +2384,7 @@
                     {
                       "ahb_expression": "",
                       "data_element_id": "1154",
-                      "discriminator": "ID einer Messlokation",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Erforderliche OBIS-Daten der Messlokation\"][0][\"Referenz auf die ID einer Messlokation\"]",
                       "entered_input": null
                     }
                   ],
@@ -2529,7 +2529,7 @@
                     },
                     {
                       "data_element_id": "7143",
-                      "discriminator": "SG8->PIA->7143",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Profilschardaten\"][0][\"Berechnung Tagesmitteltemperatur\"][0][\"Art\"]",
                       "value_pool": { "SRW": "OBIS-Kennzahl" }
                     }
                   ],
@@ -3030,7 +3030,7 @@
                     {
                       "ahb_expression": "K",
                       "data_element_id": "3124",
-                      "discriminator": "Zusatzinformation zurIdentifizierung",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Messlokationsadresse\"][0][\"Zusatzinformation zur Identifizierung\"]",
                       "entered_input": null
                     },
                     {
@@ -3164,7 +3164,7 @@
                 {
                   "ahb_expression": "X",
                   "data_element_id": "7402",
-                  "discriminator": "Vorgangsnummer",
+                  "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Vorgangsnummer\"]",
                   "entered_input": null
                 }
               ],
@@ -3182,7 +3182,7 @@
                 {
                   "ahb_expression": "X [UB3]",
                   "data_element_id": "2380",
-                  "discriminator": "Datum oder Uhrzeit oderZeitspanne, Wert",
+                  "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Datum zum geplanten Leistungsbeginn\"]",
                   "entered_input": null
                 },
                 {
@@ -3204,7 +3204,7 @@
                 },
                 {
                   "data_element_id": "9013",
-                  "discriminator": "SG4->STS->9013",
+                  "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Transaktionsgrund\"]",
                   "value_pool": {
                     "E01": "Ein-/Auszug (Umzug)",
                     "E02": "Einzug/Neuanlage",
@@ -3227,12 +3227,12 @@
                 {
                   "ahb_expression": "",
                   "data_element_id": "9013",
-                  "discriminator": "Code des Pr\u00fcfschritts",
+                  "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Status der Antwort\"][0][\"Status\"]",
                   "entered_input": null
                 },
                 {
                   "data_element_id": "1131",
-                  "discriminator": "SG4->STS->1131",
+                  "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Status der Antwort\"][0][\"Codeliste\"]",
                   "value_pool": {
                     "Codeliste Gas Nr. G_0053": "G_0053",
                     "Codeliste Gas Nr. G_0054": "G_0054",
@@ -3254,7 +3254,7 @@
                 },
                 {
                   "data_element_id": "7433",
-                  "discriminator": "SG4->AGR->7433",
+                  "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Beauftragung oder Beendigung liegt vor\"]",
                   "value_pool": {
                     "Z04": "Vertrag zwischen AN und MSB",
                     "Z06": "Vertragsbeendigung liegt vor"
@@ -3274,7 +3274,7 @@
             {
               "ahb_expression": "X",
               "data_element_id": "0062",
-              "discriminator": "Nachrichten-Referenznummer",
+              "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Nachrichten-Referenznummer\"]",
               "entered_input": null
             },
             {
@@ -3313,13 +3313,13 @@
           "data_elements": [
             {
               "data_element_id": "1001",
-              "discriminator": "BGM->1001",
+              "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Kategorie\"]",
               "value_pool": { "E01": "Anmeldungen" }
             },
             {
               "ahb_expression": "X",
               "data_element_id": "1004",
-              "discriminator": "Dokumentennummer",
+              "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Dokumentennummer\"]",
               "entered_input": null
             }
           ],
@@ -3337,7 +3337,7 @@
             {
               "ahb_expression": "X [931] [494]",
               "data_element_id": "2380",
-              "discriminator": "Datum oder Uhrzeit oderZeitspanne, Wert",
+              "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Nachrichtendatum\"]",
               "entered_input": null
             },
             {

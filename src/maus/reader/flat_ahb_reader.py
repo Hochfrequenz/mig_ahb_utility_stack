@@ -40,6 +40,7 @@ class FlatAhbCsvReader(FlatAhbReader):
     def __init__(self, file_path: Path, pruefidentifikator: Optional[str] = None, encoding="utf-8", delimiter=","):
         self.rows: List[AhbLine] = []
         self._logger = logging.getLogger()
+        self.current_section_name: Optional[str] = None
         self.pruefidentifikator = pruefidentifikator
         self.delimiter = delimiter
         with open(file_path, "r", encoding=encoding) as infile:
@@ -75,8 +76,8 @@ class FlatAhbCsvReader(FlatAhbReader):
         if FlatAhbCsvReader._is_segment_group(ahb_row["Segment Gruppe"]):
             segment_group = ahb_row["Segment Gruppe"]
         elif len(ahb_row["Segment Gruppe"]) >= 3:
-            current_section_name = ahb_row["Segment Gruppe"] or None
-            self._logger.debug("Processing %s section '%s'", self.pruefidentifikator, current_section_name)
+            self.current_section_name = ahb_row["Segment Gruppe"].strip() or None  # f.e. "Nachrichten-Kopfsegment"
+            self._logger.debug("Processing %s section '%s'", self.pruefidentifikator, self.current_section_name)
             return None  # possibly a section heading like "Nachrichten-Endesegment"
             # this is different from segment group = None which is value for e.g. the UNH
         result: AhbLine = AhbLine(
@@ -87,6 +88,7 @@ class FlatAhbCsvReader(FlatAhbReader):
             value_pool_entry=value_pool_entry,
             ahb_expression=ahb_row[self.pruefidentifikator] or None,
             name=description,
+            section_name=self.current_section_name,
         )
         return result
 
@@ -99,6 +101,10 @@ class FlatAhbCsvReader(FlatAhbReader):
         This function returns a value_pool_entry at index 0, a possible description at index 1, even if they're mixed up
         in the source files.
         """
+        if x is not None:
+            x = x.strip()
+        if y is not None:
+            y = y.strip()
         if FlatAhbCsvReader._is_value_pool_entry(x) and not FlatAhbCsvReader._is_value_pool_entry(y):
             return x, y or None
         if FlatAhbCsvReader._is_value_pool_entry(x) and FlatAhbCsvReader._is_value_pool_entry(y):

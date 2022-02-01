@@ -213,14 +213,23 @@ class Segment(SegmentLevel):
     """
 
     data_elements: List[DataElement]
+    section_name: Optional[str] = attr.ib(
+        validator=attr.validators.optional(attr.validators.instance_of(str)), default=None
+    )
+    """
+    For the MIG matching it might be necessary to know the section in which the data element occured in the AHB.
+    This might be necessary to e.g. distinguish gas and electricity fields which look the same otherwise.
+    See f.e. UTILMD 'Geplante Turnusablesung des MSB (Strom)' vs. 'Geplante Turnusablesung des NB (Gas)'
+    """
 
 
 class SegmentSchema(SegmentLevelSchema):
     """
-    A Schema to serialize Segments.
+    A Schema to serialize Segments
     """
 
     data_elements = fields.List(fields.Nested(_FreeTextOrValuePoolSchema))
+    section_name = fields.String(required=False)
 
     # pylint:disable=unused-argument,no-self-use
     @post_load
@@ -378,4 +387,11 @@ class EdifactStackQuery:
     Some names are not really unique. F.e. all date time fields carry more or less the same name in the AHB.
     So to distinguish between them you may provide the predecissing qualifier.
     In case of 'DTM+137++what_youre_looking_for' the predecessor qualifier is '137'
+    """
+    section_name: Optional[str] = attr.ib(
+        default=None, validator=attr.validators.optional(attr.validators.instance_of(str))
+    )
+    """
+    The section name (f.e. 'Nachrichten-Kopfsegment') might also be used for MIG<->AHB matching
+    if the name is too broad or not unique.
     """
