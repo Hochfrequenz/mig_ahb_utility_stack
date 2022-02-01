@@ -1,0 +1,3375 @@
+{
+  "lines": [
+    {
+      "ahb_expression": "Muss",
+      "discriminator": "root",
+      "segment_groups": [
+        {
+          "ahb_expression": "Muss",
+          "discriminator": "SG2",
+          "segment_groups": [
+            {
+              "ahb_expression": "Kann",
+              "discriminator": "SG3",
+              "segment_groups": [],
+              "segments": [
+                {
+                  "ahb_expression": "Muss",
+                  "data_elements": [
+                    {
+                      "data_element_id": "3139",
+                      "discriminator": "SG3->CTA->3139",
+                      "value_pool": { "IC": "Informationskontakt" }
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3412",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"MP-ID Absender\"][0][\"Ansprechpartner\"][0][\"Kontakt\"][0][\"Name\"]",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "CTA",
+                  "section_name": "Ansprechpartner"
+                },
+                {
+                  "ahb_expression": "Muss",
+                  "data_elements": [
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3148",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"MP-ID Absender\"][0][\"Ansprechpartner\"][0][\"Kommunikationsverbindung\"][0][\"Art des Kommunikationsmittels\"]",
+                      "entered_input": null
+                    },
+                    {
+                      "data_element_id": "3155",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"MP-ID Absender\"][0][\"Ansprechpartner\"][0][\"Kommunikationsverbindung\"][0][\"Nummer / Adresse\"]",
+                      "value_pool": {
+                        "AJ": "weiteres Telefon",
+                        "AL": "Handy",
+                        "EM": "Elektronische Post",
+                        "FX": "Telefax",
+                        "TE": "Telefon"
+                      }
+                    }
+                  ],
+                  "discriminator": "COM",
+                  "section_name": "Kommunikationsverbindung"
+                }
+              ]
+            }
+          ],
+          "segments": [
+            {
+              "ahb_expression": "Muss",
+              "data_elements": [
+                {
+                  "data_element_id": "3035",
+                  "discriminator": "SG2->NAD->3035",
+                  "value_pool": {
+                    "MS": "Dokumenten-/Nachrichtenausstellerbzw. -absender"
+                  }
+                },
+                {
+                  "ahb_expression": "X",
+                  "data_element_id": "3039",
+                  "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"MP-ID Absender\"][0][\"MP-ID\"]",
+                  "entered_input": null
+                },
+                {
+                  "data_element_id": "3055",
+                  "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"MP-ID Absender\"][0][\"Codeliste\"]",
+                  "value_pool": {
+                    "293": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",
+                    "332": "DE, DVGW Service & Consult GmbH",
+                    "9": "GS1"
+                  }
+                }
+              ],
+              "discriminator": "NAD",
+              "section_name": "MP-ID Absender"
+            },
+            {
+              "ahb_expression": "Muss",
+              "data_elements": [
+                {
+                  "data_element_id": "3035",
+                  "discriminator": "SG2->NAD->3035",
+                  "value_pool": { "MR": "Nachrichtenempf\u00e4nger" }
+                },
+                {
+                  "ahb_expression": "X",
+                  "data_element_id": "3039",
+                  "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"MP-ID Empf\u00e4nger\"][0][\"MP-ID\"]",
+                  "entered_input": null
+                },
+                {
+                  "data_element_id": "3055",
+                  "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"MP-ID Empf\u00e4nger\"][0][\"Codeliste\"]",
+                  "value_pool": {
+                    "293": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",
+                    "332": "DE, DVGW Service & Consult GmbH",
+                    "9": "GS1"
+                  }
+                }
+              ],
+              "discriminator": "NAD",
+              "section_name": "MP-ID Empf\u00e4nger"
+            }
+          ]
+        },
+        {
+          "ahb_expression": "Muss",
+          "discriminator": "SG4",
+          "segment_groups": [
+            {
+              "ahb_expression": "Muss ([77] u[78]) u (([61]u [584]) o[583])",
+              "discriminator": "SG5",
+              "segment_groups": [],
+              "segments": [
+                {
+                  "ahb_expression": "Muss",
+                  "data_elements": [
+                    {
+                      "data_element_id": "3227",
+                      "discriminator": "SG5->LOC->3227",
+                      "value_pool": { "172": "Meldepunkt" }
+                    },
+                    {
+                      "ahb_expression": "X [953]",
+                      "data_element_id": "3225",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Meldepunkt\"][0][\"ID\"]",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "LOC",
+                  "section_name": "Meldepunkt"
+                }
+              ]
+            },
+            {
+              "ahb_expression": "Muss",
+              "discriminator": "SG6",
+              "segment_groups": [],
+              "segments": [
+                {
+                  "ahb_expression": "Muss",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG6->RFF->1153",
+                      "value_pool": { "Z13": "Pr\u00fcfidentifikator" }
+                    },
+                    {
+                      "data_element_id": "1154",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Pr\u00fcfidentifikator\"][0][\"ID\"]",
+                      "value_pool": {
+                        "11042": "WiM / Anmeldung MSB",
+                        "11043": "WiM / Best\u00e4tigung Anmeldung MSB",
+                        "11044": "WiM / Ablehnung Anmeldung MSB"
+                      }
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Pr\u00fcfidentifikator"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG6->RFF->1153",
+                      "value_pool": { "TN": "Transaktions-Referenznummer" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Referenz Vorgangsnummer (aus Anfragenachricht)\"][0][\"Referenz\"]",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz Vorgangsnummer (aus Anfragenachricht)"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG6->RFF->1153",
+                      "value_pool": { "Z18": "Marktlokation" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Referenz auf die ID der Marktlokation f\u00fcr Termine der Marktlokation\"][0][\"ID\"]",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Marktlokation f\u00fcr Termine der Marktlokation"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "2005",
+                      "discriminator": "SG6->DTM->2005",
+                      "value_pool": { "752": "Geplante Turnusablesung" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "2380",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Geplante Turnusablesung des MSB (Strom)\"]",
+                      "entered_input": null
+                    },
+                    {
+                      "data_element_id": "2379",
+                      "discriminator": "SG6->DTM->2379",
+                      "value_pool": { "104": "MMWW-MMWW", "106": "MMDD" }
+                    }
+                  ],
+                  "discriminator": "DTM",
+                  "section_name": "Geplante Turnusablesung des MSB (Strom)"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "2005",
+                      "discriminator": "SG6->DTM->2005",
+                      "value_pool": { "672": "zugewiesene Periode" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "2380",
+                      "discriminator": "Datum oder Uhrzeit oderZeitspanne, Wert",
+                      "entered_input": null
+                    },
+                    {
+                      "data_element_id": "2379",
+                      "discriminator": "SG6->DTM->2379",
+                      "value_pool": { "802": "Monat" }
+                    }
+                  ],
+                  "discriminator": "DTM",
+                  "section_name": "Turnusableseintervall des MSB (Strom)"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "2005",
+                      "discriminator": "SG6->DTM->2005",
+                      "value_pool": { "Z20": "Abrechnungsintervall desLF" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "2380",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Abrechnungsintervall des LF\"]",
+                      "entered_input": null
+                    },
+                    {
+                      "data_element_id": "2379",
+                      "discriminator": "SG6->DTM->2379",
+                      "value_pool": { "802": "Monat" }
+                    }
+                  ],
+                  "discriminator": "DTM",
+                  "section_name": "Abrechnungsintervall des LF"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG6->RFF->1153",
+                      "value_pool": { "Z19": "Messlokation" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Referenz auf die ID der Messlokation f\u00fcr Termine der Messlokation\"][0][\"ID\"]",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Messlokation f\u00fcr Termine der Messlokation"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "2005",
+                      "discriminator": "SG6->DTM->2005",
+                      "value_pool": { "752": "Geplante Turnusablesung" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "2380",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Geplante Turnusablesung des NB (Gas)\"]",
+                      "entered_input": null
+                    },
+                    {
+                      "data_element_id": "2379",
+                      "discriminator": "SG6->DTM->2379",
+                      "value_pool": { "104": "MMWW-MMWW", "106": "MMDD" }
+                    }
+                  ],
+                  "discriminator": "DTM",
+                  "section_name": "Geplante Turnusablesung des NB (Gas)"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "2005",
+                      "discriminator": "SG6->DTM->2005",
+                      "value_pool": { "672": "zugewiesene Periode" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "2380",
+                      "discriminator": "Datum oder Uhrzeit oderZeitspanne, Wert",
+                      "entered_input": null
+                    },
+                    {
+                      "data_element_id": "2379",
+                      "discriminator": "SG6->DTM->2379",
+                      "value_pool": { "802": "Monat" }
+                    }
+                  ],
+                  "discriminator": "DTM",
+                  "section_name": "Turnusableseintervall des NB (Gas)"
+                }
+              ]
+            },
+            {
+              "ahb_expression": "",
+              "discriminator": "SG8",
+              "segment_groups": [
+                {
+                  "ahb_expression": "",
+                  "discriminator": "SG9",
+                  "segment_groups": [],
+                  "segments": [
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "6063",
+                          "discriminator": "SG9->QTY->6063",
+                          "value_pool": {
+                            "265": "Veranschlagte Jahresmenge Gesamt/ Jahresverbrauchsprogno se f\u00fcr spezifische Arbeit f\u00fcr tagesparameterabh\u00e4ngig e Marktlokation",
+                            "Z08": "Angepasste elektrische Arbeit nach Anhang D der VDN-Richtlinie \"Lastprofile f\u00fcr unterbrechbare Verbrauchseinrichtungen\""
+                          }
+                        },
+                        {
+                          "ahb_expression": "",
+                          "data_element_id": "6060",
+                          "discriminator": "Menge",
+                          "entered_input": null
+                        },
+                        {
+                          "data_element_id": "6411",
+                          "discriminator": "SG9->QTY->6411",
+                          "value_pool": {
+                            "KWH": "Kilowattstunde",
+                            "Z16": "kWh/K (Kilowatt- Stunde/Kelvin)"
+                          }
+                        }
+                      ],
+                      "discriminator": "QTY",
+                      "section_name": "Arbeit / Leistung f\u00fcr tagesparameterabh\u00e4ngige Marktlokation"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "6063",
+                          "discriminator": "SG9->QTY->6063",
+                          "value_pool": {
+                            "31": "VeranschlagteJahresmenge Gesamt"
+                          }
+                        },
+                        {
+                          "ahb_expression": "",
+                          "data_element_id": "6060",
+                          "discriminator": "Mengenangabe",
+                          "entered_input": null
+                        },
+                        {
+                          "data_element_id": "6411",
+                          "discriminator": "SG9->QTY->6411",
+                          "value_pool": { "KWH": "Kilowattstunde" }
+                        }
+                      ],
+                      "discriminator": "QTY",
+                      "section_name": "Veranschlagte Jahresmenge gesamt"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "6063",
+                          "discriminator": "SG9->QTY->6063",
+                          "value_pool": { "11": "Aufteilungsmenge" }
+                        },
+                        {
+                          "ahb_expression": "",
+                          "data_element_id": "6060",
+                          "discriminator": "Mengenangabe in %",
+                          "entered_input": null
+                        },
+                        {
+                          "data_element_id": "6411",
+                          "discriminator": "SG9->QTY->6411",
+                          "value_pool": { "P1": "Prozent" }
+                        }
+                      ],
+                      "discriminator": "QTY",
+                      "section_name": "Prozentualer Anteil der Tranche an der erzeugenden Marktlokation"
+                    }
+                  ]
+                },
+                {
+                  "ahb_expression": "",
+                  "discriminator": "SG10",
+                  "segment_groups": [],
+                  "segments": [
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7059",
+                          "discriminator": "SG10->CCI->7059",
+                          "value_pool": { "Z30": "Lieferrichtung" }
+                        },
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Daten der Marktlokation\"][0][\"Lieferrichtung\"][0][\"Richtung\"]",
+                          "value_pool": {
+                            "Z06": "Erzeugung",
+                            "Z07": "Verbrauch"
+                          }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Lieferrichtung"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": { "ZB3": "ZugeordneterMarktpartner" }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Zugeordnete Marktpartner"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": { "Z89": "LF" }
+                        },
+                        {
+                          "ahb_expression": "",
+                          "data_element_id": "1131",
+                          "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Daten der Marktlokation\"][0][\"Zugeordnete Marktpartner\"][0][\"Lieferant\"]",
+                          "entered_input": null
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Lieferant"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": { "Z90": "\u00dcNB" }
+                        },
+                        {
+                          "ahb_expression": "",
+                          "data_element_id": "1131",
+                          "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Daten der Marktlokation\"][0][\"Zugeordnete Marktpartner\"][0][\"\u00dcbertragungsnetzbetreiber\"]",
+                          "entered_input": null
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "\u00dcbertragungsnetzbetreiber"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": { "Z91": "MSB" }
+                        },
+                        {
+                          "ahb_expression": "",
+                          "data_element_id": "1131",
+                          "discriminator": "MP-ID",
+                          "entered_input": null
+                        },
+                        {
+                          "data_element_id": "7110",
+                          "discriminator": "SG10->CAV->7110",
+                          "value_pool": {
+                            "Z19": "Auf vertraglicher Grundlage gegen\u00fcber Anschlussnutzer / Anschlussnehmer",
+                            "Z20": "In der Aus\u00fcbung der"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Messstellenbetreiber"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": {
+                            "E03": "Spannungsebene derMarktlokation"
+                          }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Spannungsebene der Marktlokation"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": {
+                            "E03": "H\u00f6chstspannung",
+                            "E04": "Hochspannung",
+                            "E05": "Mittelspannung",
+                            "E06": "Niederspannung"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Spannungsebene der Marktlokation"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": {
+                            "Z83": "MesstechnischeEinordnung derMarktlokation"
+                          }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Messtechnische Einordnung der Marktlokation"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": { "Z52": "iMS", "Z53": "kME / mME" }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Messtechnische Einordnung der Marktlokation"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7059",
+                          "discriminator": "SG10->CCI->7059",
+                          "value_pool": { "6": "Verantwortlicher" }
+                        },
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Daten der Marktlokation\"][0][\"Aggregationsverantwortung in MaBiS\"][0][\"Code\"]",
+                          "value_pool": { "ZA8": "NB", "ZA9": "\u00dcNB" }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Aggregationsverantwortung in MaBiS"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": {
+                            "ZA6": "Prognose auf Basis von Profilen",
+                            "ZC0": "Prognose auf Basis von Werten"
+                          }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Prognosegrundlage der Marktlokation"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": {
+                            "E02": "SLP/SEP",
+                            "E14": "TLP/TEP",
+                            "Z36": "TEP mit Referenzmessung"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Details der Prognosegrundlage"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": {
+                            "Z34": "Art der erzeugendenMarktlokation"
+                          }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Art der erzeugenden Marktlokation"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": {
+                            "Z33": "EEG-Marktlokation ohne DV-Pflicht",
+                            "Z34": "KWKG-Marktlokation ohne DV-Pflicht",
+                            "Z35": "sonstige Marktlokation",
+                            "Z37": "EEG-Marktlokation mit DV-Pflicht",
+                            "Z46": "KWKG-Marktlokation mit DV-Pflicht"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Art der erzeugenden Marktlokation"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7059",
+                          "discriminator": "SG10->CCI->7059",
+                          "value_pool": {
+                            "Z36": "Versorgungsart derMarktlokation"
+                          }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Versorgungsart der Marktlokation"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7059",
+                          "discriminator": "SG10->CCI->7059",
+                          "value_pool": {
+                            "Z35": "Beschreibungerforderlicher Wert"
+                          }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Beschreibung erforderlicher Wert"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": {
+                            "ZC2": "Wirkarbeit",
+                            "ZC3": "Blindarbeit"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Wert"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": {
+                            "ZC4": "Kumuliert",
+                            "ZC5": "1/4 Stunde",
+                            "ZC7": "h\u00f6chste 1/4 Stunde im Monat"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Wertegranularit\u00e4t"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7059",
+                          "discriminator": "SG10->CCI->7059",
+                          "value_pool": { "Z39": "Code der Z\u00e4hlzeit" }
+                        },
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": { "0": "Code der Z\u00e4hlzeitZ61" }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Zugeordnete Z\u00e4hlzeit"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": { "ZA8": "NB" }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Wert f\u00fcr Netzbetreiber relevant"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": {
+                            "Z84": "Netznutzungsabrechnung",
+                            "Z85": "Bilanzkreisabrechnung",
+                            "Z86": "Mehrmindermengenabrec hnung\t[27P1..1]",
+                            "Z92": "\u00dcbermittlung an das HKNR\t[24P1..1]",
+                            "ZD1": "Blindstromabrechnung",
+                            "ZE1": "Es liegt kein Verwendungszweck vor"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Verwendungszweck des Wertes"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": { "ZA7": "LF" }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Wert f\u00fcr Lieferant relevant"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": {
+                            "Z47": "Endkundenabrechnung",
+                            "Z84": "Netznutzungsabrechnung",
+                            "Z85": "Bilanzkreisabrechnung",
+                            "Z86": "Mehrmindermengenabrec hnung\t[27P1..1]",
+                            "ZD1": "Blindstromabrechnung",
+                            "ZE1": "Es liegt kein Verwendungszweck vor"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Verwendungszweck des Wertes"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": { "ZA9": "\u00dcNB" }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Wert f\u00fcr \u00dcbertragungsnetzbetreiber relevant"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": {
+                            "Z85": "Bilanzkreisabrechnung",
+                            "ZB5": "Zur Ermittlung der Ausgeglichenheit von Bilanzkreisen"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Verwendungszweck des Wertes"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7059",
+                          "discriminator": "SG10->CCI->7059",
+                          "value_pool": { "Z39": "Code der Z\u00e4hlzeit" }
+                        },
+                        {
+                          "ahb_expression": "",
+                          "data_element_id": "7037",
+                          "discriminator": "Code der Z\u00e4hlzeit",
+                          "entered_input": null
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Zugeordnete Z\u00e4hlzeit"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7059",
+                          "discriminator": "SG10->CCI->7059",
+                          "value_pool": {
+                            "Z38": "Code desZ\u00e4hlzeitregisters"
+                          }
+                        },
+                        {
+                          "ahb_expression": "",
+                          "data_element_id": "7037",
+                          "discriminator": "Code des Z\u00e4hlzeitregisters",
+                          "entered_input": null
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Zugeordnete Z\u00e4hlzeitregister"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": { "ZA8": "NB" }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "OBIS Daten f\u00fcr Netzbetreiber relevant"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": {
+                            "Z84": "Netznutzungsabrechnung",
+                            "Z85": "Bilanzkreisabrechnung",
+                            "Z86": "Mehrmindermengenabrec hnung\t[37P1..1]",
+                            "Z92": "\u00dcbermittlung an das HKNR\t[34P1..1]",
+                            "ZD1": "Blindstromabrechnung",
+                            "ZE1": "Es liegt kein Verwendungszweck vor"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Werte"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": { "ZA7": "LF" }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "OBIS Daten f\u00fcr Lieferant relevant"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "ahb_expression": "",
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "entered_input": null
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Verwendungszweck der Werte"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": { "ZA9": "\u00dcNB" }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "OBIS Daten f\u00fcr \u00dcbertragungsnetzbetreiber relevant"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": {
+                            "Z85": "Bilanzkreisabrechnung",
+                            "ZB5": "Zur Ermittlung der Ausgeglichenheit von Bilanzkreisen"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Verwendungszweck der Werte"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": { "ZB3": "ZugeordneterMarktpartner" }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Zugeordnete Marktpartner"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": { "Z89": "LF" }
+                        },
+                        {
+                          "ahb_expression": "",
+                          "data_element_id": "1131",
+                          "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Daten der Marktlokation\"][0][\"Zugeordnete Marktpartner\"][0][\"Lieferant\"]",
+                          "entered_input": null
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Lieferant"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7059",
+                          "discriminator": "SG10->CCI->7059",
+                          "value_pool": {
+                            "Z37": "Basis zur Bildung derTranchengr\u00f6\u00dfe"
+                          }
+                        },
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": {
+                            "ZC11": "Prozentual",
+                            "ZC12": "Aufteilungsfaktor auf Basis von Referenzentr\u00e4ger/ installierter Leistung"
+                          }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Basis zur Bildung der Tranchengr\u00f6\u00dfe"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7059",
+                          "discriminator": "SG10->CCI->7059",
+                          "value_pool": {
+                            "Z35": "Beschreibungerforderlicher Wert"
+                          }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Beschreibung erforderlicher Wert"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": { "ZC2": "Wirkarbeit" }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Wert"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": { "ZC5": "1/4 Stunde" }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Wertegranularit\u00e4t"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": { "ZA8": "NB" }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Werte f\u00fcr Netzbetreiber relevant"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": {
+                            "Z85": "Bilanzkreisabrechnung",
+                            "Z92": "\u00dcbermittlung an das HKNR"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Verwendungszweck der Werte"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": { "ZA7": "LF" }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "OBIS Daten f\u00fcr Lieferant relevant"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": {
+                            "Z47": "Endkundenabrechnung",
+                            "Z85": "Bilanzkreisabrechnung"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Verwendungszweck der Werte"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": { "ZA9": "\u00dcNB" }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "OBIS Daten f\u00fcr \u00dcbertragungsnetzbetreiber relevant"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": {
+                            "Z85": "Bilanzkreisabrechnung",
+                            "ZB5": "Zur Ermittlung der Ausgeglichenheit von Bilanzkreisen"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Verwendungszweck der Werte"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": { "ZB3": "ZugeordneterMarktpartner" }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Zugeordnete Marktpartner"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": { "Z91": "MSB" }
+                        },
+                        {
+                          "ahb_expression": "",
+                          "data_element_id": "1131",
+                          "discriminator": "MP-ID",
+                          "entered_input": null
+                        },
+                        {
+                          "data_element_id": "7110",
+                          "discriminator": "SG10->CAV->7110",
+                          "value_pool": {
+                            "Z19": "Auf vertraglicher Grundlage gegen\u00fcber Anschlussnutzer / Anschlussnehmer",
+                            "Z20": "In der Aus\u00fcbung der Weiterverpflichtung durch den gMSB"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Messstellenbetreiber"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": { "ZB4": "MSBA" }
+                        },
+                        {
+                          "ahb_expression": "",
+                          "data_element_id": "1131",
+                          "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Daten der Messlokation\"][0][\"Zugeordnete Marktpartner\"][0][\"Messstellenbetreiber Alt\"]",
+                          "entered_input": null
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Messstellenbetreiber Alt"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": {
+                            "E04": "Spannungsebene derMesslokation"
+                          }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Spannungsebene der Messlokation"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": {
+                            "E03": "H\u00f6chstspannung",
+                            "E04": "Hochspannung",
+                            "E05": "Mittelspannung",
+                            "E06": "Niederspannung"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Spannungsebene der Messlokation"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": { "Y02": "Gasqualit\u00e4t" }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Gasqualit\u00e4t"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": { "Y04": "H-Gas", "Y05": "L-Gas" }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Gasqualit\u00e4t"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7059",
+                          "discriminator": "SG10->CCI->7059",
+                          "value_pool": { "Z01": "Verwendungsumfang" }
+                        },
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": {
+                            "Z81": "ID der Messlokation im Lokationsb\u00fcndel",
+                            "Z82": "ID der prozessual behandelten Messlokation"
+                          }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Verwendungsumfang"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7059",
+                          "discriminator": "SG10->CCI->7059",
+                          "value_pool": {
+                            "Z32": "Betriebszustand derMesslokation"
+                          }
+                        },
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Daten der Messlokation\"][0][\"Betriebszustand der Messlokation\"][0][\"Zustand\"]",
+                          "value_pool": {
+                            "ZC1": "Messlokation gesperrt und darf nicht entsperrt werden",
+                            "ZC2": "Messlokation gesperrt und darf entsperrt werden",
+                            "ZC3": "Messlokation im Regelbetrieb"
+                          }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Betriebszustand der Messlokation"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7059",
+                          "discriminator": "SG10->CCI->7059",
+                          "value_pool": {
+                            "Z35": "Beschreibungerforderlicher Wert"
+                          }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Beschreibung erforderlicher Wert"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": {
+                            "ZC2": "Wirkarbeit",
+                            "ZC3": "Blindarbeit"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Wert"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": {
+                            "ZC4": "Kumuliert",
+                            "ZC5": "1/4 Stunde",
+                            "ZC6": "Eine Stunde",
+                            "ZC7": "h\u00f6chste 1/4 Stunde im Monat"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Wertegranularit\u00e4t"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": {
+                            "Z71": "Verbrauch",
+                            "Z72": "Erzeugung"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Energieflussrichtung"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": {
+                            "ZC9": "Zweite Messung f\u00fcrVergleichsmessungerforderlich"
+                          }
+                        },
+                        {
+                          "data_element_id": "7110",
+                          "discriminator": "SG10->CAV->7110",
+                          "value_pool": {
+                            "Z06": "vorhanden",
+                            "Z07": "nicht vorhanden"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Notwendigkeit einer zweiten Messung"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": { "Z88": "NB" }
+                        },
+                        {
+                          "data_element_id": "7110",
+                          "discriminator": "SG10->CAV->7110",
+                          "value_pool": { "Z06": "vorhanden" }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Werte\u00fcbermittlung an den NB aufgrund weiterem Verwendungszweck"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7059",
+                          "discriminator": "SG10->CCI->7059",
+                          "value_pool": { "Z39": "Code der Z\u00e4hlzeit" }
+                        },
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": { "0": "Code der Z\u00e4hlzeitZ61" }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Zugeordnete Z\u00e4hlzeit"
+                    },
+                    {
+                      "ahb_expression": "Muss",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": { "E13": "Z\u00e4hlertyp" }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Z\u00e4hlertyp"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": {
+                            "AHZ": "analoger Haushaltsz\u00e4hler (Drehstrom)",
+                            "BGZ": "Balgengasz\u00e4hler",
+                            "DKZ": "Drehkolbengasz\u00e4hler",
+                            "EHZ": "elektronischer Haushaltsz\u00e4hler",
+                            "IVA": "Individuelle Abstimmung (Sonderausstattung)",
+                            "LAZ": "Lastgangz\u00e4hler",
+                            "MAZ": "Maximumz\u00e4hler",
+                            "MME": "moderne Messeinrichtung nach MsbG",
+                            "MRG": "Messdatenregistrierger\u00e4t",
+                            "TRZ": "Turbinenradgasz\u00e4hler",
+                            "UGZ": "Ultraschallgasz\u00e4hler",
+                            "WGZ": "Wirbelgasz\u00e4hler",
+                            "WSZ": "analoger Wechselstromz\u00e4hler"
+                          }
+                        },
+                        {
+                          "data_element_id": "7110",
+                          "discriminator": "SG10->CAV->7110",
+                          "value_pool": {
+                            "Z01": "EDL40",
+                            "Z02": "EDL21",
+                            "Z03": "sonstiger EHZ",
+                            "Z04": "Standard",
+                            "Z05": "MeDa-Z\u00e4hler"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Z\u00e4hlertyp"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7110",
+                          "discriminator": "SG10->CAV->7110",
+                          "value_pool": {
+                            "G10": "Gasz\u00e4hler G10",
+                            "G100": "Gasz\u00e4hler G100",
+                            "G1000": "Gasz\u00e4hler G1000",
+                            "G10000": "Gasz\u00e4hler G10000",
+                            "G12500": "Gasz\u00e4hler G12500",
+                            "G16": "Gasz\u00e4hler G16",
+                            "G160": "Gasz\u00e4hler G160",
+                            "G1600": "Gasz\u00e4hler G1600",
+                            "G16000": "Gasz\u00e4hler G16000",
+                            "G25": "Gasz\u00e4hler G25",
+                            "G250": "Gasz\u00e4hler G250",
+                            "G2500": "Gasz\u00e4hler G2500",
+                            "G350": "Gasz\u00e4hler G350",
+                            "G4": "Gasz\u00e4hler G4",
+                            "G40": "Gasz\u00e4hler G40",
+                            "G400": "Gasz\u00e4hler G400",
+                            "G4000": "Gasz\u00e4hler G4000",
+                            "G6": "Gasz\u00e4hler G6",
+                            "G65": "Gasz\u00e4hler G65",
+                            "G650": "Gasz\u00e4hler G650",
+                            "Gasz\u00e4hler G2.5": "G2.5"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Z\u00e4hlergr\u00f6\u00dfe (Gas)"
+                    },
+                    {
+                      "ahb_expression": "Muss",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": { "Z30": "Ger\u00e4tenummer" }
+                        },
+                        {
+                          "ahb_expression": "X",
+                          "data_element_id": "7110",
+                          "discriminator": "Ger\u00e4tenummer",
+                          "entered_input": null
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Identifikation / Nummer des Ger\u00e4tes"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": {
+                            "ETZ": "Eintarif",
+                            "NTZ": "Mehrtarif",
+                            "ZTZ": "Zweitarif"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Registeranzahl"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": {
+                            "ERZ": "Einrichtungsz\u00e4hler",
+                            "ZRZ": "Zweirichtungsz\u00e4hler"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Energierichtung"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": {
+                            "Z58": "Fernschaltung derZ\u00e4hleinrichtung"
+                          }
+                        },
+                        {
+                          "data_element_id": "7110",
+                          "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Z\u00e4hleinrichtungsdaten\"][0][\"Z\u00e4hlertyp\"][0][\"Fernschaltung der Z\u00e4hleinrichtung\"]",
+                          "value_pool": {
+                            "Z06": "vorhanden",
+                            "Z07": "nicht vorhanden"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Fernschaltung der Z\u00e4hleinrichtung"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": { "ZC0": "Art derVolumenerfassung" }
+                        },
+                        {
+                          "data_element_id": "7110",
+                          "discriminator": "SG10->CAV->7110",
+                          "value_pool": { "Z16": "Hochfrequenzsonde" }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Art der Volumenerfassung (Gas)"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": {
+                            "Z28": "BefestigungsartZ\u00e4hleinrichtung"
+                          }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Befestigungsart Z\u00e4hleinrichtung"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": {
+                            "BKE": "Stecktechnik (Befestigungs- und Kontaktierungseinrichtun g)",
+                            "DPA": "3-Dreipunktaufh\u00e4ngung",
+                            "HUT": "Hutschiene",
+                            "Z31": "Einstutzen-Z\u00e4hler",
+                            "Z32": "Zweistutzen-Z\u00e4hler"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Z\u00e4hleinrichtung"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": {
+                            "E12": "Messwerterfassung ander Z\u00e4hleinrichtung"
+                          }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Messwerterfassung an der Z\u00e4hleinrichtung"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": {
+                            "AMR": "fernauslesbare Z\u00e4hler",
+                            "MMR": "manuell ausgelesene Z\u00e4hler"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Messwerterfassung an der Z\u00e4hleinrichtung"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": { "Z64": "Mengenumwerter" }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Mengenumwerter"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": { "Z30": "Ger\u00e4tenummer" }
+                        },
+                        {
+                          "ahb_expression": "",
+                          "data_element_id": "7110",
+                          "discriminator": "Ger\u00e4tenummer",
+                          "entered_input": null
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Identifikation / Nummer des Ger\u00e4tes"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": {
+                            "DMU": "Dichtemengenumwerter",
+                            "TMU": "Temperaturmengenumwe rter",
+                            "ZMU": "Zustandsmengenumwert er"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Mengenumwertertyp"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": { "ZC0": "Art derVolumenerfassung" }
+                        },
+                        {
+                          "data_element_id": "7110",
+                          "discriminator": "SG10->CAV->7110",
+                          "value_pool": {
+                            "Z17": "Kennlinienkorrektur",
+                            "Z18": "Schleichmengenunterdr\u00fc ckung"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Art der Volumenerfassung (Gas)"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7059",
+                          "discriminator": "SG10->CCI->7059",
+                          "value_pool": { "11": "Produkt" }
+                        },
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": {
+                            "Z33": "Vor- undNachkommastellen desZ\u00e4hlwerkes"
+                          }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Vor- und Nachkommastellen des Z\u00e4hlwerks"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "ahb_expression": "",
+                          "data_element_id": "7110",
+                          "discriminator": "Angabe der Vorkommastelle",
+                          "entered_input": null
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Vor- und Nachkommastellen des Z\u00e4hlwerks"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": { "Z25": "Wandler" }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Wandler"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": { "Z30": "Ger\u00e4tenummer" }
+                        },
+                        {
+                          "ahb_expression": "",
+                          "data_element_id": "7110",
+                          "discriminator": "Ger\u00e4tenummer",
+                          "entered_input": null
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Identifikation / Nummer des Ger\u00e4tes"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": {
+                            "MBW": "Blockstromwandler",
+                            "MIW": "Messwandlersatz Strom",
+                            "MPW": "Kombimesswandlersatz (Strom und Spannung)",
+                            "MUW": "Messwandlersatz Spannung"
+                          }
+                        },
+                        {
+                          "ahb_expression": "",
+                          "data_element_id": "7110",
+                          "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Wandlerdaten\"][0][\"Wandler\"][0][\"Wandlertyp und Faktor\"][0][\"Wandlerfaktor\"]",
+                          "entered_input": null
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Wandlertyp und Faktor"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": { "Z26": "Kommunikationseinrichtung" }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Kommunikationseinrichtung"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": { "Z30": "Ger\u00e4tenummer" }
+                        },
+                        {
+                          "ahb_expression": "",
+                          "data_element_id": "7110",
+                          "discriminator": "Ger\u00e4tenummer",
+                          "entered_input": null
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Identifikation / Nummer des Ger\u00e4tes"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": {
+                            "DSL": "DSL-Kom.Einr.",
+                            "ETH": "Ethernet-Kom.-Einricht. LAN/WLAN",
+                            "GSM": "GSM/GPRS/UMTS- Kom.-Einr.",
+                            "LTE": "LTE-Kom.-Einr.",
+                            "PLC": "PLC-Kom.-Einrichtung",
+                            "PST": "Festnetz-Kom.-Einricht. TAE"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "styp"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": { "Z27": "TechnischeSteuereinrichtung" }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Technische Steuereinrichtung"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": { "Z30": "Ger\u00e4tenummer" }
+                        },
+                        {
+                          "ahb_expression": "",
+                          "data_element_id": "7110",
+                          "discriminator": "Ger\u00e4tenummer",
+                          "entered_input": null
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Identifikation / Nummer des Ger\u00e4tes"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": {
+                            "RSU": "Rundsteuerempf\u00e4nger",
+                            "TSU": "Tarifschaltuhr"
+                          }
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Technische Steuereinrichtungstyp"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": { "Z75": "Smartmeter-Gateway" }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Smartmeter-Gateway"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": { "Z30": "Ger\u00e4tenummer" }
+                        },
+                        {
+                          "ahb_expression": "",
+                          "data_element_id": "7110",
+                          "discriminator": "Ger\u00e4tenummer",
+                          "entered_input": null
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Identifikation / Nummer des Ger\u00e4tes"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": { "Z76": "Steuerbox" }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Steuerbox"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": { "Z30": "Ger\u00e4tenummer" }
+                        },
+                        {
+                          "ahb_expression": "",
+                          "data_element_id": "7110",
+                          "discriminator": "Ger\u00e4tenummer",
+                          "entered_input": null
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Identifikation / Nummer des Ger\u00e4tes"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7059",
+                          "discriminator": "SG10->CCI->7059",
+                          "value_pool": {
+                            "Z02": "Standardlastprofil",
+                            "Z04": "Standardeinspeiseprofil"
+                          }
+                        },
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": {
+                            "E01": "synthetisches Verfahren",
+                            "Z10": "analytisches Verfahren"
+                          }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Normiertes Profil (Strom)"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "ahb_expression": "",
+                          "data_element_id": "7111",
+                          "discriminator": "Code des Normierten Profils",
+                          "entered_input": null
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Normiertes Profil (Strom)"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7059",
+                          "discriminator": "SG10->CCI->7059",
+                          "value_pool": {
+                            "Z03": "tagesparameterabh\u00e4ngig es Lastprofil",
+                            "Z05": "tagesparameterabh\u00e4ngig es Einspeiseprofil"
+                          }
+                        },
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": {
+                            "E01": "synthetisches Verfahren",
+                            "Z10": "analytisches Verfahren"
+                          }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Normiertes Profil"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "ahb_expression": "",
+                          "data_element_id": "7111",
+                          "discriminator": "Code des Normierten Profils(Strom)",
+                          "entered_input": null
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Normiertes Profil"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7059",
+                          "discriminator": "SG10->CCI->7059",
+                          "value_pool": {
+                            "Z99": "Messstelle des Tagesparameters (derzeit ist nur die Temperatur ein erlaubter Tagesparameter)",
+                            "ZA0": "Klimazone des Tagesparameters (derzeit ist Tagesparameter)"
+                          }
+                        },
+                        {
+                          "ahb_expression": "",
+                          "data_element_id": "7037",
+                          "discriminator": "ID Klimazone /Temperaturmessstelle",
+                          "entered_input": null
+                        },
+                        {
+                          "ahb_expression": "",
+                          "data_element_id": "1131",
+                          "discriminator": "Dienstanbieter",
+                          "entered_input": null
+                        },
+                        {
+                          "data_element_id": "3055",
+                          "discriminator": "SG10->CCI->3055",
+                          "value_pool": {
+                            "293": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",
+                            "89": "Vergeben vom H\u00e4ndler (hier Netzbetreiber)"
+                          }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Klimazone / Temperaturmessstelle"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7059",
+                          "discriminator": "SG10->CCI->7059",
+                          "value_pool": {
+                            "Z05": "tagesparameterabh\u00e4ngiges Einspeiseprofil"
+                          }
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Referenzprofil"
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_elements": [
+                        {
+                          "ahb_expression": "",
+                          "data_element_id": "7111",
+                          "discriminator": "Code des Referenzprofils",
+                          "entered_input": null
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Referenzprofil"
+                    }
+                  ]
+                }
+              ],
+              "segments": [
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1229",
+                      "discriminator": "SG8->SEQ->1229",
+                      "value_pool": { "Z01": "Daten der Marktlokation" }
+                    }
+                  ],
+                  "discriminator": "SEQ",
+                  "section_name": "Daten der Marktlokation"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG8->RFF->1153",
+                      "value_pool": { "Z18": "Marktlokation" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "ID der Marktlokation",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Marktlokation"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1229",
+                      "discriminator": "SG8->SEQ->1229",
+                      "value_pool": {
+                        "Z27": "Erforderlicher Wert derMarktlokation"
+                      }
+                    }
+                  ],
+                  "discriminator": "SEQ",
+                  "section_name": "Erforderlicher Wert der Marktlokation"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG8->RFF->1153",
+                      "value_pool": { "Z18": "Marktlokation" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "ID einer Marktlokation",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Marktlokation"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1229",
+                      "discriminator": "SG8->SEQ->1229",
+                      "value_pool": { "Z02": "OBIS-Daten derMarktlokation" }
+                    }
+                  ],
+                  "discriminator": "SEQ",
+                  "section_name": "OBIS-Daten der Marktlokation"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG8->RFF->1153",
+                      "value_pool": { "Z18": "Marktlokation" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "ID einer Marktlokation",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Marktlokation"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "4347",
+                      "discriminator": "SG8->PIA->4347",
+                      "value_pool": { "5": "Produktidentifikation" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "7140",
+                      "discriminator": "OBIS-Kennzahl der Marktlokation",
+                      "entered_input": null
+                    },
+                    {
+                      "data_element_id": "7143",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Profilschardaten\"][0][\"Berechnung Tagesmitteltemperatur\"][0][\"Art\"]",
+                      "value_pool": { "SRW": "OBIS-Kennzahl" }
+                    }
+                  ],
+                  "discriminator": "PIA",
+                  "section_name": "OBIS-Kennzahl der Marktlokation"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1229",
+                      "discriminator": "SG8->SEQ->1229",
+                      "value_pool": { "Z15": "Daten der Tranche" }
+                    }
+                  ],
+                  "discriminator": "SEQ",
+                  "section_name": "Daten der Tranche"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG8->RFF->1153",
+                      "value_pool": { "Z20": "Tranche" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"OBIS-Daten der Z\u00e4hleinrichtung / Mengenumwerter\"][0][\"Referenz auf die Ger\u00e4tenummer\"][0][\"Nummer\"]",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Tranche"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG8->RFF->1153",
+                      "value_pool": { "Z16": "zugeordneteMarktlokation" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "ID der Marktlokation",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die Marktlokation der Tranche"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1229",
+                      "discriminator": "SG8->SEQ->1229",
+                      "value_pool": { "Z16": "Erforderlicher Wert derTranche" }
+                    }
+                  ],
+                  "discriminator": "SEQ",
+                  "section_name": "Erforderlicher Wert der Tranche"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG8->RFF->1153",
+                      "value_pool": { "Z20": "Tranche" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"OBIS-Daten der Z\u00e4hleinrichtung / Mengenumwerter\"][0][\"Referenz auf die Ger\u00e4tenummer\"][0][\"Nummer\"]",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Tranche"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1229",
+                      "discriminator": "SG8->SEQ->1229",
+                      "value_pool": { "Z18": "Daten der Messlokation" }
+                    }
+                  ],
+                  "discriminator": "SEQ",
+                  "section_name": "Daten der Messlokation"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG8->RFF->1153",
+                      "value_pool": { "Z19": "Messlokation" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Erforderliche OBIS-Daten der Messlokation\"][0][\"Referenz auf die ID einer Messlokation\"]",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Messlokation"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG8->RFF->1153",
+                      "value_pool": { "Z16": "zugeordneteMarktlokation" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Daten der Messlokation\"][0][\"Referenz auf die der Messlokation zugeordneten Marktlokation\"]",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die der Messlokation zugeordneten Marktlokation"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1229",
+                      "discriminator": "SG8->SEQ->1229",
+                      "value_pool": {
+                        "Z19": "Erforderlicher Wert derMesslokation"
+                      }
+                    }
+                  ],
+                  "discriminator": "SEQ",
+                  "section_name": "Erforderlicher Wert der Messlokation"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG8->RFF->1153",
+                      "value_pool": { "Z19": "Messlokation" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Erforderliche OBIS-Daten der Messlokation\"][0][\"Referenz auf die ID einer Messlokation\"]",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Messlokation"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG8->RFF->1153",
+                      "value_pool": { "Z18": "Marktlokation" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "ID einer Marktlokation",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID einer Marktlokation"
+                },
+                {
+                  "ahb_expression": "Muss",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1229",
+                      "discriminator": "SG8->SEQ->1229",
+                      "value_pool": { "Z03": "Z\u00e4hleinrichtungsdaten" }
+                    }
+                  ],
+                  "discriminator": "SEQ",
+                  "section_name": "Z\u00e4hleinrichtungsdaten"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG8->RFF->1153",
+                      "value_pool": { "Z19": "Messlokation" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Erforderliche OBIS-Daten der Messlokation\"][0][\"Referenz auf die ID einer Messlokation\"]",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID einer Messlokation"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG8->RFF->1153",
+                      "value_pool": { "Z14": "Smartmeter-Gateway" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "Identifikation / Nummer desSmartmeter-Gateways",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf das Smartmeter-Gateway"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1229",
+                      "discriminator": "SG8->SEQ->1229",
+                      "value_pool": { "Z09": "Mengenumwerter-Daten" }
+                    }
+                  ],
+                  "discriminator": "SEQ",
+                  "section_name": "Mengenumwerterdaten"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG8->RFF->1153",
+                      "value_pool": {
+                        "MG": "Ger\u00e4tenummer desZ\u00e4hlers"
+                      }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "Ger\u00e4tenummer",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die Ger\u00e4tenummer"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1229",
+                      "discriminator": "SG8->SEQ->1229",
+                      "value_pool": {
+                        "Z20": "OBIS-Daten derZ\u00e4hleinrichtung"
+                      }
+                    }
+                  ],
+                  "discriminator": "SEQ",
+                  "section_name": "OBIS-Daten der Z\u00e4hleinrichtung / Mengenumwerter / Smartmeter-Gateway"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG8->RFF->1153",
+                      "value_pool": {
+                        "MG": "Ger\u00e4tenummer des Z\u00e4hlers",
+                        "Z11": "Ger\u00e4tenummer des Mengenumwerters",
+                        "Z14": "Smartmeter-Gateway"
+                      }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "Ger\u00e4tenummer",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die Ger\u00e4tenummer"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG8->RFF->1153",
+                      "value_pool": { "Z18": "Marktlokation" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "ID einer Marktlokation",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID einer Marktlokation"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG8->RFF->1153",
+                      "value_pool": { "AGK": "Anwendungsreferenznummer" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "Referenz, Identifikation",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Konfigurnations-ID"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "4347",
+                      "discriminator": "SG8->PIA->4347",
+                      "value_pool": { "5": "Produktidentifikation" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "7140",
+                      "discriminator": "OBIS-Kennzahl derZ\u00e4hleinrichtung",
+                      "entered_input": null
+                    },
+                    {
+                      "data_element_id": "7143",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Profilschardaten\"][0][\"Berechnung Tagesmitteltemperatur\"][0][\"Art\"]",
+                      "value_pool": { "SRW": "OBIS-Kennzahl" }
+                    }
+                  ],
+                  "discriminator": "PIA",
+                  "section_name": "OBIS-Kennzahl der Z\u00e4hleinrichtung / Mengenumwerter / Smartmeter-Gateway"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1229",
+                      "discriminator": "SG8->SEQ->1229",
+                      "value_pool": { "Z04": "Wandler-Daten" }
+                    }
+                  ],
+                  "discriminator": "SEQ",
+                  "section_name": "Wandlerdaten"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG8->RFF->1153",
+                      "value_pool": {
+                        "MG": "Ger\u00e4tenummer desZ\u00e4hlers"
+                      }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "Ger\u00e4tenummer",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die Ger\u00e4tenummer"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1229",
+                      "discriminator": "SG8->SEQ->1229",
+                      "value_pool": { "Z05": "Kommunikationseinrichtungsdaten" }
+                    }
+                  ],
+                  "discriminator": "SEQ",
+                  "section_name": "Kommunikationseinrichtung sdaten"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG8->RFF->1153",
+                      "value_pool": {
+                        "MG": "Ger\u00e4tenummer desZ\u00e4hlers"
+                      }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "Ger\u00e4tenummer",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die Ger\u00e4tenummer"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1229",
+                      "discriminator": "SG8->SEQ->1229",
+                      "value_pool": {
+                        "Z06": "Daten der technischenSteuereinrichtung"
+                      }
+                    }
+                  ],
+                  "discriminator": "SEQ",
+                  "section_name": "Daten der technischen Steuereinrichtung"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG8->RFF->1153",
+                      "value_pool": {
+                        "MG": "Ger\u00e4tenummer desZ\u00e4hlers"
+                      }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "Ger\u00e4tenummer",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die Ger\u00e4tenummer"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1229",
+                      "discriminator": "SG8->SEQ->1229",
+                      "value_pool": { "Z13": "Smartmeter-Gateway" }
+                    }
+                  ],
+                  "discriminator": "SEQ",
+                  "section_name": "Smartmeter-Gateway"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1229",
+                      "discriminator": "SG8->SEQ->1229",
+                      "value_pool": { "Z14": "Steuerbox" }
+                    }
+                  ],
+                  "discriminator": "SEQ",
+                  "section_name": "Daten der Steuerbox"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG8->RFF->1153",
+                      "value_pool": { "Z14": "Smartmeter-Gateway" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "Identifikation / Nummer desSmartmeter-Gateways",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf das Smartmeter-Gateway"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG8->RFF->1153",
+                      "value_pool": { "Z18": "Marktlokation" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "ID einer Marktlokation",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Marktlokation"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1229",
+                      "discriminator": "SG8->SEQ->1229",
+                      "value_pool": { "Z21": "Profildaten" }
+                    }
+                  ],
+                  "discriminator": "SEQ",
+                  "section_name": "Profildaten (Strom)"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG8->RFF->1153",
+                      "value_pool": { "Z18": "Marktlokation" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "ID einer Marktlokation",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Marktlokation"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1229",
+                      "discriminator": "SG8->SEQ->1229",
+                      "value_pool": { "Z08": "Profilschardaten" }
+                    }
+                  ],
+                  "discriminator": "SEQ",
+                  "section_name": "Profilschardaten"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG8->RFF->1153",
+                      "value_pool": { "Z18": "Marktlokation" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "ID einer Marktlokation",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Marktlokation"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1229",
+                      "discriminator": "SG8->SEQ->1229",
+                      "value_pool": { "Z38": "Referenzprofildaten" }
+                    }
+                  ],
+                  "discriminator": "SEQ",
+                  "section_name": "Referenzprofildaten"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG8->RFF->1153",
+                      "value_pool": { "Z18": "Marktlokation" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "ID einer Marktlokation",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Marktlokation"
+                }
+              ]
+            },
+            {
+              "ahb_expression": "",
+              "discriminator": "SG12",
+              "segment_groups": [],
+              "segments": [
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "3035",
+                      "discriminator": "SG12->NAD->3035",
+                      "value_pool": { "Z09": "Kunde des LF" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "3036",
+                      "discriminator": "Name",
+                      "entered_input": null
+                    },
+                    {
+                      "data_element_id": "3045",
+                      "discriminator": "SG12->NAD->3045",
+                      "value_pool": {
+                        "Z01": "Struktur von Personennamen",
+                        "Z02": "Struktur der Firmenbezeichnung"
+                      }
+                    }
+                  ],
+                  "discriminator": "NAD",
+                  "section_name": "Kunde des Lieferanten"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG12->RFF->1153",
+                      "value_pool": { "Z18": "Marktlokation" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "ID der Marktlokation",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Marktlokation"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "3035",
+                      "discriminator": "SG12->NAD->3035",
+                      "value_pool": {
+                        "Z04": "Korrespondenzanschriftdes Kunden des LF"
+                      }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "3036",
+                      "discriminator": "Name",
+                      "entered_input": null
+                    },
+                    {
+                      "data_element_id": "3045",
+                      "discriminator": "SG12->NAD->3045",
+                      "value_pool": {
+                        "Z01": "Struktur von Personennamen",
+                        "Z02": "Struktur der Firmenbezeichnung"
+                      }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "3042",
+                      "discriminator": "Stra\u00dfe und Hausnummer oderPostfach",
+                      "entered_input": null
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "3164",
+                      "discriminator": "Ort",
+                      "entered_input": null
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "3251",
+                      "discriminator": "Postleitzahl",
+                      "entered_input": null
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "3207",
+                      "discriminator": "L\u00e4ndername, Code",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "NAD",
+                  "section_name": "Korrespondenzanschrift des Kunden des Lieferanten"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG12->RFF->1153",
+                      "value_pool": { "Z18": "Marktlokation" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "ID der Marktlokation",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Marktlokation"
+                },
+                {
+                  "ahb_expression": "Muss",
+                  "data_elements": [
+                    {
+                      "data_element_id": "3035",
+                      "discriminator": "SG12->NAD->3035",
+                      "value_pool": { "Z07": "Kunde des MSB" }
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3036",
+                      "discriminator": "Name",
+                      "entered_input": null
+                    },
+                    {
+                      "data_element_id": "3045",
+                      "discriminator": "SG12->NAD->3045",
+                      "value_pool": {
+                        "Z01": "Struktur von Personennamen",
+                        "Z02": "Struktur der Firmenbezeichnung"
+                      }
+                    }
+                  ],
+                  "discriminator": "NAD",
+                  "section_name": "Kunde des Messstellenbetreibers"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG12->RFF->1153",
+                      "value_pool": { "Z19": "Messlokation" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "ID der Messlokation",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Messlokation"
+                },
+                {
+                  "ahb_expression": "Muss",
+                  "data_elements": [
+                    {
+                      "data_element_id": "3035",
+                      "discriminator": "SG12->NAD->3035",
+                      "value_pool": {
+                        "Z08": "Korrespondenzanschriftdes Kunden des MSB"
+                      }
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3036",
+                      "discriminator": "Name",
+                      "entered_input": null
+                    },
+                    {
+                      "data_element_id": "3045",
+                      "discriminator": "SG12->NAD->3045",
+                      "value_pool": {
+                        "Z01": "Struktur von Personennamen",
+                        "Z02": "Struktur der Firmenbezeichnung"
+                      }
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3042",
+                      "discriminator": "Stra\u00dfe und Hausnummer oderPostfach",
+                      "entered_input": null
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3164",
+                      "discriminator": "Ort",
+                      "entered_input": null
+                    },
+                    {
+                      "ahb_expression": "M [268]S [166]",
+                      "data_element_id": "3251",
+                      "discriminator": "Postleitzahl",
+                      "entered_input": null
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3207",
+                      "discriminator": "L\u00e4ndername, Code",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "NAD",
+                  "section_name": "Messstellenbetreibers"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG12->RFF->1153",
+                      "value_pool": { "Z18": "Marktlokation" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "ID der Marktlokation",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID der Marktlokation"
+                },
+                {
+                  "ahb_expression": "Muss",
+                  "data_elements": [
+                    {
+                      "data_element_id": "3035",
+                      "discriminator": "SG12->NAD->3035",
+                      "value_pool": { "Z03": "Messlokationsadresse" }
+                    },
+                    {
+                      "ahb_expression": "K",
+                      "data_element_id": "3124",
+                      "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Messlokationsadresse\"][0][\"Zusatzinformation zur Identifizierung\"]",
+                      "entered_input": null
+                    },
+                    {
+                      "ahb_expression": "S [166]M [212]",
+                      "data_element_id": "3042",
+                      "discriminator": "Stra\u00dfe und Hausnummer oderPostfach",
+                      "entered_input": null
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3164",
+                      "discriminator": "Ort",
+                      "entered_input": null
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3251",
+                      "discriminator": "Postleitzahl",
+                      "entered_input": null
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3207",
+                      "discriminator": "L\u00e4ndername, Code",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "NAD",
+                  "section_name": "Messlokationsadresse"
+                },
+                {
+                  "ahb_expression": "",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG12->RFF->1153",
+                      "value_pool": { "Z19": "Messlokation" }
+                    },
+                    {
+                      "ahb_expression": "",
+                      "data_element_id": "1154",
+                      "discriminator": "ID einer Messlokation",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID einer Messlokation"
+                },
+                {
+                  "ahb_expression": "Muss",
+                  "data_elements": [
+                    {
+                      "data_element_id": "3035",
+                      "discriminator": "SG12->NAD->3035",
+                      "value_pool": {
+                        "Z05": "Name und Adresse f\u00fcrdie Ablesekarte"
+                      }
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3036",
+                      "discriminator": "Name",
+                      "entered_input": null
+                    },
+                    {
+                      "data_element_id": "3045",
+                      "discriminator": "SG12->NAD->3045",
+                      "value_pool": {
+                        "Z01": "Struktur von Personennamen",
+                        "Z02": "Struktur der Firmenbezeichnung"
+                      }
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3042",
+                      "discriminator": "Stra\u00dfe und Hausnummer oderPostfach",
+                      "entered_input": null
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3164",
+                      "discriminator": "Ort",
+                      "entered_input": null
+                    },
+                    {
+                      "ahb_expression": "M [268]S [166]",
+                      "data_element_id": "3251",
+                      "discriminator": "Postleitzahl",
+                      "entered_input": null
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3207",
+                      "discriminator": "L\u00e4ndername, Code",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "NAD",
+                  "section_name": "Name und Adresse f\u00fcr die Ablesekarte"
+                },
+                {
+                  "ahb_expression": "Kann",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG12->RFF->1153",
+                      "value_pool": { "Z19": "Messlokation" }
+                    },
+                    {
+                      "ahb_expression": "X [951]",
+                      "data_element_id": "1154",
+                      "discriminator": "ID einer Messlokation",
+                      "entered_input": null
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID einer Messlokation"
+                }
+              ]
+            }
+          ],
+          "segments": [
+            {
+              "ahb_expression": "Muss",
+              "data_elements": [
+                {
+                  "data_element_id": "7495",
+                  "discriminator": "SG4->IDE->7495",
+                  "value_pool": { "24": "Transaktion" }
+                },
+                {
+                  "ahb_expression": "X",
+                  "data_element_id": "7402",
+                  "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Vorgangsnummer\"]",
+                  "entered_input": null
+                }
+              ],
+              "discriminator": "IDE",
+              "section_name": "Vorgang"
+            },
+            {
+              "ahb_expression": "Muss",
+              "data_elements": [
+                {
+                  "data_element_id": "2005",
+                  "discriminator": "SG4->DTM->2005",
+                  "value_pool": { "76": "Lieferdatum/-zeit, geplant" }
+                },
+                {
+                  "ahb_expression": "X [UB3]",
+                  "data_element_id": "2380",
+                  "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Datum zum geplanten Leistungsbeginn\"]",
+                  "entered_input": null
+                },
+                {
+                  "data_element_id": "2379",
+                  "discriminator": "SG4->DTM->2379",
+                  "value_pool": { "303": "CCYYMMDDHHMMZZZ" }
+                }
+              ],
+              "discriminator": "DTM",
+              "section_name": "Datum zum geplanten Leistungsbeginn"
+            },
+            {
+              "ahb_expression": "Muss [61]",
+              "data_elements": [
+                {
+                  "data_element_id": "9015",
+                  "discriminator": "SG4->STS->9015",
+                  "value_pool": { "7": "Transaktionsgrund" }
+                },
+                {
+                  "data_element_id": "9013",
+                  "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Transaktionsgrund\"]",
+                  "value_pool": {
+                    "E01": "Ein-/Auszug (Umzug)",
+                    "E02": "Einzug/Neuanlage",
+                    "E03": "Wechsel",
+                    "ZJ4": "\u00dcbernahme aufgrund nicht erfolgtem iMS- Einbau"
+                  }
+                }
+              ],
+              "discriminator": "STS",
+              "section_name": "Transaktionsgrund"
+            },
+            {
+              "ahb_expression": "",
+              "data_elements": [
+                {
+                  "data_element_id": "9015",
+                  "discriminator": "SG4->STS->9015",
+                  "value_pool": { "E01": "Status der Antwort" }
+                },
+                {
+                  "ahb_expression": "",
+                  "data_element_id": "9013",
+                  "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Status der Antwort\"][0][\"Status\"]",
+                  "entered_input": null
+                },
+                {
+                  "data_element_id": "1131",
+                  "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Status der Antwort\"][0][\"Codeliste\"]",
+                  "value_pool": {
+                    "Codeliste Gas Nr. G_0053": "G_0053",
+                    "Codeliste Gas Nr. G_0054": "G_0054",
+                    "Codeliste Strom Nr. S_0055": "S_0055",
+                    "Codeliste Strom Nr. S_0056": "S_0056"
+                  }
+                }
+              ],
+              "discriminator": "STS",
+              "section_name": "Status der Antwort"
+            },
+            {
+              "ahb_expression": "Kann",
+              "data_elements": [
+                {
+                  "data_element_id": "7431",
+                  "discriminator": "SG4->AGR->7431",
+                  "value_pool": { "9": "Vertrag" }
+                },
+                {
+                  "data_element_id": "7433",
+                  "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Vorgang\"][0][\"Beauftragung oder Beendigung liegt vor\"]",
+                  "value_pool": {
+                    "Z04": "Vertrag zwischen AN und MSB",
+                    "Z06": "Vertragsbeendigung liegt vor"
+                  }
+                }
+              ],
+              "discriminator": "AGR",
+              "section_name": "Beauftragung oder Beendigung liegt vor"
+            }
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "ahb_expression": "Muss",
+          "data_elements": [
+            {
+              "ahb_expression": "X",
+              "data_element_id": "0062",
+              "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Nachrichten-Referenznummer\"]",
+              "entered_input": null
+            },
+            {
+              "data_element_id": "0065",
+              "discriminator": "UNH->0065",
+              "value_pool": { "UTILMD": "Netzanschluss-Stammdaten" }
+            },
+            {
+              "data_element_id": "0052",
+              "discriminator": "UNH->0052",
+              "value_pool": { "D": "Entwurfs-Version" }
+            },
+            {
+              "data_element_id": "0054",
+              "discriminator": "UNH->0054",
+              "value_pool": { "11A": "Ausgabe 2011 - A" }
+            },
+            {
+              "data_element_id": "0051",
+              "discriminator": "UNH->0051",
+              "value_pool": { "UN": "UN/CEFACT" }
+            },
+            {
+              "data_element_id": "0057",
+              "discriminator": "UNH->0057",
+              "value_pool": {
+                "Versionsnummer derzugrundeliegendenBDEW-Nachrichtenbeschreibung": "5.2d"
+              }
+            }
+          ],
+          "discriminator": "UNH",
+          "section_name": "Nachrichten-Kopfsegment"
+        },
+        {
+          "ahb_expression": "Muss",
+          "data_elements": [
+            {
+              "data_element_id": "1001",
+              "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Kategorie\"]",
+              "value_pool": { "E01": "Anmeldungen" }
+            },
+            {
+              "ahb_expression": "X",
+              "data_element_id": "1004",
+              "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Dokumentennummer\"]",
+              "entered_input": null
+            }
+          ],
+          "discriminator": "BGM",
+          "section_name": "Beginn der Nachricht"
+        },
+        {
+          "ahb_expression": "Muss",
+          "data_elements": [
+            {
+              "data_element_id": "2005",
+              "discriminator": "DTM->2005",
+              "value_pool": { "137": "Dokumenten-/Nachrichtendatum/-zeit" }
+            },
+            {
+              "ahb_expression": "X [931] [494]",
+              "data_element_id": "2380",
+              "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Nachrichtendatum\"]",
+              "entered_input": null
+            },
+            {
+              "data_element_id": "2379",
+              "discriminator": "DTM->2379",
+              "value_pool": { "303": "CCYYMMDDHHMMZZZ" }
+            }
+          ],
+          "discriminator": "DTM",
+          "section_name": "Nachrichtendatum"
+        },
+        {
+          "ahb_expression": "Muss",
+          "data_elements": [
+            {
+              "ahb_expression": "X",
+              "data_element_id": "0074",
+              "discriminator": "Anzahl der Segmente in einerNachricht",
+              "entered_input": null
+            },
+            {
+              "ahb_expression": "X",
+              "data_element_id": "0062",
+              "discriminator": "Nachrichten-Referenznummer",
+              "entered_input": null
+            }
+          ],
+          "discriminator": "UNT",
+          "section_name": "Nachrichten-Endesegment"
+        }
+      ]
+    }
+  ],
+  "meta": { "pruefidentifikator": "11042" }
+}

@@ -9,7 +9,7 @@ from maus.reader.mig_reader import MigReader
 
 
 def _replace_disciminators_with_edifact_stack_segments(
-    segments: List[Segment], segment_group_key: str, mig_reader: MigReader
+    segments: List[Segment], segment_group_key: str, mig_reader: MigReader, ignore_errors: bool = False
 ) -> List[Segment]:
     result = segments.copy()
     for segment_index, segment in enumerate(segments):  # type:ignore[union-attr]
@@ -32,7 +32,8 @@ def _replace_disciminators_with_edifact_stack_segments(
                 if stack is not None:
                     result[segment_index].data_elements[de_index].discriminator = stack.to_json_path()
                 else:
-                    raise ValueError(f"Couldn't find a stack for {query}")
+                    if not ignore_errors:
+                        raise ValueError(f"Couldn't find a stack for {query}")
             if isinstance(data_element, DataElementValuePool):
                 query = EdifactStackQuery(
                     segment_group_key=segment_group_key,
@@ -46,7 +47,8 @@ def _replace_disciminators_with_edifact_stack_segments(
                 if edifact_stack is not None:
                     result[segment_index].data_elements[de_index].discriminator = edifact_stack.to_json_path()
                 if edifact_stack is None and len(data_element.value_pool) > 1:
-                    raise ValueError(f"Any value pool with more than 1 entry has to have an edifact stack {query}")
+                    if not ignore_errors:
+                        raise ValueError(f"Any value pool with more than 1 entry has to have an edifact stack {query}")
                 if len(data_element.value_pool) == 1:
                     predecessor_qualifier = list(data_element.value_pool.keys())[0]
                 else:
@@ -55,7 +57,7 @@ def _replace_disciminators_with_edifact_stack_segments(
 
 
 def _replace_discriminators_with_edifact_stack_groups(
-    segment_groups: List[SegmentGroup], mig_reader: MigReader
+    segment_groups: List[SegmentGroup], mig_reader: MigReader, ignore_errors: bool = False
 ) -> List[SegmentGroup]:
     """
     replaces all discriminators in the given list of segment groups with an edifact seed path from the provided reader
@@ -68,17 +70,21 @@ def _replace_discriminators_with_edifact_stack_groups(
                 segments=result[segment_group_index].segments,  # type:ignore[arg-type]
                 segment_group_key=current_segment_group_key,
                 mig_reader=mig_reader,
+                ignore_errors=ignore_errors,
             )
         if result[segment_group_index].segment_groups is not None:
             result[segment_group_index].segment_groups = _replace_discriminators_with_edifact_stack_groups(
                 segment_groups=segment_group.segment_groups,  # type:ignore[arg-type]
                 mig_reader=mig_reader,
+                ignore_errors=ignore_errors,
             )
     return result
 
 
-def replace_discriminators_with_edifact_stack(deep_ahb: DeepAnwendungshandbuch, mig_reader: MigReader) -> None:
+def replace_discriminators_with_edifact_stack(
+    deep_ahb: DeepAnwendungshandbuch, mig_reader: MigReader, ignore_errors: bool = False
+) -> None:
     """
     replaces all discriminators in deep_ahb with an edifact seed path from the provided mig_reader
     """
-    deep_ahb.lines = _replace_discriminators_with_edifact_stack_groups(deep_ahb.lines, mig_reader)
+    deep_ahb.lines = _replace_discriminators_with_edifact_stack_groups(deep_ahb.lines, mig_reader, ignore_errors)

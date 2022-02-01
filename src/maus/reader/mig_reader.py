@@ -403,7 +403,7 @@ class MigXmlReader(MigReader):
                     filter=lambda q, c: self.get_unique_result_by_parent_segment_group(
                         c, q  # type:ignore[arg-type]
                     ),
-                    no_result_strategy=None,
+                    no_result_strategy=None,  # filter by its own predecessor :-(
                     unique_result_strategy=lambda unique_result: self.element_to_edifact_stack(
                         unique_result, use_sanitized_tree=False
                     ),

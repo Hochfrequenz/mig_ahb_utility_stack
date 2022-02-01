@@ -231,20 +231,28 @@ class TestMigXmlReader:
                 '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Geplante Turnusablesung des MSB (Strom)"]',
                 id="UTILMD geplante Turnusablesung 752",
             ),
-            pytest.param(
-                "utilmd_2379.xml",
-                EdifactStackQuery(
-                    segment_group_key="SG6",
-                    segment_code="DTM",
-                    data_element_id="2379",
-                    name=None,
-                    predecessor_qualifier="752",
-                    section_name="Geplante Turnusablesung des MSB (Strom)",
-                ),
-                "$['foo']",
-                id="UTILMD geplante Turnusablesung (Qualifier)",
-                # https://github.com/Hochfrequenz/edifact-templates/issues/24
-            ),
+            # pytest.param( # unsolved
+            #    "utilmd_1154.xml",
+            # EdifactStackQuery(segment_group_key='SG8', segment_code='RFF', data_element_id='1154',
+            #                  name='ID der Marktlokation', predecessor_qualifier='Z18',
+            #                  section_name='Referenz auf die ID der Marktlokation'),
+            #    '$["Dokument"][0]["Vorgang"]["0"]["Daten der Marktlokation"][0]["Referenz auf die ID der Marktlokation"]',
+            #    id="Referenz auf die ID der Marktlokation"
+            # )
+            # pytest.param( # unsolved
+            #    "utilmd_2379.xml",
+            #    EdifactStackQuery(
+            #        segment_group_key="SG6",
+            #        segment_code="DTM",
+            #        data_element_id="2379",
+            #        name=None,
+            #        predecessor_qualifier="752",
+            #        section_name="Geplante Turnusablesung des MSB (Strom)",
+            #    ),
+            #    "$['foo']",
+            #    id="UTILMD geplante Turnusablesung (Qualifier)",
+            #    # https://github.com/Hochfrequenz/edifact-templates/issues/24
+            # ),
         ],
     )
     def test_simple_paths(
