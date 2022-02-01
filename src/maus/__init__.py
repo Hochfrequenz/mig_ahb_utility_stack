@@ -52,7 +52,7 @@ def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElem
         )
         # a free text field never spans more than 1 line
 
-        data_type = derive_data_type_from_segment_code(ahb_lines[0].segment_code)
+        data_type = derive_data_type_from_segment_code(ahb_lines[0].segment_code)  # type:ignore[arg-type]
         if data_type is not None:
             result.value_type = data_type
     return result

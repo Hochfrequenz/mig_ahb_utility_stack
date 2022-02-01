@@ -71,7 +71,7 @@ class DataElementFreeText(DataElement):
     """
 
     value_type: Optional[DataElementDataType] = attr.ib(
-        validator=attr.validators.optional(attr.validators.instance_of(DataElementDataType)),
+        validator=attr.validators.optional(attr.validators.instance_of(DataElementDataType)),  # type:ignore[arg-type]
         default=DataElementDataType.TEXT,
     )
 
@@ -108,7 +108,7 @@ class DataElementValuePool(DataElement):
     """
 
     value_type: Optional[DataElementDataType] = attr.ib(
-        validator=attr.validators.optional(attr.validators.instance_of(DataElementDataType)),
+        validator=attr.validators.optional(attr.validators.instance_of(DataElementDataType)),  # type:ignore[arg-type]
         default=DataElementDataType.VALUE_POOL,
     )
     value_pool: Dict[str, str]
