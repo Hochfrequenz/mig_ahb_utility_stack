@@ -358,6 +358,8 @@ class EdifactStack:
         Transforms this instance into a JSON Path.
         """
         result: str = "$"
+        # https://stackoverflow.com/questions/47972143/using-attr-with-pylint
+        # pylint: disable=not-an-iterable
         for level in self.levels:
             result += '["' + level.name + '"]'
             if level.index is not None:

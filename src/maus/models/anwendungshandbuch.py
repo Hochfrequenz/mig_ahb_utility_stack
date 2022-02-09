@@ -23,10 +23,7 @@ class AhbLine:
     An AhbLine is a single line inside the machine readable, flat AHB.
     """
 
-    guid: Optional[
-        UUID
-        # pylint: disable=line-too-long
-    ] = attrs.field(
+    guid: Optional[UUID] = attrs.field(
         validator=attrs.validators.optional(attrs.validators.instance_of(UUID))
     )  #: optional key
     # because the combination (segment group, segment, data element, name) is not guaranteed to be unique
@@ -76,6 +73,8 @@ class AhbLine:
         Returns true iff the line holds any information exception for just a GUID.
         This is useful to filter out empty lines which are artefacts remaining from the scraping process.
         """
+        # https://stackoverflow.com/questions/47972143/using-attr-with-pylint
+        # pylint: disable=no-member
         return (
             (self.segment_group_key is not None and len(self.segment_group_key.strip()) > 0)
             or (self.segment_code is not None and len(self.segment_code.strip()) > 0)

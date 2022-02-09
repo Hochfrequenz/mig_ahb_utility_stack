@@ -120,6 +120,8 @@ class _EdifactStackSearchStrategy:
         """
         Apply the defined strategy until we either have no ideas left or a unique result is found
         """
+        # https://stackoverflow.com/questions/47972143/using-attr-with-pylint
+        # pylint: disable=not-callable
         filter_result: _MigFilterResult = self.filter(query, pre_selection)
         if filter_result.is_unique is True:
             return self.unique_result_strategy(filter_result.unique_result)  # type:ignore[arg-type]
@@ -187,6 +189,8 @@ class MigXmlReader(MigReader):
                 level_name = leaf_element.attrib["ahbName"]
             else:
                 level_name = leaf_element.attrib["name"]
+            # https://stackoverflow.com/questions/47972143/using-attr-with-pylint
+            # pylint: disable=no-member
             stack.levels.append(EdifactStackLevel(name=level_name, is_groupable=leaf_element.tag == "class"))
         return stack
 
