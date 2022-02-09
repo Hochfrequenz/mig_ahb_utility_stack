@@ -13,7 +13,8 @@ from maus.models.anwendungshandbuch import AhbLine, AhbMetaInformation, FlatAnwe
 
 _pruefi_pattern = re.compile(r"^\d{5}$")  #: five digits
 _value_pool_entry_pattern = re.compile(r"^[A-Z0-9]{2,}$")
-_numeric_value_pool_entry_pattern = re.compile(r"^\d+(?:\.\d+)?$")
+_numeric_value_pool_entry_pattern = re.compile(r"^\d+(?:\.\d+)?[a-z]?$")
+_ebd_code_pattern = re.compile(r"^E_\d+$")
 _segment_group_pattern = re.compile(r"^SG\d+$")
 
 
@@ -125,7 +126,9 @@ class FlatAhbCsvReader(FlatAhbReader):
         # we don't use "isdigit" because isdigit f.e. does not match '1.2'
         if _numeric_value_pool_entry_pattern.match(candidate) is not None:
             return True
-        return len(candidate) == 1 and candidate.upper() == candidate
+        if len(candidate) == 1 and candidate.upper() == candidate:
+            return True
+        return _ebd_code_pattern.match(candidate) is not None
 
     @staticmethod
     def _is_segment_group(candidate: Optional[str]) -> bool:

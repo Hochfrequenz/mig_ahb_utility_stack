@@ -106,6 +106,14 @@ class TestAhbCsvReader:
                 "Dokumenten-/Nachrichtenausstellerbzw. -absender",
                 id="strip inputs; utilmd absender",
             ),
+            pytest.param("EBD Nr. E_0456", "E_0456", "E_0456", "EBD Nr. E_0456", id="EBD Name in IFSTA"),
+            pytest.param(
+                "2.0d",
+                "Versionsnummer derzugrundeliegendenBDEW-Nachrichtenbeschreibung",
+                "2.0d",
+                "Versionsnummer derzugrundeliegendenBDEW-Nachrichtenbeschreibung",
+                id="iftsta version",
+            ),
         ],
     )
     def test_code_description_separation(

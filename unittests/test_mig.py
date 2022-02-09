@@ -9,6 +9,7 @@ ALL_SGH_FILES = pytest.mark.datafiles(
     "./unittests/migs/FV2204/segment_group_hierarchies/sgh_mscons.json",
     "./unittests/migs/FV2204/segment_group_hierarchies/sgh_utilmd.json",
     "./unittests/migs/FV2204/segment_group_hierarchies/sgh_reqote.json",
+    "./unittests/migs/FV2204/segment_group_hierarchies/sgh_iftsta.json",
 )
 
 
