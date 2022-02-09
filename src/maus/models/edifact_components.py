@@ -46,10 +46,10 @@ class DataElement(ABC):
     """ The discriminator uniquely identifies the data element. This _might_ be its key """
     # but could also be a reference or a name
     #: the ID of the data element (f.e. "0062") for the Nachrichten-Referenznummer
-    data_element_id: str = attrs.field(validator=attr.validators.matches_re(r"^\d{4}$"))
+    data_element_id: str = attrs.field(validator=attrs.validators.matches_re(r"^\d{4}$"))
     #: the type of data expected to be used with this data element
-    value_type: Optional[DataElementDataType] = attrs.fields(
-        validator=attrs.validators.optional(attr.validators.instance_of(DataElementDataType)), default=None
+    value_type: Optional[DataElementDataType] = attrs.field(
+        validator=attrs.validators.optional(attrs.validators.instance_of(DataElementDataType)), default=None
     )
 
 
@@ -70,12 +70,12 @@ class DataElementFreeText(DataElement):
     This is the main difference to the :class:`DataElementValuePool` which has a finite set of allowed values attached.
     """
 
-    value_type: Optional[DataElementDataType] = attrs.fields(
-        validator=attrs.validators.optional(attr.validators.instance_of(DataElementDataType)),  # type:ignore[arg-type]
+    value_type: Optional[DataElementDataType] = attrs.field(
+        validator=attrs.validators.optional(attrs.validators.instance_of(DataElementDataType)),  # type:ignore[arg-type]
         default=DataElementDataType.TEXT,
     )
 
-    ahb_expression: str = attrs.field(validator=attr.validators.instance_of(str))
+    ahb_expression: str = attrs.field(validator=attrs.validators.instance_of(str))
     """any freetext data element has an ahb expression attached. Could be 'X' but also 'M [13]'"""
     entered_input: Optional[str] = attrs.field(validator=attrs.validators.optional(attrs.validators.instance_of(str)))
     """If the message contains data for this data element, this is not None."""
@@ -107,8 +107,8 @@ class DataElementValuePool(DataElement):
     The set of values allowed according to the AHB is always a subset of the values allowed according to the MIG.
     """
 
-    value_type: Optional[DataElementDataType] = attr.ib(
-        validator=attr.validators.optional(attr.validators.instance_of(DataElementDataType)),  # type:ignore[arg-type]
+    value_type: Optional[DataElementDataType] = attrs.field(
+        validator=attrs.validators.optional(attrs.validators.instance_of(DataElementDataType)),  # type:ignore[arg-type]
         default=DataElementDataType.VALUE_POOL,
     )
     value_pool: Dict[str, str]
