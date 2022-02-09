@@ -10,14 +10,14 @@ another segment group)
 from typing import List, Optional, Sequence
 from uuid import UUID
 
-import attr
+import attrs
 from marshmallow import Schema, fields, post_load  # type:ignore[import]
 
 from maus.models.edifact_components import SegmentGroup, SegmentGroupSchema
 
 
 # pylint:disable=too-many-instance-attributes
-@attr.s(auto_attribs=True, kw_only=True)
+@attrs.define(auto_attribs=True, kw_only=True)
 class AhbLine:
     """
     An AhbLine is a single line inside the machine readable, flat AHB.
@@ -26,46 +26,46 @@ class AhbLine:
     guid: Optional[
         UUID
         # pylint: disable=line-too-long
-    ] = attr.ib(
-        validator=attr.validators.optional(attr.validators.instance_of(UUID))
+    ] = attrs.field(
+        validator=attrs.validators.optional(attrs.validators.instance_of(UUID))
     )  #: optional key
     # because the combination (segment group, segment, data element, name) is not guaranteed to be unique
     # yes, it's actually that bad already
-    segment_group_key: Optional[str] = attr.ib(
-        validator=attr.validators.optional(validator=attr.validators.instance_of(str))
+    segment_group_key: Optional[str] = attrs.field(
+        validator=attrs.validators.optional(validator=attrs.validators.instance_of(str))
     )
     """ the segment group, e.g. 'SG5' """
 
-    segment_code: Optional[str] = attr.ib(
-        validator=attr.validators.optional(validator=attr.validators.instance_of(str))
+    segment_code: Optional[str] = attrs.field(
+        validator=attrs.validators.optional(validator=attrs.validators.instance_of(str))
     )
     """the segment, e.g. 'IDE'"""
 
-    data_element: Optional[str] = attr.ib(
-        validator=attr.validators.optional(validator=attr.validators.instance_of(str))
+    data_element: Optional[str] = attrs.field(
+        validator=attrs.validators.optional(validator=attrs.validators.instance_of(str))
     )
     """ the data element ID, e.g. '3224' """
 
-    value_pool_entry: Optional[str] = attr.ib(
-        validator=attr.validators.optional(validator=attr.validators.instance_of(str))
+    value_pool_entry: Optional[str] = attrs.field(
+        validator=attrs.validators.optional(validator=attrs.validators.instance_of(str))
     )
     """ one of (possible multiple) allowed values, e.g. 'E01' or '293' """
 
-    name: Optional[str] = attr.ib(validator=attr.validators.optional(validator=attr.validators.instance_of(str)))
+    name: Optional[str] = attrs.field(validator=attrs.validators.optional(validator=attrs.validators.instance_of(str)))
     """the name, e.g. 'Meldepunkt'. It can be both the description of a field but also its meaning"""
 
     # Check the unittest test_csv_file_reading_11042 to see the different values of name. It's not only the grey fields
     # where user input is expected but also the meanings / values of value pool entries. This means the exact meaning of
     # name can only be determined in the context in which it is used. This is one of many shortcoming of the current AHB
     # structure: Things in the same column don't necessarily mean the same thing.
-    ahb_expression: Optional[str] = attr.ib(
-        validator=attr.validators.optional(validator=attr.validators.instance_of(str))
+    ahb_expression: Optional[str] = attrs.field(
+        validator=attrs.validators.optional(validator=attrs.validators.instance_of(str))
     )
     """a requirement indicator + an optional condition ("ahb expression"), f.e. 'Muss [123] O [456]' """
     # note: to parse expressions from AHBs consider using AHBicht: https://github.com/Hochfrequenz/ahbicht/
 
-    section_name: Optional[str] = attr.ib(
-        validator=attr.validators.optional(validator=attr.validators.instance_of(str)), default=None
+    section_name: Optional[str] = attrs.field(
+        validator=attrs.validators.optional(validator=attrs.validators.instance_of(str)), default=None
     )
     """
     The section name describes the purpose of a segment, f.e. "Nachrichten-Kopfsegment" or "Beginn der Nachricht"
@@ -125,7 +125,7 @@ class AhbLineSchema(Schema):
         return AhbLine(**data)
 
 
-@attr.s(auto_attribs=True, kw_only=True)
+@attrs.define(auto_attribs=True, kw_only=True)
 class AhbMetaInformation:
     """
     Meta information about an AHB like f.e. its title, Prüfidentifikator, possible sender and receiver roles
@@ -151,7 +151,7 @@ class AhbMetaInformationSchema(Schema):
         return AhbMetaInformation(**data)
 
 
-@attr.s(auto_attribs=True, kw_only=True)
+@attrs.define(auto_attribs=True, kw_only=True)
 class FlatAnwendungshandbuch:
     """
     A flat Anwendungshandbuch (AHB) models an Anwendungshandbuch as combination of some meta data and an ordered list
@@ -159,12 +159,13 @@ class FlatAnwendungshandbuch:
     You can create instances of this class without knowing anything about the "under the hood" structure of AHBs or MIGs
     """
 
-    meta: AhbMetaInformation = attr.ib(validator=attr.validators.instance_of(AhbMetaInformation))
+    meta: AhbMetaInformation = attrs.field(validator=attrs.validators.instance_of(AhbMetaInformation))
     """information about this AHB"""
 
-    lines: List[AhbLine] = attr.ib(
-        validator=attr.validators.deep_iterable(
-            member_validator=attr.validators.instance_of(AhbLine), iterable_validator=attr.validators.instance_of(list)
+    lines: List[AhbLine] = attrs.field(
+        validator=attrs.validators.deep_iterable(
+            member_validator=attrs.validators.instance_of(AhbLine),
+            iterable_validator=attrs.validators.instance_of(list),
         )
     )  #: ordered list lines as they occur in the AHB
 
@@ -250,19 +251,19 @@ class FlatAnwendungshandbuchSchema(Schema):
         return FlatAnwendungshandbuch(**data)
 
 
-@attr.s(auto_attribs=True, kw_only=True)
+@attrs.define(auto_attribs=True, kw_only=True)
 class DeepAnwendungshandbuch:
     """
     The data of the AHB nested as described in the MIG.
     """
 
-    meta: AhbMetaInformation = attr.ib(validator=attr.validators.instance_of(AhbMetaInformation))
+    meta: AhbMetaInformation = attrs.field(validator=attrs.validators.instance_of(AhbMetaInformation))
     """information about this AHB"""
 
-    lines: List[SegmentGroup] = attr.ib(
-        validator=attr.validators.deep_iterable(
-            member_validator=attr.validators.instance_of(SegmentGroup),
-            iterable_validator=attr.validators.instance_of(list),
+    lines: List[SegmentGroup] = attrs.field(
+        validator=attrs.validators.deep_iterable(
+            member_validator=attrs.validators.instance_of(SegmentGroup),
+            iterable_validator=attrs.validators.instance_of(list),
         )
     )  #: the nested data
 

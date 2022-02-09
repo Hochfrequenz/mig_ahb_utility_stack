@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Callable, List, Literal, Optional, TypeVar, Union
 from xml.etree.ElementTree import Element
 
-import attr
+import attrs
 from lxml import etree  # type:ignore[import]
 
 from maus import SegmentGroupHierarchy
@@ -80,7 +80,7 @@ class MigReader(ABC):
 
 
 # pylint:disable=too-few-public-methods
-@attr.s(auto_attribs=True, kw_only=True)
+@attrs.define(auto_attribs=True, kw_only=True)
 class _MigFilterResult:
     """
     the (internal) result of a query path search inside the tree
@@ -92,7 +92,7 @@ class _MigFilterResult:
 
 
 # pylint:disable=too-few-public-methods
-@attr.s(auto_attribs=True, kw_only=True)
+@attrs.define(auto_attribs=True, kw_only=True)
 class _EdifactStackSearchStrategy:
     """
     The search strategy allows to have a compact yet descriptive representation on how the edifact stack search works.
@@ -104,13 +104,13 @@ class _EdifactStackSearchStrategy:
     """
 
     #: name, f.e. "filter by data element id"
-    name: str = attr.ib(validator=attr.validators.instance_of(str))
+    name: str = attrs.field(validator=attrs.validators.instance_of(str))
     #: the filter is the function that describes the strategy. It consumes the query and (optionally) a list of elements
-    filter: Callable[[EdifactStackQuery, Optional[List[Element]]], _MigFilterResult] = attr.ib(
-        validator=attr.validators.is_callable()
+    filter: Callable[[EdifactStackQuery, Optional[List[Element]]], _MigFilterResult] = attrs.field(
+        validator=attrs.validators.is_callable()
     )
     #: The unique result strategy is to return an edifact stack for the unique result element
-    unique_result_strategy: Callable[[Element], EdifactStack] = attr.ib(validator=attr.validators.is_callable())
+    unique_result_strategy: Callable[[Element], EdifactStack] = attrs.field(validator=attrs.validators.is_callable())
     #: the no result strategy is to apply another filter based on those candidates that lead to no result (fallback)
     no_result_strategy: Optional["_EdifactStackSearchStrategy"]
     #: in case of multiple results the next strategy uses the multiple results as input (sharpen)

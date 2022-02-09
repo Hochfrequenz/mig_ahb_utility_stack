@@ -4,7 +4,7 @@ Contains classes to Model Message Implementation Guides (MIG)
 """
 from typing import List, Optional, Tuple
 
-import attr
+import attrs
 from marshmallow import Schema, fields, post_load
 
 # pylint:disable=fixme
@@ -14,7 +14,7 @@ from marshmallow import Schema, fields, post_load
 # From a parsed .tree file it is possible to also derive the segment group hierarchy.
 
 
-@attr.s(auto_attribs=True, kw_only=True)
+@attrs.define(auto_attribs=True, kw_only=True)
 class SegmentGroupHierarchy:
     """
     Models the hierarchy of segment groups within an EDIFACT format.
@@ -27,9 +27,9 @@ class SegmentGroupHierarchy:
     It'll make sense then.
     """
 
-    segment_group: Optional[str] = attr.ib(validator=attr.validators.optional(attr.validators.instance_of(str)))
+    segment_group: Optional[str] = attrs.field(validator=attrs.validators.optional(attrs.validators.instance_of(str)))
     """segment group name, f.e. "SG4" or "SG5" """
-    opening_segment: str = attr.ib(validator=attr.validators.instance_of(str))
+    opening_segment: str = attrs.field(validator=attrs.validators.instance_of(str))
     """first segment in group, f.e. 'IDE' or 'LOC' """
     sub_hierarchy: Optional[
         List["SegmentGroupHierarchy"]
