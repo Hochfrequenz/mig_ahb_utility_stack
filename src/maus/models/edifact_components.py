@@ -74,7 +74,6 @@ class DataElementFreeText(DataElement):
         validator=attrs.validators.optional(attrs.validators.instance_of(DataElementDataType)),  # type:ignore[arg-type]
         default=DataElementDataType.TEXT,
     )
-
     ahb_expression: str = attrs.field(validator=attrs.validators.instance_of(str))
     """any freetext data element has an ahb expression attached. Could be 'X' but also 'M [13]'"""
     entered_input: Optional[str] = attrs.field(validator=attrs.validators.optional(attrs.validators.instance_of(str)))
@@ -110,7 +109,7 @@ class DataElementValuePool(DataElement):
     value_type: Optional[DataElementDataType] = attrs.field(
         validator=attrs.validators.optional(attrs.validators.instance_of(DataElementDataType)),  # type:ignore[arg-type]
         default=DataElementDataType.VALUE_POOL,
-    )
+    )  #: type of the value, if known
     value_pool: Dict[str, str]
     """
     The value pool contains the allowed values as key and their meaning as value.
