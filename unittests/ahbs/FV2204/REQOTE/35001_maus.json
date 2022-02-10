@@ -15,14 +15,16 @@
                 {
                   "data_element_id": "1153",
                   "discriminator": "SG1->RFF->1153",
-                  "value_pool": { "Z13": "Pr\u00fcfidentifikator" }
+                  "value_pool": { "Z13": "Pr\u00fcfidentifikator" },
+                  "value_type": "VALUE_POOL"
                 },
                 {
                   "data_element_id": "1154",
                   "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Pr\u00fcfidentifikator\"][0][\"ID\"]",
                   "value_pool": {
                     "35001": "Anforderung AngebotGer\u00e4te\u00fcbernahme"
-                  }
+                  },
+                  "value_type": "VALUE_POOL"
                 }
               ],
               "discriminator": "RFF",
@@ -45,13 +47,15 @@
                     {
                       "data_element_id": "3139",
                       "discriminator": "SG14->CTA->3139",
-                      "value_pool": { "IC": "Informationskontakt" }
+                      "value_pool": { "IC": "Informationskontakt" },
+                      "value_type": "VALUE_POOL"
                     },
                     {
                       "ahb_expression": "X [500]",
                       "data_element_id": "3412",
                       "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"MP-ID Absender\"][0][\"Ansprechpartner\"][0][\"Kontakt\"][0][\"Name\"]",
-                      "entered_input": null
+                      "entered_input": null,
+                      "value_type": "TEXT"
                     }
                   ],
                   "discriminator": "CTA",
@@ -64,7 +68,8 @@
                       "ahb_expression": "X",
                       "data_element_id": "3148",
                       "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"MP-ID Absender\"][0][\"Ansprechpartner\"][0][\"Kommunikationsverbindung\"][0][\"Art des Kommunikationsmittels\"]",
-                      "entered_input": null
+                      "entered_input": null,
+                      "value_type": "TEXT"
                     },
                     {
                       "data_element_id": "3155",
@@ -75,7 +80,8 @@
                         "EM": "Elektronische Post",
                         "FX": "Telefax",
                         "TE": "Telefon"
-                      }
+                      },
+                      "value_type": "VALUE_POOL"
                     }
                   ],
                   "discriminator": "COM",
@@ -91,13 +97,15 @@
                 {
                   "data_element_id": "3035",
                   "discriminator": "SG11->NAD->3035",
-                  "value_pool": { "MS": "Nachrichtenaussteller bzw." }
+                  "value_pool": { "MS": "Nachrichtenaussteller bzw." },
+                  "value_type": "VALUE_POOL"
                 },
                 {
                   "ahb_expression": "X",
                   "data_element_id": "3039",
                   "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"MP-ID Absender\"][0][\"MP-ID\"]",
-                  "entered_input": null
+                  "entered_input": null,
+                  "value_type": "TEXT"
                 },
                 {
                   "data_element_id": "3055",
@@ -106,7 +114,8 @@
                     "293": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",
                     "332": "DE, DVGW Service & Consult GmbH",
                     "9": "GS1"
-                  }
+                  },
+                  "value_type": "VALUE_POOL"
                 }
               ],
               "discriminator": "NAD",
@@ -118,13 +127,15 @@
                 {
                   "data_element_id": "3035",
                   "discriminator": "SG11->NAD->3035",
-                  "value_pool": { "MR": "Absender" }
+                  "value_pool": { "MR": "Absender" },
+                  "value_type": "VALUE_POOL"
                 },
                 {
                   "ahb_expression": "X",
                   "data_element_id": "3039",
                   "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"MP-ID Empf\u00e4nger\"][0][\"MP-ID\"]",
-                  "entered_input": null
+                  "entered_input": null,
+                  "value_type": "TEXT"
                 },
                 {
                   "data_element_id": "3055",
@@ -133,7 +144,8 @@
                     "293": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",
                     "332": "DE, DVGW Service & Consult GmbH",
                     "9": "GS1"
-                  }
+                  },
+                  "value_type": "VALUE_POOL"
                 }
               ],
               "discriminator": "NAD",
@@ -145,7 +157,8 @@
                 {
                   "data_element_id": "3035",
                   "discriminator": "SG11->NAD->3035",
-                  "value_pool": { "DP": "Lieferanschrift" }
+                  "value_pool": { "DP": "Lieferanschrift" },
+                  "value_type": "VALUE_POOL"
                 }
               ],
               "discriminator": "NAD",
@@ -157,13 +170,15 @@
                 {
                   "data_element_id": "3227",
                   "discriminator": "SG11->LOC->3227",
-                  "value_pool": { "172": "Meldepunkt" }
+                  "value_pool": { "172": "Meldepunkt" },
+                  "value_type": "VALUE_POOL"
                 },
                 {
                   "ahb_expression": "X [951] [503]",
                   "data_element_id": "3225",
                   "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Meldepunkt\"][0][\"Meldepunkt\"][0][\"ID\"]",
-                  "entered_input": null
+                  "entered_input": null,
+                  "value_type": "TEXT"
                 }
               ],
               "discriminator": "LOC",
@@ -183,7 +198,8 @@
                   "ahb_expression": "X [903]",
                   "data_element_id": "1082",
                   "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Positionsdaten\"][0][\"Positionsnummer\"]",
-                  "entered_input": null
+                  "entered_input": null,
+                  "value_type": "TEXT"
                 }
               ],
               "discriminator": "LIN",
@@ -200,34 +216,40 @@
               "ahb_expression": "X",
               "data_element_id": "0062",
               "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Nachrichten-Referenznummer\"]",
-              "entered_input": null
+              "entered_input": null,
+              "value_type": "TEXT"
             },
             {
               "data_element_id": "0065",
               "discriminator": "UNH->0065",
-              "value_pool": { "REQOTE": "Anfrage" }
+              "value_pool": { "REQOTE": "Anfrage" },
+              "value_type": "VALUE_POOL"
             },
             {
               "data_element_id": "0052",
               "discriminator": "UNH->0052",
-              "value_pool": { "D": "Entwurfs-Version" }
+              "value_pool": { "D": "Entwurfs-Version" },
+              "value_type": "VALUE_POOL"
             },
             {
               "data_element_id": "0054",
               "discriminator": "UNH->0054",
-              "value_pool": { "10A": "Ausgabe 2010 - A" }
+              "value_pool": { "10A": "Ausgabe 2010 - A" },
+              "value_type": "VALUE_POOL"
             },
             {
               "data_element_id": "0051",
               "discriminator": "UNH->0051",
-              "value_pool": { "UN": "UN/CEFACT" }
+              "value_pool": { "UN": "UN/CEFACT" },
+              "value_type": "VALUE_POOL"
             },
             {
               "data_element_id": "0057",
               "discriminator": "UNH->0057",
               "value_pool": {
                 "1.2": "Versionsnummer derzugrundeliegendenBDEW-Nachrichtenbeschreibung"
-              }
+              },
+              "value_type": "VALUE_POOL"
             }
           ],
           "discriminator": "UNH",
@@ -241,13 +263,15 @@
               "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Kategorie\"]",
               "value_pool": {
                 "311": "Aufforderung zurAngebotsabgabe (Anfrage)"
-              }
+              },
+              "value_type": "VALUE_POOL"
             },
             {
               "ahb_expression": "X",
               "data_element_id": "1004",
               "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Dokumentennummer\"]",
-              "entered_input": null
+              "entered_input": null,
+              "value_type": "TEXT"
             }
           ],
           "discriminator": "BGM",
@@ -259,34 +283,40 @@
             {
               "data_element_id": "2005",
               "discriminator": "DTM->2005",
-              "value_pool": { "137": "Dokumenten-/Nachrichtendatum/-zeit" }
+              "value_pool": { "137": "Dokumenten-/Nachrichtendatum/-zeit" },
+              "value_type": "VALUE_POOL"
             },
             {
               "ahb_expression": "X [931] [494]",
               "data_element_id": "2380",
               "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Nachrichtendatum\"]",
-              "entered_input": null
+              "entered_input": null,
+              "value_type": "DATETIME"
             },
             {
               "data_element_id": "2379",
               "discriminator": "DTM->2379",
-              "value_pool": { "303": "CCYYMMDDHHMMZZZ" }
+              "value_pool": { "303": "CCYYMMDDHHMMZZZ" },
+              "value_type": "VALUE_POOL"
             },
             {
               "data_element_id": "2005",
               "discriminator": "DTM->2005",
-              "value_pool": { "76": "Lieferdatum/-zeit, geplant" }
+              "value_pool": { "76": "Lieferdatum/-zeit, geplant" },
+              "value_type": "VALUE_POOL"
             },
             {
               "ahb_expression": "X [UB3]",
               "data_element_id": "2380",
               "discriminator": "$[\"Dokument\"][0][\"Nachricht\"][0][\"Datum zum geplanten Leistungsbeginn\"]",
-              "entered_input": null
+              "entered_input": null,
+              "value_type": "DATETIME"
             },
             {
               "data_element_id": "2379",
               "discriminator": "DTM->2379",
-              "value_pool": { "303": "CCYYMMDDHHMMZZZ" }
+              "value_pool": { "303": "CCYYMMDDHHMMZZZ" },
+              "value_type": "VALUE_POOL"
             }
           ],
           "discriminator": "DTM",
@@ -298,7 +328,8 @@
             {
               "data_element_id": "0081",
               "discriminator": "UNS->0081",
-              "value_pool": {}
+              "value_pool": {},
+              "value_type": "VALUE_POOL"
             }
           ],
           "discriminator": "UNS",
@@ -311,13 +342,15 @@
               "ahb_expression": "X",
               "data_element_id": "0074",
               "discriminator": "Anzahl der Segmente in einerNachricht",
-              "entered_input": null
+              "entered_input": null,
+              "value_type": "TEXT"
             },
             {
               "ahb_expression": "X",
               "data_element_id": "0062",
               "discriminator": "Nachrichten-Referenznummer",
-              "entered_input": null
+              "entered_input": null,
+              "value_type": "TEXT"
             }
           ],
           "discriminator": "UNT",

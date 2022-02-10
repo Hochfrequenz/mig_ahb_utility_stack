@@ -1,6 +1,7 @@
 import pytest  # type:ignore[import]
 
 from maus.models.edifact_components import (
+    DataElementDataType,
     DataElementFreeText,
     DataElementFreeTextSchema,
     DataElementValuePool,
@@ -25,13 +26,18 @@ class TestEdifactComponents:
         [
             pytest.param(
                 DataElementFreeText(
-                    ahb_expression="Muss [1]", entered_input="Hello Maus", discriminator="foo", data_element_id="2222"
+                    ahb_expression="Muss [1]",
+                    entered_input="Hello Maus",
+                    discriminator="foo",
+                    data_element_id="2222",
+                    value_type=DataElementDataType.TEXT,
                 ),
                 {
                     "ahb_expression": "Muss [1]",
                     "entered_input": "Hello Maus",
                     "discriminator": "foo",
                     "data_element_id": "2222",
+                    "value_type": "TEXT",
                 },
             ),
         ],
@@ -46,7 +52,12 @@ class TestEdifactComponents:
                 DataElementValuePool(
                     value_pool={"hello": "world", "maus": "rocks"}, discriminator="foo", data_element_id="0022"
                 ),
-                {"value_pool": {"hello": "world", "maus": "rocks"}, "discriminator": "foo", "data_element_id": "0022"},
+                {
+                    "value_pool": {"hello": "world", "maus": "rocks"},
+                    "discriminator": "foo",
+                    "data_element_id": "0022",
+                    "value_type": "VALUE_POOL",
+                },
             ),
         ],
     )
@@ -81,12 +92,14 @@ class TestEdifactComponents:
                             "value_pool": {"hello": "world", "maus": "rocks"},
                             "discriminator": "baz",
                             "data_element_id": "0329",
+                            "value_type": "VALUE_POOL",
                         },
                         {
                             "ahb_expression": "Muss [1]",
                             "entered_input": "Hello Maus",
                             "discriminator": "bar",
                             "data_element_id": "0330",
+                            "value_type": "TEXT",
                         },
                     ],
                     "discriminator": "foo",
@@ -153,12 +166,14 @@ class TestEdifactComponents:
                                     "value_pool": {"hello": "world", "maus": "rocks"},
                                     "discriminator": "baz",
                                     "data_element_id": "3333",
+                                    "value_type": "VALUE_POOL",
                                 },
                                 {
                                     "ahb_expression": "Muss [1]",
                                     "entered_input": "Hello Maus",
                                     "discriminator": "bar",
                                     "data_element_id": "4444",
+                                    "value_type": "TEXT",
                                 },
                             ],
                         }

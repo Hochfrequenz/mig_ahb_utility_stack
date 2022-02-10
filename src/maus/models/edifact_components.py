@@ -5,10 +5,33 @@ Components contain not only EDIFACT composits but also segments and segment grou
 """
 import re
 from abc import ABC
+from enum import Enum
 from typing import Dict, List, Optional, Type
 
 import attrs
 from marshmallow import Schema, fields, post_dump, post_load, pre_dump, pre_load  # type:ignore[import]
+from marshmallow_enum import EnumField  # type:ignore[import]
+
+
+class DataElementDataType(str, Enum):
+    """
+    The Data Element Data Type describes with which kind of data element we're dealing with in a data element.
+    This information is set but not used anywhere inside MAUS directly but more of a "service" to downstream code.
+    """
+
+    TEXT = "TEXT"  #: plain text, f.e. a name
+    DATETIME = "DATETIME"  #: a datetime string, usually as RFC3339
+    VALUE_POOL = "VALUE_POOL"  #: the user can choose between different possible values
+
+
+def derive_data_type_from_segment_code(segment_code: str) -> Optional[DataElementDataType]:
+    """
+    derives the expected data type from the segment code, f.e. `DATETIME` for DTM segments
+    :return: The DataType if it can be derived without any doubt, None otherwise
+    """
+    if segment_code in {"DTM"}:
+        return DataElementDataType.DATETIME
+    return None
 
 
 @attrs.define(auto_attribs=True, kw_only=True)
@@ -22,8 +45,12 @@ class DataElement(ABC):
     discriminator: str = attrs.field(validator=attrs.validators.instance_of(str))
     """ The discriminator uniquely identifies the data element. This _might_ be its key """
     # but could also be a reference or a name
-    #: the the ID of the data element (f.e. "0062") for the Nachrichten-Referenznummer
-    data_element_id: str = attrs.field(validator=attrs.validators.matches_re(r"\d{4}"))
+    #: the ID of the data element (f.e. "0062") for the Nachrichten-Referenznummer
+    data_element_id: str = attrs.field(validator=attrs.validators.matches_re(r"^\d{4}$"))
+    #: the type of data expected to be used with this data element
+    value_type: Optional[DataElementDataType] = attrs.field(
+        validator=attrs.validators.optional(attrs.validators.instance_of(DataElementDataType)), default=None
+    )
 
 
 class DataElementSchema(Schema):
@@ -33,6 +60,7 @@ class DataElementSchema(Schema):
 
     discriminator = fields.String(required=True)
     data_element_id = fields.String(required=True)
+    value_type = EnumField(DataElementDataType, required=False)
 
 
 @attrs.define(auto_attribs=True, kw_only=True)
@@ -42,6 +70,10 @@ class DataElementFreeText(DataElement):
     This is the main difference to the :class:`DataElementValuePool` which has a finite set of allowed values attached.
     """
 
+    value_type: Optional[DataElementDataType] = attrs.field(
+        validator=attrs.validators.optional(attrs.validators.instance_of(DataElementDataType)),  # type:ignore[arg-type]
+        default=DataElementDataType.TEXT,
+    )
     ahb_expression: str = attrs.field(validator=attrs.validators.instance_of(str))
     """any freetext data element has an ahb expression attached. Could be 'X' but also 'M [13]'"""
     entered_input: Optional[str] = attrs.field(validator=attrs.validators.optional(attrs.validators.instance_of(str)))
@@ -74,6 +106,10 @@ class DataElementValuePool(DataElement):
     The set of values allowed according to the AHB is always a subset of the values allowed according to the MIG.
     """
 
+    value_type: Optional[DataElementDataType] = attrs.field(
+        validator=attrs.validators.optional(attrs.validators.instance_of(DataElementDataType)),  # type:ignore[arg-type]
+        default=DataElementDataType.VALUE_POOL,
+    )  #: type of the value, if known
     value_pool: Dict[str, str]
     """
     The value pool contains the allowed values as key and their meaning as value.
