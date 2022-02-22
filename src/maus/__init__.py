@@ -42,6 +42,8 @@ def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElem
                 # f.e. there is 35001: https://github.com/Hochfrequenz/mig_ahb_utility_stack/issues/21
                 continue
             if not data_element_value_entry.ahb_expression:
+                # value pool entries with empty/None AHB expression shall not be included
+                # https://github.com/Hochfrequenz/mig_ahb_utility_stack/issues/38
                 continue
             value_pool_entry = ValuePoolEntry(
                 edifact_key=data_element_value_entry.value_pool_entry,
