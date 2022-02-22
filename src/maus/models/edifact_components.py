@@ -274,7 +274,7 @@ class SegmentLevel(ABC):
     """
 
     discriminator: str
-    ahb_expression: str
+    ahb_expression: str = attrs.field(validator=attrs.validators.instance_of(str))
 
 
 class SegmentLevelSchema(Schema):
