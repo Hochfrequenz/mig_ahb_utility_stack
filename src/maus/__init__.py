@@ -75,10 +75,14 @@ def group_lines_by_segment(segment_group_lines: List[AhbLine]) -> List[Segment]:
         if segment_key is None:
             continue  # filter out segment group level
         this_segment_lines = list(segments)
+        if not this_segment_lines[0].ahb_expression:
+            # segments with an empty AHB expression shall not be included
+            # https://github.com/Hochfrequenz/mig_ahb_utility_stack/issues/38
+            continue
         segment = Segment(
             discriminator=segment_key,  # type:ignore[arg-type] # shall not be none after sanitizing
             data_elements=[],
-            ahb_expression=this_segment_lines[0].ahb_expression or "",
+            ahb_expression=this_segment_lines[0].ahb_expression,
             section_name=this_segment_lines[0].section_name,
         )
         for data_element_key, data_element_lines in groupby(this_segment_lines, key=lambda line: line.data_element):
@@ -105,7 +109,7 @@ def group_lines_by_segment_group(
                 this_sg = list(sg_group)
                 sg_draft = SegmentGroup(
                     discriminator=segment_group_key,  # type:ignore[arg-type] # might be None now, will be replace later
-                    ahb_expression=this_sg[0].ahb_expression or "",
+                    ahb_expression=this_sg[0].ahb_expression or "",  # segment groups barely ever have an expression
                     segments=group_lines_by_segment(this_sg),
                     segment_groups=[],
                 )
