@@ -30,7 +30,7 @@
 27,MP-ID Absender,,,,,,
 28,SG11,,,,,Muss,
 29,SG11,NAD,,,,Muss,
-30,SG11,NAD,3035,MS,Nachrichtenaussteller bzw.,,
+30,SG11,NAD,3035,MS,Nachrichtenaussteller bzw.,X,
 31,,,,,-absender,,
 32,SG11,NAD,3039,"MP-ID",,X,
 33,SG11,NAD,3055,9,GS1,X,
@@ -39,7 +39,7 @@
 36,Ansprechpartner,,,,,,
 37,SG14,,,,,Muss,
 38,SG14,CTA,,,,Muss,
-39,SG14,CTA,3139,IC,Informationskontakt,,
+39,SG14,CTA,3139,IC,Informationskontakt,X,
 40,SG14,CTA,3412,Kontakt,,X [500],[500] Hinweis: Angabe eines technischen Ansprechpartners für die Geräteübernahme
 41,Kommunikationsverbindung,,,,,,
 42,SG14,,,,,,
@@ -53,7 +53,7 @@
 50,MP-ID Empfänger,,,,,,
 51,SG11,,,,,Muss,
 52,SG11,NAD,,,,Muss,
-53,SG11,NAD,3035,MR,Absender,
+53,SG11,NAD,3035,MR,Absender,X
 54,SG11,NAD,3039,"MP-ID",,X,
 55,SG11,NAD,3055,9,GS1,X,
 56,SG11,NAD,3055,293,"DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",X,
@@ -61,11 +61,11 @@
 58,Marktlokation bzw. Messlokation,,,,,,
 59,SG11,,,,,Muss,
 60,SG11,NAD,,,,Muss,
-61,SG11,NAD,3035,DP,Lieferanschrift,,
+61,SG11,NAD,3035,DP,Lieferanschrift,X,
 62,Meldepunkt,,,,,,
 63,SG11,,,,,,
 64,SG11,LOC,,,,Muss,
-65,SG11,LOC,3227,172,Meldepunkt,,
+65,SG11,LOC,3227,172,Meldepunkt,X,
 66,SG11,LOC,3225,Identifikator,,X [951] [503],"[503] Hinweis: Verwendung der ID der Messlokation
 [951] Format: Zählpunktbezeichnung"
 67,Positionsdaten,,,,,,
