@@ -12,6 +12,7 @@ from maus.models.edifact_components import (
     DataElementValuePool,
     Segment,
     SegmentGroup,
+    ValuePoolEntry,
     derive_data_type_from_segment_code,
 )
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
@@ -31,7 +32,7 @@ def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElem
     if ahb_lines[0].value_pool_entry is not None:
         result = DataElementValuePool(
             discriminator=ahb_lines[0].get_discriminator(include_name=False),
-            value_pool={},
+            value_pool=[],
             data_element_id=ahb_lines[0].data_element,  # type:ignore[arg-type]
         )
         for data_element_value_entry in ahb_lines:
@@ -40,9 +41,14 @@ def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElem
                 # todo: this is line where there is only a description and nothing else. i hate it
                 # f.e. there is 35001: https://github.com/Hochfrequenz/mig_ahb_utility_stack/issues/21
                 continue
-            result.value_pool[
-                data_element_value_entry.value_pool_entry  # type:ignore[index]
-            ] = data_element_value_entry.name.strip()  # type:ignore[assignment,union-attr]
+            if not data_element_value_entry.ahb_expression:
+                continue
+            value_pool_entry = ValuePoolEntry(
+                edifact_key=data_element_value_entry.value_pool_entry,
+                meaning=data_element_value_entry.name.strip(),  # type:ignore[assignment,union-attr]
+                ahb_expression=data_element_value_entry.ahb_expression,
+            )
+            result.value_pool.append(value_pool_entry)  # type:ignore[index]
     else:
         result = DataElementFreeText(
             entered_input=None,
