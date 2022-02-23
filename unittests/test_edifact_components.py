@@ -262,3 +262,15 @@ class TestEdifactComponents:
     def test_edifact_stack_to_from_json_path(self, json_path: str):
         stack = EdifactStack.from_json_path(json_path)
         assert stack.to_json_path() == json_path
+
+    def test_segment_group_can_be_instantiated_without_explicitly_defining_sub_groups(self):
+        """
+        Tests https://github.com/Hochfrequenz/mig_ahb_utility_stack/issues/41
+        """
+        sg = SegmentGroup(
+            discriminator="Foo",
+            ahb_expression="",
+        )  # must not throw an exception
+        assert sg is not None
+        assert sg.segment_groups is None
+        assert sg.segments is None

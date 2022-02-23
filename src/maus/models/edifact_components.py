@@ -290,9 +290,12 @@ class SegmentGroup(SegmentLevel):
                 member_validator=attrs.validators.instance_of(Segment),
                 iterable_validator=attrs.validators.instance_of(list),
             )
-        )
+        ),
+        default=None,
     )  #: the segments inside this very group
-    segment_groups: Optional[List["SegmentGroup"]]  #: groups that are nested into this group
+    segment_groups: Optional[List["SegmentGroup"]] = attrs.field(
+        default=None
+    )  #: groups that are nested into this group
 
 
 class SegmentGroupSchema(SegmentLevelSchema):
