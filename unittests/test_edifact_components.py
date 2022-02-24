@@ -12,6 +12,7 @@ from maus.models.edifact_components import (
     SegmentGroup,
     SegmentGroupSchema,
     SegmentSchema,
+    ValuePoolEntry,
 )
 from unittests.serialization_test_helper import assert_serialization_roundtrip  # type:ignore[import]
 
@@ -50,10 +51,18 @@ class TestEdifactComponents:
         [
             pytest.param(
                 DataElementValuePool(
-                    value_pool={"hello": "world", "maus": "rocks"}, discriminator="foo", data_element_id="0022"
+                    value_pool=[
+                        ValuePoolEntry(edifact_key="hello", meaning="world", ahb_expression="X"),
+                        ValuePoolEntry(edifact_key="maus", meaning="rocks", ahb_expression="X"),
+                    ],
+                    discriminator="foo",
+                    data_element_id="0022",
                 ),
                 {
-                    "value_pool": {"hello": "world", "maus": "rocks"},
+                    "value_pool": [
+                        {"edifact_key": "hello", "meaning": "world", "ahb_expression": "X"},
+                        {"edifact_key": "maus", "meaning": "rocks", "ahb_expression": "X"},
+                    ],
                     "discriminator": "foo",
                     "data_element_id": "0022",
                     "value_type": "VALUE_POOL",
@@ -73,7 +82,12 @@ class TestEdifactComponents:
                     section_name="foo",
                     data_elements=[
                         DataElementValuePool(
-                            value_pool={"hello": "world", "maus": "rocks"}, discriminator="baz", data_element_id="0329"
+                            value_pool=[
+                                ValuePoolEntry(edifact_key="hello", meaning="world", ahb_expression="X"),
+                                ValuePoolEntry(edifact_key="maus", meaning="rocks", ahb_expression="X"),
+                            ],
+                            discriminator="baz",
+                            data_element_id="0329",
                         ),
                         DataElementFreeText(
                             ahb_expression="Muss [1]",
@@ -89,7 +103,10 @@ class TestEdifactComponents:
                     "section_name": "foo",
                     "data_elements": [
                         {
-                            "value_pool": {"hello": "world", "maus": "rocks"},
+                            "value_pool": [
+                                {"edifact_key": "hello", "meaning": "world", "ahb_expression": "X"},
+                                {"edifact_key": "maus", "meaning": "rocks", "ahb_expression": "X"},
+                            ],
                             "discriminator": "baz",
                             "data_element_id": "0329",
                             "value_type": "VALUE_POOL",
@@ -124,7 +141,10 @@ class TestEdifactComponents:
                             section_name="bar",
                             data_elements=[
                                 DataElementValuePool(
-                                    value_pool={"hello": "world", "maus": "rocks"},
+                                    value_pool=[
+                                        ValuePoolEntry(edifact_key="hello", meaning="world", ahb_expression="X"),
+                                        ValuePoolEntry(edifact_key="maus", meaning="rocks", ahb_expression="X"),
+                                    ],
                                     discriminator="baz",
                                     data_element_id="3333",
                                 ),
@@ -163,7 +183,10 @@ class TestEdifactComponents:
                             "discriminator": "disc B",
                             "data_elements": [
                                 {
-                                    "value_pool": {"hello": "world", "maus": "rocks"},
+                                    "value_pool": [
+                                        {"edifact_key": "hello", "meaning": "world", "ahb_expression": "X"},
+                                        {"edifact_key": "maus", "meaning": "rocks", "ahb_expression": "X"},
+                                    ],
                                     "discriminator": "baz",
                                     "data_element_id": "3333",
                                     "value_type": "VALUE_POOL",

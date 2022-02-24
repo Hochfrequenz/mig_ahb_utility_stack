@@ -20,21 +20,21 @@
 17,MP-ID Empfänger,,,,,,
 18,SG1,,,,,Muss,
 19,SG1,NAD,,,,Muss,
-20,SG1,NAD,3035,MR,Nachrichtenempfänger
+20,SG1,NAD,3035,MR,Nachrichtenempfänger,X
 21,SG1,NAD,3039,MP-ID,,X [27],[27] Nur MP-ID aus Sparte Strom
 22,SG1,NAD,3055,9,GS1,X,
 23,SG1,NAD,3055,293,"DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",X,
 24,MP-ID Absender,,,,,,
 25,SG1,,,,,Muss,
 26,SG1,NAD,,,,Muss,
-27,SG1,NAD,3035,MS,Nachrichtenaussteller bzw.-absender
+27,SG1,NAD,3035,MS,Nachrichtenaussteller bzw.-absender,X
 28,SG1,NAD,3039,MP-ID,,X [27],[27] Nur MP-ID aus Sparte Strom
 29,SG1,NAD,3055,9,GS1,X,
 30,SG1,NAD,3055,293,"DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",X,
 31,Ansprechpartner,,,,,,
 32,SG2,,,,,Kann,
 33,SG2,CTA,,,,Muss,
-34,SG2,CTA,3139,IC,Informationskontakt
+34,SG2,CTA,3139,IC,Informationskontakt,X
 35,SG2,CTA,3412,Kontakt,,X,
 36,Kommunikationsverbindung,,,,,,
 37,SG2,,,,,,

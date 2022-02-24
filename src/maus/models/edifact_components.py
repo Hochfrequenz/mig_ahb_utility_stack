@@ -6,8 +6,9 @@ Components contain not only EDIFACT composits but also segments and segment grou
 import re
 from abc import ABC
 from enum import Enum
-from typing import Dict, List, Optional, Type
+from typing import List, Optional, Type
 
+import attr
 import attrs
 from marshmallow import Schema, fields, post_dump, post_load, pre_dump, pre_load  # type:ignore[import]
 from marshmallow_enum import EnumField  # type:ignore[import]
@@ -98,6 +99,46 @@ class DataElementFreeTextSchema(DataElementSchema):
 
 
 @attrs.define(auto_attribs=True, kw_only=True)
+class ValuePoolEntry:
+    """
+    A value pool entry contains the EDIFACT qualifier, a meaning (German text) and an ahb expression.
+    A value pool consists of 1 to n ValuePoolEntries.
+    The data element 3055 in UTILMD is a good example for a value pool.
+    It is used in the segments NAD+MS and NAD+MR. Its ValuePoolEntries are:
+    - (key: "9", meaning: "GS1", ahb_expression: "X")
+    - (key: "293", meaning: "DE, BDEW", ahb_expression: "X")
+    - (key: "332", meaning: "DE, DVGW", ahb_expression: "X")
+    """
+
+    #: the qualifier in edifact, might be f.e. "E01", "D", "9", "1.1a", "G_0057"
+    edifact_key: str = attr.field(validator=attrs.validators.matches_re(r"^[A-Z\d\.a-z_]+$"))
+    #: the meaning as it is written in the AHB (f.e. "Einzug", "Entwurfs-Version", "GS1", "Codeliste Gas G_0057"
+    meaning: str = attr.field(validator=attrs.validators.instance_of(str))
+    #: the ahb expression, in most cases this is a simple "X"; it must not be empty
+    ahb_expression: str = attr.field(validator=attrs.validators.matches_re(".+"))
+    # must not be empty (if so, the value pool entry should not be included of the result)
+
+
+class ValuePoolEntrySchema(Schema):
+    """
+    A Schema to serialize ValuePoolEntries
+    """
+
+    # this looks like a plain Dict[str,str] but we prefer typed access over loose string key value pairs
+    edifact_key = fields.String(required=True)
+    meaning = fields.String(required=True)
+    ahb_expression = fields.String(required=True)
+
+    # pylint:disable=unused-argument,no-self-use
+    @post_load
+    def deserialize(self, data, **kwargs) -> ValuePoolEntry:
+        """
+        Converts the barely typed data dictionary into an actual :class:`.ValuePoolEntry`
+        """
+        return ValuePoolEntry(**data)
+
+
+@attrs.define(auto_attribs=True, kw_only=True)
 class DataElementValuePool(DataElement):
     """
     A DataElementValuePool is a data element with a finite set of allowed values.
@@ -110,11 +151,14 @@ class DataElementValuePool(DataElement):
         validator=attrs.validators.optional(attrs.validators.instance_of(DataElementDataType)),  # type:ignore[arg-type]
         default=DataElementDataType.VALUE_POOL,
     )  #: type of the value, if known
-    value_pool: Dict[str, str]
+    value_pool: List[ValuePoolEntry] = attrs.field(
+        validator=attrs.validators.deep_iterable(
+            member_validator=attrs.validators.instance_of(ValuePoolEntry),
+            iterable_validator=attrs.validators.instance_of(list),
+        )
+    )
     """
-    The value pool contains the allowed values as key and their meaning as value.
-    # for example data element 3055 in UTILMD (used in NAD+MR and NAD+MS) has the value pool:
-    # { "9": "GS1", "293": "DE, BDEW", "332": "DE, DVGW" }
+    The value pool contains at least one value :class:`.ValuePoolEntry`
     """
 
 
@@ -123,7 +167,7 @@ class DataElementValuePoolSchema(DataElementSchema):
     A Schema to serialize DataElementValuePool
     """
 
-    value_pool = fields.Dict(keys=fields.String(required=True), values=fields.String(required=True), required=True)
+    value_pool = fields.List(fields.Nested(ValuePoolEntrySchema), required=True)
 
     # pylint:disable=unused-argument,no-self-use
     @post_load
@@ -226,8 +270,8 @@ class SegmentLevel(ABC):
     SegmentLevel describes @annika: what does it describe?
     """
 
-    discriminator: str
-    ahb_expression: str
+    discriminator: str  # no validator here, because it might be None on initialization and will be set later (trust me)
+    ahb_expression: str = attrs.field(validator=attrs.validators.instance_of(str))
 
 
 class SegmentLevelSchema(Schema):
