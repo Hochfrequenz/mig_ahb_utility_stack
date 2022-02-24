@@ -89,8 +89,8 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = u"maus"
-copyright = u"2022, Hochfrequenz GmbH"
+project = "maus"
+copyright = "2022, Hochfrequenz GmbH"
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -256,8 +256,8 @@ latex_documents = [
     (
         "index",
         "user_guide.tex",
-        u"maus Documentation",
-        u"Hochfrequenz Unternehmensberatung GmbH",
+        "maus Documentation",
+        "Hochfrequenz Unternehmensberatung GmbH",
         "manual",
     ),
 ]

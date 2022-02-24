@@ -1,6 +1,7 @@
 import pytest  # type:ignore[import]
 
 from maus.models.edifact_components import (
+    DataElementDataType,
     DataElementFreeText,
     DataElementFreeTextSchema,
     DataElementValuePool,
@@ -25,13 +26,18 @@ class TestEdifactComponents:
         [
             pytest.param(
                 DataElementFreeText(
-                    ahb_expression="Muss [1]", entered_input="Hello Maus", discriminator="foo", data_element_id="2222"
+                    ahb_expression="Muss [1]",
+                    entered_input="Hello Maus",
+                    discriminator="foo",
+                    data_element_id="2222",
+                    value_type=DataElementDataType.TEXT,
                 ),
                 {
                     "ahb_expression": "Muss [1]",
                     "entered_input": "Hello Maus",
                     "discriminator": "foo",
                     "data_element_id": "2222",
+                    "value_type": "TEXT",
                 },
             ),
         ],
@@ -46,7 +52,12 @@ class TestEdifactComponents:
                 DataElementValuePool(
                     value_pool={"hello": "world", "maus": "rocks"}, discriminator="foo", data_element_id="0022"
                 ),
-                {"value_pool": {"hello": "world", "maus": "rocks"}, "discriminator": "foo", "data_element_id": "0022"},
+                {
+                    "value_pool": {"hello": "world", "maus": "rocks"},
+                    "discriminator": "foo",
+                    "data_element_id": "0022",
+                    "value_type": "VALUE_POOL",
+                },
             ),
         ],
     )
@@ -59,6 +70,7 @@ class TestEdifactComponents:
             pytest.param(
                 Segment(
                     ahb_expression="X",
+                    section_name="foo",
                     data_elements=[
                         DataElementValuePool(
                             value_pool={"hello": "world", "maus": "rocks"}, discriminator="baz", data_element_id="0329"
@@ -74,17 +86,20 @@ class TestEdifactComponents:
                 ),
                 {
                     "ahb_expression": "X",
+                    "section_name": "foo",
                     "data_elements": [
                         {
                             "value_pool": {"hello": "world", "maus": "rocks"},
                             "discriminator": "baz",
                             "data_element_id": "0329",
+                            "value_type": "VALUE_POOL",
                         },
                         {
                             "ahb_expression": "Muss [1]",
                             "entered_input": "Hello Maus",
                             "discriminator": "bar",
                             "data_element_id": "0330",
+                            "value_type": "TEXT",
                         },
                     ],
                     "discriminator": "foo",
@@ -106,6 +121,7 @@ class TestEdifactComponents:
                         Segment(
                             ahb_expression="expr B",
                             discriminator="disc B",
+                            section_name="bar",
                             data_elements=[
                                 DataElementValuePool(
                                     value_pool={"hello": "world", "maus": "rocks"},
@@ -127,6 +143,7 @@ class TestEdifactComponents:
                             ahb_expression="expr C",
                             segments=[
                                 Segment(
+                                    section_name="foo",
                                     ahb_expression="expr Y",
                                     discriminator="disc Y",
                                     data_elements=[],
@@ -141,6 +158,7 @@ class TestEdifactComponents:
                     "discriminator": "disc A",
                     "segments": [
                         {
+                            "section_name": "bar",
                             "ahb_expression": "expr B",
                             "discriminator": "disc B",
                             "data_elements": [
@@ -148,12 +166,14 @@ class TestEdifactComponents:
                                     "value_pool": {"hello": "world", "maus": "rocks"},
                                     "discriminator": "baz",
                                     "data_element_id": "3333",
+                                    "value_type": "VALUE_POOL",
                                 },
                                 {
                                     "ahb_expression": "Muss [1]",
                                     "entered_input": "Hello Maus",
                                     "discriminator": "bar",
                                     "data_element_id": "4444",
+                                    "value_type": "TEXT",
                                 },
                             ],
                         }
@@ -164,6 +184,7 @@ class TestEdifactComponents:
                             "discriminator": "disc C",
                             "segments": [
                                 {
+                                    "section_name": "foo",
                                     "ahb_expression": "expr Y",
                                     "discriminator": "disc Y",
                                     "data_elements": [],
@@ -241,3 +262,15 @@ class TestEdifactComponents:
     def test_edifact_stack_to_from_json_path(self, json_path: str):
         stack = EdifactStack.from_json_path(json_path)
         assert stack.to_json_path() == json_path
+
+    def test_segment_group_can_be_instantiated_without_explicitly_defining_sub_groups(self):
+        """
+        Tests https://github.com/Hochfrequenz/mig_ahb_utility_stack/issues/41
+        """
+        sg = SegmentGroup(
+            discriminator="Foo",
+            ahb_expression="",
+        )  # must not throw an exception
+        assert sg is not None
+        assert sg.segment_groups is None
+        assert sg.segments is None

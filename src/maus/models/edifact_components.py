@@ -5,13 +5,36 @@ Components contain not only EDIFACT composits but also segments and segment grou
 """
 import re
 from abc import ABC
+from enum import Enum
 from typing import Dict, List, Optional, Type
 
-import attr
+import attrs
 from marshmallow import Schema, fields, post_dump, post_load, pre_dump, pre_load  # type:ignore[import]
+from marshmallow_enum import EnumField  # type:ignore[import]
 
 
-@attr.s(auto_attribs=True, kw_only=True)
+class DataElementDataType(str, Enum):
+    """
+    The Data Element Data Type describes with which kind of data element we're dealing with in a data element.
+    This information is set but not used anywhere inside MAUS directly but more of a "service" to downstream code.
+    """
+
+    TEXT = "TEXT"  #: plain text, f.e. a name
+    DATETIME = "DATETIME"  #: a datetime string, usually as RFC3339
+    VALUE_POOL = "VALUE_POOL"  #: the user can choose between different possible values
+
+
+def derive_data_type_from_segment_code(segment_code: str) -> Optional[DataElementDataType]:
+    """
+    derives the expected data type from the segment code, f.e. `DATETIME` for DTM segments
+    :return: The DataType if it can be derived without any doubt, None otherwise
+    """
+    if segment_code in {"DTM"}:
+        return DataElementDataType.DATETIME
+    return None
+
+
+@attrs.define(auto_attribs=True, kw_only=True)
 class DataElement(ABC):
     """
     A data element holds specific kinds of data. It is defined in EDIFACT.
@@ -19,11 +42,15 @@ class DataElement(ABC):
     For example in UTILMD the data element that holds the 13 digit market partner ID is data element '3039'
     """
 
-    discriminator: str = attr.ib(validator=attr.validators.instance_of(str))
+    discriminator: str = attrs.field(validator=attrs.validators.instance_of(str))
     """ The discriminator uniquely identifies the data element. This _might_ be its key """
     # but could also be a reference or a name
-    #: the the ID of the data element (f.e. "0062") for the Nachrichten-Referenznummer
-    data_element_id: str = attr.ib(validator=attr.validators.matches_re(r"\d{4}"))
+    #: the ID of the data element (f.e. "0062") for the Nachrichten-Referenznummer
+    data_element_id: str = attrs.field(validator=attrs.validators.matches_re(r"^\d{4}$"))
+    #: the type of data expected to be used with this data element
+    value_type: Optional[DataElementDataType] = attrs.field(
+        validator=attrs.validators.optional(attrs.validators.instance_of(DataElementDataType)), default=None
+    )
 
 
 class DataElementSchema(Schema):
@@ -33,18 +60,23 @@ class DataElementSchema(Schema):
 
     discriminator = fields.String(required=True)
     data_element_id = fields.String(required=True)
+    value_type = EnumField(DataElementDataType, required=False)
 
 
-@attr.s(auto_attribs=True, kw_only=True)
+@attrs.define(auto_attribs=True, kw_only=True)
 class DataElementFreeText(DataElement):
     """
     A DataElementFreeText is a data element that allows entering arbitrary data.
     This is the main difference to the :class:`DataElementValuePool` which has a finite set of allowed values attached.
     """
 
-    ahb_expression: str = attr.ib(validator=attr.validators.instance_of(str))
+    value_type: Optional[DataElementDataType] = attrs.field(
+        validator=attrs.validators.optional(attrs.validators.instance_of(DataElementDataType)),  # type:ignore[arg-type]
+        default=DataElementDataType.TEXT,
+    )
+    ahb_expression: str = attrs.field(validator=attrs.validators.instance_of(str))
     """any freetext data element has an ahb expression attached. Could be 'X' but also 'M [13]'"""
-    entered_input: Optional[str] = attr.ib(validator=attr.validators.optional(attr.validators.instance_of(str)))
+    entered_input: Optional[str] = attrs.field(validator=attrs.validators.optional(attrs.validators.instance_of(str)))
     """If the message contains data for this data element, this is not None."""
 
 
@@ -65,7 +97,7 @@ class DataElementFreeTextSchema(DataElementSchema):
         return DataElementFreeText(**data)
 
 
-@attr.s(auto_attribs=True, kw_only=True)
+@attrs.define(auto_attribs=True, kw_only=True)
 class DataElementValuePool(DataElement):
     """
     A DataElementValuePool is a data element with a finite set of allowed values.
@@ -74,6 +106,10 @@ class DataElementValuePool(DataElement):
     The set of values allowed according to the AHB is always a subset of the values allowed according to the MIG.
     """
 
+    value_type: Optional[DataElementDataType] = attrs.field(
+        validator=attrs.validators.optional(attrs.validators.instance_of(DataElementDataType)),  # type:ignore[arg-type]
+        default=DataElementDataType.VALUE_POOL,
+    )  #: type of the value, if known
     value_pool: Dict[str, str]
     """
     The value pool contains the allowed values as key and their meaning as value.
@@ -109,11 +145,11 @@ class _FreeTextOrValuePool:
         self.free_text = free_text
         self.value_pool = value_pool
 
-    free_text: Optional[DataElementFreeText] = attr.ib(
-        validator=attr.validators.optional(attr.validators.instance_of(DataElementFreeText))
+    free_text: Optional[DataElementFreeText] = attrs.field(
+        validator=attrs.validators.optional(attrs.validators.instance_of(DataElementFreeText))
     )
-    value_pool: Optional[DataElementValuePool] = attr.ib(
-        validator=attr.validators.optional(attr.validators.instance_of(DataElementValuePool))
+    value_pool: Optional[DataElementValuePool] = attrs.field(
+        validator=attrs.validators.optional(attrs.validators.instance_of(DataElementValuePool))
     )
 
 
@@ -184,7 +220,7 @@ class _FreeTextOrValuePoolSchema(Schema):
         raise NotImplementedError(f"Data type of {data} is not implemented for JSON serialization")
 
 
-@attr.s(auto_attribs=True, kw_only=True)
+@attrs.define(auto_attribs=True, kw_only=True)
 class SegmentLevel(ABC):
     """
     SegmentLevel describes @annika: what does it describe?
@@ -203,21 +239,30 @@ class SegmentLevelSchema(Schema):
     ahb_expression = fields.String(required=True)
 
 
-@attr.s(auto_attribs=True, kw_only=True)
+@attrs.define(auto_attribs=True, kw_only=True)
 class Segment(SegmentLevel):
     """
     A Segment contains multiple data elements.
     """
 
     data_elements: List[DataElement]
+    section_name: Optional[str] = attrs.field(
+        validator=attrs.validators.optional(attrs.validators.instance_of(str)), default=None
+    )
+    """
+    For the MIG matching it might be necessary to know the section in which the data element occured in the AHB.
+    This might be necessary to e.g. distinguish gas and electricity fields which look the same otherwise.
+    See f.e. UTILMD 'Geplante Turnusablesung des MSB (Strom)' vs. 'Geplante Turnusablesung des NB (Gas)'
+    """
 
 
 class SegmentSchema(SegmentLevelSchema):
     """
-    A Schema to serialize Segments.
+    A Schema to serialize Segments
     """
 
     data_elements = fields.List(fields.Nested(_FreeTextOrValuePoolSchema))
+    section_name = fields.String(required=False)
 
     # pylint:disable=unused-argument,no-self-use
     @post_load
@@ -228,7 +273,7 @@ class SegmentSchema(SegmentLevelSchema):
         return Segment(**data)
 
 
-@attr.s(auto_attribs=True, kw_only=True)
+@attrs.define(auto_attribs=True, kw_only=True)
 class SegmentGroup(SegmentLevel):
     """
     A segment group that contains segments and nested groups.
@@ -236,15 +281,18 @@ class SegmentGroup(SegmentLevel):
     This group has the key "root".
     """
 
-    segments: Optional[List[Segment]] = attr.ib(
-        validator=attr.validators.optional(
-            attr.validators.deep_iterable(
-                member_validator=attr.validators.instance_of(Segment),
-                iterable_validator=attr.validators.instance_of(list),
+    segments: Optional[List[Segment]] = attrs.field(
+        validator=attrs.validators.optional(
+            attrs.validators.deep_iterable(
+                member_validator=attrs.validators.instance_of(Segment),
+                iterable_validator=attrs.validators.instance_of(list),
             )
-        )
+        ),
+        default=None,
     )  #: the segments inside this very group
-    segment_groups: Optional[List["SegmentGroup"]]  #: groups that are nested into this group
+    segment_groups: Optional[List["SegmentGroup"]] = attrs.field(
+        default=None
+    )  #: groups that are nested into this group
 
 
 class SegmentGroupSchema(SegmentLevelSchema):
@@ -269,25 +317,27 @@ class SegmentGroupSchema(SegmentLevelSchema):
         return SegmentGroup(**data)
 
 
-@attr.s(auto_attribs=True, kw_only=True)
+@attrs.define(auto_attribs=True, kw_only=True)
 class EdifactStackLevel:
     """
     The EDIFACT stack level describes the hierarchy level of information inside an EDIFACT message.
     """
 
     #: the name of the level, f.e. 'Dokument' or 'Nachricht' or 'Meldepunkt'
-    name: str = attr.ib(validator=attr.validators.instance_of(str))
+    name: str = attrs.field(validator=attrs.validators.instance_of(str))
     #: describes if this level is groupable / if there are multiple instances of this level within the same message
-    is_groupable: bool = attr.ib(validator=attr.validators.instance_of(bool))
+    is_groupable: bool = attrs.field(validator=attrs.validators.instance_of(bool))
     #: the index if present (f.e. 0)
-    index: Optional[int] = attr.ib(default=None, validator=attr.validators.optional(attr.validators.instance_of(int)))
+    index: Optional[int] = attrs.field(
+        default=None, validator=attrs.validators.optional(attrs.validators.instance_of(int))
+    )
 
 
 #: a pattern that matches parts of the json path: https://regex101.com/r/iQzdXK/1
 _level_pattern = re.compile(r"\[\"(?P<level_name>[^\[\]]+?)\"\](?:\[(?P<index>\d+)\])?")
 
 
-@attr.s(auto_attribs=True, kw_only=True)
+@attrs.define(auto_attribs=True, kw_only=True)
 class EdifactStack:
     """
     The EdifactStack describes where inside an EDIFACT message data are found.
@@ -295,10 +345,10 @@ class EdifactStack:
     """
 
     #: levels describe the nesting inside an edifact message
-    levels: List[EdifactStackLevel] = attr.ib(
-        validator=attr.validators.deep_iterable(
-            member_validator=attr.validators.instance_of(EdifactStackLevel),
-            iterable_validator=attr.validators.instance_of(list),
+    levels: List[EdifactStackLevel] = attrs.field(
+        validator=attrs.validators.deep_iterable(
+            member_validator=attrs.validators.instance_of(EdifactStackLevel),
+            iterable_validator=attrs.validators.instance_of(list),
         )
     )
 
@@ -343,6 +393,8 @@ class EdifactStack:
         Transforms this instance into a JSON Path.
         """
         result: str = "$"
+        # https://stackoverflow.com/questions/47972143/using-attr-with-pylint
+        # pylint: disable=not-an-iterable
         for level in self.levels:
             result += '["' + level.name + '"]'
             if level.index is not None:
@@ -352,7 +404,7 @@ class EdifactStack:
         return result
 
 
-@attr.s(auto_attribs=True, kw_only=True)
+@attrs.define(auto_attribs=True, kw_only=True)
 class EdifactStackQuery:
     """
     The EdifactStackQuery contains the data you need to provide to a MIG reader to return you the :class:`EdifactStack`
@@ -360,18 +412,25 @@ class EdifactStackQuery:
     """
 
     #: the key of the segment group, f.e. 'root' or 'SG5' or 'SG12'
-    segment_group_key: str = attr.ib(validator=attr.validators.instance_of(str))
+    segment_group_key: str = attrs.field(validator=attrs.validators.instance_of(str))
     #: the segment code, f.e. 'NAD' or 'DTM'
-    segment_code: str = attr.ib(validator=attr.validators.matches_re("^[A-Z]+$"))
+    segment_code: str = attrs.field(validator=attrs.validators.matches_re("^[A-Z]+$"))
     #: the data element id, f.e. '0068'
-    data_element_id: str = attr.ib(validator=attr.validators.matches_re(r"^\d{4}$"))
+    data_element_id: str = attrs.field(validator=attrs.validators.matches_re(r"^\d{4}$"))
     #: the name of the element, f.e. "MP-ID" or "Kundennummer" or "Identifikator"; Is None for Value Pools
-    name: Optional[str] = attr.ib(validator=attr.validators.optional(attr.validators.instance_of(str)))
-    predecessor_qualifier: Optional[str] = attr.ib(
-        default=None, validator=attr.validators.optional(attr.validators.matches_re(r"^[A-Z\d]+$"))
+    name: Optional[str] = attrs.field(validator=attrs.validators.optional(attrs.validators.instance_of(str)))
+    predecessor_qualifier: Optional[str] = attrs.field(
+        default=None, validator=attrs.validators.optional(attrs.validators.matches_re(r"^[A-Z\d]+$"))
     )
     """
     Some names are not really unique. F.e. all date time fields carry more or less the same name in the AHB.
     So to distinguish between them you may provide the predecissing qualifier.
     In case of 'DTM+137++what_youre_looking_for' the predecessor qualifier is '137'
+    """
+    section_name: Optional[str] = attrs.field(
+        default=None, validator=attrs.validators.optional(attrs.validators.instance_of(str))
+    )
+    """
+    The section name (f.e. 'Nachrichten-Kopfsegment') might also be used for MIG<->AHB matching
+    if the name is too broad or not unique.
     """

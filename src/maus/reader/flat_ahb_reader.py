@@ -13,7 +13,8 @@ from maus.models.anwendungshandbuch import AhbLine, AhbMetaInformation, FlatAnwe
 
 _pruefi_pattern = re.compile(r"^\d{5}$")  #: five digits
 _value_pool_entry_pattern = re.compile(r"^[A-Z0-9]{2,}$")
-_numeric_value_pool_entry_pattern = re.compile(r"^\d+(?:\.\d+)?$")
+_numeric_value_pool_entry_pattern = re.compile(r"^\d+(?:\.\d+)?[a-z]?$")
+_ebd_code_pattern = re.compile(r"^E_\d+$")
 _segment_group_pattern = re.compile(r"^SG\d+$")
 
 
@@ -40,6 +41,7 @@ class FlatAhbCsvReader(FlatAhbReader):
     def __init__(self, file_path: Path, pruefidentifikator: Optional[str] = None, encoding="utf-8", delimiter=","):
         self.rows: List[AhbLine] = []
         self._logger = logging.getLogger()
+        self.current_section_name: Optional[str] = None
         self.pruefidentifikator = pruefidentifikator
         self.delimiter = delimiter
         with open(file_path, "r", encoding=encoding) as infile:
@@ -75,8 +77,8 @@ class FlatAhbCsvReader(FlatAhbReader):
         if FlatAhbCsvReader._is_segment_group(ahb_row["Segment Gruppe"]):
             segment_group = ahb_row["Segment Gruppe"]
         elif len(ahb_row["Segment Gruppe"]) >= 3:
-            current_section_name = ahb_row["Segment Gruppe"] or None
-            self._logger.debug("Processing %s section '%s'", self.pruefidentifikator, current_section_name)
+            self.current_section_name = ahb_row["Segment Gruppe"].strip() or None  # f.e. "Nachrichten-Kopfsegment"
+            self._logger.debug("Processing %s section '%s'", self.pruefidentifikator, self.current_section_name)
             return None  # possibly a section heading like "Nachrichten-Endesegment"
             # this is different from segment group = None which is value for e.g. the UNH
         result: AhbLine = AhbLine(
@@ -87,6 +89,7 @@ class FlatAhbCsvReader(FlatAhbReader):
             value_pool_entry=value_pool_entry,
             ahb_expression=ahb_row[self.pruefidentifikator] or None,
             name=description,
+            section_name=self.current_section_name,
         )
         return result
 
@@ -99,6 +102,10 @@ class FlatAhbCsvReader(FlatAhbReader):
         This function returns a value_pool_entry at index 0, a possible description at index 1, even if they're mixed up
         in the source files.
         """
+        if x is not None:
+            x = x.strip()
+        if y is not None:
+            y = y.strip()
         if FlatAhbCsvReader._is_value_pool_entry(x) and not FlatAhbCsvReader._is_value_pool_entry(y):
             return x, y or None
         if FlatAhbCsvReader._is_value_pool_entry(x) and FlatAhbCsvReader._is_value_pool_entry(y):
@@ -119,7 +126,9 @@ class FlatAhbCsvReader(FlatAhbReader):
         # we don't use "isdigit" because isdigit f.e. does not match '1.2'
         if _numeric_value_pool_entry_pattern.match(candidate) is not None:
             return True
-        return len(candidate) == 1 and candidate.upper() == candidate
+        if len(candidate) == 1 and candidate.upper() == candidate:
+            return True
+        return _ebd_code_pattern.match(candidate) is not None
 
     @staticmethod
     def _is_segment_group(candidate: Optional[str]) -> bool:

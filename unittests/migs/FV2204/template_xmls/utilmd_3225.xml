@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<UTILMD>
+    <class name="Dokument" ref="/" key="UNB:5:0">
+        <class name="Nachricht" ref="UNH" key="UNH:1:0" max="9999" meta.type="group">
+            <class name="Vorgang" ref="SG4" key="IDE:2:0" max="99999" meta.type="group" groupKey="Vorgangsnummer">
+                <class name="Meldepunkt" ref="SG5" key="LOC:2:0[1:0=172]" max="999999" meta.objType="Meldepunkte"
+                       meta.changeTrigger="trigger_meldepunkt_change">
+                    <field name="ID" ref="LOC:2:0" meta.id="3225"/>
+                </class>
+                <class name="zukünftiger Meldepunkt" ref="SG5" key="LOC:2:0[1:0=Z08]" max="999999"
+                       meta.objType="Meldepunkte">
+                    <field name="ID" ref="LOC:2:0" meta.id="3225"/>
+                </class>
+            </class>
+        </class>
+    </class>
+</UTILMD>

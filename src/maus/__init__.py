@@ -6,7 +6,14 @@ from itertools import groupby
 from typing import List, Sequence
 
 from maus.models.anwendungshandbuch import AhbLine, DeepAnwendungshandbuch, FlatAnwendungshandbuch
-from maus.models.edifact_components import DataElement, DataElementFreeText, DataElementValuePool, Segment, SegmentGroup
+from maus.models.edifact_components import (
+    DataElement,
+    DataElementFreeText,
+    DataElementValuePool,
+    Segment,
+    SegmentGroup,
+    derive_data_type_from_segment_code,
+)
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
 
 
@@ -44,6 +51,10 @@ def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElem
             data_element_id=ahb_lines[0].data_element,  # type:ignore[arg-type]
         )
         # a free text field never spans more than 1 line
+
+        data_type = derive_data_type_from_segment_code(ahb_lines[0].segment_code)  # type:ignore[arg-type]
+        if data_type is not None:
+            result.value_type = data_type
     return result
 
 
@@ -60,6 +71,7 @@ def group_lines_by_segment(segment_group_lines: List[AhbLine]) -> List[Segment]:
             discriminator=segment_key,  # type:ignore[arg-type] # shall not be none after sanitizing
             data_elements=[],
             ahb_expression=this_segment_lines[0].ahb_expression or "",
+            section_name=this_segment_lines[0].section_name,
         )
         for data_element_key, data_element_lines in groupby(this_segment_lines, key=lambda line: line.data_element):
             if data_element_key is None:

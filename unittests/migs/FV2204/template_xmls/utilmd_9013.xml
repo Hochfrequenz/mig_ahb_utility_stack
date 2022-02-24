@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<UTILMD>
+    <class name="Dokument" ref="/" key="UNB:5:0">
+        <class name="Vorgang" ref="SG4" key="IDE:2:0" max="99999" meta.type="group" groupKey="Vorgangsnummer">
+            <field name="Transaktionsgrund" ref="STS:3:0[1:0=7]" meta.id="9013" meta.type="repository"
+                   meta.typeInfo="TransactionReasonrepository"/>
+            <field name="Transaktionsgrund (befristet)" ref="STS:3:0[1:0=Z17]" meta.id="9013" meta.type="repository"
+                   meta.typeInfo="TransactionReasonrepository"/>
+            <class name="Status der Antwort" ref="SG4" key="STS:3:0[1:0=E01]" max="1">
+                <field name="Status" ref="STS:3:0[1:0=E01]" meta.id="9013" meta.typeInfo="AnswerStatusrepository"
+                       meta.type="repository"/>
+            </class>
+        </class>
+    </class>
+</UTILMD>

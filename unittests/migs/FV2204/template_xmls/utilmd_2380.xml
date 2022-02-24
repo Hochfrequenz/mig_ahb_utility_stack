@@ -1,18 +1,111 @@
 <?xml version="1.0"?>
-<!-- a stripped down template file for UTILMD data element 2380 testcases -->
 <UTILMD>
     <class name="Dokument" ref="/" key="UNB:5:0">
+        <field name="Absender" ref="UNB:2:0" ahbName="Absender.Code"/>
+        <field name="Absender_Code_UNB" ref="UNB:2:1" ahbName="Absender.Codeliste"/>
+        <field name="Empfaenger" ref="UNB:3:0" ahbName="Empfänger.Code"/>
+        <field name="Empfaenger_Code_UNB" ref="UNB:3:1" ahbName="Empfänger.Codeliste"/>
+        <field name="Dokumentendatum" ref="UNB:4:0"/>
+        <field name="Dokumentenuhrzeit" ref="UNB:4:1"/>
+        <field name="Datenaustauschreferenz" ref="UNB:5:0"/>
         <class name="Nachricht" ref="UNH" key="UNH:1:0" max="9999" meta.type="group">
             <field name="Nachrichtendatum" ref="DTM:1:1[1:0=137]" meta.id="2380" meta.format="203"/>
             <field name="Zeitzone" ref="DTM:1:1[1:0=735]" meta.format="406" meta.id="2380"
                    ahbName="Abweichnung zur UTC"/>
             <field name="Gueltigkeit" ref="DTM:1:1[1:0=157]" meta.id="2380" meta.format="610"
                    ahbName="Gültigkeit,Beginndatum"/>
-            <field name="Referenz Anfrage" ref="RFF:1:1[RFF:1:0=AAV]" meta.id="1154"
-                   ahbName="Referenz auf eine vorangegangene Anfrage"/>
             <class name="Vorgang" ref="SG4" key="IDE:2:0" max="99999" meta.type="group" groupKey="Vorgangsnummer">
+                <field name="Lieferdatum" ref="DTM:1:1[1:0=76]" meta.format="102" meta.id="2380" meta.type="date-time"
+                       ahbName="Datum zum geplanten Leistungsbeginn"/>
+                <field name="Uebergabedatum" ref="DTM:1:1[1:0=294]" meta.format="203" meta.id="2380"
+                       meta.type="date-time" ahbName="Datum und Uhrzeit der Übergabe"/>
+                <field name="Vertragsbeginn" ref="DTM:1:1[1:0=92]" meta.format="102" meta.id="2380"
+                       meta.type="date-time" ahbName="Beginn zum"/>
+                <field name="Vertragsende" ref="DTM:1:1[1:0=93]" meta.format="102" meta.id="2380" ahbName="Ende zum"
+                       meta.type="date-time"/>
+                <field name="Änderung zum" ref="DTM:1:1[1:0=157]" meta.format="102;203" meta.id="2380"
+                       ahbName="Änderung zum, Gültigkeit, Beginndatum" meta.type="date-time"/>
+                <field name="Ende zum (nächstmoeglichen Termin)" ref="DTM:1:1[1:0=471]" meta.format="102" meta.id="2380"
+                       ahbName="Ende zum (nächstmöglichem Termin)" meta.type="date-time"/>
+                <field name="Kündigung Kunde" ref="DTM:1:1[1:0=Z05]" meta.format="102" meta.id="2380"
+                       ahbName="gegenüber Kunde bestätigtes Kündigungsdatum" meta.type="date-time"/>
+                <field name="Kündigung Lieferant" ref="DTM:1:1[1:0=Z06]" meta.format="102" meta.id="2380"
+                       ahbName="gegenüber Lieferant bestätigtes Kündigungsdatum" meta.type="date-time"/>
                 <field name="Bilanzierungsbeginn" ref="DTM:1:1[1:0=158^1:2=102]" meta.id="2380" meta.format="102"
                        meta.type="date-time"/>
+                <field name="Bilanzierungsbeginn lang" ref="DTM:1:1[1:0=158^1:2=203]" meta.id="2380" meta.format="203"
+                       meta.type="date-time"/>
+                <field name="Bilanzierungsende" ref="DTM:1:1[1:0=159^1:2=102]" meta.id="2380" meta.format="102"
+                       meta.type="date-time"/>
+                <field name="Bilanzierungsende lang" ref="DTM:1:1[1:0=159^1:2=203]" meta.id="2380" meta.format="203"
+                       meta.type="date-time"/>
+                <field name="Kündigungsfrist" ref="DTM:1:1[1:0=Z01^1:2=Z01]" meta.id="2380" meta.format="Z01"
+                       ahbName="Kündigungsfrist des Vertrags"/>
+                <field name="Kündigungsfrist zu festem Datum" ref="DTM:1:1[1:0=Z01^1:2=102]" meta.id="2380"
+                       meta.format="102"/>
+                <field name="Kündigungsfrist zu bestimmtem Termin" ref="DTM:1:1[1:0=Z01^1:2=106]" meta.id="2380"
+                       meta.format="106" meta.type="date-time"/>
+                <field name="Nächste Anmeldung" ref="DTM:1:1[1:0=Z08]" meta.id="2380" meta.format="102"
+                       meta.type="date-time"/>
+                <field name="Sperre Lieferbeginn" ref="DTM:1:1[1:0=Z07]" meta.id="2380" meta.format="102"
+                       meta.type="date-time"/>
+                <class name="Kuendigungstermin" ref="DTM" key="DTM:1:1[1:0=Z10]" max="1"
+                       ahbName="Kündigungstermin des Vertrags" meta.type="date-time-format" meta.typeInfo="102;106">
+                    <field name="Kuendigungstermin" ref="DTM:1:1[1:0=Z10]" meta.id="2380" ahbName="Kündigungstermin"
+                           meta.type="date-time"/>
+                    <field name="DateFormat" ref="DTM:1:2[1:0=Z10]" meta.id="2379"/>
+                </class>
+                <field name="Verwendung der Daten ab" ref="DTM:1:1[1:0=Z25]" meta.id="2380" meta.format="203"
+                       meta.type="date-time"/>
+                <field name="Verwendung der Daten bis" ref="DTM:1:1[1:0=Z26]" meta.id="2380" meta.format="203"
+                       meta.type="date-time"/>
+                <class name="Prozessual ausgetauschte Termine aus Sicht der beteiligten Marktrolle" ref="SG6"
+                       key="RFF:1:0[1:0=Z22]">
+                    <field name="Bilanzierungsbeginn aus Daten der beteiligten Marktrolle" ref="DTM:1:1[1:0=Z15]"
+                           meta.id="2380" meta.format="102" meta.type="date-time"/>
+                    <field name="Bilanzierungsende aus Daten der beteiligten Marktrolle" ref="DTM:1:1[1:0=Z16]"
+                           meta.id="2380" meta.format="102" meta.type="date-time"/>
+                </class>
+
+                <field name="Start des Abrechnungsjahrs bei Marktlokationen mit Jahresleistungspreis (Gas)"
+                       ref="DTM:1:1[1:0=155]" meta.id="2380" meta.format="102" meta.type="date-time"/>
+                <field name="Geplante Turnusablesung des MSB (Strom)" ref="DTM:1:1[1:0=752^1:2=106]" meta.format="106"
+                       meta.id="2380" meta.type="date-time"/>
+                <field name="Turnusmäßige Ablesung" ref="DTM:1:1[1:0=752^1:2=104]" meta.format="104" meta.id="2380"
+                       meta.type="date-time"/>
+                <field name="Turnusableseintervall des MSB (Strom)" ref="DTM:1:1[1:0=672]" meta.id="2380"
+                       meta.type="repository" meta.typeInfo="Turnusintervallrepository"/>
+                <field name="Abrechnungsintervall des LF" ref="DTM:1:1[1:0=Z20]" meta.id="2380" meta.type="repository"
+                       meta.typeInfo="Turnusintervallrepository"/>
+                <class name="Termin der Netznutzungsabrechnung" ref="SG6" key="DTM:1:1[1:0=Z21]" max="1"
+                       meta.type="date-time-format" meta.typeInfo="102;106">
+                    <field name="Datum" ref="DTM:1:1[1:0=Z21]" ahbName="Termin der Netznutzungsabrechnung"
+                           meta.id="2380" meta.type="date-time"/>
+                    <field name="DateFormat" ref="DTM:1:2[1:0=Z21]" meta.id="2379"/>
+                </class>
+                <field name="Netznutzungsabrechnungsintervall des NB" ref="DTM:1:1[1:0=Z22]" meta.id="2380"
+                       meta.type="repository" meta.typeInfo="Turnusintervallrepository"/>
+                <class name="Referenz auf die ID der Messlokation für Termine der Messlokation" ref="SG6"
+                       key="RFF:1:1[1:0=Z19]">
+                    <field name="ID" ref="RFF:1:1" meta.id="1154" meta.ref="Meldepunkt.ID"/>
+                </class>
+                <field name="Nächste Netznutzungsabrechnung" ref="DTM:1:1[1:0=Z09]" meta.format="602" meta.id="2380"
+                       meta.type="date-time"/>
+                <field name="Geplante Turnusablesung des NB (Gas)" ref="DTM:1:1[1:0=752^1:2=106]" meta.format="106"
+                       meta.id="2380" meta.type="date-time"/>
+                <field name="Turnusableseintervall des NB (Gas)" ref="DTM:1:1[1:0=672]" meta.id="2380"
+                       meta.type="repository" meta.typeInfo="Turnusintervallrepository"/>
+                <class name="Daten der Summenzeitreihe" ref="SG8" key="SEQ:1:0[SEQ:1:0=Z22]" max="99999">
+                    <class name="OBIS-Daten der Summenzeitreihe" ref="SG8" key="SEQ:1:0[SEQ:1:0=Z23]" max="99999">
+                        <field name="Beginn Messperiode" ref="DTM:1:2[1:0=163]" meta.id="2380" meta.format="203"/>
+                        <field name="Ende Messperiode" ref="DTM:1:2[1:0=164]" meta.id="2380" meta.format="203"/>
+                    </class>
+                    <class name="OBIS-Daten der EEG-Überführungszeitreihe" ref="SG8" key="SEQ:1:0[SEQ:1:0=Z25]"
+                           max="99999">
+                        <field name="Beginn Messperiode" ref="DTM:1:2[1:0=163]" meta.id="2380" meta.format="203"/>
+                        <field name="Ende Messperiode" ref="DTM:1:2[1:0=164]" meta.id="2380" meta.format="203"/>
+                    </class>
+                </class>
             </class>
         </class>
     </class>
