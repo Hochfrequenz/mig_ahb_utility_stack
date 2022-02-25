@@ -22,7 +22,7 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "IC",
+                          "qualifier": "IC",
                           "meaning": "Informationskontakt"
                         }
                       ],
@@ -55,27 +55,27 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X [1P0..1]",
-                          "edifact_key": "EM",
+                          "qualifier": "EM",
                           "meaning": "Elektronische Post"
                         },
                         {
                           "ahb_expression": "X [1P0..1]",
-                          "edifact_key": "FX",
+                          "qualifier": "FX",
                           "meaning": "Telefax"
                         },
                         {
                           "ahb_expression": "X [1P0..1]",
-                          "edifact_key": "TE",
+                          "qualifier": "TE",
                           "meaning": "Telefon"
                         },
                         {
                           "ahb_expression": "X [1P0..1]",
-                          "edifact_key": "AJ",
+                          "qualifier": "AJ",
                           "meaning": "weiteres Telefon"
                         },
                         {
                           "ahb_expression": "X [1P0..1]",
-                          "edifact_key": "AL",
+                          "qualifier": "AL",
                           "meaning": "Handy"
                         }
                       ],
@@ -98,7 +98,7 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "MS",
+                      "qualifier": "MS",
                       "meaning": "Dokumenten-/Nachrichtenausstellerbzw. -absender"
                     }
                   ],
@@ -117,17 +117,17 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "9",
+                      "qualifier": "9",
                       "meaning": "GS1"
                     },
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "293",
+                      "qualifier": "293",
                       "meaning": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)"
                     },
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "332",
+                      "qualifier": "332",
                       "meaning": "DE, DVGW Service & Consult GmbH"
                     }
                   ],
@@ -146,7 +146,7 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "MR",
+                      "qualifier": "MR",
                       "meaning": "Nachrichtenempf\u00e4nger"
                     }
                   ],
@@ -165,17 +165,17 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "9",
+                      "qualifier": "9",
                       "meaning": "GS1"
                     },
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "293",
+                      "qualifier": "293",
                       "meaning": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)"
                     },
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "332",
+                      "qualifier": "332",
                       "meaning": "DE, DVGW Service & Consult GmbH"
                     }
                   ],
@@ -205,7 +205,7 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "172",
+                          "qualifier": "172",
                           "meaning": "Meldepunkt"
                         }
                       ],
@@ -238,7 +238,7 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "Z13",
+                          "qualifier": "Z13",
                           "meaning": "Pr\u00fcfidentifikator"
                         }
                       ],
@@ -250,7 +250,7 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "11042",
+                          "qualifier": "11042",
                           "meaning": "WiM / Anmeldung MSB"
                         }
                       ],
@@ -286,7 +286,7 @@
                           "value_pool": [
                             {
                               "ahb_expression": "X",
-                              "edifact_key": "E13",
+                              "qualifier": "E13",
                               "meaning": "Z\u00e4hlertyp"
                             }
                           ],
@@ -305,7 +305,7 @@
                           "value_pool": [
                             {
                               "ahb_expression": "X",
-                              "edifact_key": "Z30",
+                              "qualifier": "Z30",
                               "meaning": "Ger\u00e4tenummer"
                             }
                           ],
@@ -335,7 +335,7 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "Z03",
+                          "qualifier": "Z03",
                           "meaning": "Z\u00e4hleinrichtungsdaten"
                         }
                       ],
@@ -361,7 +361,7 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "Z07",
+                          "qualifier": "Z07",
                           "meaning": "Kunde des MSB"
                         }
                       ],
@@ -380,12 +380,12 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "Z01",
+                          "qualifier": "Z01",
                           "meaning": "Struktur von Personennamen"
                         },
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "Z02",
+                          "qualifier": "Z02",
                           "meaning": "Struktur der Firmenbezeichnung"
                         }
                       ],
@@ -404,7 +404,7 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "Z08",
+                          "qualifier": "Z08",
                           "meaning": "Korrespondenzanschriftdes Kunden des MSB"
                         }
                       ],
@@ -423,12 +423,12 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "Z01",
+                          "qualifier": "Z01",
                           "meaning": "Struktur von Personennamen"
                         },
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "Z02",
+                          "qualifier": "Z02",
                           "meaning": "Struktur der Firmenbezeichnung"
                         }
                       ],
@@ -475,7 +475,7 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "Z03",
+                          "qualifier": "Z03",
                           "meaning": "Messlokationsadresse"
                         }
                       ],
@@ -529,7 +529,7 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "Z05",
+                          "qualifier": "Z05",
                           "meaning": "Name und Adresse f\u00fcrdie Ablesekarte"
                         }
                       ],
@@ -548,12 +548,12 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "Z01",
+                          "qualifier": "Z01",
                           "meaning": "Struktur von Personennamen"
                         },
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "Z02",
+                          "qualifier": "Z02",
                           "meaning": "Struktur der Firmenbezeichnung"
                         }
                       ],
@@ -600,7 +600,7 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "Z19",
+                          "qualifier": "Z19",
                           "meaning": "Messlokation"
                         }
                       ],
@@ -630,7 +630,7 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "24",
+                      "qualifier": "24",
                       "meaning": "Transaktion"
                     }
                   ],
@@ -656,7 +656,7 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "76",
+                      "qualifier": "76",
                       "meaning": "Lieferdatum/-zeit, geplant"
                     }
                   ],
@@ -675,7 +675,7 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "303",
+                      "qualifier": "303",
                       "meaning": "CCYYMMDDHHMMZZZ"
                     }
                   ],
@@ -694,7 +694,7 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "7",
+                      "qualifier": "7",
                       "meaning": "Transaktionsgrund"
                     }
                   ],
@@ -706,22 +706,22 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "E01",
+                      "qualifier": "E01",
                       "meaning": "Ein-/Auszug (Umzug)"
                     },
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "E02",
+                      "qualifier": "E02",
                       "meaning": "Einzug/Neuanlage"
                     },
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "E03",
+                      "qualifier": "E03",
                       "meaning": "Wechsel"
                     },
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "ZJ4",
+                      "qualifier": "ZJ4",
                       "meaning": "\u00dcbernahme aufgrund nicht erfolgtem iMS- Einbau"
                     }
                   ],
@@ -740,7 +740,7 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "9",
+                      "qualifier": "9",
                       "meaning": "Vertrag"
                     }
                   ],
@@ -752,12 +752,12 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X [1P0..1]",
-                      "edifact_key": "Z04",
+                      "qualifier": "Z04",
                       "meaning": "Vertrag zwischen AN und MSB"
                     },
                     {
                       "ahb_expression": "X [1P0..1]",
-                      "edifact_key": "Z06",
+                      "qualifier": "Z06",
                       "meaning": "Vertragsbeendigung liegt vor"
                     }
                   ],
@@ -787,7 +787,7 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "edifact_key": "UTILMD",
+                  "qualifier": "UTILMD",
                   "meaning": "Netzanschluss-Stammdaten"
                 }
               ],
@@ -799,7 +799,7 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "edifact_key": "D",
+                  "qualifier": "D",
                   "meaning": "Entwurfs-Version"
                 }
               ],
@@ -811,7 +811,7 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "edifact_key": "11A",
+                  "qualifier": "11A",
                   "meaning": "Ausgabe 2011 - A"
                 }
               ],
@@ -823,7 +823,7 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "edifact_key": "UN",
+                  "qualifier": "UN",
                   "meaning": "UN/CEFACT"
                 }
               ],
@@ -835,7 +835,7 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "edifact_key": "5.2d",
+                  "qualifier": "5.2d",
                   "meaning": "Versionsnummer derzugrundeliegendenBDEW-Nachrichtenbeschreibung"
                 }
               ],
@@ -854,7 +854,7 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "edifact_key": "E01",
+                  "qualifier": "E01",
                   "meaning": "Anmeldungen"
                 }
               ],
@@ -880,7 +880,7 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "edifact_key": "137",
+                  "qualifier": "137",
                   "meaning": "Dokumenten-/Nachrichtendatum/-zeit"
                 }
               ],
@@ -899,7 +899,7 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "edifact_key": "303",
+                  "qualifier": "303",
                   "meaning": "CCYYMMDDHHMMZZZ"
                 }
               ],

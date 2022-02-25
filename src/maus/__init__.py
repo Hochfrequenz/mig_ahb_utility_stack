@@ -46,7 +46,7 @@ def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElem
                 # https://github.com/Hochfrequenz/mig_ahb_utility_stack/issues/38
                 continue
             value_pool_entry = ValuePoolEntry(
-                edifact_key=data_element_value_entry.value_pool_entry,  # type:ignore[arg-type]
+                qualifier=data_element_value_entry.value_pool_entry,  # type:ignore[arg-type]
                 meaning=data_element_value_entry.name.strip(),  # type:ignore[assignment,union-attr]
                 ahb_expression=data_element_value_entry.ahb_expression,
             )
