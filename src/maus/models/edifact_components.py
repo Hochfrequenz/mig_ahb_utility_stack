@@ -216,12 +216,9 @@ class _FreeTextOrValuePoolSchema(Schema):
     """
 
     # disable unnecessary lambda warning because of circular imports
-    free_text = fields.Nested(
-        lambda: DataElementFreeTextSchema(), allow_none=True, required=False  # pylint: disable=unnecessary-lambda
-    )  # fields.String(dump_default=False, required=False, allow_none=True)
-    value_pool = fields.Nested(
-        lambda: DataElementValuePoolSchema(), required=False, allow_none=True  # pylint: disable=unnecessary-lambda
-    )
+    free_text = fields.Nested("DataElementFreeTextSchema", allow_none=True, required=False)
+    value_pool = fields.Nested("DataElementValuePoolSchema", required=False, allow_none=True)
+    # see https://github.com/fuhrysteve/marshmallow-jsonschema/issues/164
 
     # pylint:disable= unused-argument, no-self-use
     @post_load
@@ -360,9 +357,8 @@ class SegmentGroupSchema(SegmentLevelSchema):
 
     segments = fields.List(fields.Nested(SegmentSchema), load_default=None, required=False)
     segment_groups = fields.List(
-        fields.Nested(
-            lambda: SegmentGroupSchema(),  # pylint: disable=unnecessary-lambda
-        ),
+        fields.Nested("SegmentGroupSchema"),
+        # see https://github.com/fuhrysteve/marshmallow-jsonschema/issues/164
         load_default=None,
         required=False,
     )

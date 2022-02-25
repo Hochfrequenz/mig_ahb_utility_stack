@@ -1,0 +1,182 @@
+{
+  "$ref": "#/definitions/DeepAnwendungshandbuchSchema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "AhbMetaInformationSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "pruefidentifikator": {
+          "title": "pruefidentifikator",
+          "type": "string"
+        }
+      },
+      "required": ["pruefidentifikator"],
+      "type": "object"
+    },
+    "DataElementFreeTextSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "ahb_expression": {
+          "title": "ahb_expression",
+          "type": "string"
+        },
+        "data_element_id": {
+          "title": "data_element_id",
+          "type": "string"
+        },
+        "discriminator": {
+          "title": "discriminator",
+          "type": "string"
+        },
+        "entered_input": {
+          "title": "entered_input",
+          "type": ["string", "null"]
+        },
+        "value_type": {
+          "enum": ["TEXT", "DATETIME", "VALUE_POOL"],
+          "title": "value_type",
+          "type": "string"
+        }
+      },
+      "required": ["ahb_expression", "data_element_id", "discriminator"],
+      "type": "object"
+    },
+    "DataElementValuePoolSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "data_element_id": {
+          "title": "data_element_id",
+          "type": "string"
+        },
+        "discriminator": {
+          "title": "discriminator",
+          "type": "string"
+        },
+        "value_pool": {
+          "items": {
+            "$ref": "#/definitions/ValuePoolEntrySchema",
+            "type": "object"
+          },
+          "title": "value_pool",
+          "type": "array"
+        },
+        "value_type": {
+          "enum": ["TEXT", "DATETIME", "VALUE_POOL"],
+          "title": "value_type",
+          "type": "string"
+        }
+      },
+      "required": ["data_element_id", "discriminator", "value_pool"],
+      "type": "object"
+    },
+    "DeepAnwendungshandbuchSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "lines": {
+          "items": {
+            "$ref": "#/definitions/SegmentGroupSchema",
+            "type": "object"
+          },
+          "title": "lines",
+          "type": "array"
+        },
+        "meta": {
+          "$ref": "#/definitions/AhbMetaInformationSchema",
+          "type": "object"
+        }
+      },
+      "type": "object"
+    },
+    "SegmentGroupSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "ahb_expression": {
+          "title": "ahb_expression",
+          "type": "string"
+        },
+        "discriminator": {
+          "title": "discriminator",
+          "type": "string"
+        },
+        "segment_groups": {
+          "items": {
+            "$ref": "#/definitions/SegmentGroupSchema",
+            "type": "object"
+          },
+          "title": "segment_groups",
+          "type": ["array", "null"]
+        },
+        "segments": {
+          "items": {
+            "$ref": "#/definitions/SegmentSchema",
+            "type": "object"
+          },
+          "title": "segments",
+          "type": ["array", "null"]
+        }
+      },
+      "required": ["ahb_expression", "discriminator"],
+      "type": "object"
+    },
+    "SegmentSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "ahb_expression": {
+          "title": "ahb_expression",
+          "type": "string"
+        },
+        "data_elements": {
+          "items": {
+            "$ref": "#/definitions/_FreeTextOrValuePoolSchema",
+            "type": "object"
+          },
+          "title": "data_elements",
+          "type": "array"
+        },
+        "discriminator": {
+          "title": "discriminator",
+          "type": "string"
+        },
+        "section_name": {
+          "title": "section_name",
+          "type": "string"
+        }
+      },
+      "required": ["ahb_expression", "discriminator"],
+      "type": "object"
+    },
+    "ValuePoolEntrySchema": {
+      "additionalProperties": false,
+      "properties": {
+        "ahb_expression": {
+          "title": "ahb_expression",
+          "type": "string"
+        },
+        "meaning": {
+          "title": "meaning",
+          "type": "string"
+        },
+        "qualifier": {
+          "title": "qualifier",
+          "type": "string"
+        }
+      },
+      "required": ["ahb_expression", "meaning", "qualifier"],
+      "type": "object"
+    },
+    "_FreeTextOrValuePoolSchema": {
+      "additionalProperties": false,
+      "properties": {
+        "free_text": {
+          "$ref": "#/definitions/DataElementFreeTextSchema",
+          "type": "object"
+        },
+        "value_pool": {
+          "$ref": "#/definitions/DataElementValuePoolSchema",
+          "type": "object"
+        }
+      },
+      "type": "object"
+    }
+  }
+}
