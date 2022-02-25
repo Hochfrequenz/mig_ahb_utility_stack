@@ -22,7 +22,7 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "IC",
+                          "qualifier": "IC",
                           "meaning": "Informationskontakt"
                         }
                       ],
@@ -55,27 +55,27 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X [1P0..1]",
-                          "edifact_key": "EM",
+                          "qualifier": "EM",
                           "meaning": "E-Mail"
                         },
                         {
                           "ahb_expression": "X [1P0..1]",
-                          "edifact_key": "FX",
+                          "qualifier": "FX",
                           "meaning": "Telefax"
                         },
                         {
                           "ahb_expression": "X [1P0..1]",
-                          "edifact_key": "TE",
+                          "qualifier": "TE",
                           "meaning": "Telefon"
                         },
                         {
                           "ahb_expression": "X [1P0..1]",
-                          "edifact_key": "AJ",
+                          "qualifier": "AJ",
                           "meaning": "weiteres Telefon"
                         },
                         {
                           "ahb_expression": "X [1P0..1]",
-                          "edifact_key": "AL",
+                          "qualifier": "AL",
                           "meaning": "Handy"
                         }
                       ],
@@ -98,7 +98,7 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "MR",
+                      "qualifier": "MR",
                       "meaning": "Nachrichtenempf\u00e4nger"
                     }
                   ],
@@ -117,12 +117,12 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "9",
+                      "qualifier": "9",
                       "meaning": "GS1"
                     },
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "293",
+                      "qualifier": "293",
                       "meaning": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)"
                     }
                   ],
@@ -141,7 +141,7 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "MS",
+                      "qualifier": "MS",
                       "meaning": "Nachrichtenaussteller bzw.-absender"
                     }
                   ],
@@ -160,12 +160,12 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "9",
+                      "qualifier": "9",
                       "meaning": "GS1"
                     },
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "293",
+                      "qualifier": "293",
                       "meaning": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)"
                     }
                   ],
@@ -195,7 +195,7 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "Z01",
+                          "qualifier": "Z01",
                           "meaning": "Ansicht des Senders"
                         }
                       ],
@@ -214,7 +214,7 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "163",
+                          "qualifier": "163",
                           "meaning": "Verarbeitung,Beginndatum/-zeit"
                         }
                       ],
@@ -233,7 +233,7 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "303",
+                          "qualifier": "303",
                           "meaning": "CCYYMMDDHHMMZZZ"
                         }
                       ],
@@ -252,7 +252,7 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "164",
+                          "qualifier": "164",
                           "meaning": "Verarbeitung,Endedatum/-zeit"
                         }
                       ],
@@ -271,7 +271,7 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "303",
+                          "qualifier": "303",
                           "meaning": "CCYYMMDDHHMMZZZ"
                         }
                       ],
@@ -290,7 +290,7 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "306",
+                          "qualifier": "306",
                           "meaning": "Leistungsperiode"
                         }
                       ],
@@ -309,7 +309,7 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "610",
+                          "qualifier": "610",
                           "meaning": "CCYYMM"
                         }
                       ],
@@ -328,52 +328,52 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "Z20",
+                          "qualifier": "Z20",
                           "meaning": "Tarifstufe 0"
                         },
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "Z21",
+                          "qualifier": "Z21",
                           "meaning": "Tarifstufe 1"
                         },
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "Z22",
+                          "qualifier": "Z22",
                           "meaning": "Tarifstufe 2"
                         },
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "Z23",
+                          "qualifier": "Z23",
                           "meaning": "Tarifstufe 3"
                         },
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "Z24",
+                          "qualifier": "Z24",
                           "meaning": "Tarifstufe 4"
                         },
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "Z25",
+                          "qualifier": "Z25",
                           "meaning": "Tarifstufe 5"
                         },
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "Z26",
+                          "qualifier": "Z26",
                           "meaning": "Tarifstufe 6"
                         },
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "Z27",
+                          "qualifier": "Z27",
                           "meaning": "Tarifstufe 7"
                         },
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "Z28",
+                          "qualifier": "Z28",
                           "meaning": "Tarifstufe 8"
                         },
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "Z29",
+                          "qualifier": "Z29",
                           "meaning": "Tarifstufe 9"
                         }
                       ],
@@ -392,22 +392,22 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "KWH",
+                          "qualifier": "KWH",
                           "meaning": "kilowatt hour"
                         },
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "KWT",
+                          "qualifier": "KWT",
                           "meaning": "kilowatt"
                         },
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "K3",
+                          "qualifier": "K3",
                           "meaning": "kilovolt ampere reactive hour"
                         },
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "K5",
+                          "qualifier": "K5",
                           "meaning": "kilovolt ampere (reactive)"
                         }
                       ],
@@ -430,7 +430,7 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "Z25",
+                      "qualifier": "Z25",
                       "meaning": "Status des Lieferscheins"
                     }
                   ],
@@ -442,12 +442,12 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "Z30",
+                      "qualifier": "Z30",
                       "meaning": "zugestimmt"
                     },
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "Z31",
+                      "qualifier": "Z31",
                       "meaning": "widersprochen"
                     }
                   ],
@@ -466,7 +466,7 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "E_0456",
+                      "qualifier": "E_0456",
                       "meaning": "EBD Nr. E_0456"
                     }
                   ],
@@ -485,7 +485,7 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "Z13",
+                      "qualifier": "Z13",
                       "meaning": "Pr\u00fcfidentifikator"
                     }
                   ],
@@ -497,7 +497,7 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "21035",
+                      "qualifier": "21035",
                       "meaning": "GPKE / R\u00fcckmeldung aufLieferschein"
                     }
                   ],
@@ -516,7 +516,7 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "ACW",
+                      "qualifier": "ACW",
                       "meaning": "Referenznummer einervorangegangenenNachricht"
                     }
                   ],
@@ -553,7 +553,7 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "edifact_key": "IFTSTA",
+                  "qualifier": "IFTSTA",
                   "meaning": "Multimodaler Statusbericht"
                 }
               ],
@@ -565,7 +565,7 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "edifact_key": "D",
+                  "qualifier": "D",
                   "meaning": "Entwurfs-Version"
                 }
               ],
@@ -577,7 +577,7 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "edifact_key": "18A",
+                  "qualifier": "18A",
                   "meaning": "Ausgabe 2018 - A"
                 }
               ],
@@ -589,7 +589,7 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "edifact_key": "UN",
+                  "qualifier": "UN",
                   "meaning": "UN/CEFACT"
                 }
               ],
@@ -601,7 +601,7 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "edifact_key": "2.0d",
+                  "qualifier": "2.0d",
                   "meaning": "Versionsnummer derzugrundeliegendenBDEW-Nachrichtenbeschreibung"
                 }
               ],
@@ -620,7 +620,7 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "edifact_key": "Z33",
+                  "qualifier": "Z33",
                   "meaning": "GPKE Meldung(en)"
                 }
               ],
@@ -646,7 +646,7 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "edifact_key": "137",
+                  "qualifier": "137",
                   "meaning": "Dokumenten-/Nachrichtendatum/-zeit"
                 }
               ],
@@ -665,7 +665,7 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "edifact_key": "303",
+                  "qualifier": "303",
                   "meaning": "CCYYMMDDHHMMZZZ"
                 }
               ],

@@ -51,12 +51,12 @@ class TestMaus:
                     discriminator="SG4->FOO->0333",
                     value_pool=[
                         ValuePoolEntry(
-                            edifact_key="E01",
+                            qualifier="E01",
                             meaning="Das Eine",
                             ahb_expression="X",
                         ),
                         ValuePoolEntry(
-                            edifact_key="E02",
+                            qualifier="E02",
                             meaning="Das Andere",
                             ahb_expression="X",
                         ),
@@ -153,12 +153,12 @@ class TestMaus:
                     discriminator="SG4->FOO->0333",
                     value_pool=[
                         ValuePoolEntry(
-                            edifact_key="E01",
+                            qualifier="E01",
                             meaning="Das Eine",
                             ahb_expression="X",
                         ),
                         ValuePoolEntry(
-                            edifact_key="E02",
+                            qualifier="E02",
                             meaning="Das Andere",
                             ahb_expression="X",
                         ),
@@ -230,12 +230,12 @@ class TestMaus:
                                         discriminator="SG4->FOO->0333",
                                         value_pool=[
                                             ValuePoolEntry(
-                                                edifact_key="E01",
+                                                qualifier="E01",
                                                 meaning="Das Eine",
                                                 ahb_expression="X",
                                             ),
                                             ValuePoolEntry(
-                                                edifact_key="E02",
+                                                qualifier="E02",
                                                 meaning="Das Andere",
                                                 ahb_expression="X",
                                             ),
@@ -284,12 +284,12 @@ class TestMaus:
                                         discriminator="SG4->FOO->0333",
                                         value_pool=[
                                             ValuePoolEntry(
-                                                edifact_key="E01",
+                                                qualifier="E01",
                                                 meaning="Das Eine",
                                                 ahb_expression="X",
                                             ),
                                             ValuePoolEntry(
-                                                edifact_key="E02",
+                                                qualifier="E02",
                                                 meaning="Das Andere",
                                                 ahb_expression="X",
                                             ),
@@ -441,12 +441,12 @@ class TestMaus:
                                                     discriminator="SG4->FOO->0333",
                                                     value_pool=[
                                                         ValuePoolEntry(
-                                                            edifact_key="E01",
+                                                            qualifier="E01",
                                                             meaning="Das andere",
                                                             ahb_expression="X",
                                                         ),
                                                         ValuePoolEntry(
-                                                            edifact_key="E02",
+                                                            qualifier="E02",
                                                             meaning="Das Eine",
                                                             ahb_expression="X",
                                                         ),

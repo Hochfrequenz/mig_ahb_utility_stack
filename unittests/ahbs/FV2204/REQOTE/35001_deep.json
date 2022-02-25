@@ -18,7 +18,7 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "Z13",
+                      "qualifier": "Z13",
                       "meaning": "Pr\u00fcfidentifikator"
                     }
                   ],
@@ -30,7 +30,7 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "35001",
+                      "qualifier": "35001",
                       "meaning": "Anforderung AngebotGer\u00e4te\u00fcbernahme"
                     }
                   ],
@@ -60,7 +60,7 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "edifact_key": "IC",
+                          "qualifier": "IC",
                           "meaning": "Informationskontakt"
                         }
                       ],
@@ -93,27 +93,27 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X [1P0..1]",
-                          "edifact_key": "EM",
+                          "qualifier": "EM",
                           "meaning": "Elektronische Post"
                         },
                         {
                           "ahb_expression": "X [1P0..1]",
-                          "edifact_key": "FX",
+                          "qualifier": "FX",
                           "meaning": "Telefax"
                         },
                         {
                           "ahb_expression": "X [1P0..1]",
-                          "edifact_key": "TE",
+                          "qualifier": "TE",
                           "meaning": "Telefon"
                         },
                         {
                           "ahb_expression": "X [1P0..1]",
-                          "edifact_key": "AJ",
+                          "qualifier": "AJ",
                           "meaning": "weiteres Telefon"
                         },
                         {
                           "ahb_expression": "X [1P0..1]",
-                          "edifact_key": "AL",
+                          "qualifier": "AL",
                           "meaning": "Handy"
                         }
                       ],
@@ -136,7 +136,7 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "MS",
+                      "qualifier": "MS",
                       "meaning": "Nachrichtenaussteller bzw."
                     }
                   ],
@@ -155,17 +155,17 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "9",
+                      "qualifier": "9",
                       "meaning": "GS1"
                     },
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "293",
+                      "qualifier": "293",
                       "meaning": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)"
                     },
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "332",
+                      "qualifier": "332",
                       "meaning": "DE, DVGW Service & Consult GmbH"
                     }
                   ],
@@ -184,7 +184,7 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "MR",
+                      "qualifier": "MR",
                       "meaning": "Absender"
                     }
                   ],
@@ -203,17 +203,17 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "9",
+                      "qualifier": "9",
                       "meaning": "GS1"
                     },
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "293",
+                      "qualifier": "293",
                       "meaning": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)"
                     },
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "332",
+                      "qualifier": "332",
                       "meaning": "DE, DVGW Service & Consult GmbH"
                     }
                   ],
@@ -232,7 +232,7 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "DP",
+                      "qualifier": "DP",
                       "meaning": "Lieferanschrift"
                     }
                   ],
@@ -251,7 +251,7 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "edifact_key": "172",
+                      "qualifier": "172",
                       "meaning": "Meldepunkt"
                     }
                   ],
@@ -309,7 +309,7 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "edifact_key": "REQOTE",
+                  "qualifier": "REQOTE",
                   "meaning": "Anfrage"
                 }
               ],
@@ -321,7 +321,7 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "edifact_key": "D",
+                  "qualifier": "D",
                   "meaning": "Entwurfs-Version"
                 }
               ],
@@ -333,7 +333,7 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "edifact_key": "10A",
+                  "qualifier": "10A",
                   "meaning": "Ausgabe 2010 - A"
                 }
               ],
@@ -345,7 +345,7 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "edifact_key": "UN",
+                  "qualifier": "UN",
                   "meaning": "UN/CEFACT"
                 }
               ],
@@ -357,7 +357,7 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "edifact_key": "1.2",
+                  "qualifier": "1.2",
                   "meaning": "Versionsnummer derzugrundeliegendenBDEW-Nachrichtenbeschreibung"
                 }
               ],
@@ -376,7 +376,7 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "edifact_key": "311",
+                  "qualifier": "311",
                   "meaning": "Aufforderung zurAngebotsabgabe (Anfrage)"
                 }
               ],
@@ -402,7 +402,7 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "edifact_key": "137",
+                  "qualifier": "137",
                   "meaning": "Dokumenten-/Nachrichtendatum/-zeit"
                 }
               ],
@@ -421,7 +421,7 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "edifact_key": "303",
+                  "qualifier": "303",
                   "meaning": "CCYYMMDDHHMMZZZ"
                 }
               ],
@@ -433,7 +433,7 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "edifact_key": "76",
+                  "qualifier": "76",
                   "meaning": "Lieferdatum/-zeit, geplant"
                 }
               ],
@@ -452,7 +452,7 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "edifact_key": "303",
+                  "qualifier": "303",
                   "meaning": "CCYYMMDDHHMMZZZ"
                 }
               ],

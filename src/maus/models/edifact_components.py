@@ -111,7 +111,7 @@ class ValuePoolEntry:
     """
 
     #: the qualifier in edifact, might be f.e. "E01", "D", "9", "1.1a", "G_0057"
-    edifact_key: str = attr.field(validator=attrs.validators.matches_re(r"^[A-Z\d\.a-z_]+$"))
+    qualifier: str = attr.field(validator=attrs.validators.matches_re(r"^[A-Z\d\.a-z_]+$"))
     #: the meaning as it is written in the AHB (f.e. "Einzug", "Entwurfs-Version", "GS1", "Codeliste Gas G_0057"
     meaning: str = attr.field(validator=attrs.validators.instance_of(str))
     #: the ahb expression, in most cases this is a simple "X"; it must not be empty
@@ -125,7 +125,7 @@ class ValuePoolEntrySchema(Schema):
     """
 
     # this looks like a plain Dict[str,str] but we prefer typed access over loose string key value pairs
-    edifact_key = fields.String(required=True)
+    qualifier = fields.String(required=True)
     meaning = fields.String(required=True)
     ahb_expression = fields.String(required=True)
 
