@@ -15,15 +15,25 @@
                 {
                   "data_element_id": "1153",
                   "discriminator": "SG1->RFF->1153",
-                  "value_pool": { "Z13": "Pr\u00fcfidentifikator" },
+                  "value_pool": [
+                    {
+                      "ahb_expression": "X",
+                      "qualifier": "Z13",
+                      "meaning": "Pr\u00fcfidentifikator"
+                    }
+                  ],
                   "value_type": "VALUE_POOL"
                 },
                 {
                   "data_element_id": "1154",
                   "discriminator": "SG1->RFF->1154",
-                  "value_pool": {
-                    "35001": "Anforderung AngebotGer\u00e4te\u00fcbernahme"
-                  },
+                  "value_pool": [
+                    {
+                      "ahb_expression": "X",
+                      "qualifier": "35001",
+                      "meaning": "Anforderung AngebotGer\u00e4te\u00fcbernahme"
+                    }
+                  ],
                   "value_type": "VALUE_POOL"
                 }
               ],
@@ -47,7 +57,13 @@
                     {
                       "data_element_id": "3139",
                       "discriminator": "SG14->CTA->3139",
-                      "value_pool": { "IC": "Informationskontakt" },
+                      "value_pool": [
+                        {
+                          "ahb_expression": "X",
+                          "qualifier": "IC",
+                          "meaning": "Informationskontakt"
+                        }
+                      ],
                       "value_type": "VALUE_POOL"
                     },
                     {
@@ -74,13 +90,33 @@
                     {
                       "data_element_id": "3155",
                       "discriminator": "SG14->COM->3155",
-                      "value_pool": {
-                        "AJ": "weiteres Telefon",
-                        "AL": "Handy",
-                        "EM": "Elektronische Post",
-                        "FX": "Telefax",
-                        "TE": "Telefon"
-                      },
+                      "value_pool": [
+                        {
+                          "ahb_expression": "X [1P0..1]",
+                          "qualifier": "EM",
+                          "meaning": "Elektronische Post"
+                        },
+                        {
+                          "ahb_expression": "X [1P0..1]",
+                          "qualifier": "FX",
+                          "meaning": "Telefax"
+                        },
+                        {
+                          "ahb_expression": "X [1P0..1]",
+                          "qualifier": "TE",
+                          "meaning": "Telefon"
+                        },
+                        {
+                          "ahb_expression": "X [1P0..1]",
+                          "qualifier": "AJ",
+                          "meaning": "weiteres Telefon"
+                        },
+                        {
+                          "ahb_expression": "X [1P0..1]",
+                          "qualifier": "AL",
+                          "meaning": "Handy"
+                        }
+                      ],
                       "value_type": "VALUE_POOL"
                     }
                   ],
@@ -97,7 +133,13 @@
                 {
                   "data_element_id": "3035",
                   "discriminator": "SG11->NAD->3035",
-                  "value_pool": { "MS": "Nachrichtenaussteller bzw." },
+                  "value_pool": [
+                    {
+                      "ahb_expression": "X",
+                      "qualifier": "MS",
+                      "meaning": "Nachrichtenaussteller bzw."
+                    }
+                  ],
                   "value_type": "VALUE_POOL"
                 },
                 {
@@ -110,11 +152,23 @@
                 {
                   "data_element_id": "3055",
                   "discriminator": "SG11->NAD->3055",
-                  "value_pool": {
-                    "293": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",
-                    "332": "DE, DVGW Service & Consult GmbH",
-                    "9": "GS1"
-                  },
+                  "value_pool": [
+                    {
+                      "ahb_expression": "X",
+                      "qualifier": "9",
+                      "meaning": "GS1"
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "qualifier": "293",
+                      "meaning": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)"
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "qualifier": "332",
+                      "meaning": "DE, DVGW Service & Consult GmbH"
+                    }
+                  ],
                   "value_type": "VALUE_POOL"
                 }
               ],
@@ -127,7 +181,13 @@
                 {
                   "data_element_id": "3035",
                   "discriminator": "SG11->NAD->3035",
-                  "value_pool": { "MR": "Absender" },
+                  "value_pool": [
+                    {
+                      "ahb_expression": "X",
+                      "qualifier": "MR",
+                      "meaning": "Absender"
+                    }
+                  ],
                   "value_type": "VALUE_POOL"
                 },
                 {
@@ -140,11 +200,23 @@
                 {
                   "data_element_id": "3055",
                   "discriminator": "SG11->NAD->3055",
-                  "value_pool": {
-                    "293": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",
-                    "332": "DE, DVGW Service & Consult GmbH",
-                    "9": "GS1"
-                  },
+                  "value_pool": [
+                    {
+                      "ahb_expression": "X",
+                      "qualifier": "9",
+                      "meaning": "GS1"
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "qualifier": "293",
+                      "meaning": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)"
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "qualifier": "332",
+                      "meaning": "DE, DVGW Service & Consult GmbH"
+                    }
+                  ],
                   "value_type": "VALUE_POOL"
                 }
               ],
@@ -157,7 +229,13 @@
                 {
                   "data_element_id": "3035",
                   "discriminator": "SG11->NAD->3035",
-                  "value_pool": { "DP": "Lieferanschrift" },
+                  "value_pool": [
+                    {
+                      "ahb_expression": "X",
+                      "qualifier": "DP",
+                      "meaning": "Lieferanschrift"
+                    }
+                  ],
                   "value_type": "VALUE_POOL"
                 }
               ],
@@ -170,7 +248,13 @@
                 {
                   "data_element_id": "3227",
                   "discriminator": "SG11->LOC->3227",
-                  "value_pool": { "172": "Meldepunkt" },
+                  "value_pool": [
+                    {
+                      "ahb_expression": "X",
+                      "qualifier": "172",
+                      "meaning": "Meldepunkt"
+                    }
+                  ],
                   "value_type": "VALUE_POOL"
                 },
                 {
@@ -222,33 +306,61 @@
             {
               "data_element_id": "0065",
               "discriminator": "UNH->0065",
-              "value_pool": { "REQOTE": "Anfrage" },
+              "value_pool": [
+                {
+                  "ahb_expression": "X",
+                  "qualifier": "REQOTE",
+                  "meaning": "Anfrage"
+                }
+              ],
               "value_type": "VALUE_POOL"
             },
             {
               "data_element_id": "0052",
               "discriminator": "UNH->0052",
-              "value_pool": { "D": "Entwurfs-Version" },
+              "value_pool": [
+                {
+                  "ahb_expression": "X",
+                  "qualifier": "D",
+                  "meaning": "Entwurfs-Version"
+                }
+              ],
               "value_type": "VALUE_POOL"
             },
             {
               "data_element_id": "0054",
               "discriminator": "UNH->0054",
-              "value_pool": { "10A": "Ausgabe 2010 - A" },
+              "value_pool": [
+                {
+                  "ahb_expression": "X",
+                  "qualifier": "10A",
+                  "meaning": "Ausgabe 2010 - A"
+                }
+              ],
               "value_type": "VALUE_POOL"
             },
             {
               "data_element_id": "0051",
               "discriminator": "UNH->0051",
-              "value_pool": { "UN": "UN/CEFACT" },
+              "value_pool": [
+                {
+                  "ahb_expression": "X",
+                  "qualifier": "UN",
+                  "meaning": "UN/CEFACT"
+                }
+              ],
               "value_type": "VALUE_POOL"
             },
             {
               "data_element_id": "0057",
               "discriminator": "UNH->0057",
-              "value_pool": {
-                "1.2": "Versionsnummer derzugrundeliegendenBDEW-Nachrichtenbeschreibung"
-              },
+              "value_pool": [
+                {
+                  "ahb_expression": "X",
+                  "qualifier": "1.2",
+                  "meaning": "Versionsnummer derzugrundeliegendenBDEW-Nachrichtenbeschreibung"
+                }
+              ],
               "value_type": "VALUE_POOL"
             }
           ],
@@ -261,9 +373,13 @@
             {
               "data_element_id": "1001",
               "discriminator": "BGM->1001",
-              "value_pool": {
-                "311": "Aufforderung zurAngebotsabgabe (Anfrage)"
-              },
+              "value_pool": [
+                {
+                  "ahb_expression": "X",
+                  "qualifier": "311",
+                  "meaning": "Aufforderung zurAngebotsabgabe (Anfrage)"
+                }
+              ],
               "value_type": "VALUE_POOL"
             },
             {
@@ -283,7 +399,13 @@
             {
               "data_element_id": "2005",
               "discriminator": "DTM->2005",
-              "value_pool": { "137": "Dokumenten-/Nachrichtendatum/-zeit" },
+              "value_pool": [
+                {
+                  "ahb_expression": "X",
+                  "qualifier": "137",
+                  "meaning": "Dokumenten-/Nachrichtendatum/-zeit"
+                }
+              ],
               "value_type": "VALUE_POOL"
             },
             {
@@ -296,13 +418,25 @@
             {
               "data_element_id": "2379",
               "discriminator": "DTM->2379",
-              "value_pool": { "303": "CCYYMMDDHHMMZZZ" },
+              "value_pool": [
+                {
+                  "ahb_expression": "X",
+                  "qualifier": "303",
+                  "meaning": "CCYYMMDDHHMMZZZ"
+                }
+              ],
               "value_type": "VALUE_POOL"
             },
             {
               "data_element_id": "2005",
               "discriminator": "DTM->2005",
-              "value_pool": { "76": "Lieferdatum/-zeit, geplant" },
+              "value_pool": [
+                {
+                  "ahb_expression": "X",
+                  "qualifier": "76",
+                  "meaning": "Lieferdatum/-zeit, geplant"
+                }
+              ],
               "value_type": "VALUE_POOL"
             },
             {
@@ -315,7 +449,13 @@
             {
               "data_element_id": "2379",
               "discriminator": "DTM->2379",
-              "value_pool": { "303": "CCYYMMDDHHMMZZZ" },
+              "value_pool": [
+                {
+                  "ahb_expression": "X",
+                  "qualifier": "303",
+                  "meaning": "CCYYMMDDHHMMZZZ"
+                }
+              ],
               "value_type": "VALUE_POOL"
             }
           ],
@@ -328,7 +468,7 @@
             {
               "data_element_id": "0081",
               "discriminator": "UNS->0081",
-              "value_pool": {},
+              "value_pool": [],
               "value_type": "VALUE_POOL"
             }
           ],

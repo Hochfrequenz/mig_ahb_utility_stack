@@ -4,7 +4,14 @@ import pytest  # type:ignore[import]
 
 from maus import group_lines_by_segment_group, merge_lines_with_same_data_element, to_deep_ahb
 from maus.models.anwendungshandbuch import AhbLine, AhbMetaInformation, DeepAnwendungshandbuch, FlatAnwendungshandbuch
-from maus.models.edifact_components import DataElement, DataElementFreeText, DataElementValuePool, Segment, SegmentGroup
+from maus.models.edifact_components import (
+    DataElement,
+    DataElementFreeText,
+    DataElementValuePool,
+    Segment,
+    SegmentGroup,
+    ValuePoolEntry,
+)
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
 from unittests.serialization_test_helper import assert_serialization_roundtrip  # type:ignore[import]
 
@@ -42,7 +49,18 @@ class TestMaus:
                 ],
                 DataElementValuePool(
                     discriminator="SG4->FOO->0333",
-                    value_pool={"E01": "Das Eine", "E02": "Das Andere"},
+                    value_pool=[
+                        ValuePoolEntry(
+                            qualifier="E01",
+                            meaning="Das Eine",
+                            ahb_expression="X",
+                        ),
+                        ValuePoolEntry(
+                            qualifier="E02",
+                            meaning="Das Andere",
+                            ahb_expression="X",
+                        ),
+                    ],
                     data_element_id="0333",
                 ),
             ),
@@ -133,7 +151,18 @@ class TestMaus:
                 ],
                 DataElementValuePool(
                     discriminator="SG4->FOO->0333",
-                    value_pool={"E01": "Das Eine", "E02": "Das Andere"},
+                    value_pool=[
+                        ValuePoolEntry(
+                            qualifier="E01",
+                            meaning="Das Eine",
+                            ahb_expression="X",
+                        ),
+                        ValuePoolEntry(
+                            qualifier="E02",
+                            meaning="Das Andere",
+                            ahb_expression="X",
+                        ),
+                    ],
                     data_element_id="0333",
                 ),
             ),
@@ -199,7 +228,18 @@ class TestMaus:
                                 data_elements=[
                                     DataElementValuePool(
                                         discriminator="SG4->FOO->0333",
-                                        value_pool={"E01": "Das Eine", "E02": "Das Andere"},
+                                        value_pool=[
+                                            ValuePoolEntry(
+                                                qualifier="E01",
+                                                meaning="Das Eine",
+                                                ahb_expression="X",
+                                            ),
+                                            ValuePoolEntry(
+                                                qualifier="E02",
+                                                meaning="Das Andere",
+                                                ahb_expression="X",
+                                            ),
+                                        ],
                                         data_element_id="0333",
                                     )
                                 ],
@@ -242,7 +282,18 @@ class TestMaus:
                                 data_elements=[
                                     DataElementValuePool(
                                         discriminator="SG4->FOO->0333",
-                                        value_pool={"E01": "Das Eine", "E02": "Das Andere"},
+                                        value_pool=[
+                                            ValuePoolEntry(
+                                                qualifier="E01",
+                                                meaning="Das Eine",
+                                                ahb_expression="X",
+                                            ),
+                                            ValuePoolEntry(
+                                                qualifier="E02",
+                                                meaning="Das Andere",
+                                                ahb_expression="X",
+                                            ),
+                                        ],
                                         data_element_id="0333",
                                     )
                                 ],
@@ -388,7 +439,18 @@ class TestMaus:
                                             data_elements=[
                                                 DataElementValuePool(
                                                     discriminator="SG4->FOO->0333",
-                                                    value_pool={"E01": "Das andere", "E02": "Das Eine"},
+                                                    value_pool=[
+                                                        ValuePoolEntry(
+                                                            qualifier="E01",
+                                                            meaning="Das andere",
+                                                            ahb_expression="X",
+                                                        ),
+                                                        ValuePoolEntry(
+                                                            qualifier="E02",
+                                                            meaning="Das Eine",
+                                                            ahb_expression="X",
+                                                        ),
+                                                    ],
                                                     data_element_id="0333",
                                                 )
                                             ],

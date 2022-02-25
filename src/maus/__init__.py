@@ -12,6 +12,7 @@ from maus.models.edifact_components import (
     DataElementValuePool,
     Segment,
     SegmentGroup,
+    ValuePoolEntry,
     derive_data_type_from_segment_code,
 )
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
@@ -31,7 +32,7 @@ def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElem
     if ahb_lines[0].value_pool_entry is not None:
         result = DataElementValuePool(
             discriminator=ahb_lines[0].get_discriminator(include_name=False),
-            value_pool={},
+            value_pool=[],
             data_element_id=ahb_lines[0].data_element,  # type:ignore[arg-type]
         )
         for data_element_value_entry in ahb_lines:
@@ -40,9 +41,16 @@ def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElem
                 # todo: this is line where there is only a description and nothing else. i hate it
                 # f.e. there is 35001: https://github.com/Hochfrequenz/mig_ahb_utility_stack/issues/21
                 continue
-            result.value_pool[
-                data_element_value_entry.value_pool_entry  # type:ignore[index]
-            ] = data_element_value_entry.name.strip()  # type:ignore[assignment,union-attr]
+            if not data_element_value_entry.ahb_expression:
+                # value pool entries with empty/None AHB expression shall not be included
+                # https://github.com/Hochfrequenz/mig_ahb_utility_stack/issues/38
+                continue
+            value_pool_entry = ValuePoolEntry(
+                qualifier=data_element_value_entry.value_pool_entry,  # type:ignore[arg-type]
+                meaning=data_element_value_entry.name.strip(),  # type:ignore[assignment,union-attr]
+                ahb_expression=data_element_value_entry.ahb_expression,
+            )
+            result.value_pool.append(value_pool_entry)  # type:ignore[index]
     else:
         result = DataElementFreeText(
             entered_input=None,
@@ -67,10 +75,14 @@ def group_lines_by_segment(segment_group_lines: List[AhbLine]) -> List[Segment]:
         if segment_key is None:
             continue  # filter out segment group level
         this_segment_lines = list(segments)
+        if not this_segment_lines[0].ahb_expression:
+            # segments with an empty AHB expression shall not be included
+            # https://github.com/Hochfrequenz/mig_ahb_utility_stack/issues/38
+            continue
         segment = Segment(
             discriminator=segment_key,  # type:ignore[arg-type] # shall not be none after sanitizing
             data_elements=[],
-            ahb_expression=this_segment_lines[0].ahb_expression or "",
+            ahb_expression=this_segment_lines[0].ahb_expression,
             section_name=this_segment_lines[0].section_name,
         )
         for data_element_key, data_element_lines in groupby(this_segment_lines, key=lambda line: line.data_element):
@@ -97,7 +109,7 @@ def group_lines_by_segment_group(
                 this_sg = list(sg_group)
                 sg_draft = SegmentGroup(
                     discriminator=segment_group_key,  # type:ignore[arg-type] # might be None now, will be replace later
-                    ahb_expression=this_sg[0].ahb_expression or "",
+                    ahb_expression=this_sg[0].ahb_expression or "",  # segment groups barely ever have an expression
                     segments=group_lines_by_segment(this_sg),
                     segment_groups=[],
                 )

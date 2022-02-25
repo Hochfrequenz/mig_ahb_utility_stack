@@ -13,7 +13,13 @@ from maus.models.anwendungshandbuch import (
     FlatAnwendungshandbuch,
     FlatAnwendungshandbuchSchema,
 )
-from maus.models.edifact_components import DataElementFreeText, DataElementValuePool, Segment, SegmentGroup
+from maus.models.edifact_components import (
+    DataElementFreeText,
+    DataElementValuePool,
+    Segment,
+    SegmentGroup,
+    ValuePoolEntry,
+)
 from unittests.serialization_test_helper import assert_serialization_roundtrip  # type:ignore[import]
 
 meta_x = AhbMetaInformation(
@@ -310,7 +316,10 @@ class TestAhb:
                                     section_name="foo",
                                     data_elements=[
                                         DataElementValuePool(
-                                            value_pool={"hello": "world", "maus": "rocks"},
+                                            value_pool=[
+                                                ValuePoolEntry(qualifier="hello", meaning="world", ahb_expression="X"),
+                                                ValuePoolEntry(qualifier="maus", meaning="rocks", ahb_expression="X"),
+                                            ],
                                             discriminator="baz",
                                             data_element_id="0123",
                                         ),
@@ -354,7 +363,10 @@ class TestAhb:
                                     "discriminator": "disc B",
                                     "data_elements": [
                                         {
-                                            "value_pool": {"hello": "world", "maus": "rocks"},
+                                            "value_pool": [
+                                                {"qualifier": "hello", "meaning": "world", "ahb_expression": "X"},
+                                                {"qualifier": "maus", "meaning": "rocks", "ahb_expression": "X"},
+                                            ],
                                             "discriminator": "baz",
                                             "data_element_id": "0123",
                                             "value_type": "VALUE_POOL",
@@ -409,7 +421,10 @@ class TestAhb:
                                     discriminator="disc B",
                                     data_elements=[
                                         DataElementValuePool(
-                                            value_pool={"hello": "world", "maus": "rocks"},
+                                            value_pool=[
+                                                ValuePoolEntry(qualifier="hello", meaning="world", ahb_expression="X"),
+                                                ValuePoolEntry(qualifier="maus", meaning="rocks", ahb_expression="X"),
+                                            ],
                                             discriminator="baz",
                                             data_element_id="0123",
                                         ),
@@ -438,7 +453,10 @@ class TestAhb:
                                     discriminator="disc B",
                                     data_elements=[
                                         DataElementValuePool(
-                                            value_pool={"hello": "moon", "maus": "rocks"},
+                                            value_pool=[
+                                                ValuePoolEntry(qualifier="hello", meaning="world", ahb_expression="X"),
+                                                ValuePoolEntry(qualifier="maus", meaning="rocks", ahb_expression="X"),
+                                            ],
                                             discriminator="baz",
                                             data_element_id="0123",
                                         ),
