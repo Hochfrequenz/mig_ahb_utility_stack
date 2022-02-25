@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Callable, List, Literal, Optional, TypeVar, Union
 from xml.etree.ElementTree import Element
 
-import attr
+import attrs
 from lxml import etree  # type:ignore[import]
 
 from maus import SegmentGroupHierarchy
@@ -80,7 +80,7 @@ class MigReader(ABC):
 
 
 # pylint:disable=too-few-public-methods
-@attr.s(auto_attribs=True, kw_only=True)
+@attrs.define(auto_attribs=True, kw_only=True)
 class _MigFilterResult:
     """
     the (internal) result of a query path search inside the tree
@@ -92,7 +92,7 @@ class _MigFilterResult:
 
 
 # pylint:disable=too-few-public-methods
-@attr.s(auto_attribs=True, kw_only=True)
+@attrs.define(auto_attribs=True, kw_only=True)
 class _EdifactStackSearchStrategy:
     """
     The search strategy allows to have a compact yet descriptive representation on how the edifact stack search works.
@@ -104,13 +104,13 @@ class _EdifactStackSearchStrategy:
     """
 
     #: name, f.e. "filter by data element id"
-    name: str = attr.ib(validator=attr.validators.instance_of(str))
+    name: str = attrs.field(validator=attrs.validators.instance_of(str))
     #: the filter is the function that describes the strategy. It consumes the query and (optionally) a list of elements
-    filter: Callable[[EdifactStackQuery, Optional[List[Element]]], _MigFilterResult] = attr.ib(
-        validator=attr.validators.is_callable()
+    filter: Callable[[EdifactStackQuery, Optional[List[Element]]], _MigFilterResult] = attrs.field(
+        validator=attrs.validators.is_callable()
     )
     #: The unique result strategy is to return an edifact stack for the unique result element
-    unique_result_strategy: Callable[[Element], EdifactStack] = attr.ib(validator=attr.validators.is_callable())
+    unique_result_strategy: Callable[[Element], EdifactStack] = attrs.field(validator=attrs.validators.is_callable())
     #: the no result strategy is to apply another filter based on those candidates that lead to no result (fallback)
     no_result_strategy: Optional["_EdifactStackSearchStrategy"]
     #: in case of multiple results the next strategy uses the multiple results as input (sharpen)
@@ -120,6 +120,8 @@ class _EdifactStackSearchStrategy:
         """
         Apply the defined strategy until we either have no ideas left or a unique result is found
         """
+        # https://stackoverflow.com/questions/47972143/using-attr-with-pylint
+        # pylint: disable=not-callable
         filter_result: _MigFilterResult = self.filter(query, pre_selection)
         if filter_result.is_unique is True:
             return self.unique_result_strategy(filter_result.unique_result)  # type:ignore[arg-type]
@@ -187,6 +189,8 @@ class MigXmlReader(MigReader):
                 level_name = leaf_element.attrib["ahbName"]
             else:
                 level_name = leaf_element.attrib["name"]
+            # https://stackoverflow.com/questions/47972143/using-attr-with-pylint
+            # pylint: disable=no-member
             stack.levels.append(EdifactStackLevel(name=level_name, is_groupable=leaf_element.tag == "class"))
         return stack
 

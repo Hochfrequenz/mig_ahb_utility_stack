@@ -50,7 +50,7 @@ def _replace_disciminators_with_edifact_stack_segments(
                     if not ignore_errors:
                         raise ValueError(f"Any value pool with more than 1 entry has to have an edifact stack {query}")
                 if len(data_element.value_pool) == 1:
-                    predecessor_qualifier = list(data_element.value_pool.keys())[0]
+                    predecessor_qualifier = data_element.value_pool[0].qualifier
                 else:
                     predecessor_qualifier = None
     return result

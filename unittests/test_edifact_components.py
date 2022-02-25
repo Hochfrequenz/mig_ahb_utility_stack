@@ -1,6 +1,7 @@
 import pytest  # type:ignore[import]
 
 from maus.models.edifact_components import (
+    DataElementDataType,
     DataElementFreeText,
     DataElementFreeTextSchema,
     DataElementValuePool,
@@ -11,6 +12,7 @@ from maus.models.edifact_components import (
     SegmentGroup,
     SegmentGroupSchema,
     SegmentSchema,
+    ValuePoolEntry,
 )
 from unittests.serialization_test_helper import assert_serialization_roundtrip  # type:ignore[import]
 
@@ -25,13 +27,18 @@ class TestEdifactComponents:
         [
             pytest.param(
                 DataElementFreeText(
-                    ahb_expression="Muss [1]", entered_input="Hello Maus", discriminator="foo", data_element_id="2222"
+                    ahb_expression="Muss [1]",
+                    entered_input="Hello Maus",
+                    discriminator="foo",
+                    data_element_id="2222",
+                    value_type=DataElementDataType.TEXT,
                 ),
                 {
                     "ahb_expression": "Muss [1]",
                     "entered_input": "Hello Maus",
                     "discriminator": "foo",
                     "data_element_id": "2222",
+                    "value_type": "TEXT",
                 },
             ),
         ],
@@ -44,9 +51,22 @@ class TestEdifactComponents:
         [
             pytest.param(
                 DataElementValuePool(
-                    value_pool={"hello": "world", "maus": "rocks"}, discriminator="foo", data_element_id="0022"
+                    value_pool=[
+                        ValuePoolEntry(qualifier="hello", meaning="world", ahb_expression="X"),
+                        ValuePoolEntry(qualifier="maus", meaning="rocks", ahb_expression="X"),
+                    ],
+                    discriminator="foo",
+                    data_element_id="0022",
                 ),
-                {"value_pool": {"hello": "world", "maus": "rocks"}, "discriminator": "foo", "data_element_id": "0022"},
+                {
+                    "value_pool": [
+                        {"qualifier": "hello", "meaning": "world", "ahb_expression": "X"},
+                        {"qualifier": "maus", "meaning": "rocks", "ahb_expression": "X"},
+                    ],
+                    "discriminator": "foo",
+                    "data_element_id": "0022",
+                    "value_type": "VALUE_POOL",
+                },
             ),
         ],
     )
@@ -62,7 +82,12 @@ class TestEdifactComponents:
                     section_name="foo",
                     data_elements=[
                         DataElementValuePool(
-                            value_pool={"hello": "world", "maus": "rocks"}, discriminator="baz", data_element_id="0329"
+                            value_pool=[
+                                ValuePoolEntry(qualifier="hello", meaning="world", ahb_expression="X"),
+                                ValuePoolEntry(qualifier="maus", meaning="rocks", ahb_expression="X"),
+                            ],
+                            discriminator="baz",
+                            data_element_id="0329",
                         ),
                         DataElementFreeText(
                             ahb_expression="Muss [1]",
@@ -78,15 +103,20 @@ class TestEdifactComponents:
                     "section_name": "foo",
                     "data_elements": [
                         {
-                            "value_pool": {"hello": "world", "maus": "rocks"},
+                            "value_pool": [
+                                {"qualifier": "hello", "meaning": "world", "ahb_expression": "X"},
+                                {"qualifier": "maus", "meaning": "rocks", "ahb_expression": "X"},
+                            ],
                             "discriminator": "baz",
                             "data_element_id": "0329",
+                            "value_type": "VALUE_POOL",
                         },
                         {
                             "ahb_expression": "Muss [1]",
                             "entered_input": "Hello Maus",
                             "discriminator": "bar",
                             "data_element_id": "0330",
+                            "value_type": "TEXT",
                         },
                     ],
                     "discriminator": "foo",
@@ -111,7 +141,10 @@ class TestEdifactComponents:
                             section_name="bar",
                             data_elements=[
                                 DataElementValuePool(
-                                    value_pool={"hello": "world", "maus": "rocks"},
+                                    value_pool=[
+                                        ValuePoolEntry(qualifier="hello", meaning="world", ahb_expression="X"),
+                                        ValuePoolEntry(qualifier="maus", meaning="rocks", ahb_expression="X"),
+                                    ],
                                     discriminator="baz",
                                     data_element_id="3333",
                                 ),
@@ -150,15 +183,20 @@ class TestEdifactComponents:
                             "discriminator": "disc B",
                             "data_elements": [
                                 {
-                                    "value_pool": {"hello": "world", "maus": "rocks"},
+                                    "value_pool": [
+                                        {"qualifier": "hello", "meaning": "world", "ahb_expression": "X"},
+                                        {"qualifier": "maus", "meaning": "rocks", "ahb_expression": "X"},
+                                    ],
                                     "discriminator": "baz",
                                     "data_element_id": "3333",
+                                    "value_type": "VALUE_POOL",
                                 },
                                 {
                                     "ahb_expression": "Muss [1]",
                                     "entered_input": "Hello Maus",
                                     "discriminator": "bar",
                                     "data_element_id": "4444",
+                                    "value_type": "TEXT",
                                 },
                             ],
                         }
@@ -247,3 +285,15 @@ class TestEdifactComponents:
     def test_edifact_stack_to_from_json_path(self, json_path: str):
         stack = EdifactStack.from_json_path(json_path)
         assert stack.to_json_path() == json_path
+
+    def test_segment_group_can_be_instantiated_without_explicitly_defining_sub_groups(self):
+        """
+        Tests https://github.com/Hochfrequenz/mig_ahb_utility_stack/issues/41
+        """
+        sg = SegmentGroup(
+            discriminator="Foo",
+            ahb_expression="",
+        )  # must not throw an exception
+        assert sg is not None
+        assert sg.segment_groups is None
+        assert sg.segments is None
