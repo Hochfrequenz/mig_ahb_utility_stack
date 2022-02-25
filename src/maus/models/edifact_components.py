@@ -273,8 +273,8 @@ class SegmentLevel(ABC):
     SegmentLevel describes @annika: what does it describe?
     """
 
-    discriminator: str
-    ahb_expression: str
+    discriminator: str  # no validator here, because it might be None on initialization and will be set later (trust me)
+    ahb_expression: str = attrs.field(validator=attrs.validators.instance_of(str))
 
 
 class SegmentLevelSchema(Schema):
