@@ -36,6 +36,15 @@
                         "string",
                         "null"
                     ]
+                },
+                "value_type": {
+                    "enum": [
+                        "TEXT",
+                        "DATETIME",
+                        "VALUE_POOL"
+                    ],
+                    "title": "value_type",
+                    "type": "string"
                 }
             },
             "required": [
@@ -57,12 +66,21 @@
                     "type": "string"
                 },
                 "value_pool": {
-                    "additionalProperties": {
-                        "title": "value_pool",
-                        "type": "string"
+                    "items": {
+                        "$ref": "#/definitions/ValuePoolEntrySchema",
+                        "type": "object"
                     },
                     "title": "value_pool",
-                    "type": "object"
+                    "type": "array"
+                },
+                "value_type": {
+                    "enum": [
+                        "TEXT",
+                        "DATETIME",
+                        "VALUE_POOL"
+                    ],
+                    "title": "value_type",
+                    "type": "string"
                 }
             },
             "required": [
@@ -148,11 +166,38 @@
                 "discriminator": {
                     "title": "discriminator",
                     "type": "string"
+                },
+                "section_name": {
+                    "title": "section_name",
+                    "type": "string"
                 }
             },
             "required": [
                 "ahb_expression",
                 "discriminator"
+            ],
+            "type": "object"
+        },
+        "ValuePoolEntrySchema": {
+            "additionalProperties": false,
+            "properties": {
+                "ahb_expression": {
+                    "title": "ahb_expression",
+                    "type": "string"
+                },
+                "edifact_key": {
+                    "title": "edifact_key",
+                    "type": "string"
+                },
+                "meaning": {
+                    "title": "meaning",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "ahb_expression",
+                "edifact_key",
+                "meaning"
             ],
             "type": "object"
         },
