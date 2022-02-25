@@ -98,6 +98,17 @@ class DataElementFreeTextSchema(DataElementSchema):
         return DataElementFreeText(**data)
 
 
+# pylint: disable=unused-argument
+def _check_that_string_is_not_whitespace_or_empty(instance, attribute, value):
+    """
+    Check that string in the instance attribute value is not empty
+    """
+    if not value:
+        raise ValueError(f"The string {attribute.name} must not be None or empty")
+    if len(value.strip()) == 0:
+        raise ValueError(f"The string {attribute.name} must not consist only of whitespace: '{value}'")
+
+
 @attrs.define(auto_attribs=True, kw_only=True)
 class ValuePoolEntry:
     """
@@ -115,7 +126,7 @@ class ValuePoolEntry:
     #: the meaning as it is written in the AHB (f.e. "Einzug", "Entwurfs-Version", "GS1", "Codeliste Gas G_0057"
     meaning: str = attr.field(validator=attrs.validators.instance_of(str))
     #: the ahb expression, in most cases this is a simple "X"; it must not be empty
-    ahb_expression: str = attr.field(validator=attrs.validators.matches_re(".+"))
+    ahb_expression: str = attr.field(validator=_check_that_string_is_not_whitespace_or_empty)
     # must not be empty (if so, the value pool entry should not be included of the result)
 
 
