@@ -39,7 +39,7 @@ def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElem
             if data_element_value_entry.name is None:
                 # pylint:disable=fixme
                 # todo: this is line where there is only a description and nothing else. i hate it
-                # f.e. there is 35001: https://github.com/Hochfrequenz/mig_ahb_utility_stack/issues/21
+                # e.g. there is 35001: https://github.com/Hochfrequenz/mig_ahb_utility_stack/issues/21
                 continue
             if not data_element_value_entry.ahb_expression:
                 # value pool entries with empty/None AHB expression shall not be included

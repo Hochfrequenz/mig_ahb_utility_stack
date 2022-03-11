@@ -58,14 +58,14 @@ class AhbLine:
     ahb_expression: Optional[str] = attrs.field(
         validator=attrs.validators.optional(validator=attrs.validators.instance_of(str))
     )
-    """a requirement indicator + an optional condition ("ahb expression"), f.e. 'Muss [123] O [456]' """
+    """a requirement indicator + an optional condition ("ahb expression"), e.g. 'Muss [123] O [456]' """
     # note: to parse expressions from AHBs consider using AHBicht: https://github.com/Hochfrequenz/ahbicht/
 
     section_name: Optional[str] = attrs.field(
         validator=attrs.validators.optional(validator=attrs.validators.instance_of(str)), default=None
     )
     """
-    The section name describes the purpose of a segment, f.e. "Nachrichten-Kopfsegment" or "Beginn der Nachricht"
+    The section name describes the purpose of a segment, e.g. "Nachrichten-Kopfsegment" or "Beginn der Nachricht"
     """
 
     def holds_any_information(self) -> bool:
@@ -127,7 +127,7 @@ class AhbLineSchema(Schema):
 @attrs.define(auto_attribs=True, kw_only=True)
 class AhbMetaInformation:
     """
-    Meta information about an AHB like f.e. its title, Prüfidentifikator, possible sender and receiver roles
+    Meta information about an AHB like e.g. its title, Prüfidentifikator, possible sender and receiver roles
     """
 
     pruefidentifikator: str  #: identifies the message type (within a fixed format version) e.g. "11042" or "13012"
