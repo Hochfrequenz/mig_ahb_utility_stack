@@ -77,7 +77,7 @@ class FlatAhbCsvReader(FlatAhbReader):
         if FlatAhbCsvReader._is_segment_group(ahb_row["Segment Gruppe"]):
             segment_group = ahb_row["Segment Gruppe"]
         elif len(ahb_row["Segment Gruppe"]) >= 3:
-            self.current_section_name = ahb_row["Segment Gruppe"].strip() or None  # f.e. "Nachrichten-Kopfsegment"
+            self.current_section_name = ahb_row["Segment Gruppe"].strip() or None  # e.g. "Nachrichten-Kopfsegment"
             self._logger.debug("Processing %s section '%s'", self.pruefidentifikator, self.current_section_name)
             return None  # possibly a section heading like "Nachrichten-Endesegment"
             # this is different from segment group = None which is value for e.g. the UNH
@@ -109,7 +109,7 @@ class FlatAhbCsvReader(FlatAhbReader):
         if FlatAhbCsvReader._is_value_pool_entry(x) and not FlatAhbCsvReader._is_value_pool_entry(y):
             return x, y or None
         if FlatAhbCsvReader._is_value_pool_entry(x) and FlatAhbCsvReader._is_value_pool_entry(y):
-            # Both look like a value pool entry. This typically happens f.e. for date qualifiers or code lists
+            # Both look like a value pool entry. This typically happens e.g. for date qualifiers or code lists
             return x, y
         return y or None, x or None
 
@@ -123,7 +123,7 @@ class FlatAhbCsvReader(FlatAhbReader):
         if _value_pool_entry_pattern.match(candidate) is not None:
             return True
         # numbers alone might be value pool entries even if they don't match the regex
-        # we don't use "isdigit" because isdigit f.e. does not match '1.2'
+        # we don't use "isdigit" because isdigit e.g. does not match '1.2'
         if _numeric_value_pool_entry_pattern.match(candidate) is not None:
             return True
         if len(candidate) == 1 and candidate.upper() == candidate:

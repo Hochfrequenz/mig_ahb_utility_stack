@@ -103,7 +103,7 @@ class _EdifactStackSearchStrategy:
     3. There are >1 results => apply additional filters
     """
 
-    #: name, f.e. "filter by data element id"
+    #: name, e.g. "filter by data element id"
     name: str = attrs.field(validator=attrs.validators.instance_of(str))
     #: the filter is the function that describes the strategy. It consumes the query and (optionally) a list of elements
     filter: Callable[[EdifactStackQuery, Optional[List[Element]]], _MigFilterResult] = attrs.field(
