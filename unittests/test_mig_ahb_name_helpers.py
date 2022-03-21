@@ -34,6 +34,8 @@ class TestMigAhbNameHelpers:
         [
             pytest.param(None, "", True),
             pytest.param("", "", True),
+            pytest.param("Foo", "", False),
+            pytest.param(None, "Bar", False),
             pytest.param("X", "X", True),
             pytest.param("X", "x", True),
             pytest.param("X", "y", False),
