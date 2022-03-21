@@ -1,7 +1,6 @@
 """
 Classes that allow to read XML files that contain structural information (Message Implementation Guide information)
 """
-import re
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Callable, List, Literal, Optional, TypeVar, Union
@@ -12,6 +11,8 @@ from lxml import etree  # type:ignore[import]
 
 from maus import SegmentGroupHierarchy
 from maus.models.edifact_components import EdifactStack, EdifactStackLevel, EdifactStackQuery
+from maus.reader.etree_element_helpers import get_nested_qualifier, get_segment_group_key_or_none
+from maus.reader.mig_ahb_name_helpers import are_similar_names, make_name_comparable
 
 
 class MigReader(ABC):
@@ -28,30 +29,6 @@ class MigReader(ABC):
         raise NotImplementedError("The inheriting class has to implement this method")
 
     @staticmethod
-    def are_similar_names(name_x: Optional[str], name_y: Optional[str]) -> bool:
-        """
-        Returns true if name_x and name_y are somehow similar.
-        "Somehow similar" in this context means, that all the artefacts from text to word to PDF + scraping
-        + human errors might add up to something which explains the difference between name_x and name_y.
-        """
-        if (name_x and not name_y) or (name_y and not name_x):
-            return False
-        if (not name_x) and (not name_y):
-            return True
-        # neither name_x nor name_y are None below this line
-        return MigReader.make_name_comparable(name_x) == MigReader.make_name_comparable(name_y)  # type:ignore[arg-type]
-
-    @staticmethod
-    def make_name_comparable(orig_str: str) -> str:
-        """
-        Removes all the characters that could be a problem when matching names from the AHB with names from the MIG
-        """
-        result: str = orig_str.lower()
-        for removable_character in [" ", "-", "\n"]:
-            result = result.replace(removable_character, "")
-        return result
-
-    @staticmethod
     def make_tree_names_comparable(tree: etree.ElementTree) -> None:  # pylint:disable=c-extension-no-member
         """
         modifies the provided tree by applying `make_name_comparable` to all name and ahbName attributes
@@ -59,7 +36,7 @@ class MigReader(ABC):
         for element in tree.iter():
             for attrib_key, attrib_value in list(element.attrib.items()):
                 if attrib_key in {"name", "ahbName"}:
-                    element.attrib[attrib_key] = MigXmlReader.make_name_comparable(attrib_value)
+                    element.attrib[attrib_key] = make_name_comparable(attrib_value)
 
     @staticmethod
     def is_edifact_boilerplate(segment_code: Optional[str]) -> bool:
@@ -134,10 +111,7 @@ class _EdifactStackSearchStrategy:
         return None
 
 
-#: a regex to match a ref-segment: https://regex101.com/r/KY25AH/1
-_nested_qualifier_pattern = re.compile(r"^(?P<segment_code>[A-Z]+):\d+:\d+\[(?:\w+:)+\w+:?=(?P<qualifier>[A-Z\d]+)\]$")
 TResult = TypeVar("TResult")  #: is a type var to indicate an "arbitrary but same" type in a generic function
-
 
 # pylint:disable=c-extension-no-member
 class MigXmlReader(MigReader):
@@ -240,9 +214,7 @@ class MigXmlReader(MigReader):
         else:
             relevant_attribute = "ref"
         filtered_by_predecessor = [
-            c
-            for c in candidates
-            if MigXmlReader._get_nested_qualifier(relevant_attribute, c) == query.predecessor_qualifier
+            c for c in candidates if get_nested_qualifier(relevant_attribute, c) == query.predecessor_qualifier
         ]  # that's a bit dirty, better parse the ref properly instead of string-matching
         return MigXmlReader._list_to_mig_filter_result(filtered_by_predecessor)
 
@@ -285,8 +257,8 @@ class MigXmlReader(MigReader):
         filtered_by_names = [
             x
             for x in candidates
-            if MigReader.are_similar_names(x.attrib["name"], query.name)
-            or ("ahbName" in x.attrib and MigReader.are_similar_names(x.attrib["ahbName"], query.name))
+            if are_similar_names(x.attrib["name"], query.name)
+            or ("ahbName" in x.attrib and are_similar_names(x.attrib["ahbName"], query.name))
         ]
         return MigXmlReader._list_to_mig_filter_result(filtered_by_names)
 
@@ -299,31 +271,10 @@ class MigXmlReader(MigReader):
         filtered_by_names = [
             x
             for x in candidates
-            if MigReader.are_similar_names(x.attrib["name"], query.section_name)
-            # or ("ahbName" in x.attrib and MigReader.are_similar_names(x.attrib["ahbName"], query.name))
+            if are_similar_names(x.attrib["name"], query.section_name)
+            # or ("ahbName" in x.attrib and are_similar_names(x.attrib["ahbName"], query.name))
         ]
         return MigXmlReader._list_to_mig_filter_result(filtered_by_names)
-
-    @staticmethod
-    def _get_segment_group_key_or_none(element: Element) -> Optional[str]:
-        """
-        returns the segment group of element if present; None otherwise
-        """
-        if "ref" in element.attrib and element.attrib["ref"].startswith("SG"):
-            # the trivial case
-            return element.attrib["ref"]
-        return None
-
-    @staticmethod
-    def _get_nested_qualifier(attrib_key: Literal["ref", "key"], element: Element) -> Optional[str]:
-        """
-        returns the nested qualifier of an element if present; None otherwise
-        """
-        if attrib_key in element.attrib:
-            match = _nested_qualifier_pattern.match(element.attrib[attrib_key])
-            if match:
-                return match["qualifier"]
-        return None
 
     def _get_parent_x(
         self, element: Element, evaluator: Callable[[Element], TResult], use_sanitized_tree: bool
@@ -358,9 +309,7 @@ class MigXmlReader(MigReader):
         iterate from element towards root and return the first segment group found (the one closes to element).
         returns None if no segment group was found
         """
-        return self._get_parent_x(
-            element, MigXmlReader._get_segment_group_key_or_none, use_sanitized_tree=use_sanitized_tree
-        )
+        return self._get_parent_x(element, get_segment_group_key_or_none, use_sanitized_tree=use_sanitized_tree)
 
     def get_parent_predecessor(self, element: Element, use_sanitized_tree: bool) -> Optional[str]:
         """
@@ -368,7 +317,7 @@ class MigXmlReader(MigReader):
         returns None if no segment group was found
         """
         return self._get_parent_x(
-            element, lambda c: MigXmlReader._get_nested_qualifier("key", c), use_sanitized_tree=use_sanitized_tree
+            element, lambda c: get_nested_qualifier("key", c), use_sanitized_tree=use_sanitized_tree
         )
 
     def _handle_predecessor_if_present(self, query: EdifactStackQuery) -> Optional[_EdifactStackSearchStrategy]:
@@ -440,7 +389,7 @@ class MigXmlReader(MigReader):
                     name="B filter by parents name because direct name lead to no result",
                     filter=lambda q, _: self.get_unique_result_by_xpath(
                         # pylint:disable=line-too-long
-                        f".//class[@name='{MigReader.make_name_comparable(query.name)}']/*[@meta.id='{query.data_element_id}' and starts-with(@ref, '{query.segment_code}')]",  # type:ignore[arg-type]
+                        f".//class[@name='{make_name_comparable(query.name)}']/*[@meta.id='{query.data_element_id}' and starts-with(@ref, '{query.segment_code}')]",  # type:ignore[arg-type]
                         use_sanitized_tree=True,
                     ),
                     unique_result_strategy=lambda unique_result: self.element_to_edifact_stack(
@@ -450,7 +399,7 @@ class MigXmlReader(MigReader):
                         name="C filter by parents ahb name",
                         filter=lambda q, _: self.get_unique_result_by_xpath(
                             # pylint:disable=line-too-long
-                            f".//class[@ahbName='{MigReader.make_name_comparable(query.name)}']/*[@meta.id='{query.data_element_id}' and starts-with(@ref, '{query.segment_code}')]",  # type:ignore[arg-type]
+                            f".//class[@ahbName='{make_name_comparable(query.name)}']/*[@meta.id='{query.data_element_id}' and starts-with(@ref, '{query.segment_code}')]",  # type:ignore[arg-type]
                             use_sanitized_tree=True,
                         ),
                         unique_result_strategy=lambda unique_result: self.element_to_edifact_stack(
