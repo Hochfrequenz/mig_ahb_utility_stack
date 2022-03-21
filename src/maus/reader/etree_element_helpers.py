@@ -3,10 +3,13 @@ This module contains (static) functions that process single lxml.etree Elements.
 Each function is separately unit tested.
 """
 import re
-from typing import Literal, Optional
+from typing import List, Literal, Optional
 
 # pylint:disable=no-name-in-module
 from lxml.etree import Element  # type:ignore[import]
+
+from maus.models.edifact_components import EdifactStackQuery
+from maus.reader.mig_ahb_name_helpers import are_similar_names
 
 
 def get_segment_group_key_or_none(element: Element) -> Optional[str]:
@@ -32,3 +35,24 @@ def get_nested_qualifier(attrib_key: Literal["ref", "key"], element: Element) ->
         if match:
             return match["qualifier"]
     return None
+
+
+def filter_by_name(candidates: List[Element], query: EdifactStackQuery) -> List[Element]:
+    """
+    returns those elements that have the given name
+    """
+    filtered_by_names = [
+        x
+        for x in candidates
+        if are_similar_names(x.attrib["name"], query.name)
+        or ("ahbName" in x.attrib and are_similar_names(x.attrib["ahbName"], query.name))
+    ]
+    return filtered_by_names
+
+
+def filter_by_section_name(candidates: List[Element], query: EdifactStackQuery) -> List[Element]:
+    """
+    returns those elements that have the given name
+    """
+    filtered_by_names = [x for x in candidates if are_similar_names(x.attrib["name"], query.section_name)]
+    return filtered_by_names
