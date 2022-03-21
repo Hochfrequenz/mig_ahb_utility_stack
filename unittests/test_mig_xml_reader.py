@@ -52,23 +52,6 @@ class TestMigXmlReader:
         actual_is_boilerplate = MigXmlReader.is_edifact_boilerplate(segment_code)
         assert actual_is_boilerplate == expected_is_boilerplate
 
-    def test_make_tree_names_comparable(self):
-        orig_xml = """<?xml version="1.0"?>
-        <hello>
-        <einfield name="Foo "/>
-        <einclass ahbName="Hallo-Welt">
-            <einfield name=" DiGiTaLiSiErUnG" ahbName="(ZuKunFt)"/>
-        </einclass>
-        </hello>
-        """
-        tree = etree.ElementTree(etree.fromstring(orig_xml))
-        MigXmlReader.make_tree_names_comparable(tree)
-        for element in tree.iter():
-            if "name" in element.attrib:
-                assert element.attrib["name"] == make_name_comparable(element.attrib["name"])
-            if "ahbName" in element.attrib:
-                assert element.attrib["ahbName"] == make_name_comparable(element.attrib["ahbName"])
-
     @ALL_MIG_XML_FILES
     @pytest.mark.parametrize(
         "mig_xml_path, query, expected_path",

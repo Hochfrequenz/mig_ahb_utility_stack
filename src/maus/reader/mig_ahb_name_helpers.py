@@ -3,6 +3,8 @@ This module contains helper methods that compare strings, especially names from 
 """
 from typing import Optional
 
+from lxml import etree  # type:ignore[import]
+
 
 def make_name_comparable(orig_str: str) -> str:
     """
@@ -26,3 +28,13 @@ def are_similar_names(name_x: Optional[str], name_y: Optional[str]) -> bool:
         return True
     # neither name_x nor name_y are None below this line
     return make_name_comparable(name_x) == make_name_comparable(name_y)  # type:ignore[arg-type]
+
+
+def make_tree_names_comparable(tree: etree.ElementTree) -> None:  # pylint:disable=c-extension-no-member
+    """
+    modifies the provided tree by applying `make_name_comparable` to all name and ahbName attributes
+    """
+    for element in tree.iter():
+        for attrib_key, attrib_value in list(element.attrib.items()):
+            if attrib_key in {"name", "ahbName"}:
+                element.attrib[attrib_key] = make_name_comparable(attrib_value)

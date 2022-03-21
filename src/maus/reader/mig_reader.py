@@ -12,7 +12,7 @@ from lxml import etree  # type:ignore[import]
 from maus import SegmentGroupHierarchy
 from maus.models.edifact_components import EdifactStack, EdifactStackLevel, EdifactStackQuery
 from maus.reader.etree_element_helpers import get_nested_qualifier, get_segment_group_key_or_none
-from maus.reader.mig_ahb_name_helpers import are_similar_names, make_name_comparable
+from maus.reader.mig_ahb_name_helpers import are_similar_names, make_name_comparable, make_tree_names_comparable
 
 
 class MigReader(ABC):
@@ -27,16 +27,6 @@ class MigReader(ABC):
         :return:
         """
         raise NotImplementedError("The inheriting class has to implement this method")
-
-    @staticmethod
-    def make_tree_names_comparable(tree: etree.ElementTree) -> None:  # pylint:disable=c-extension-no-member
-        """
-        modifies the provided tree by applying `make_name_comparable` to all name and ahbName attributes
-        """
-        for element in tree.iter():
-            for attrib_key, attrib_value in list(element.attrib.items()):
-                if attrib_key in {"name", "ahbName"}:
-                    element.attrib[attrib_key] = make_name_comparable(attrib_value)
 
     @staticmethod
     def is_edifact_boilerplate(segment_code: Optional[str]) -> bool:
@@ -135,7 +125,7 @@ class MigXmlReader(MigReader):
         # * has only lower case (ahb)names which are easy to match because they don't contain whitespace,"-" or casing
         # * has the same structure as the _original_tree so that absolute path expressions from the sanitized tree match
         self._sanitized_tree: etree.ElementTree = etree.ElementTree(self._sanitized_root)
-        MigReader.make_tree_names_comparable(self._sanitized_tree)
+        make_tree_names_comparable(self._sanitized_tree)
 
     def get_format_name(self) -> str:
         """
