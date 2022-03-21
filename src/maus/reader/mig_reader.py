@@ -11,8 +11,13 @@ from lxml import etree  # type:ignore[import]
 
 from maus import SegmentGroupHierarchy
 from maus.models.edifact_components import EdifactStack, EdifactStackLevel, EdifactStackQuery
-from maus.reader.etree_element_helpers import get_nested_qualifier, get_segment_group_key_or_none
-from maus.reader.mig_ahb_name_helpers import are_similar_names, make_name_comparable, make_tree_names_comparable
+from maus.reader.etree_element_helpers import (
+    filter_by_name,
+    filter_by_section_name,
+    get_nested_qualifier,
+    get_segment_group_key_or_none,
+)
+from maus.reader.mig_ahb_name_helpers import make_name_comparable, make_tree_names_comparable
 
 
 class MigReader(ABC):
@@ -103,6 +108,16 @@ class _EdifactStackSearchStrategy:
 
 TResult = TypeVar("TResult")  #: is a type var to indicate an "arbitrary but same" type in a generic function
 
+
+def _list_to_mig_filter_result(candidates: List[Element]) -> _MigFilterResult:
+    if len(candidates) == 0:
+        return _MigFilterResult(candidates=None, is_unique=None, unique_result=None)
+        # the == 1 case is handled last
+    if len(candidates) > 1:
+        return _MigFilterResult(candidates=candidates, is_unique=False, unique_result=None)
+    return _MigFilterResult(candidates=None, is_unique=True, unique_result=candidates[0])
+
+
 # pylint:disable=c-extension-no-member
 class MigXmlReader(MigReader):
     """
@@ -158,15 +173,6 @@ class MigXmlReader(MigReader):
             stack.levels.append(EdifactStackLevel(name=level_name, is_groupable=leaf_element.tag == "class"))
         return stack
 
-    @staticmethod
-    def _list_to_mig_filter_result(candidates: List[Element]) -> _MigFilterResult:
-        if len(candidates) == 0:
-            return _MigFilterResult(candidates=None, is_unique=None, unique_result=None)
-            # the == 1 case is handled last
-        if len(candidates) > 1:
-            return _MigFilterResult(candidates=candidates, is_unique=False, unique_result=None)
-        return _MigFilterResult(candidates=None, is_unique=True, unique_result=candidates[0])
-
     def get_unique_result_by_xpath(self, query_path: str, use_sanitized_tree: bool) -> _MigFilterResult:
         """
         Tries to find an element for the given query path.
@@ -178,7 +184,7 @@ class MigXmlReader(MigReader):
             candidates = list(self._sanitized_root.xpath(query_path))
         else:
             candidates = list(self._original_root.xpath(query_path))
-        return MigXmlReader._list_to_mig_filter_result(candidates)
+        return _list_to_mig_filter_result(candidates)
 
     def get_unique_result_by_segment_group(
         self, candidates: List[Element], query: EdifactStackQuery, use_sanitized_tree: bool
@@ -191,7 +197,7 @@ class MigXmlReader(MigReader):
             for e in candidates
             if self.get_parent_segment_group_key(e, use_sanitized_tree=use_sanitized_tree) == query.segment_group_key
         ]
-        return MigXmlReader._list_to_mig_filter_result(filtered)
+        return _list_to_mig_filter_result(filtered)
 
     # pylint:disable=no-self-use
     def get_unique_result_by_predecessor(self, candidates: List[Element], query: EdifactStackQuery) -> _MigFilterResult:
@@ -206,7 +212,7 @@ class MigXmlReader(MigReader):
         filtered_by_predecessor = [
             c for c in candidates if get_nested_qualifier(relevant_attribute, c) == query.predecessor_qualifier
         ]  # that's a bit dirty, better parse the ref properly instead of string-matching
-        return MigXmlReader._list_to_mig_filter_result(filtered_by_predecessor)
+        return _list_to_mig_filter_result(filtered_by_predecessor)
 
     def get_unique_result_by_parent_predecessor(
         self, candidates: List[Element], query: EdifactStackQuery
@@ -224,7 +230,7 @@ class MigXmlReader(MigReader):
             for c in candidates
             if self.get_parent_predecessor(c, use_sanitized_tree=False) == query.predecessor_qualifier
         ]
-        return MigXmlReader._list_to_mig_filter_result(filtered_by_predecessor)
+        return _list_to_mig_filter_result(filtered_by_predecessor)
 
     def get_unique_result_by_parent_segment_group(
         self, candidates: List[Element], query: EdifactStackQuery
@@ -237,34 +243,24 @@ class MigXmlReader(MigReader):
             for c in candidates
             if self.get_parent_segment_group_key(c, use_sanitized_tree=False) == query.segment_group_key
         ]
-        return MigXmlReader._list_to_mig_filter_result(filtered_by_segment_group_key)
+        return _list_to_mig_filter_result(filtered_by_segment_group_key)
 
     @staticmethod
-    def get_unique_result_by_name(candidates: List[Element], query: EdifactStackQuery):
+    def get_unique_result_by_name(candidates: List[Element], query: EdifactStackQuery) -> _MigFilterResult:
         """
         returns those elements that have the given name
         """
-        filtered_by_names = [
-            x
-            for x in candidates
-            if are_similar_names(x.attrib["name"], query.name)
-            or ("ahbName" in x.attrib and are_similar_names(x.attrib["ahbName"], query.name))
-        ]
-        return MigXmlReader._list_to_mig_filter_result(filtered_by_names)
+        filtered_by_names = filter_by_name(candidates, query)
+        return _list_to_mig_filter_result(filtered_by_names)
 
     @staticmethod
-    def get_unique_result_by_section_name(candidates: List[Element], query: EdifactStackQuery):
+    def get_unique_result_by_section_name(candidates: List[Element], query: EdifactStackQuery) -> _MigFilterResult:
         """
         keeps those elements from the candidates whose where the name matches the query section name.
         Does _not_ create a new xpath.
         """
-        filtered_by_names = [
-            x
-            for x in candidates
-            if are_similar_names(x.attrib["name"], query.section_name)
-            # or ("ahbName" in x.attrib and are_similar_names(x.attrib["ahbName"], query.name))
-        ]
-        return MigXmlReader._list_to_mig_filter_result(filtered_by_names)
+        filtered_by_names = filter_by_section_name(candidates, query)
+        return _list_to_mig_filter_result(filtered_by_names)
 
     def _get_parent_x(
         self, element: Element, evaluator: Callable[[Element], TResult], use_sanitized_tree: bool
