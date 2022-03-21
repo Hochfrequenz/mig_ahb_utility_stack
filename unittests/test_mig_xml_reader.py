@@ -5,6 +5,7 @@ import pytest  # type:ignore[import]
 from lxml import etree  # type:ignore[import]
 
 from maus.models.edifact_components import EdifactStackQuery
+from maus.reader.mig_ahb_name_helpers import make_name_comparable
 from maus.reader.mig_reader import MigXmlReader
 
 ALL_MIG_XML_FILES = pytest.mark.datafiles(
@@ -38,24 +39,6 @@ class TestMigXmlReader:
         assert reader.get_format_name() == expected_format
 
     @pytest.mark.parametrize(
-        "x,y, expected_result",
-        [
-            pytest.param(None, "", True),
-            pytest.param("", "", True),
-            pytest.param("X", "X", True),
-            pytest.param("X", "x", True),
-            pytest.param("X", "y", False),
-            pytest.param("Gültigkeit, Beginndatum", "Gültigkeit,Beginndatum", True),
-            pytest.param(
-                "Referenz Vorgangsnummer (aus Anfragenachricht)", "Referenz Vorgangsnummer (aus Anfragenachricht)", True
-            ),
-        ],
-    )
-    def test_are_similar_names(self, x: Optional[str], y: Optional[str], expected_result: bool):
-        actual = MigXmlReader.are_similar_names(x, y)
-        assert actual == expected_result
-
-    @pytest.mark.parametrize(
         "segment_code,expected_is_boilerplate",
         [
             pytest.param(None, True),
@@ -68,23 +51,6 @@ class TestMigXmlReader:
     def test_is_boilerplate_segment(self, segment_code: Optional[str], expected_is_boilerplate: bool):
         actual_is_boilerplate = MigXmlReader.is_edifact_boilerplate(segment_code)
         assert actual_is_boilerplate == expected_is_boilerplate
-
-    def test_make_tree_names_comparable(self):
-        orig_xml = """<?xml version="1.0"?>
-        <hello>
-        <einfield name="Foo "/>
-        <einclass ahbName="Hallo-Welt">
-            <einfield name=" DiGiTaLiSiErUnG" ahbName="(ZuKunFt)"/>
-        </einclass>
-        </hello>
-        """
-        tree = etree.ElementTree(etree.fromstring(orig_xml))
-        MigXmlReader.make_tree_names_comparable(tree)
-        for element in tree.iter():
-            if "name" in element.attrib:
-                assert element.attrib["name"] == MigXmlReader.make_name_comparable(element.attrib["name"])
-            if "ahbName" in element.attrib:
-                assert element.attrib["ahbName"] == MigXmlReader.make_name_comparable(element.attrib["ahbName"])
 
     @ALL_MIG_XML_FILES
     @pytest.mark.parametrize(
