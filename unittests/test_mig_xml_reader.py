@@ -38,20 +38,6 @@ class TestMigXmlReader:
         reader = MigXmlReader(xml_string)
         assert reader.get_format_name() == expected_format
 
-    @pytest.mark.parametrize(
-        "segment_code,expected_is_boilerplate",
-        [
-            pytest.param(None, True),
-            pytest.param("UNH", False),
-            pytest.param("UNT", True),
-            pytest.param("UNZ", True),
-            pytest.param("DTM", False),
-        ],
-    )
-    def test_is_boilerplate_segment(self, segment_code: Optional[str], expected_is_boilerplate: bool):
-        actual_is_boilerplate = MigXmlReader.is_edifact_boilerplate(segment_code)
-        assert actual_is_boilerplate == expected_is_boilerplate
-
     @ALL_MIG_XML_FILES
     @pytest.mark.parametrize(
         "mig_xml_path, query, expected_path",

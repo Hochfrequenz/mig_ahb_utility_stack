@@ -4,6 +4,7 @@ A module to mix/join information from the deep ahb and the MIG (beyond SGH)
 from typing import List, Optional
 
 from maus import DataElementFreeText, DataElementValuePool, DeepAnwendungshandbuch
+from maus.edifact import is_edifact_boilerplate
 from maus.models.edifact_components import EdifactStackQuery, Segment, SegmentGroup
 from maus.reader.mig_reader import MigReader
 
@@ -13,7 +14,7 @@ def _replace_disciminators_with_edifact_stack_segments(
 ) -> List[Segment]:
     result = segments.copy()
     for segment_index, segment in enumerate(segments):  # type:ignore[union-attr]
-        if mig_reader.is_edifact_boilerplate(segment.discriminator):
+        if is_edifact_boilerplate(segment.discriminator):
             continue
         current_segment_key = segment.discriminator
         predecessor_qualifier: Optional[str] = None
