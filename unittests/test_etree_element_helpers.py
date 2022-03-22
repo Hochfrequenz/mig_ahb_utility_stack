@@ -9,6 +9,7 @@ from maus.reader.etree_element_helpers import (
     filter_by_section_name,
     get_nested_qualifier,
     get_segment_group_key_or_none,
+    list_to_mig_filter_result,
 )
 
 
@@ -68,6 +69,49 @@ class TestMultipleElementsHelpers:
     """
     Tests the behaviour of static helper methods (for multiple elements)
     """
+
+    @pytest.mark.parametrize(
+        "xml_string,expected_is_unique, expected_has_unique_result, expected_candidates_length",
+        [
+            pytest.param(
+                "<bar/><baz/><foo/>",
+                False,
+                None,
+                3,
+            ),
+            pytest.param(
+                "<bar/>",
+                True,
+                True,
+                None,
+            ),
+            pytest.param(
+                "",
+                None,
+                False,
+                None,
+            ),
+        ],
+    )
+    def test_list_to_mig_filter_result(
+        self,
+        xml_string: str,
+        expected_is_unique: Optional[bool],
+        expected_has_unique_result: bool,
+        expected_candidates_length: Optional[int],
+    ):
+        elements = _string_to_elements(xml_string)
+        actual = list_to_mig_filter_result(elements)
+        assert actual.is_unique is expected_is_unique
+        if expected_is_unique:
+            assert actual.unique_result is not None
+        else:
+            assert actual.unique_result is None
+        if expected_candidates_length is not None:
+            assert actual.candidates is not None
+            assert len(actual.candidates) == expected_candidates_length
+        else:
+            assert actual.candidates is None
 
     @pytest.mark.parametrize(
         "xml_string, query, expected_allowed_ids",
