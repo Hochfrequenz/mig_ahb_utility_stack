@@ -67,6 +67,15 @@ class EdifactFormatVersion(str, Enum):
         return self.value
 
 
+def is_edifact_boilerplate(segment_code: Optional[str]) -> bool:
+    """
+    returns true iff this segment is not relevant in a sense that it has to be validated or merged with the AHB
+    """
+    if not segment_code:
+        return True
+    return segment_code.strip() in {"UNT", "UNZ"}
+
+
 def pruefidentifikator_to_format(pruefidentifikator: str) -> Optional[EdifactFormat]:
     """
     returns the format corresponding to a given pruefi

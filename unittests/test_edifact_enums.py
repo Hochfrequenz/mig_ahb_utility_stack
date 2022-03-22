@@ -2,7 +2,7 @@ from typing import Optional, Tuple
 
 import pytest  # type:ignore[import]
 
-from maus.edifact import EdifactFormat, pruefidentifikator_to_format
+from maus.edifact import EdifactFormat, is_edifact_boilerplate, pruefidentifikator_to_format
 
 
 class TestEdifact:
@@ -36,3 +36,17 @@ class TestEdifact:
         """
         with pytest.raises(ValueError):
             pruefidentifikator_to_format(illegal_pruefi)  # type:ignore[arg-type] # ok, because this raises an error
+
+    @pytest.mark.parametrize(
+        "segment_code,expected_is_boilerplate",
+        [
+            pytest.param(None, True),
+            pytest.param("UNH", False),
+            pytest.param("UNT", True),
+            pytest.param("UNZ", True),
+            pytest.param("DTM", False),
+        ],
+    )
+    def test_is_boilerplate_segment(self, segment_code: Optional[str], expected_is_boilerplate: bool):
+        actual_is_boilerplate = is_edifact_boilerplate(segment_code)
+        assert actual_is_boilerplate == expected_is_boilerplate

@@ -34,15 +34,6 @@ class MigReader(ABC):
         """
         raise NotImplementedError("The inheriting class has to implement this method")
 
-    @staticmethod
-    def is_edifact_boilerplate(segment_code: Optional[str]) -> bool:
-        """
-        returns true iff this segment is not relevant in a sense that it has to be validated or merged with the AHB
-        """
-        if not segment_code:
-            return True
-        return segment_code.strip() in {"UNT", "UNZ"}
-
     # pylint:disable=too-many-arguments
     @abstractmethod
     def get_edifact_stack(self, query: EdifactStackQuery) -> Optional[EdifactStack]:
