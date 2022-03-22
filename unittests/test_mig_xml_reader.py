@@ -3,7 +3,7 @@ from typing import Optional, Tuple
 
 import pytest  # type:ignore[import]
 from lxml import etree  # type:ignore[import]
-from lxml.etree import Element
+from lxml.etree import Element  # type:ignore[import]
 
 from maus.models.edifact_components import EdifactStackQuery
 from maus.reader.mig_reader import MigXmlReader
