@@ -88,7 +88,6 @@ class MigXmlReader(MigReader):
     def element_to_edifact_stack(self, element: etree.Element, use_sanitized_tree: bool) -> EdifactStack:
         """
         extract the edifact seed path from the given element
-        :return:
         """
         if use_sanitized_tree:
             xpath = self._sanitized_tree.getpath(element)

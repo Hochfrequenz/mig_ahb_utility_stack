@@ -40,7 +40,7 @@ def get_nested_qualifier(attrib_key: Literal["ref", "key"], element: Element) ->
 
 def filter_by_name(candidates: List[Element], query: EdifactStackQuery) -> List[Element]:
     """
-    returns those elements that have the given name
+    returns those elements that have the given name (in the query)
     """
     filtered_by_names = [
         x
@@ -53,7 +53,7 @@ def filter_by_name(candidates: List[Element], query: EdifactStackQuery) -> List[
 
 def filter_by_section_name(candidates: List[Element], query: EdifactStackQuery) -> List[Element]:
     """
-    returns those elements that have the given name
+    returns those elements that have the given section name (in the query)
     """
     filtered_by_names = [x for x in candidates if are_similar_names(x.attrib["name"], query.section_name)]
     return filtered_by_names
