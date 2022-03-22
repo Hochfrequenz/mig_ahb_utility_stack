@@ -1,11 +1,11 @@
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Tuple
 
 import pytest  # type:ignore[import]
 from lxml import etree  # type:ignore[import]
+from lxml.etree import Element
 
 from maus.models.edifact_components import EdifactStackQuery
-from maus.reader.mig_ahb_name_helpers import make_name_comparable
 from maus.reader.mig_reader import MigXmlReader
 
 ALL_MIG_XML_FILES = pytest.mark.datafiles(
@@ -27,6 +27,20 @@ class TestMigXmlReader:
     Tests the behaviour of the Message Implementation Guide model
     """
 
+    @staticmethod
+    def _prepare_xml_reader_and_element(xml_string: str, element_xpath: str) -> Tuple[MigXmlReader, Element]:
+        """
+        A helper method for easier test setup
+        """
+        reader = MigXmlReader(xml_string)
+        elements = reader._original_tree.xpath(element_xpath)
+        if len(elements) != 1:
+            raise ValueError(
+                f"In this test you're thought to provide an xpath that matches exactly one element of the given XML but found {len(elements)}."
+            )
+        element = elements[0]
+        return reader, element
+
     @pytest.mark.parametrize(
         "xml_string, expected_format",
         [
@@ -37,6 +51,42 @@ class TestMigXmlReader:
     def test_get_edifact_format(self, xml_string: str, expected_format: str):
         reader = MigXmlReader(xml_string)
         assert reader.get_format_name() == expected_format
+
+    @pytest.mark.parametrize(
+        "xml_string, element_xpath, use_sanitized, expected_result",
+        [
+            pytest.param(
+                '<?xml version="1.0"?><MSCONS><class ref="SG42"><foo/></class></MSCONS>',
+                "//MSCONS/class/foo",
+                False,
+                "SG42",
+            ),
+        ],
+    )
+    def test_get_parent_segment_group(
+        self, xml_string: str, element_xpath: str, use_sanitized: bool, expected_result: Optional[str]
+    ):
+        reader, element = TestMigXmlReader._prepare_xml_reader_and_element(xml_string, element_xpath)
+        actual = reader.get_parent_segment_group_key(element, use_sanitized_tree=use_sanitized)
+        assert actual == expected_result
+
+    @pytest.mark.parametrize(
+        "xml_string, element_xpath, use_sanitized, expected_result",
+        [
+            pytest.param(
+                '<?xml version="1.0"?><MSCONS><foo key="DTM:1:2[1:0=Z21]"><bar/></foo></MSCONS>',
+                "//MSCONS/foo/bar",
+                False,
+                "Z21",
+            ),
+        ],
+    )
+    def test_get_parent_predecessor(
+        self, xml_string: str, element_xpath: str, use_sanitized: bool, expected_result: Optional[str]
+    ):
+        reader, element = TestMigXmlReader._prepare_xml_reader_and_element(xml_string, element_xpath)
+        actual = reader.get_parent_predecessor(element, use_sanitized_tree=use_sanitized)
+        assert actual == expected_result
 
     @ALL_MIG_XML_FILES
     @pytest.mark.parametrize(
