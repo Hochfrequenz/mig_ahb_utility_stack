@@ -12,7 +12,7 @@ from maus.reader.mig_reader import MigXmlReader
 
 class TestMigXmlReaderMwe:
     """
-    Tests the behaviour of the Message Implementation Guide model with minimal working examples
+    Tests the behaviour of the Message Implementation Guide model with manually crafted minimal working examples.
     """
 
     # todo: you could probably use an indirect parametrization instead of the static helper methods below
@@ -198,4 +198,56 @@ class TestMigXmlReaderMwe:
         reader, candidates = TestMigXmlReaderMwe._prepare_xml_reader_and_elements(xml_string, candidates_xpaths)
         expected_result = TestMigXmlReaderMwe._prepare_mig_filter_result(reader._original_tree, expected_result_xpaths)
         actual = reader.get_unique_result_by_segment_group(candidates=candidates, query=query, use_sanitized_tree=False)
+        assert actual == expected_result
+
+    @pytest.mark.parametrize(
+        "xml_string,candidates_xpaths,query,expected_result_xpaths",
+        [
+            pytest.param(
+                '<?xml version="1.0"?><MSCONS><class ref="SG1" key="RFF:1:1[RFF:1:0=AGI]"><foo/></class></MSCONS>',
+                ["//MSCONS/class"],
+                EdifactStackQuery(
+                    segment_group_key="SG1",
+                    segment_code="RFF",
+                    predecessor_qualifier="AGI",
+                    data_element_id="0000",  # dummy
+                    name="",  # dummy
+                ),
+                ["//MSCONS/class"],
+                id="rffuck1 mit ref",
+            ),
+            pytest.param(
+                '<?xml version="1.0"?><MSCONS><class><foo key="RFF:1:1[RFF:1:0=AGI]"/></class></MSCONS>',
+                ["//MSCONS/class/foo"],
+                EdifactStackQuery(
+                    segment_group_key="SG1",
+                    segment_code="RFF",
+                    predecessor_qualifier="AGI",
+                    data_element_id="0000",  # dummy
+                    name="",  # dummy
+                ),
+                ["//MSCONS/class/foo"],
+                id="rffuck2 mit key",
+            ),
+            pytest.param(
+                '<?xml version="1.0"?><MSCONS><class><foo ref="DTM:1:1[1:0=Z21]"/></class></MSCONS>',
+                ["//MSCONS/class/foo"],
+                EdifactStackQuery(
+                    segment_group_key="SG1",
+                    segment_code="DTM",
+                    predecessor_qualifier="Z21",
+                    data_element_id="0000",  # dummy
+                    name="",  # dummy
+                ),
+                ["//MSCONS/class/foo"],
+                id="dtm",
+            ),
+        ],
+    )
+    def test_get_unique_result_by_predecessor(
+        self, xml_string: str, candidates_xpaths: List[str], query: EdifactStackQuery, expected_result_xpaths: List[str]
+    ):
+        reader, candidates = TestMigXmlReaderMwe._prepare_xml_reader_and_elements(xml_string, candidates_xpaths)
+        expected_result = TestMigXmlReaderMwe._prepare_mig_filter_result(reader._original_tree, expected_result_xpaths)
+        actual = reader.get_unique_result_by_predecessor(candidates=candidates, query=query)
         assert actual == expected_result
