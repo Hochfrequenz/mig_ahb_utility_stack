@@ -204,6 +204,30 @@ class TestMigXmlReaderMwe:
         "xml_string,candidates_xpaths,query,expected_result_xpaths",
         [
             pytest.param(
+                '<?xml version="1.0"?><MSCONS><class ref="SG42"><foo/></class><class ref="SG77"><bar/></class></MSCONS>',
+                ["//MSCONS/class/foo", "//MSCONS/class/bar"],
+                EdifactStackQuery(
+                    segment_group_key="SG42",
+                    segment_code="XXX",  # dummy
+                    data_element_id="0000",  # dummy
+                    name="",
+                ),
+                ["//MSCONS/class/foo"],
+            ),
+        ],
+    )
+    def test_get_unique_result_by_parent_segment_group(
+        self, xml_string: str, candidates_xpaths: List[str], query: EdifactStackQuery, expected_result_xpaths: List[str]
+    ):
+        reader, candidates = TestMigXmlReaderMwe._prepare_xml_reader_and_elements(xml_string, candidates_xpaths)
+        expected_result = TestMigXmlReaderMwe._prepare_mig_filter_result(reader._original_tree, expected_result_xpaths)
+        actual = reader.get_unique_result_by_parent_segment_group(candidates=candidates, query=query)
+        assert actual == expected_result
+
+    @pytest.mark.parametrize(
+        "xml_string,candidates_xpaths,query,expected_result_xpaths",
+        [
+            pytest.param(
                 '<?xml version="1.0"?><MSCONS><class ref="SG1" key="RFF:1:1[RFF:1:0=AGI]"><foo/></class></MSCONS>',
                 ["//MSCONS/class"],
                 EdifactStackQuery(
@@ -250,4 +274,30 @@ class TestMigXmlReaderMwe:
         reader, candidates = TestMigXmlReaderMwe._prepare_xml_reader_and_elements(xml_string, candidates_xpaths)
         expected_result = TestMigXmlReaderMwe._prepare_mig_filter_result(reader._original_tree, expected_result_xpaths)
         actual = reader.get_unique_result_by_predecessor(candidates=candidates, query=query)
+        assert actual == expected_result
+
+    @pytest.mark.parametrize(
+        "xml_string,candidates_xpaths,query,expected_result_xpaths",
+        [
+            pytest.param(
+                '<?xml version="1.0"?><UTILMD><class key="LOC:2:0[1:0=Z08]"><field ref="LOC:2:0"/></class></UTILMD>',
+                ["//UTILMD/class/field"],
+                EdifactStackQuery(
+                    segment_group_key="SG1",  # dummy
+                    segment_code="LOC",
+                    predecessor_qualifier="Z08",
+                    data_element_id="0000",  # dummy
+                    name="",  # dummy
+                ),
+                ["//UTILMD/class/field"],
+                id="loc",
+            ),
+        ],
+    )
+    def test_get_unique_result_by_parent_predecessor(
+        self, xml_string: str, candidates_xpaths: List[str], query: EdifactStackQuery, expected_result_xpaths: List[str]
+    ):
+        reader, candidates = TestMigXmlReaderMwe._prepare_xml_reader_and_elements(xml_string, candidates_xpaths)
+        expected_result = TestMigXmlReaderMwe._prepare_mig_filter_result(reader._original_tree, expected_result_xpaths)
+        actual = reader.get_unique_result_by_parent_predecessor(candidates=candidates, query=query)
         assert actual == expected_result

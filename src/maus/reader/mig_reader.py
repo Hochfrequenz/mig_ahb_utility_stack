@@ -167,12 +167,7 @@ class MigXmlReader(MigReader):
         """
         Keep those elements that have (in the parent class) the given predecessor qualifier
         """
-        # todo: write decided tests for this
-        # relevant_parent_attribute: Literal["key", "ref"]
-        # if query.segment_code == "RFF":
-        #    relevant_parent_attribute = "key"
-        # else:
-        #    relevant_parent_attribute = "ref"
+        # this method is separately unittests; see the tests to get an understanding of the way it works.
         filtered_by_predecessor = [
             c
             for c in candidates
@@ -186,7 +181,6 @@ class MigXmlReader(MigReader):
         """
         Keep those elements that have (in the parent class) the given segment group key
         """
-        # todo: write decided tests for this
         filtered_by_segment_group_key = [
             c
             for c in candidates
