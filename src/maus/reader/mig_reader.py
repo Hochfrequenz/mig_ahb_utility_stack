@@ -78,8 +78,9 @@ class MigXmlReader(MigReader):
 
     def element_to_edifact_stack(self, element: etree.Element, use_sanitized_tree: bool) -> EdifactStack:
         """
-        extract the edifact seed path from the given element
+        extract the edifact seed path from the given element.
         """
+        # this method is directly unittests. Please refer to the test for some easy to debug examples.
         if use_sanitized_tree:
             xpath = self._sanitized_tree.getpath(element)
         else:
@@ -100,6 +101,23 @@ class MigXmlReader(MigReader):
             stack.levels.append(EdifactStackLevel(name=level_name, is_groupable=leaf_element.tag == "class"))
         return stack
 
+    @staticmethod
+    def get_unique_result_by_name(candidates: List[Element], query: EdifactStackQuery) -> MigFilterResult:
+        """
+        returns those elements that have the given name
+        """
+        filtered_by_names = filter_by_name(candidates, query)
+        return list_to_mig_filter_result(filtered_by_names)
+
+    @staticmethod
+    def get_unique_result_by_section_name(candidates: List[Element], query: EdifactStackQuery) -> MigFilterResult:
+        """
+        keeps those elements from the candidates whose where the name matches the query section name.
+        Does _not_ create a new xpath.
+        """
+        filtered_by_names = filter_by_section_name(candidates, query)
+        return list_to_mig_filter_result(filtered_by_names)
+
     def get_unique_result_by_xpath(self, query_path: str, use_sanitized_tree: bool) -> MigFilterResult:
         """
         Tries to find an element for the given query path.
@@ -119,6 +137,7 @@ class MigXmlReader(MigReader):
         """
         keep those elements that have the correct segment_group_key
         """
+        # this method is separately unittests; see the tests to get an understanding of the way it works.
         filtered = [
             e
             for e in candidates
@@ -131,6 +150,7 @@ class MigXmlReader(MigReader):
         """
         Keep those elements that have (in the field) the given predecessor qualifier
         """
+        # this method is separately unittests; see the tests to get an understanding of the way it works.
         relevant_attribute: Literal["key", "ref"]
         if query.segment_code == "RFF":
             relevant_attribute = "key"
@@ -147,11 +167,7 @@ class MigXmlReader(MigReader):
         """
         Keep those elements that have (in the parent class) the given predecessor qualifier
         """
-        # relevant_parent_attribute: Literal["key", "ref"]
-        # if query.segment_code == "RFF":
-        #    relevant_parent_attribute = "key"
-        # else:
-        #    relevant_parent_attribute = "ref"
+        # this method is separately unittests; see the tests to get an understanding of the way it works.
         filtered_by_predecessor = [
             c
             for c in candidates
@@ -171,23 +187,6 @@ class MigXmlReader(MigReader):
             if self.get_parent_segment_group_key(c, use_sanitized_tree=False) == query.segment_group_key
         ]
         return list_to_mig_filter_result(filtered_by_segment_group_key)
-
-    @staticmethod
-    def get_unique_result_by_name(candidates: List[Element], query: EdifactStackQuery) -> MigFilterResult:
-        """
-        returns those elements that have the given name
-        """
-        filtered_by_names = filter_by_name(candidates, query)
-        return list_to_mig_filter_result(filtered_by_names)
-
-    @staticmethod
-    def get_unique_result_by_section_name(candidates: List[Element], query: EdifactStackQuery) -> MigFilterResult:
-        """
-        keeps those elements from the candidates whose where the name matches the query section name.
-        Does _not_ create a new xpath.
-        """
-        filtered_by_names = filter_by_section_name(candidates, query)
-        return list_to_mig_filter_result(filtered_by_names)
 
     def _get_parent_x(
         self, element: Element, evaluator: Callable[[Element], TResult], use_sanitized_tree: bool
@@ -222,6 +221,8 @@ class MigXmlReader(MigReader):
         iterate from element towards root and return the first segment group found (the one closes to element).
         returns None if no segment group was found
         """
+        # This method is separately unit tested.
+        # Reading the test will most likely make its behaviour more understandable.
         return self._get_parent_x(element, get_segment_group_key_or_none, use_sanitized_tree=use_sanitized_tree)
 
     def get_parent_predecessor(self, element: Element, use_sanitized_tree: bool) -> Optional[str]:
@@ -229,6 +230,8 @@ class MigXmlReader(MigReader):
         iterate from element towards root and return the first segment group found (the one closes to element).
         returns None if no segment group was found
         """
+        # This method is separately unit tested.
+        # Reading the test will most likely make its behaviour more understandable.
         return self._get_parent_x(
             element, lambda c: get_nested_qualifier("key", c), use_sanitized_tree=use_sanitized_tree
         )
