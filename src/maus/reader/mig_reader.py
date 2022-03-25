@@ -43,7 +43,7 @@ class MigReader(ABC):
         raise NotImplementedError("The inheriting class has to implement this method")
 
 
-TResult = TypeVar("TResult")  #: is a type var to indicate an "arbitrary but same" type in a generic function
+Result = TypeVar("Result")  #: is a type var to indicate an "arbitrary but same" type in a generic function
 
 
 # pylint:disable=c-extension-no-member
@@ -106,6 +106,7 @@ class MigXmlReader(MigReader):
         """
         returns those elements that have the given name
         """
+        # this method is directly unittests. Please refer to the test for some easy to debug examples.
         filtered_by_names = filter_by_name(candidates, query)
         return list_to_mig_filter_result(filtered_by_names)
 
@@ -115,6 +116,7 @@ class MigXmlReader(MigReader):
         keeps those elements from the candidates whose where the name matches the query section name.
         Does _not_ create a new xpath.
         """
+        # this method is directly unittests. Please refer to the test for some easy to debug examples.
         filtered_by_names = filter_by_section_name(candidates, query)
         return list_to_mig_filter_result(filtered_by_names)
 
@@ -189,8 +191,8 @@ class MigXmlReader(MigReader):
         return list_to_mig_filter_result(filtered_by_segment_group_key)
 
     def _get_parent_x(
-        self, element: Element, evaluator: Callable[[Element], TResult], use_sanitized_tree: bool
-    ) -> Optional[TResult]:
+        self, element: Element, evaluator: Callable[[Element], Result], use_sanitized_tree: bool
+    ) -> Optional[Result]:
         """
         get the 'X' property of the parent where 'X' is the result of the evaluator when applied to an element.
         returns None if not found
