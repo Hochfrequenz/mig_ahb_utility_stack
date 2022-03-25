@@ -228,6 +228,79 @@ class TestMigXmlReaderMwe:
         "xml_string,candidates_xpaths,query,expected_result_xpaths",
         [
             pytest.param(
+                '<?xml version="1.0"?><MSCONS><class ref="SG42"><foo name="hello"/><bar name="world"/></class></MSCONS>',
+                ["//MSCONS/class/foo", "//MSCONS/class/bar"],
+                EdifactStackQuery(
+                    segment_group_key="SG123",  # dummy
+                    segment_code="XXX",  # dummy
+                    data_element_id="0000",  # dummy
+                    name="world",
+                ),
+                ["//MSCONS/class/bar"],
+            ),
+        ],
+    )
+    def test_get_unique_result_by_name(
+        self, xml_string: str, candidates_xpaths: List[str], query: EdifactStackQuery, expected_result_xpaths: List[str]
+    ):
+        reader, candidates = TestMigXmlReaderMwe._prepare_xml_reader_and_elements(xml_string, candidates_xpaths)
+        expected_result = TestMigXmlReaderMwe._prepare_mig_filter_result(reader._original_tree, expected_result_xpaths)
+        actual = reader.get_unique_result_by_name(candidates=candidates, query=query)
+        assert actual == expected_result
+
+    @pytest.mark.parametrize(
+        "xml_string,candidates_xpaths,query,expected_result_xpaths",
+        [
+            pytest.param(
+                '<?xml version="1.0"?><MSCONS><class ref="SG42" name="foo"><x name="xx"/><y name="yy"/></class></MSCONS>',
+                ["//MSCONS/class/x", "//MSCONS/class/y", "//MSCONS/class/y"],
+                EdifactStackQuery(
+                    segment_group_key="SG123",  # dummy
+                    segment_code="XXX",  # dummy
+                    data_element_id="0000",  # dummy
+                    name="asd",  # dummy
+                    section_name="xx",
+                ),
+                ["//MSCONS/class/x"],
+            ),
+            pytest.param(
+                '<?xml version="1.0"?><MSCONS><class ref="SG42" name="foo"><x name="XxX"/><y name="yy"/></class></MSCONS>',
+                ["//MSCONS/class/x", "//MSCONS/class/y", "//MSCONS/class/y"],
+                EdifactStackQuery(
+                    segment_group_key="SG123",  # dummy
+                    segment_code="XXX",  # dummy
+                    data_element_id="0000",  # dummy
+                    name="asd",  # dummy
+                    section_name="xxx",
+                ),
+                ["//MSCONS/class/x"],
+            ),
+            pytest.param(
+                '<?xml version="1.0"?><MSCONS><class ref="SG42" name="foo"><x name=" XxX-"/><y name="yy"/></class></MSCONS>',
+                ["//MSCONS/class/x", "//MSCONS/class/y", "//MSCONS/class/y"],
+                EdifactStackQuery(
+                    segment_group_key="SG123",  # dummy
+                    segment_code="XXX",  # dummy
+                    data_element_id="0000",  # dummy
+                    name="asd",  # dummy
+                    section_name="xxx",
+                ),
+                ["//MSCONS/class/x"],
+            ),
+        ],
+    )
+    def test_get_unique_result_by_section_name(
+        self, xml_string: str, candidates_xpaths: List[str], query: EdifactStackQuery, expected_result_xpaths: List[str]
+    ):
+        reader, candidates = TestMigXmlReaderMwe._prepare_xml_reader_and_elements(xml_string, candidates_xpaths)
+        expected_result = TestMigXmlReaderMwe._prepare_mig_filter_result(reader._original_tree, expected_result_xpaths)
+        actual = reader.get_unique_result_by_section_name(candidates=candidates, query=query)
+        assert actual == expected_result
+
+    @pytest.mark.parametrize(
+        "xml_string,candidates_xpaths,query,expected_result_xpaths",
+        [
+            pytest.param(
                 '<?xml version="1.0"?><MSCONS><class ref="SG1" key="RFF:1:1[RFF:1:0=AGI]"><foo/></class></MSCONS>',
                 ["//MSCONS/class"],
                 EdifactStackQuery(

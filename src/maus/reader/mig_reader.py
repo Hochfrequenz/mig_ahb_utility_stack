@@ -106,6 +106,7 @@ class MigXmlReader(MigReader):
         """
         returns those elements that have the given name
         """
+        # this method is directly unittests. Please refer to the test for some easy to debug examples.
         filtered_by_names = filter_by_name(candidates, query)
         return list_to_mig_filter_result(filtered_by_names)
 
@@ -115,6 +116,7 @@ class MigXmlReader(MigReader):
         keeps those elements from the candidates whose where the name matches the query section name.
         Does _not_ create a new xpath.
         """
+        # this method is directly unittests. Please refer to the test for some easy to debug examples.
         filtered_by_names = filter_by_section_name(candidates, query)
         return list_to_mig_filter_result(filtered_by_names)
 
