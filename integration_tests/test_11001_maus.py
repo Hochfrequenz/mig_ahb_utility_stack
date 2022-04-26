@@ -17,25 +17,18 @@ class Test11001Maus:
     A unit test that ensures that the 11001 MAUS.json is created.
     """
 
-    @pytest.mark.datafiles("./edifact-tempaltes/FV2204/UTILMD/11042.csv")
-    @pytest.mark.datafiles("./ahbs/FV2204/UTILMD/11042_deep.json")
-    def test_csv_file_reading_11042(self, datafiles):
-        path_to_csv: Path = datafiles / "11042.csv"
+    @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2c.template")
+    @pytest.mark.datafiles("./edifact-templates/ahbs/FV2110/UTILMD/11001.csv")
+    @pytest.mark.datafiles("../unit_tests/migs/FV2204/segment_group_hierarchies/sgh_utilmd.json")
+    def test_maus_creation_11001(self, datafiles):
+        path_to_csv: Path = datafiles / "11001.csv"
         reader = FlatAhbCsvReader(file_path=path_to_csv)
         flat_ahb = reader.to_flat_ahb()
         with open(datafiles / "sgh_utilmd.json", "r", encoding="utf-8") as sgh_file:
             sgh = SegmentGroupHierarchySchema().loads(sgh_file.read())
         actual_deep_ahb = to_deep_ahb(flat_ahb, sgh)
-        with open(datafiles / "11042_deep.json", "r", encoding="utf-8") as deep_ahb_file:
-            expected_deep_ahb = DeepAnwendungshandbuchSchema().loads(deep_ahb_file.read())
         actual_json = DeepAnwendungshandbuchSchema().dumps(actual_deep_ahb, ensure_ascii=True, sort_keys=True)
-        assert actual_deep_ahb == expected_deep_ahb
-        return
-        ## this happens later...
         mig_reader = MigXmlReader(Path(datafiles) / Path("utilmd.xml"))
         assert mig_reader is not None
         replace_discriminators_with_edifact_stack(actual_deep_ahb, mig_reader, ignore_errors=True)
         actual_maus_json = DeepAnwendungshandbuchSchema().dumps(actual_deep_ahb, ensure_ascii=True, sort_keys=True)
-        with open(datafiles / "35001_maus.json", "r", encoding="utf-8") as maus_file:
-            expected_maus = DeepAnwendungshandbuchSchema().loads(maus_file.read())
-        assert actual_deep_ahb == expected_maus
