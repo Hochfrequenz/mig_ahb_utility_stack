@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import List, Optional, Sequence, TextIO, Tuple
 
 from maus.models.anwendungshandbuch import AhbLine, AhbMetaInformation, FlatAnwendungshandbuch
+from maus.models.edifact_components import gabi_edifact_qualifier_pattern
 
 _pruefi_pattern = re.compile(r"^\d{5}$")  #: five digits
 _value_pool_entry_pattern = re.compile(r"^[A-Z0-9\-i]{2,}$")  # i for GABi -- why?
@@ -127,6 +128,8 @@ class FlatAhbCsvReader(FlatAhbReader):
         if _numeric_value_pool_entry_pattern.match(candidate) is not None:
             return True
         if len(candidate) == 1 and candidate.upper() == candidate:
+            return True
+        if gabi_edifact_qualifier_pattern.match(candidate) is not None:
             return True
         return _ebd_code_pattern.match(candidate) is not None
 

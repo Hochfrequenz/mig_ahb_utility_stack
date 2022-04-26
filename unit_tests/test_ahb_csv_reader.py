@@ -41,6 +41,9 @@ class TestAhbCsvReader:
             pytest.param(None, False),
             pytest.param("", False),
             pytest.param("E01", True),
+            pytest.param("GABi-RLMoT", True),
+            pytest.param("GABi-RLMmT", True),
+            pytest.param("Gabi sitzt zu Hause ", False),
         ],
     )
     def test_is_value_pool_entry(self, value: Optional[str], expected_is_value_pool_entry: bool):

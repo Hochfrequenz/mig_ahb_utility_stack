@@ -113,7 +113,7 @@ def _check_that_string_is_not_whitespace_or_empty(instance, attribute, value):
 _simple_edifact_qualifier_pattern = re.compile(r"^[A-Z\d]+$")
 
 #: a pattern that matches the GABi qualifiers: They contain with "-" and lower case "i"/"o"/"n"
-_gabi_edifact_qualifier_pattern = re.compile(r"^(GABi)?[A-Z\d]+(RLM(o|n)T)?$")
+gabi_edifact_qualifier_pattern = re.compile(r"^(GABi)?[A-Z\d\-]+(RLM(o|m)T)?$")
 
 
 def _check_is_edifact_qualifier(instance, attribute, value):
@@ -125,7 +125,7 @@ def _check_is_edifact_qualifier(instance, attribute, value):
     simple_match = _simple_edifact_qualifier_pattern.match(value)
     if simple_match is not None:
         return
-    gabi_match = _gabi_edifact_qualifier_pattern.match(value)
+    gabi_match = gabi_edifact_qualifier_pattern.match(value)
     if gabi_match is not None:
         return
     raise ValueError(f"The qualifier {attribute.name} '{value}' is invalid")
