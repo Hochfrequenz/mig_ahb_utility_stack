@@ -110,7 +110,7 @@ def _check_that_string_is_not_whitespace_or_empty(instance, attribute, value):
 
 
 #: a pattern that matches most of the qualifiers we find in the AHBs
-_simple_edifact_qualifier_pattern = re.compile(r"^[A-Z\d]+$")
+_simple_edifact_qualifier_pattern = re.compile(r"^([A-Z\d]+)|(\d+\.\d+[a-z])$")
 
 #: a pattern that matches the GABi qualifiers: They contain with "-" and lower case "i"/"o"/"n"
 gabi_edifact_qualifier_pattern = re.compile(r"^(GABi)?[A-Z\d\-]+(RLM(o|m)T)?$")
