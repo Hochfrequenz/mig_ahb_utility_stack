@@ -109,6 +109,28 @@ def _check_that_string_is_not_whitespace_or_empty(instance, attribute, value):
         raise ValueError(f"The string {attribute.name} must not consist only of whitespace: '{value}'")
 
 
+#: a pattern that matches most of the qualifiers we find in the AHBs
+_simple_edifact_qualifier_pattern = re.compile(r"^[A-Z\d]+$")
+
+#: a pattern that matches the GABi qualifiers: They contain with "-" and lower case "i"/"o"/"n"
+_gabi_edifact_qualifier_pattern = re.compile(r"^(GABi)?[A-Z\d]+(RLM(o|n)T)?$")
+
+
+def _check_is_edifact_qualifier(instance, attribute, value):
+    """
+    Checks that the given attribute is a valid EDIFACT qualifier.
+    Raises a ValueError if not.
+    """
+    _check_that_string_is_not_whitespace_or_empty(instance, attribute, value)
+    simple_match = _simple_edifact_qualifier_pattern.match(value)
+    if simple_match is not None:
+        return
+    gabi_match = _gabi_edifact_qualifier_pattern.match(value)
+    if gabi_match is not None:
+        return
+    raise ValueError(f"The qualifier {attribute.name} '{value}' is invalid")
+
+
 @attrs.define(auto_attribs=True, kw_only=True)
 class ValuePoolEntry:
     """
@@ -122,7 +144,7 @@ class ValuePoolEntry:
     """
 
     #: the qualifier in edifact, might be e.g. "E01", "D", "9", "1.1a", "G_0057"
-    qualifier: str = attr.field(validator=attrs.validators.matches_re(r"^[A-Z\d\.a-z_]+$"))
+    qualifier: str = attr.field(validator=_check_is_edifact_qualifier)
     #: the meaning as it is written in the AHB (e.g. "Einzug", "Entwurfs-Version", "GS1", "Codeliste Gas G_0057"
     meaning: str = attr.field(validator=attrs.validators.instance_of(str))
     #: the ahb expression, in most cases this is a simple "X"; it must not be empty
@@ -475,8 +497,8 @@ class EdifactStackQuery:
     #: the name of the element, e.g. "MP-ID" or "Kundennummer" or "Identifikator"; Is None for Value Pools
     name: Optional[str] = attrs.field(validator=attrs.validators.optional(attrs.validators.instance_of(str)))
     predecessor_qualifier: Optional[str] = attrs.field(
-        default=None, validator=attrs.validators.optional(attrs.validators.matches_re(r"^[A-Z\d]+$"))
-    )
+        default=None, validator=attrs.validators.optional(_check_is_edifact_qualifier)
+    )  # GABi-RLMEV wtf
     """
     Some names are not really unique. e.g. all date time fields carry more or less the same name in the AHB.
     So to distinguish between them you may provide the predecissing qualifier.

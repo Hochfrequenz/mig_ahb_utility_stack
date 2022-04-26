@@ -12,7 +12,7 @@ from typing import List, Optional, Sequence, TextIO, Tuple
 from maus.models.anwendungshandbuch import AhbLine, AhbMetaInformation, FlatAnwendungshandbuch
 
 _pruefi_pattern = re.compile(r"^\d{5}$")  #: five digits
-_value_pool_entry_pattern = re.compile(r"^[A-Z0-9]{2,}$")
+_value_pool_entry_pattern = re.compile(r"^[A-Z0-9\-i]{2,}$")  # i for GABi -- why?
 _numeric_value_pool_entry_pattern = re.compile(r"^\d+(?:\.\d+)?[a-z]?$")
 _ebd_code_pattern = re.compile(r"^E_\d+$")
 _segment_group_pattern = re.compile(r"^SG\d+$")

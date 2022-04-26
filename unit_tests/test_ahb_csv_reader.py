@@ -114,6 +114,13 @@ class TestAhbCsvReader:
                 "Versionsnummer derzugrundeliegendenBDEW-Nachrichtenbeschreibung",
                 id="iftsta version",
             ),
+            pytest.param(
+                "GABI-RLMNEV",
+                "Nominierungsersatzverfahren - Exit (Hinweis: Dieser Code darf nur für Liefermonate vor dem 01.10.2016 genutzt werden)",
+                "GABI-RLMNEV",
+                "Nominierungsersatzverfahren - Exit (Hinweis: Dieser Code darf nur für Liefermonate vor dem 01.10.2016 genutzt werden)",
+                id="GABI-RLMNEV",
+            ),
         ],
     )
     def test_code_description_separation(
