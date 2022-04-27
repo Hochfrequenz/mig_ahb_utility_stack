@@ -1,6 +1,9 @@
+import json
 from pathlib import Path
+from sys import gettrace
 
 import pytest  # type:ignore[import]
+from helpers import should_write_to_submodule
 from test_mig_xml_reader_real_data import ALL_MIG_XML_FILES  # type:ignore[import]
 
 from maus import to_deep_ahb
@@ -28,7 +31,20 @@ class Test11001Maus:
             sgh = SegmentGroupHierarchySchema().loads(sgh_file.read())
         actual_deep_ahb = to_deep_ahb(flat_ahb, sgh)
         actual_json = DeepAnwendungshandbuchSchema().dumps(actual_deep_ahb, ensure_ascii=True, sort_keys=True)
-        mig_reader = MigXmlReader(Path(datafiles) / Path("utilmd.xml"))
+        mig_reader = MigXmlReader(Path(datafiles) / Path("UTILMD5.2c.template"))
         assert mig_reader is not None
         replace_discriminators_with_edifact_stack(actual_deep_ahb, mig_reader, ignore_errors=True)
-        actual_maus_json = DeepAnwendungshandbuchSchema().dumps(actual_deep_ahb, ensure_ascii=True, sort_keys=True)
+        actual_maus_json = DeepAnwendungshandbuchSchema().dumps(
+            actual_deep_ahb, ensure_ascii=True, sort_keys=True, indent=True
+        )
+        assert actual_maus_json is not None
+        write_into_submodule: bool = should_write_to_submodule()
+        maus_file_path = Path("edifact-templates/maus/FV2110/UTILMD/11001_maus.json")
+        if write_into_submodule:
+            with open(maus_file_path, "w+", encoding="utf-8") as outfile:
+                outfile.write(actual_maus_json)
+        else:
+            with open(maus_file_path, "r", encoding="utf-8") as infile:
+                json_content = json.load(infile)
+                expected_maus = DeepAnwendungshandbuchSchema().load(json_content)
+            assert actual_deep_ahb == expected_maus
