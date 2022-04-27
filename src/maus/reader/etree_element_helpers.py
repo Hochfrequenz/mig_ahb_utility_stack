@@ -23,8 +23,10 @@ def get_segment_group_key_or_none(element: Element) -> Optional[str]:
     return None
 
 
-#: a regex to match a ref-segment: https://regex101.com/r/KY25AH/1
-_nested_qualifier_pattern = re.compile(r"^(?P<segment_code>[A-Z]+):\d+:\d+\[(?:\w+:)+\w+:?=(?P<qualifier>[A-Z\d]+)\]$")
+#: a regex to match a ref-segment: https://regex101.com/r/D81bbO/1
+_nested_qualifier_pattern = re.compile(
+    r"^(?P<segment_code>[A-Z]+):\d+:(?:\d+|\(\d+,\d+\))\[(?:\w+:)+\w+:?=(?P<qualifier>[A-Z\d]+)\]$"
+)
 
 
 def get_nested_qualifier(attrib_key: Literal["ref", "key"], element: Element) -> Optional[str]:
