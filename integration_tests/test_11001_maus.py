@@ -3,7 +3,7 @@ from pathlib import Path
 from sys import gettrace
 
 import pytest  # type:ignore[import]
-from helpers import should_write_to_submodule
+from helpers import should_write_to_submodule, write_to_file_or_assert_equality
 from test_mig_xml_reader_real_data import ALL_MIG_XML_FILES  # type:ignore[import]
 
 from maus import to_deep_ahb
@@ -38,13 +38,5 @@ class Test11001Maus:
             actual_deep_ahb, ensure_ascii=True, sort_keys=True, indent=True
         )
         assert actual_maus_json is not None
-        write_into_submodule: bool = should_write_to_submodule()
         maus_file_path = Path("edifact-templates/maus/FV2110/UTILMD/11001_maus.json")
-        if write_into_submodule:
-            with open(maus_file_path, "w+", encoding="utf-8") as outfile:
-                outfile.write(actual_maus_json)
-        else:
-            with open(maus_file_path, "r", encoding="utf-8") as infile:
-                json_content = json.load(infile)
-                expected_maus = DeepAnwendungshandbuchSchema().load(json_content)
-            assert actual_deep_ahb == expected_maus
+        write_to_file_or_assert_equality(actual_deep_ahb, maus_file_path)
