@@ -29,7 +29,7 @@ class Test11001Maus:
         actual_json = DeepAnwendungshandbuchSchema().dumps(actual_deep_ahb, ensure_ascii=True, sort_keys=True)
         mig_reader = MigXmlReader(Path(datafiles) / Path("UTILMD5.2c.template"))
         assert mig_reader is not None
-        replace_discriminators_with_edifact_stack(actual_deep_ahb, mig_reader, ignore_errors=True)
+        replace_discriminators_with_edifact_stack(actual_deep_ahb, mig_reader, ignore_errors=False)
         actual_maus_json = DeepAnwendungshandbuchSchema().dumps(
             actual_deep_ahb, ensure_ascii=True, sort_keys=True, indent=True
         )
