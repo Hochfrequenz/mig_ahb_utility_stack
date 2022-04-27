@@ -317,8 +317,8 @@ class TestAhb:
                                     data_elements=[
                                         DataElementValuePool(
                                             value_pool=[
-                                                ValuePoolEntry(qualifier="hello", meaning="world", ahb_expression="X"),
-                                                ValuePoolEntry(qualifier="maus", meaning="rocks", ahb_expression="X"),
+                                                ValuePoolEntry(qualifier="HELLO", meaning="world", ahb_expression="X"),
+                                                ValuePoolEntry(qualifier="MAUS", meaning="rocks", ahb_expression="X"),
                                             ],
                                             discriminator="baz",
                                             data_element_id="0123",
@@ -364,8 +364,8 @@ class TestAhb:
                                     "data_elements": [
                                         {
                                             "value_pool": [
-                                                {"qualifier": "hello", "meaning": "world", "ahb_expression": "X"},
-                                                {"qualifier": "maus", "meaning": "rocks", "ahb_expression": "X"},
+                                                {"qualifier": "HELLO", "meaning": "world", "ahb_expression": "X"},
+                                                {"qualifier": "MAUS", "meaning": "rocks", "ahb_expression": "X"},
                                             ],
                                             "discriminator": "baz",
                                             "data_element_id": "0123",
@@ -422,8 +422,8 @@ class TestAhb:
                                     data_elements=[
                                         DataElementValuePool(
                                             value_pool=[
-                                                ValuePoolEntry(qualifier="hello", meaning="world", ahb_expression="X"),
-                                                ValuePoolEntry(qualifier="maus", meaning="rocks", ahb_expression="X"),
+                                                ValuePoolEntry(qualifier="HELLO", meaning="world", ahb_expression="X"),
+                                                ValuePoolEntry(qualifier="MAUS", meaning="rocks", ahb_expression="X"),
                                             ],
                                             discriminator="baz",
                                             data_element_id="0123",
@@ -454,8 +454,8 @@ class TestAhb:
                                     data_elements=[
                                         DataElementValuePool(
                                             value_pool=[
-                                                ValuePoolEntry(qualifier="hello", meaning="world", ahb_expression="X"),
-                                                ValuePoolEntry(qualifier="maus", meaning="rocks", ahb_expression="X"),
+                                                ValuePoolEntry(qualifier="HELLO", meaning="world", ahb_expression="X"),
+                                                ValuePoolEntry(qualifier="MAUS", meaning="rocks", ahb_expression="X"),
                                             ],
                                             discriminator="baz",
                                             data_element_id="0123",

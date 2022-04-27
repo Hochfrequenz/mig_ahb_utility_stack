@@ -38,6 +38,15 @@ def get_nested_qualifier(attrib_key: Literal["ref", "key"], element: Element) ->
     return None
 
 
+def get_ahb_name_or_none(element: Element) -> Optional[str]:
+    """
+    returns the ahbName of element if present; None otherwise
+    """
+    if "ahbName" in element.attrib:
+        return element.attrib["ahbName"]
+    return None
+
+
 def filter_by_name(candidates: List[Element], query: EdifactStackQuery) -> List[Element]:
     """
     returns those elements that have the given name (in the query)

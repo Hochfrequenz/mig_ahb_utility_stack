@@ -41,6 +41,9 @@ class TestAhbCsvReader:
             pytest.param(None, False),
             pytest.param("", False),
             pytest.param("E01", True),
+            pytest.param("GABi-RLMoT", True),
+            pytest.param("GABi-RLMmT", True),
+            pytest.param("Gabi sitzt zu Hause ", False),
         ],
     )
     def test_is_value_pool_entry(self, value: Optional[str], expected_is_value_pool_entry: bool):
@@ -113,6 +116,34 @@ class TestAhbCsvReader:
                 "2.0d",
                 "Versionsnummer derzugrundeliegendenBDEW-Nachrichtenbeschreibung",
                 id="iftsta version",
+            ),
+            pytest.param(
+                "GABI-RLMNEV",
+                "Nominierungsersatzverfahren - Exit (Hinweis: Dieser Code darf nur für Liefermonate vor dem 01.10.2016 genutzt werden)",
+                "GABI-RLMNEV",
+                "Nominierungsersatzverfahren - Exit (Hinweis: Dieser Code darf nur für Liefermonate vor dem 01.10.2016 genutzt werden)",
+                id="GABI-RLMNEV",
+            ),
+            pytest.param(
+                "GABI-RLMNEV",
+                "Nominierungsersatzverfahren - Exit (Hinweis: Dieser Code darf nur für Liefermonate vor dem 01.10.2016 genutzt werden)",
+                "GABI-RLMNEV",
+                "Nominierungsersatzverfahren - Exit (Hinweis: Dieser Code darf nur für Liefermonate vor dem 01.10.2016 genutzt werden)",
+                id="GABI-RLMNEV",
+            ),
+            pytest.param(
+                "MS",
+                "Nachrichtenaussteller bzw.",
+                "MS",
+                "Nachrichtenaussteller bzw.",
+                id="MP-ID Absender REQOTE",
+            ),
+            pytest.param(
+                "9",
+                "GS1",
+                "9",
+                "GS1",
+                id="Codeliste GS1",
             ),
         ],
     )
