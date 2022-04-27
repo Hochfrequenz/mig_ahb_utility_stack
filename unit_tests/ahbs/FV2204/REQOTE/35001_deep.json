@@ -136,7 +136,7 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "meaning": "Nachrichtenaussteller bzw.",
+                      "meaning": "Nachrichtenaussteller bzw. -absender",
                       "qualifier": "MS"
                     }
                   ],

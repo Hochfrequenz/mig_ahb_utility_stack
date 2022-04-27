@@ -124,6 +124,27 @@ class TestAhbCsvReader:
                 "Nominierungsersatzverfahren - Exit (Hinweis: Dieser Code darf nur für Liefermonate vor dem 01.10.2016 genutzt werden)",
                 id="GABI-RLMNEV",
             ),
+            pytest.param(
+                "GABI-RLMNEV",
+                "Nominierungsersatzverfahren - Exit (Hinweis: Dieser Code darf nur für Liefermonate vor dem 01.10.2016 genutzt werden)",
+                "GABI-RLMNEV",
+                "Nominierungsersatzverfahren - Exit (Hinweis: Dieser Code darf nur für Liefermonate vor dem 01.10.2016 genutzt werden)",
+                id="GABI-RLMNEV",
+            ),
+            pytest.param(
+                "MS",
+                "Nachrichtenaussteller bzw.",
+                "MS",
+                "Nachrichtenaussteller bzw.",
+                id="MP-ID Absender REQOTE",
+            ),
+            pytest.param(
+                "9",
+                "GS1",
+                "9",
+                "GS1",
+                id="Codeliste GS1",
+            ),
         ],
     )
     def test_code_description_separation(

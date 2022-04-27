@@ -14,6 +14,7 @@ from maus.models.edifact_components import EdifactStack, EdifactStackLevel, Edif
 from maus.reader.etree_element_helpers import (
     filter_by_name,
     filter_by_section_name,
+    get_ahb_name_or_none,
     get_nested_qualifier,
     get_segment_group_key_or_none,
     list_to_mig_filter_result,
@@ -189,6 +190,19 @@ class MigXmlReader(MigReader):
             if self.get_parent_segment_group_key(c, use_sanitized_tree=False) == query.segment_group_key
         ]
         return list_to_mig_filter_result(filtered_by_segment_group_key)
+
+    def get_unique_result_by_parent_ahb_name_section_name(
+        self, candidates: List[Element], query: EdifactStackQuery
+    ) -> MigFilterResult:
+        """
+        Keep those elements that have (in the parent class) the given query.section_name
+        """
+        filtered_by_parent_ahb_name_key = [
+            c
+            for c in candidates
+            if self._get_parent_x(c, lambda e: get_ahb_name_or_none(e), use_sanitized_tree=False) == query.section_name
+        ]
+        return list_to_mig_filter_result(filtered_by_parent_ahb_name_key)
 
     def _get_parent_x(
         self, element: Element, evaluator: Callable[[Element], Result], use_sanitized_tree: bool
@@ -379,6 +393,16 @@ class MigXmlReader(MigReader):
                     no_result_strategy=None,
                 ),
                 multiple_results_strategy=None,
+            )
+        if query.section_name is not None:
+            return EdifactStackSearchStrategy(
+                name="N filter by parents ahb name (using the section name)",
+                filter=lambda q, c: self.get_unique_result_by_parent_ahb_name_section_name(c, q),
+                unique_result_strategy=lambda unique_result: self.element_to_edifact_stack(
+                    unique_result, use_sanitized_tree=False
+                ),
+                multiple_results_strategy=None,
+                no_result_strategy=None,
             )
         return None
 

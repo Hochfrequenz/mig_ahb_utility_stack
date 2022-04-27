@@ -7,6 +7,7 @@ from maus.models.edifact_components import EdifactStackQuery
 from maus.reader.etree_element_helpers import (
     filter_by_name,
     filter_by_section_name,
+    get_ahb_name_or_none,
     get_nested_qualifier,
     get_segment_group_key_or_none,
     list_to_mig_filter_result,
@@ -48,6 +49,17 @@ class TestEtreeSingleElementHelpers:
     def test_get_segment_group_key_or_none(self, xml_string: str, expected: Optional[str]):
         element = _string_to_element(xml_string)
         assert get_segment_group_key_or_none(element) == expected
+
+    @pytest.mark.parametrize(
+        "xml_string, expected",
+        [
+            pytest.param('<foo ahbName="X"></foo>', "X"),
+            pytest.param("<bar></bar>", None),
+        ],
+    )
+    def test_get_ahb_name_or_none(self, xml_string: str, expected: Optional[str]):
+        element = _string_to_element(xml_string)
+        assert get_ahb_name_or_none(element) == expected
 
     @pytest.mark.parametrize(
         "ref_or_key, xml_string, expected",

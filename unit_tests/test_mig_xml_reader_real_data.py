@@ -170,6 +170,20 @@ class TestMigXmlReaderRealData:
                 '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Geplante Turnusablesung des MSB (Strom)"]',
                 id="UTILMD geplante Turnusablesung 752",
             ),
+            pytest.param(
+                "reqote.xml",
+                EdifactStackQuery(
+                    segment_group_key="SG11",
+                    segment_code="NAD",
+                    data_element_id="3055",
+                    name=None,
+                    predecessor_qualifier=None,
+                    section_name="MP-ID Absender"
+                    # division=Division.ELECTRICITY,
+                ),
+                '$["Dokument"][0]["Nachricht"][0]["MP-ID Absender"][0]["Codeliste"]',
+                id="REQOTE Absender",
+            ),
             # pytest.param( # unsolved
             #    "utilmd_1154.xml",
             # EdifactStackQuery(segment_group_key='SG8', segment_code='RFF', data_element_id='1154',
