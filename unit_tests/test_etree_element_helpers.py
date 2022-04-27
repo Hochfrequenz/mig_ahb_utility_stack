@@ -70,6 +70,7 @@ class TestEtreeSingleElementHelpers:
             pytest.param("ref", '<baz ref="DTM:1:1[1:0=469]"></baz>', "469"),
             pytest.param("key", '<baz asd="hello"></baz>', None),
             pytest.param("key", '<foo key="NAD:2:0[1:0=MS]"></foo>', "MS"),
+            pytest.param("ref", '<field ref="FTX:4:(0,4)[1:0=ACB]" />', "ACB"),
         ],
     )
     def test_get_nested_qualifier(self, ref_or_key: Literal["ref", "key"], xml_string: str, expected: Optional[str]):
