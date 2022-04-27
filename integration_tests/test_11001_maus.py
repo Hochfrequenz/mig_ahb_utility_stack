@@ -1,10 +1,7 @@
-import json
 from pathlib import Path
-from sys import gettrace
 
 import pytest  # type:ignore[import]
-from helpers import should_write_to_submodule, write_to_file_or_assert_equality
-from test_mig_xml_reader_real_data import ALL_MIG_XML_FILES  # type:ignore[import]
+from helpers import write_to_file_or_assert_equality
 
 from maus import to_deep_ahb
 from maus.deep_ahb_mig_joiner import replace_discriminators_with_edifact_stack
@@ -12,7 +9,6 @@ from maus.models.anwendungshandbuch import DeepAnwendungshandbuchSchema
 from maus.models.message_implementation_guide import SegmentGroupHierarchySchema
 from maus.reader.flat_ahb_reader import FlatAhbCsvReader
 from maus.reader.mig_reader import MigXmlReader
-from unit_tests.test_mig import ALL_SGH_FILES  # type:ignore[import]
 
 
 class Test11001Maus:
