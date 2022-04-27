@@ -22,58 +22,85 @@ def _replace_disciminators_with_edifact_stack_segments(
 ) -> Tuple[List[Segment], Dict[str, Set[str]]]:
     result = segments.copy()
     predecessors_used: Dict[str, Set[str]] = {}  # maps the segment code to a set of qualifiers used as predecessors
-    for segment_index, segment in (
-        s for s in enumerate(segments) if not is_edifact_boilerplate(s[1].discriminator)
+    for segment_index, segment in enumerate(
+        s for s in segments if not is_edifact_boilerplate(s.discriminator)
     ):  # type:ignore[union-attr]
-        current_segment_key = segment.discriminator
         predecessor_qualifier: Optional[str] = None
         for de_index, data_element in enumerate(segment.data_elements):
             if isinstance(data_element, DataElementFreeText):
-                query = EdifactStackQuery(
-                    segment_group_key=segment_group_key,
-                    segment_code=current_segment_key,
-                    data_element_id=data_element.data_element_id,
-                    name=data_element.discriminator,
-                    predecessor_qualifier=predecessor_qualifier,
-                    section_name=segment.section_name,
-                )
-                stack = mig_reader.get_edifact_stack(query)
+                stack = _handle_free_text(mig_reader, segment_group_key, segment, data_element, predecessor_qualifier)
                 # for easy error analysis set a conditional break point here for 'stack is None'
                 if stack is not None:
                     result[segment_index].data_elements[de_index].discriminator = stack.to_json_path()
                 elif ignore_errors:
-                    raise ValueError(f"Couldn't find a stack for {query}")
+                    raise ValueError(f"Couldn't find a stack for (DataElementFreeText {data_element})")
             if isinstance(data_element, DataElementValuePool):
-                query = EdifactStackQuery(
-                    segment_group_key=segment_group_key,
-                    segment_code=current_segment_key,
-                    data_element_id=data_element.data_element_id,
-                    name=None,
-                    predecessor_qualifier=predecessor_qualifier,
-                    section_name=segment.section_name,
+                edifact_stack = _handle_value_pool(
+                    mig_reader, segment_group_key, segment, data_element, predecessor_qualifier, fallback_predecessors
                 )
-                edifact_stack = mig_reader.get_edifact_stack(query)
                 if edifact_stack is not None:
                     result[segment_index].data_elements[de_index].discriminator = edifact_stack.to_json_path()
-                if edifact_stack is None and len(data_element.value_pool) > 1:
-                    if predecessor_qualifier is None:
-                        edifact_stack = _find_stack_using_fallback_predecessors(
-                            mig_reader, query_draft=query, fallback_predecessors=fallback_predecessors
-                        )
-                        if edifact_stack is not None:
-                            result[segment_index].data_elements[de_index].discriminator = edifact_stack.to_json_path()
-                            break
-                    if edifact_stack is None and not ignore_errors:
-                        raise ValueError(f"Any value pool with more than 1 entry has to have an edifact stack {query}")
+                elif not ignore_errors:
+                    raise ValueError(
+                        f"Any value pool with more than 1 entry has to have an edifact stack {data_element}"
+                    )
                 if len(data_element.value_pool) == 1:
                     predecessor_qualifier = data_element.value_pool[0].qualifier
                     try:
-                        predecessors_used[current_segment_key].add(predecessor_qualifier)
+                        predecessors_used[segment.discriminator].add(predecessor_qualifier)
                     except KeyError:
-                        predecessors_used[current_segment_key] = {predecessor_qualifier}
+                        predecessors_used[segment.discriminator] = {predecessor_qualifier}
                 else:
                     predecessor_qualifier = None
     return result, predecessors_used
+
+
+def _handle_free_text(
+    mig_reader: MigReader,
+    segment_group_key: str,
+    segment: Segment,
+    data_element: DataElementFreeText,
+    predecessor_qualifier: Optional[str],
+) -> Optional[EdifactStack]:
+    query = EdifactStackQuery(
+        segment_group_key=segment_group_key,
+        segment_code=segment.discriminator,
+        data_element_id=data_element.data_element_id,
+        name=data_element.discriminator,
+        predecessor_qualifier=predecessor_qualifier,
+        section_name=segment.section_name,
+    )
+    stack = mig_reader.get_edifact_stack(query)
+    return stack
+
+
+def _handle_value_pool(
+    mig_reader: MigReader,
+    segment_group_key: str,
+    segment: Segment,
+    data_element: DataElementValuePool,
+    predecessor_qualifier: Optional[str],
+    fallback_predecessors: Dict[str, Set[str]],
+) -> Optional[EdifactStack]:
+    query = EdifactStackQuery(
+        segment_group_key=segment_group_key,
+        segment_code=segment.discriminator,
+        data_element_id=data_element.data_element_id,
+        name=None,
+        predecessor_qualifier=predecessor_qualifier,
+        section_name=segment.section_name,
+    )
+    edifact_stack = mig_reader.get_edifact_stack(query)
+    if edifact_stack is not None:
+        return edifact_stack
+    if len(data_element.value_pool) > 1:
+        if predecessor_qualifier is None:
+            edifact_stack = _find_stack_using_fallback_predecessors(
+                mig_reader, query_draft=query, fallback_predecessors=fallback_predecessors
+            )
+            if edifact_stack is not None:
+                return edifact_stack
+    return None
 
 
 def _find_stack_using_fallback_predecessors(
