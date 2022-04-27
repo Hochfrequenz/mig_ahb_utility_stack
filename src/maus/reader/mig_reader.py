@@ -397,7 +397,9 @@ class MigXmlReader(MigReader):
         if query.section_name is not None:
             return EdifactStackSearchStrategy(
                 name="N filter by parents ahb name (using the section name)",
-                filter=lambda q, c: self.get_unique_result_by_parent_ahb_name_section_name(c, q),
+                filter=lambda q, c: self.get_unique_result_by_parent_ahb_name_section_name(
+                    c, q  # type:ignore[arg-type]
+                ),
                 unique_result_strategy=lambda unique_result: self.element_to_edifact_stack(
                     unique_result, use_sanitized_tree=False
                 ),
