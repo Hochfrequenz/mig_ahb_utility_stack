@@ -104,8 +104,8 @@ class TestEdifactComponents:
                     "data_elements": [
                         {
                             "value_pool": [
-                                {"qualifier": "hello", "meaning": "world", "ahb_expression": "X"},
-                                {"qualifier": "maus", "meaning": "rocks", "ahb_expression": "X"},
+                                {"qualifier": "HELLO", "meaning": "world", "ahb_expression": "X"},
+                                {"qualifier": "MAUS", "meaning": "rocks", "ahb_expression": "X"},
                             ],
                             "discriminator": "baz",
                             "data_element_id": "0329",
