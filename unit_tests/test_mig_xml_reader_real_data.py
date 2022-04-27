@@ -192,10 +192,10 @@ class TestMigXmlReaderRealData:
                     segment_code="QTY",
                     data_element_id="6063",
                     name=None,
-                    predecessor_qualifier=None,
+                    predecessor_qualifier="Z01",
                     section_name="Arbeit / Leistung für tagesparameterabhängige Marktlokation",
                 ),
-                '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0][0]["Daten der Marktlokation"]["Arbeit / Leistung für tagesparameterabhängige Marktlokation"][0]["Qualifier"]',
+                '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Daten der Marktlokation"][0]["Arbeit / Leistung für tagesparameterabhängige Marktlokation"][0]["Qualifier"]',
                 id="UTILMD 6063",
             ),
             # pytest.param( # unsolved
