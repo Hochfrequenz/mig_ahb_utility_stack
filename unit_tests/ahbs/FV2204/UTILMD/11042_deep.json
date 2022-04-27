@@ -22,8 +22,8 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "qualifier": "IC",
-                          "meaning": "Informationskontakt"
+                          "meaning": "Informationskontakt",
+                          "qualifier": "IC"
                         }
                       ],
                       "value_type": "VALUE_POOL"
@@ -55,28 +55,28 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X [1P0..1]",
-                          "qualifier": "EM",
-                          "meaning": "Elektronische Post"
+                          "meaning": "Elektronische Post",
+                          "qualifier": "EM"
                         },
                         {
                           "ahb_expression": "X [1P0..1]",
-                          "qualifier": "FX",
-                          "meaning": "Telefax"
+                          "meaning": "Telefax",
+                          "qualifier": "FX"
                         },
                         {
                           "ahb_expression": "X [1P0..1]",
-                          "qualifier": "TE",
-                          "meaning": "Telefon"
+                          "meaning": "Telefon",
+                          "qualifier": "TE"
                         },
                         {
                           "ahb_expression": "X [1P0..1]",
-                          "qualifier": "AJ",
-                          "meaning": "weiteres Telefon"
+                          "meaning": "weiteres Telefon",
+                          "qualifier": "AJ"
                         },
                         {
                           "ahb_expression": "X [1P0..1]",
-                          "qualifier": "AL",
-                          "meaning": "Handy"
+                          "meaning": "Handy",
+                          "qualifier": "AL"
                         }
                       ],
                       "value_type": "VALUE_POOL"
@@ -98,18 +98,17 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "qualifier": "MS",
-                      "meaning": "Dokumenten-/Nachrichtenausstellerbzw. -absender"
+                      "meaning": "Dokumenten-/Nachrichtenausstellerbzw. -absender",
+                      "qualifier": "MS"
                     }
                   ],
                   "value_type": "VALUE_POOL"
                 },
                 {
-                  "ahb_expression": "X",
                   "data_element_id": "3039",
-                  "discriminator": "MP-ID",
-                  "entered_input": null,
-                  "value_type": "TEXT"
+                  "discriminator": "SG2->NAD->3039",
+                  "value_pool": [],
+                  "value_type": "VALUE_POOL"
                 },
                 {
                   "data_element_id": "3055",
@@ -117,18 +116,18 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "qualifier": "9",
-                      "meaning": "GS1"
+                      "meaning": "GS1",
+                      "qualifier": "9"
                     },
                     {
                       "ahb_expression": "X",
-                      "qualifier": "293",
-                      "meaning": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)"
+                      "meaning": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",
+                      "qualifier": "293"
                     },
                     {
                       "ahb_expression": "X",
-                      "qualifier": "332",
-                      "meaning": "DE, DVGW Service & Consult GmbH"
+                      "meaning": "DE, DVGW Service & Consult GmbH",
+                      "qualifier": "332"
                     }
                   ],
                   "value_type": "VALUE_POOL"
@@ -146,18 +145,17 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "qualifier": "MR",
-                      "meaning": "Nachrichtenempf\u00e4nger"
+                      "meaning": "Nachrichtenempf\u00e4nger",
+                      "qualifier": "MR"
                     }
                   ],
                   "value_type": "VALUE_POOL"
                 },
                 {
-                  "ahb_expression": "X",
                   "data_element_id": "3039",
-                  "discriminator": "MP-ID",
-                  "entered_input": null,
-                  "value_type": "TEXT"
+                  "discriminator": "SG2->NAD->3039",
+                  "value_pool": [],
+                  "value_type": "VALUE_POOL"
                 },
                 {
                   "data_element_id": "3055",
@@ -165,18 +163,18 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "qualifier": "9",
-                      "meaning": "GS1"
+                      "meaning": "GS1",
+                      "qualifier": "9"
                     },
                     {
                       "ahb_expression": "X",
-                      "qualifier": "293",
-                      "meaning": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)"
+                      "meaning": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",
+                      "qualifier": "293"
                     },
                     {
                       "ahb_expression": "X",
-                      "qualifier": "332",
-                      "meaning": "DE, DVGW Service & Consult GmbH"
+                      "meaning": "DE, DVGW Service & Consult GmbH",
+                      "qualifier": "332"
                     }
                   ],
                   "value_type": "VALUE_POOL"
@@ -205,8 +203,8 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "qualifier": "172",
-                          "meaning": "Meldepunkt"
+                          "meaning": "Meldepunkt",
+                          "qualifier": "172"
                         }
                       ],
                       "value_type": "VALUE_POOL"
@@ -238,8 +236,8 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "qualifier": "Z13",
-                          "meaning": "Pr\u00fcfidentifikator"
+                          "meaning": "Pr\u00fcfidentifikator",
+                          "qualifier": "Z13"
                         }
                       ],
                       "value_type": "VALUE_POOL"
@@ -250,8 +248,8 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "qualifier": "11042",
-                          "meaning": "WiM / Anmeldung MSB"
+                          "meaning": "WiM / Anmeldung MSB",
+                          "qualifier": "11042"
                         }
                       ],
                       "value_type": "VALUE_POOL"
@@ -286,8 +284,8 @@
                           "value_pool": [
                             {
                               "ahb_expression": "X",
-                              "qualifier": "E13",
-                              "meaning": "Z\u00e4hlertyp"
+                              "meaning": "Z\u00e4hlertyp",
+                              "qualifier": "E13"
                             }
                           ],
                           "value_type": "VALUE_POOL"
@@ -305,8 +303,8 @@
                           "value_pool": [
                             {
                               "ahb_expression": "X",
-                              "qualifier": "Z30",
-                              "meaning": "Ger\u00e4tenummer"
+                              "meaning": "Ger\u00e4tenummer",
+                              "qualifier": "Z30"
                             }
                           ],
                           "value_type": "VALUE_POOL"
@@ -335,8 +333,8 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "qualifier": "Z03",
-                          "meaning": "Z\u00e4hleinrichtungsdaten"
+                          "meaning": "Z\u00e4hleinrichtungsdaten",
+                          "qualifier": "Z03"
                         }
                       ],
                       "value_type": "VALUE_POOL"
@@ -361,8 +359,8 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "qualifier": "Z07",
-                          "meaning": "Kunde des MSB"
+                          "meaning": "Kunde des MSB",
+                          "qualifier": "Z07"
                         }
                       ],
                       "value_type": "VALUE_POOL"
@@ -380,13 +378,13 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "qualifier": "Z01",
-                          "meaning": "Struktur von Personennamen"
+                          "meaning": "Struktur von Personennamen",
+                          "qualifier": "Z01"
                         },
                         {
                           "ahb_expression": "X",
-                          "qualifier": "Z02",
-                          "meaning": "Struktur der Firmenbezeichnung"
+                          "meaning": "Struktur der Firmenbezeichnung",
+                          "qualifier": "Z02"
                         }
                       ],
                       "value_type": "VALUE_POOL"
@@ -404,8 +402,8 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "qualifier": "Z08",
-                          "meaning": "Korrespondenzanschriftdes Kunden des MSB"
+                          "meaning": "Korrespondenzanschriftdes Kunden des MSB",
+                          "qualifier": "Z08"
                         }
                       ],
                       "value_type": "VALUE_POOL"
@@ -423,13 +421,13 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "qualifier": "Z01",
-                          "meaning": "Struktur von Personennamen"
+                          "meaning": "Struktur von Personennamen",
+                          "qualifier": "Z01"
                         },
                         {
                           "ahb_expression": "X",
-                          "qualifier": "Z02",
-                          "meaning": "Struktur der Firmenbezeichnung"
+                          "meaning": "Struktur der Firmenbezeichnung",
+                          "qualifier": "Z02"
                         }
                       ],
                       "value_type": "VALUE_POOL"
@@ -475,8 +473,8 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "qualifier": "Z03",
-                          "meaning": "Messlokationsadresse"
+                          "meaning": "Messlokationsadresse",
+                          "qualifier": "Z03"
                         }
                       ],
                       "value_type": "VALUE_POOL"
@@ -529,8 +527,8 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "qualifier": "Z05",
-                          "meaning": "Name und Adresse f\u00fcrdie Ablesekarte"
+                          "meaning": "Name und Adresse f\u00fcrdie Ablesekarte",
+                          "qualifier": "Z05"
                         }
                       ],
                       "value_type": "VALUE_POOL"
@@ -548,13 +546,13 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "qualifier": "Z01",
-                          "meaning": "Struktur von Personennamen"
+                          "meaning": "Struktur von Personennamen",
+                          "qualifier": "Z01"
                         },
                         {
                           "ahb_expression": "X",
-                          "qualifier": "Z02",
-                          "meaning": "Struktur der Firmenbezeichnung"
+                          "meaning": "Struktur der Firmenbezeichnung",
+                          "qualifier": "Z02"
                         }
                       ],
                       "value_type": "VALUE_POOL"
@@ -600,8 +598,8 @@
                       "value_pool": [
                         {
                           "ahb_expression": "X",
-                          "qualifier": "Z19",
-                          "meaning": "Messlokation"
+                          "meaning": "Messlokation",
+                          "qualifier": "Z19"
                         }
                       ],
                       "value_type": "VALUE_POOL"
@@ -630,8 +628,8 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "qualifier": "24",
-                      "meaning": "Transaktion"
+                      "meaning": "Transaktion",
+                      "qualifier": "24"
                     }
                   ],
                   "value_type": "VALUE_POOL"
@@ -656,8 +654,8 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "qualifier": "76",
-                      "meaning": "Lieferdatum/-zeit, geplant"
+                      "meaning": "Lieferdatum/-zeit, geplant",
+                      "qualifier": "76"
                     }
                   ],
                   "value_type": "VALUE_POOL"
@@ -675,8 +673,8 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "qualifier": "303",
-                      "meaning": "CCYYMMDDHHMMZZZ"
+                      "meaning": "CCYYMMDDHHMMZZZ",
+                      "qualifier": "303"
                     }
                   ],
                   "value_type": "VALUE_POOL"
@@ -694,8 +692,8 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "qualifier": "7",
-                      "meaning": "Transaktionsgrund"
+                      "meaning": "Transaktionsgrund",
+                      "qualifier": "7"
                     }
                   ],
                   "value_type": "VALUE_POOL"
@@ -706,23 +704,23 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "qualifier": "E01",
-                      "meaning": "Ein-/Auszug (Umzug)"
+                      "meaning": "Ein-/Auszug (Umzug)",
+                      "qualifier": "E01"
                     },
                     {
                       "ahb_expression": "X",
-                      "qualifier": "E02",
-                      "meaning": "Einzug/Neuanlage"
+                      "meaning": "Einzug/Neuanlage",
+                      "qualifier": "E02"
                     },
                     {
                       "ahb_expression": "X",
-                      "qualifier": "E03",
-                      "meaning": "Wechsel"
+                      "meaning": "Wechsel",
+                      "qualifier": "E03"
                     },
                     {
                       "ahb_expression": "X",
-                      "qualifier": "ZJ4",
-                      "meaning": "\u00dcbernahme aufgrund nicht erfolgtem iMS- Einbau"
+                      "meaning": "\u00dcbernahme aufgrund nicht erfolgtem iMS- Einbau",
+                      "qualifier": "ZJ4"
                     }
                   ],
                   "value_type": "VALUE_POOL"
@@ -740,8 +738,8 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X",
-                      "qualifier": "9",
-                      "meaning": "Vertrag"
+                      "meaning": "Vertrag",
+                      "qualifier": "9"
                     }
                   ],
                   "value_type": "VALUE_POOL"
@@ -752,13 +750,13 @@
                   "value_pool": [
                     {
                       "ahb_expression": "X [1P0..1]",
-                      "qualifier": "Z04",
-                      "meaning": "Vertrag zwischen AN und MSB"
+                      "meaning": "Vertrag zwischen AN und MSB",
+                      "qualifier": "Z04"
                     },
                     {
                       "ahb_expression": "X [1P0..1]",
-                      "qualifier": "Z06",
-                      "meaning": "Vertragsbeendigung liegt vor"
+                      "meaning": "Vertragsbeendigung liegt vor",
+                      "qualifier": "Z06"
                     }
                   ],
                   "value_type": "VALUE_POOL"
@@ -787,8 +785,8 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "qualifier": "UTILMD",
-                  "meaning": "Netzanschluss-Stammdaten"
+                  "meaning": "Netzanschluss-Stammdaten",
+                  "qualifier": "UTILMD"
                 }
               ],
               "value_type": "VALUE_POOL"
@@ -799,8 +797,8 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "qualifier": "D",
-                  "meaning": "Entwurfs-Version"
+                  "meaning": "Entwurfs-Version",
+                  "qualifier": "D"
                 }
               ],
               "value_type": "VALUE_POOL"
@@ -811,8 +809,8 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "qualifier": "11A",
-                  "meaning": "Ausgabe 2011 - A"
+                  "meaning": "Ausgabe 2011 - A",
+                  "qualifier": "11A"
                 }
               ],
               "value_type": "VALUE_POOL"
@@ -823,8 +821,8 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "qualifier": "UN",
-                  "meaning": "UN/CEFACT"
+                  "meaning": "UN/CEFACT",
+                  "qualifier": "UN"
                 }
               ],
               "value_type": "VALUE_POOL"
@@ -835,8 +833,8 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "qualifier": "5.2d",
-                  "meaning": "Versionsnummer derzugrundeliegendenBDEW-Nachrichtenbeschreibung"
+                  "meaning": "Versionsnummer derzugrundeliegendenBDEW-Nachrichtenbeschreibung",
+                  "qualifier": "5.2d"
                 }
               ],
               "value_type": "VALUE_POOL"
@@ -854,8 +852,8 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "qualifier": "E01",
-                  "meaning": "Anmeldungen"
+                  "meaning": "Anmeldungen",
+                  "qualifier": "E01"
                 }
               ],
               "value_type": "VALUE_POOL"
@@ -880,8 +878,8 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "qualifier": "137",
-                  "meaning": "Dokumenten-/Nachrichtendatum/-zeit"
+                  "meaning": "Dokumenten-/Nachrichtendatum/-zeit",
+                  "qualifier": "137"
                 }
               ],
               "value_type": "VALUE_POOL"
@@ -899,8 +897,8 @@
               "value_pool": [
                 {
                   "ahb_expression": "X",
-                  "qualifier": "303",
-                  "meaning": "CCYYMMDDHHMMZZZ"
+                  "meaning": "CCYYMMDDHHMMZZZ",
+                  "qualifier": "303"
                 }
               ],
               "value_type": "VALUE_POOL"
