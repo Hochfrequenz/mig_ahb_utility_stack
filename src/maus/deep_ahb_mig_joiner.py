@@ -40,10 +40,11 @@ def _replace_disciminators_with_edifact_stack_segments(
                 )
                 if stack is not None:
                     result[segment_index].data_elements[de_index].discriminator = stack.to_json_path()
-                elif stack is None and len(data_element.value_pool) > 1 and not ignore_errors:
-                    raise ValueError(
-                        f"Any value pool with more than 1 entry has to have an edifact stack {data_element}"
-                    )
+                elif len(data_element.value_pool) > 1:
+                    if not ignore_errors:
+                        raise ValueError(
+                            f"Any value pool with more than 1 entry has to have an edifact stack {data_element}"
+                        )
                 if len(data_element.value_pool) == 1:
                     predecessor_qualifier = data_element.value_pool[0].qualifier
                     try:
