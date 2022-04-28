@@ -8,6 +8,7 @@ from maus.models.edifact_components import EdifactStackQuery
 from maus.reader.mig_reader import MigXmlReader
 
 ALL_MIG_XML_FILES = pytest.mark.datafiles(
+    "./migs/FV2204/template_xmls/utilmd_1131.xml",
     "./migs/FV2204/template_xmls/mscons_1154.xml",
     "./migs/FV2204/template_xmls/utilmd_1154.xml",
     "./migs/FV2204/template_xmls/utilmd_2379.xml",
@@ -198,6 +199,19 @@ class TestMigXmlReaderRealData:
                 '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Daten der Marktlokation"][0]["Arbeit / Leistung für tagesparameterabhängige Marktlokation"][0]["Qualifier"]',
                 id="UTILMD 6063",
             ),
+            pytest.param(
+                "utilmd_1131.xml",
+                EdifactStackQuery(
+                    segment_group_key="SG10",
+                    segment_code="CCI",
+                    data_element_id="1131",
+                    name=None,
+                    predecessor_qualifier="Z17",
+                    section_name="Fallgruppenzuordnung",
+                ),
+                '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Daten der Marktlokation"][0]["Fallgruppenzuordnung"][0]["Zuordnung"]',
+                id="UTILMD 1131 (Fallgruppenzuordnung)",
+            )
             # pytest.param( # unsolved
             #    "utilmd_1154.xml",
             # EdifactStackQuery(segment_group_key='SG8', segment_code='RFF', data_element_id='1154',
