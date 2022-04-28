@@ -35,11 +35,11 @@ def _replace_disciminators_with_edifact_stack_segments(
                 elif ignore_errors:
                     raise ValueError(f"Couldn't find a stack for (DataElementFreeText {data_element})")
             if isinstance(data_element, DataElementValuePool):
-                edifact_stack = _handle_value_pool(
+                stack = _handle_value_pool(
                     mig_reader, segment_group_key, segment, data_element, predecessor_qualifier, fallback_predecessors
                 )
-                if edifact_stack is not None:
-                    result[segment_index].data_elements[de_index].discriminator = edifact_stack.to_json_path()
+                if stack is not None:
+                    result[segment_index].data_elements[de_index].discriminator = stack.to_json_path()
                 elif not ignore_errors:
                     raise ValueError(
                         f"Any value pool with more than 1 entry has to have an edifact stack {data_element}"
