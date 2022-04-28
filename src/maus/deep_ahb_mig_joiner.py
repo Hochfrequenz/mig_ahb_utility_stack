@@ -40,7 +40,7 @@ def _replace_disciminators_with_edifact_stack_segments(
                 )
                 if stack is not None:
                     result[segment_index].data_elements[de_index].discriminator = stack.to_json_path()
-                elif not ignore_errors:
+                elif stack is None and len(data_element.value_pool) > 1 and not ignore_errors:
                     raise ValueError(
                         f"Any value pool with more than 1 entry has to have an edifact stack {data_element}"
                     )
@@ -74,6 +74,8 @@ def _handle_free_text(
     return stack
 
 
+# todo: fix this later
+# pylint:disable=too-many-arguments
 def _handle_value_pool(
     mig_reader: MigReader,
     segment_group_key: str,
@@ -90,16 +92,16 @@ def _handle_value_pool(
         predecessor_qualifier=predecessor_qualifier,
         section_name=segment.section_name,
     )
-    edifact_stack = mig_reader.get_edifact_stack(query)
-    if edifact_stack is not None:
-        return edifact_stack
+    stack = mig_reader.get_edifact_stack(query)
+    if stack is not None:
+        return stack
     if len(data_element.value_pool) > 1:
         if predecessor_qualifier is None:
-            edifact_stack = _find_stack_using_fallback_predecessors(
+            stack = _find_stack_using_fallback_predecessors(
                 mig_reader, query_draft=query, fallback_predecessors=fallback_predecessors
             )
-            if edifact_stack is not None:
-                return edifact_stack
+            if stack is not None:
+                return stack
     return None
 
 
