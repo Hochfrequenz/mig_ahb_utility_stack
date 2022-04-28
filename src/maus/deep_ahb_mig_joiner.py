@@ -5,7 +5,7 @@ from typing import Dict, List, Optional, Set, Tuple
 
 from maus import DataElementFreeText, DataElementValuePool, DeepAnwendungshandbuch
 from maus.edifact import is_edifact_boilerplate
-from maus.models.edifact_components import EdifactStack, EdifactStackQuery, Segment, SegmentGroup
+from maus.models.edifact_components import DataElement, EdifactStack, EdifactStackQuery, Segment, SegmentGroup
 from maus.reader.mig_reader import MigReader
 
 
@@ -41,7 +41,7 @@ def _replace_disciminators_with_edifact_stack_segments(
                 if stack is not None:
                     result[segment_index].data_elements[de_index].discriminator = stack.to_json_path()
                 elif len(data_element.value_pool) > 1:
-                    if not ignore_errors:
+                    if not ignore_errors and not _data_element_has_a_known_problem(data_element):
                         raise ValueError(
                             f"Any value pool with more than 1 entry has to have an edifact stack {data_element}"
                         )
@@ -54,6 +54,16 @@ def _replace_disciminators_with_edifact_stack_segments(
                 else:
                     predecessor_qualifier = None
     return result, predecessors_used
+
+
+def _data_element_has_a_known_problem(data_element: DataElement):
+    if data_element.discriminator == "SG10->CAV->7110":
+        # https://github.com/Hochfrequenz/edifact-templates/issues/59
+        return True
+    if data_element.discriminator == "SG10->CCI->7037":
+        # https://github.com/Hochfrequenz/edifact-templates/issues/60
+        return True
+    return False
 
 
 def _handle_free_text(
