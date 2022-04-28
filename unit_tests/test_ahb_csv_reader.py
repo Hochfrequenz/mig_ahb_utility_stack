@@ -145,6 +145,20 @@ class TestAhbCsvReader:
                 "GS1",
                 id="Codeliste GS1",
             ),
+            pytest.param(
+                "E_0403",
+                "EBD Nr. E_0403",
+                "E_0403",
+                "EBD Nr. E_0403",
+                id="EBD E",
+            ),
+            pytest.param(
+                "G_0009",
+                "Codeliste Gas Nr. G_0009",
+                "G_0009",
+                "Codeliste Gas Nr. G_0009",
+                id="EBD G",
+            ),
         ],
     )
     def test_code_description_separation(
