@@ -176,4 +176,6 @@ def replace_discriminators_with_edifact_stack(
     """
     replaces all discriminators in deep_ahb with an edifact seed path from the provided mig_reader
     """
-    deep_ahb.lines = _replace_discriminators_with_edifact_stack_groups(deep_ahb.lines, mig_reader, ignore_errors)
+    deep_ahb.lines = _replace_discriminators_with_edifact_stack_groups(
+        deep_ahb.lines, mig_reader, fallback_predecessors={}, ignore_errors=ignore_errors
+    )

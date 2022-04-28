@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import pytest  # type:ignore[import]
-from helpers import write_to_file_or_assert_equality
+from helpers import write_to_file_or_assert_equality  # type:ignore[import]
 
 from maus import to_deep_ahb
 from maus.deep_ahb_mig_joiner import replace_discriminators_with_edifact_stack
