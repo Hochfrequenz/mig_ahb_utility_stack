@@ -1,4 +1,4 @@
-MIG AHB Utility Stack (MAUS) 
+MIG AHB Utility Stack (MAUS) 🐭
 ===============================
 
 | |Unittests status badge| |Coverage status badge| |Linting status badge| |Black status badge| |pypy status badge| |read the docs|
