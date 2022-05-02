@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<UTILMD>
+    <class name="Dokument" ref="/" key="UNB:5:0">
+        <class name="Nachricht" ref="UNH" key="UNH:1:0" max="9999" meta.type="group">
+            <class name="Absender_NAD" migName="MP-ID Absender" max="1" ref="SG2" key="NAD:2:0[1:0=MS]" ahbName="MP-ID Absender" meta.type="group" meta.objType="Marktpartner">
+                <field name="ID" ref="NAD:2:0" ahbName="MP-ID" meta.id="3039"/>
+                <field name="Codeliste" ref="NAD:2:2" meta.id="3055"/>
+                <class name="Ansprechpartner" ref="SG3" max="1">
+                    <class name="Kontakt" ref="CTA" key="CTA:2:1" meta.virtualKey="Ansprechpartner" max="5" meta.virtual="true">
+                        <field name="Name" ref="CTA:2:1" meta.id="3412"/>
+                    </class>
+                    <class name="Kommunikationsverbindung" ref="COM" max="5">
+                        <field name="ID" ref="COM:1:1" meta.id="3148" ahbName="Art des Kommunikationsmittels"/>
+                        <field name="Adresse" ref="COM:1:0" meta.id="3155" ahbName="Nummer / Adresse"/>
+                    </class>
+                </class>
+            </class>
+            <class name="Empfaenger_NAD" migName="MP-ID Empfänger" max="1" ahbName="MP-ID Empfänger" ref="SG2" key="NAD:2:0[1:0=MR]" meta.objType="Marktpartner">
+                <field name="ID" ref="NAD:2:0" ahbName="MP-ID" meta.id="3039"/>
+                <field name="Codeliste" ref="NAD:2:2" meta.id="3055"/>
+            </class>
+            <class name="Vorgang" ref="SG4" key="IDE:2:0" max="99999" meta.type="group" groupKey="Vorgangsnummer">
+                <class name="Beteiligter Marktpartner MP-ID" ahbName="Beteiligter Marktpartner MP-ID" ref="SG12" key="NAD:2:0[1:0=VY]" max="99" meta.objType="Marktpartner">
+                    <field name="ID" ref="NAD:2:0" meta.id="3039" ahbName="MP-ID"/>
+                    <field name="Codeliste" ref="NAD:2:2" meta.id="3055"/>
+                    <class name="Referenz auf die ID einer Marktlokation / Tranche" ref="RFF" key="RFF:1:1">
+                        <field name="Qualifier" ref="RFF:1:0" max="9" meta.id="1153"/>
+                        <field name="ID" ref="RFF:1:1" max="9" meta.id="1154" meta.ref="Meldepunkt.ID"/>
+                    </class>
+                </class>
+            </class>
+        </class>
+    </class>
+</UTILMD>
