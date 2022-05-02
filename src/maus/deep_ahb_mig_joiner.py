@@ -84,6 +84,18 @@ def _data_element_has_a_known_problem(data_element: DataElement):
     ):
         # https://github.com/Hochfrequenz/edifact-templates/issues/65
         return True
+    if data_element == DataElementValuePool(
+        discriminator="SG4->DTM->2005",
+        data_element_id="2005",
+        value_pool=[
+            ValuePoolEntry(qualifier="Z05", meaning="gegenüber Kunde bestätigtes Kündigungsdatum", ahb_expression="X"),
+            ValuePoolEntry(
+                qualifier="Z06", meaning="gegenüber Lieferant bestätigtes Kündigungsdatum", ahb_expression="X"
+            ),
+        ],
+    ):
+        # https://github.com/Hochfrequenz/edifact-templates/issues/69
+        return True
     return False
 
 
