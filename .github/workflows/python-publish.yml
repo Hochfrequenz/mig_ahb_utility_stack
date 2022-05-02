@@ -18,6 +18,10 @@ jobs:
         os: [ubuntu-latest]
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
+          token: ${{secrets.edifact_templates_pat}} # expires 2023-04-24
+          submodules: "recursive"
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
