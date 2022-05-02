@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 
 import pytest  # type:ignore[import]
 
@@ -13,7 +13,7 @@ from maus.models.edifact_components import (
     ValuePoolEntry,
 )
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
-from unit_tests.serialization_test_helper import assert_serialization_roundtrip  # type:ignore[import]
+from serialization_test_helper import assert_serialization_roundtrip  # type:ignore[import]
 
 
 class TestMaus:
