@@ -200,7 +200,8 @@ class MigXmlReader(MigReader):
         filtered_by_parent_ahb_name_key = [
             c
             for c in candidates
-            if self._get_parent_x(c, get_ahb_name_or_none, use_sanitized_tree=False) == query.section_name
+            if make_name_comparable(self._get_parent_x(c, get_ahb_name_or_none, use_sanitized_tree=False))
+            == make_name_comparable(query.section_name)
         ]
         return list_to_mig_filter_result(filtered_by_parent_ahb_name_key)
 
