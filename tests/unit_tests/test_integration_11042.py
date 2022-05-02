@@ -20,8 +20,8 @@ class TestIntegration11042:
 
     @ALL_SGH_FILES
     @ALL_MIG_XML_FILES
-    @pytest.mark.datafiles("./unit_tests/ahbs/FV2204/UTILMD/11042.csv")
-    @pytest.mark.datafiles("./unit_tests/ahbs/FV2204/UTILMD/11042_deep.json")
+    @pytest.mark.datafiles("./ahbs/FV2204/UTILMD/11042.csv")
+    @pytest.mark.datafiles("./ahbs/FV2204/UTILMD/11042_deep.json")
     def test_csv_file_reading_11042(self, datafiles):
         path_to_csv: Path = datafiles / "11042.csv"
         reader = FlatAhbCsvReader(file_path=path_to_csv)

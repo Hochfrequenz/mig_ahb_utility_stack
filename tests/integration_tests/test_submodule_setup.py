@@ -9,7 +9,7 @@ class TestSubmoduleSetup:
     (This is not expected to work for anyone who does not have access to Hochfrequenz/edifact-templates).
     """
 
-    @pytest.mark.datafiles("./integration_tests//edifact-templates/edi/APERAK/APERAK2.1f.template")
+    @pytest.mark.datafiles("./edifact-templates/edi/APERAK/APERAK2.1f.template")
     def test_aperak_file_can_be_accessed(self, datafiles):
         path_to_file: Path = Path(datafiles) / Path("APERAK2.1f.template")
         with open(path_to_file, "r") as infile:

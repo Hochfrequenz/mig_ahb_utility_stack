@@ -174,7 +174,7 @@ class TestAhbCsvReader:
         assert actual_code == expected_code
         assert actual_beschreibung == expected_beschreibung
 
-    @pytest.mark.datafiles("./unit_tests/ahbs/FV2204/UTILMD/11042.csv")
+    @pytest.mark.datafiles("./ahbs/FV2204/UTILMD/11042.csv")
     def test_csv_file_reading_11042(self, datafiles):
         path_to_csv: Path = datafiles / "11042.csv"
         reader = FlatAhbCsvReader(file_path=path_to_csv)

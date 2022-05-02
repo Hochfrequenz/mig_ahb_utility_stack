@@ -10,16 +10,16 @@ from maus.reader.mig_reader import MigXmlReader
 d = Path(__file__).resolve().parents[0]
 
 ALL_MIG_XML_FILES = pytest.mark.datafiles(
-    "./unit_tests/migs/FV2204/template_xmls/utilmd_1131.xml",
-    "./unit_tests/migs/FV2204/template_xmls/mscons_1154.xml",
-    "./unit_tests/migs/FV2204/template_xmls/utilmd_1154.xml",
-    "./unit_tests/migs/FV2204/template_xmls/utilmd_2379.xml",
-    "./unit_tests/migs/FV2204/template_xmls/utilmd_2380.xml",
-    "./unit_tests/migs/FV2204/template_xmls/utilmd_7402.xml",
-    "./unit_tests/migs/FV2204/template_xmls/utilmd_3225.xml",
-    "./unit_tests/migs/FV2204/template_xmls/utilmd_6063.xml",
-    "./unit_tests/migs/FV2204/template_xmls/utilmd_9013.xml",
-    "./unit_tests/migs/FV2204/template_xmls/reqote.xml",
+    "./migs/FV2204/template_xmls/utilmd_1131.xml",
+    "./migs/FV2204/template_xmls/mscons_1154.xml",
+    "./migs/FV2204/template_xmls/utilmd_1154.xml",
+    "./migs/FV2204/template_xmls/utilmd_2379.xml",
+    "./migs/FV2204/template_xmls/utilmd_2380.xml",
+    "./migs/FV2204/template_xmls/utilmd_7402.xml",
+    "./migs/FV2204/template_xmls/utilmd_3225.xml",
+    "./migs/FV2204/template_xmls/utilmd_6063.xml",
+    "./migs/FV2204/template_xmls/utilmd_9013.xml",
+    "./migs/FV2204/template_xmls/reqote.xml",
 )
 
 

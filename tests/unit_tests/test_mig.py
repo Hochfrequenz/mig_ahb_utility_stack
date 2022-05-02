@@ -7,13 +7,12 @@ from tests.unit_tests.serialization_test_helper import assert_serialization_roun
 
 from pathlib import Path
 
-d = Path(__file__).resolve().parents[0]
 
 ALL_SGH_FILES = pytest.mark.datafiles(
-    "./unit_tests/migs/FV2204/segment_group_hierarchies/sgh_mscons.json",
-    "./unit_tests/migs/FV2204/segment_group_hierarchies/sgh_utilmd.json",
-    "./unit_tests/migs/FV2204/segment_group_hierarchies/sgh_reqote.json",
-    "./unit_tests/migs/FV2204/segment_group_hierarchies/sgh_iftsta.json",
+    "./migs/FV2204/segment_group_hierarchies/sgh_mscons.json",
+    "./migs/FV2204/segment_group_hierarchies/sgh_utilmd.json",
+    "./migs/FV2204/segment_group_hierarchies/sgh_reqote.json",
+    "./migs/FV2204/segment_group_hierarchies/sgh_iftsta.json",
 )
 
 
