@@ -19,7 +19,7 @@ class TestEogMaus:
     @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2c.template")
     @pytest.mark.datafiles("./edifact-templates/ahbs/FV2110/UTILMD/11013.csv")
     @pytest.mark.datafiles("../unit_tests/migs/FV2204/segment_group_hierarchies/sgh_utilmd.json")
-    def test_maus_creation_11001(self, datafiles):
+    def test_maus_creation_11013(self, datafiles):
         path_to_csv: Path = datafiles / "11013.csv"
         reader = FlatAhbCsvReader(file_path=path_to_csv)
         flat_ahb = reader.to_flat_ahb()
