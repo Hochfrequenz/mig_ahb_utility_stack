@@ -1,15 +1,27 @@
 """
 This module contains helper methods that compare strings, especially names from AHB and MIG.
 """
-from typing import Optional
+from typing import Literal, Optional, overload
 
 from lxml import etree  # type:ignore[import]
 
 
+@overload
 def make_name_comparable(orig_str: str) -> str:
+    ...
+
+
+@overload
+def make_name_comparable(orig_str: Literal[None]) -> Literal[None]:
+    ...
+
+
+def make_name_comparable(orig_str: Optional[str]) -> Optional[str]:
     """
     Removes all the characters that could be a problem when matching names from the AHB with names from the MIG
     """
+    if orig_str is None:
+        return None
     result: str = orig_str.lower()
     for removable_character in [" ", "-", "\n"]:
         result = result.replace(removable_character, "")
