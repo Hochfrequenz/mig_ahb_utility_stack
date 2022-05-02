@@ -11,7 +11,7 @@ from maus.reader.flat_ahb_reader import FlatAhbCsvReader
 from maus.reader.mig_reader import MigXmlReader
 
 
-class Test11001Maus:
+class TestAnmeldungMaus:
     """
     A unit test that ensures that the 11001 MAUS.json is created.
     """
