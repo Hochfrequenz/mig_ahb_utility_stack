@@ -5,7 +5,14 @@ from typing import Dict, List, Optional, Set, Tuple
 
 from maus import DataElementFreeText, DataElementValuePool, DeepAnwendungshandbuch
 from maus.edifact import is_edifact_boilerplate
-from maus.models.edifact_components import DataElement, EdifactStack, EdifactStackQuery, Segment, SegmentGroup
+from maus.models.edifact_components import (
+    DataElement,
+    EdifactStack,
+    EdifactStackQuery,
+    Segment,
+    SegmentGroup,
+    ValuePoolEntry,
+)
 from maus.reader.mig_reader import MigReader
 
 
@@ -65,6 +72,17 @@ def _data_element_has_a_known_problem(data_element: DataElement):
         return True
     if data_element.discriminator == "SG6->DTM->2379":
         # https://github.com/Hochfrequenz/edifact-templates/issues/63
+        return True
+    if data_element == DataElementValuePool(
+        discriminator="SG8->RFF->1153",
+        data_element_id="1153",
+        value_pool=[
+            ValuePoolEntry(qualifier="MG", meaning="Gerätenummer des Zählers", ahb_expression="X"),
+            ValuePoolEntry(qualifier="Z11", meaning="Gerätenummer des Mengenumwerters", ahb_expression="X"),
+            ValuePoolEntry(qualifier="Z14", meaning="Smartmeter-Gateway", ahb_expression="X"),
+        ],
+    ):
+        # https://github.com/Hochfrequenz/edifact-templates/issues/65
         return True
     return False
 
