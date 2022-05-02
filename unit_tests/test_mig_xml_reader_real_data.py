@@ -13,6 +13,7 @@ ALL_MIG_XML_FILES = pytest.mark.datafiles(
     "./migs/FV2204/template_xmls/utilmd_1154.xml",
     "./migs/FV2204/template_xmls/utilmd_2379.xml",
     "./migs/FV2204/template_xmls/utilmd_2380.xml",
+    "./migs/FV2204/template_xmls/utilmd_3055.xml",
     "./migs/FV2204/template_xmls/utilmd_7402.xml",
     "./migs/FV2204/template_xmls/utilmd_3225.xml",
     "./migs/FV2204/template_xmls/utilmd_6063.xml",
@@ -211,6 +212,19 @@ class TestMigXmlReaderRealData:
                 ),
                 '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Daten der Marktlokation"][0]["Fallgruppenzuordnung"][0]["Zuordnung"]',
                 id="UTILMD 1131 (Fallgruppenzuordnung)",
+            ),
+            pytest.param(
+                "utilmd_3055.xml",
+                EdifactStackQuery(
+                    segment_group_key="SG12",
+                    segment_code="NAD",
+                    data_element_id="3055",
+                    name=None,
+                    predecessor_qualifier=None,
+                    section_name="Beteiligter Marktpartner MP- ID",  # note that the "MP- ID" contains a space
+                ),
+                '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Beteiligter Marktpartner MP-ID"][0]["Codeliste"]',
+                id="UTILMD 3055, Beteiligter Marktpartner",
             )
             # pytest.param( # unsolved
             #    "utilmd_1154.xml",
