@@ -13,7 +13,7 @@ from maus.models.edifact_components import (
     ValuePoolEntry,
 )
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
-from serialization_test_helper import assert_serialization_roundtrip  # type:ignore[import]
+from tests.unit_tests.serialization_test_helper import assert_serialization_roundtrip  # type:ignore[import]
 
 
 class TestMaus:

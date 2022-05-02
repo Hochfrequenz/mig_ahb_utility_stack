@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import pytest  # type:ignore[import]
-from .test_mig_xml_reader_real_data import ALL_MIG_XML_FILES  # type:ignore[import]
+from tests.unit_tests.test_mig_xml_reader_real_data import ALL_MIG_XML_FILES  # type:ignore[import]
 
 from maus import to_deep_ahb
 from maus.deep_ahb_mig_joiner import replace_discriminators_with_edifact_stack
@@ -9,7 +9,7 @@ from maus.models.anwendungshandbuch import DeepAnwendungshandbuchSchema
 from maus.models.message_implementation_guide import SegmentGroupHierarchySchema
 from maus.reader.flat_ahb_reader import FlatAhbCsvReader
 from maus.reader.mig_reader import MigXmlReader
-from test_mig import ALL_SGH_FILES  # type:ignore[import]
+from tests.unit_tests.test_mig import ALL_SGH_FILES  # type:ignore[import]
 
 
 class TestIntegration11042:
@@ -20,8 +20,8 @@ class TestIntegration11042:
 
     @ALL_SGH_FILES
     @ALL_MIG_XML_FILES
-    @pytest.mark.datafiles("./ahbs/FV2204/UTILMD/11042.csv")
-    @pytest.mark.datafiles("./ahbs/FV2204/UTILMD/11042_deep.json")
+    @pytest.mark.datafiles("./unit_tests/ahbs/FV2204/UTILMD/11042.csv")
+    @pytest.mark.datafiles("./unit_tests/ahbs/FV2204/UTILMD/11042_deep.json")
     def test_csv_file_reading_11042(self, datafiles):
         path_to_csv: Path = datafiles / "11042.csv"
         reader = FlatAhbCsvReader(file_path=path_to_csv)

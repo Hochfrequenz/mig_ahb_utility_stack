@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import pytest  # type:ignore[import]
-from helpers import write_to_file_or_assert_equality  # type:ignore[import]
+from tests.integration_tests.helpers import write_to_file_or_assert_equality  # type:ignore[import]
 
 from maus import to_deep_ahb
 from maus.deep_ahb_mig_joiner import replace_discriminators_with_edifact_stack
@@ -16,9 +16,9 @@ class Test11001Maus:
     A unit test that ensures that the 11001 MAUS.json is created.
     """
 
-    @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2c.template")
-    @pytest.mark.datafiles("./edifact-templates/ahbs/FV2110/UTILMD/11001.csv")
-    @pytest.mark.datafiles("../unit_tests/migs/FV2204/segment_group_hierarchies/sgh_utilmd.json")
+    @pytest.mark.datafiles("./integration_tests/edifact-templates/edi/UTILMD/UTILMD5.2c.template")
+    @pytest.mark.datafiles("./integration_tests/edifact-templates/ahbs/FV2110/UTILMD/11001.csv")
+    @pytest.mark.datafiles("./unit_tests/migs/FV2204/segment_group_hierarchies/sgh_utilmd.json")
     def test_maus_creation_11001(self, datafiles):
         path_to_csv: Path = datafiles / "11001.csv"
         reader = FlatAhbCsvReader(file_path=path_to_csv)
@@ -34,5 +34,6 @@ class Test11001Maus:
             actual_deep_ahb, ensure_ascii=True, sort_keys=True, indent=True
         )
         assert actual_maus_json is not None
-        maus_file_path = Path("edifact-templates/maus/FV2110/UTILMD/11001_maus.json")
+        d = Path(__file__).resolve().parents[0]
+        maus_file_path = d / Path("edifact-templates/maus/FV2110/UTILMD/11001_maus.json")
         write_to_file_or_assert_equality(actual_deep_ahb, maus_file_path)
