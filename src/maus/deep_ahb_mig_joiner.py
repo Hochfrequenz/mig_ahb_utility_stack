@@ -63,6 +63,9 @@ def _data_element_has_a_known_problem(data_element: DataElement):
     if data_element.discriminator == "SG10->CCI->7037":
         # https://github.com/Hochfrequenz/edifact-templates/issues/60
         return True
+    if data_element.discriminator == "SG6->DTM->2379":
+        # https://github.com/Hochfrequenz/edifact-templates/issues/63
+        return True
     return False
 
 
