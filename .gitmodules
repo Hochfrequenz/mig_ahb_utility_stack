@@ -1,3 +1,0 @@
-[submodule "integration_tests/edifact-templates"]
-	path = tests/integration_tests/edifact-templates
-	url = https://github.com/Hochfrequenz/edifact-templates
