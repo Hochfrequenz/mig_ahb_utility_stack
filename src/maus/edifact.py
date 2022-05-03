@@ -61,7 +61,7 @@ class EdifactFormatVersion(str, Enum):
 
     FV2104 = "FV2104"  #: valid from 2021-04-01 until 2021-10-01
     FV2110 = "FV2110"  #: valid from 2021-10-01 until 2022-04-01
-    FV2204 = "FV2204"  #: valid from 2022-04-01 onwards ("MaKo 2022")
+    FV2210 = "FV2210"  #: valid from 2022-10-01 onwards ("MaKo 2022", was 2204 previously)
 
     def __str__(self):
         return self.value
