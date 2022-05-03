@@ -179,6 +179,16 @@ class TestAhbCsvReader:
         path_to_csv: Path = datafiles / "11042.csv"
         reader = FlatAhbCsvReader(file_path=path_to_csv)
         assert len(reader.rows) == 846
+        assert (
+            len(
+                [
+                    r
+                    for r in reader.rows
+                    if r.section_name == "Korrespondenzanschrift des Kunden des Messstellenbetreibers"
+                ]
+            )
+            > 0
+        )  # this shows that the merging of sections spanning multiple lines works
         # first row assertions
         first_row = reader.rows[0]
         assert first_row.segment_code == "UNH"
