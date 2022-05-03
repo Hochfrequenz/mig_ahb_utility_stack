@@ -204,3 +204,34 @@ class TestAhbCsvReader:
         flat_ahb = reader.to_flat_ahb()
         assert len(flat_ahb.lines) < len(reader.rows)  # filter out the empty lines
         assert flat_ahb.get_segment_groups() == [None, "SG2", "SG3", "SG4", "SG5", "SG6", "SG8", "SG9", "SG10", "SG12"]
+
+    @pytest.mark.parametrize(
+        "input_lines,expected_lines",
+        [
+            pytest.param(
+                [
+                    {"": "0", "ASD": "asd"},
+                    {"": "1", "Segment Gruppe": "Das ist der Anfang"},
+                    {"": "2", "Segment Gruppe": "einer sehr langen"},
+                    {"": "3", "Segment Gruppe": "Geschichte."},
+                    {"": "4", "Foo": "Bar"},
+                ],
+                [
+                    {"": "0", "ASD": "asd"},
+                    {
+                        "": "3",
+                        "Segment Gruppe": "Das ist der Anfang einer sehr langen Geschichte.",
+                        "Bedingung": "",
+                        "Beschreibung": "",
+                        "Codes und Qualifier": "",
+                        "Datenelement": "",
+                        "Segment": "",
+                    },
+                    {"": "4", "Foo": "Bar"},
+                ],
+            )
+        ],
+    )
+    def test_merging_of_section_only_lines(self, input_lines: List[dict], expected_lines: List[dict]):
+        actual = FlatAhbCsvReader.merge_section_only_lines(input_lines)
+        assert actual == expected_lines

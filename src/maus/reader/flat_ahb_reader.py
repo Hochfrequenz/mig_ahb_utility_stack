@@ -103,9 +103,10 @@ class FlatAhbCsvReader(FlatAhbReader):
                 merged_section_name += " " + raw_line["Segment Gruppe"]
                 number_of_lines_merged += 1
             else:
+                # note that AHBs never end with a section heading, so all headings/sections will run into this block
                 if len(merged_section_name) > 0:
                     artificial_merged_line: dict = {
-                        "": int(raw_line[""]) - 1,
+                        "": str(int(raw_line[""]) - 1),
                         "Segment Gruppe": merged_section_name.strip().replace("  ", " "),
                     }
                     for key in keys_that_must_no_hold_any_values:
