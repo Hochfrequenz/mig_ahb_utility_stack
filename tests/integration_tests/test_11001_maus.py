@@ -34,6 +34,5 @@ class Test11001Maus:
             actual_deep_ahb, ensure_ascii=True, sort_keys=True, indent=True
         )
         assert actual_maus_json is not None
-        d = Path(__file__).resolve().parents[0]
-        maus_file_path = d / Path("edifact-templates/maus/FV2110/UTILMD/11001_maus.json")
+        maus_file_path = Path("edifact-templates/maus/FV2110/UTILMD/11001_maus.json")
         write_to_file_or_assert_equality(actual_deep_ahb, maus_file_path)
