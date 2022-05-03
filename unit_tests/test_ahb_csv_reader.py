@@ -188,7 +188,7 @@ class TestAhbCsvReader:
                 ]
             )
             > 0
-        )  # this shows that the merging of sections spanning multiple lines works
+        )  # this shows that the merging of sections spanning multiple lines works, see original CSV
         # first row assertions
         first_row = reader.rows[0]
         assert first_row.segment_code == "UNH"
