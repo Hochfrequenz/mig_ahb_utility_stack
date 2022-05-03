@@ -371,22 +371,21 @@ class SegmentGroup(SegmentLevel):
         default=None
     )  #: groups that are nested into this group
 
-    def get_segment(self, predicate: Callable[[Segment], bool], search_recursively: bool = True) -> Optional[Segment]:
+    def find_segments(self, predicate: Callable[[Segment], bool], search_recursively: bool = True) -> List[Segment]:
         """
-        recursively search for a segment that matches the predicate (in this group and subgroups),
-        return it, if found. return None otherwise
+        Search for a segment that matches the predicate (in this group and subgroups if 'search_recursively' is set),
+        Return results, if found. Return empty list otherwise.
         """
-        if self.segments is None:
-            return None
-        for segment in self.segments:
-            if predicate(segment):
-                return segment
-            if search_recursively and self.segment_groups is not None:
-                for sub_group in self.segment_groups:
-                    sub_result = sub_group.get_segment(predicate, search_recursively)
-                    if sub_result is not None:
-                        return sub_result
-        return None
+        result: List[Segment] = []
+        if self.segments is not None:
+            for segment in self.segments:
+                if predicate(segment):
+                    result.append(segment)
+        if search_recursively and self.segment_groups is not None:
+            for sub_group in self.segment_groups:
+                sub_result = sub_group.find_segments(predicate, search_recursively)
+                result += sub_result
+        return result
 
 
 class SegmentGroupSchema(SegmentLevelSchema):
