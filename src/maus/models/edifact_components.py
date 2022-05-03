@@ -6,7 +6,7 @@ Components contain not only EDIFACT composits but also segments and segment grou
 import re
 from abc import ABC
 from enum import Enum
-from typing import List, Optional, Type
+from typing import Callable, List, Optional, Type
 
 import attr
 import attrs
@@ -370,6 +370,22 @@ class SegmentGroup(SegmentLevel):
     segment_groups: Optional[List["SegmentGroup"]] = attrs.field(
         default=None
     )  #: groups that are nested into this group
+
+    def find_segments(self, predicate: Callable[[Segment], bool], search_recursively: bool = True) -> List[Segment]:
+        """
+        Search for a segment that matches the predicate (in this group and subgroups if 'search_recursively' is set),
+        Return results, if found. Return empty list otherwise.
+        """
+        result: List[Segment] = []
+        if self.segments is not None:
+            for segment in self.segments:
+                if predicate(segment):
+                    result.append(segment)
+        if search_recursively and self.segment_groups is not None:
+            for sub_group in self.segment_groups:
+                sub_result = sub_group.find_segments(predicate, search_recursively)
+                result += sub_result
+        return result
 
 
 class SegmentGroupSchema(SegmentLevelSchema):
