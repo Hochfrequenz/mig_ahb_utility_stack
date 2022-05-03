@@ -1,8 +1,8 @@
 from pathlib import Path
 
 import pytest  # type:ignore[import]
-from tests.unit_tests.test_mig import ALL_SGH_FILES  # type:ignore[import]
-from tests.unit_tests.test_mig_xml_reader_real_data import ALL_MIG_XML_FILES  # type:ignore[import]
+from test_mig import ALL_SGH_FILES  # type:ignore[import]
+from test_mig_xml_reader_real_data import ALL_MIG_XML_FILES  # type:ignore[import]
 
 from maus import to_deep_ahb
 from maus.deep_ahb_mig_joiner import replace_discriminators_with_edifact_stack

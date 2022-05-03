@@ -14,7 +14,7 @@ from maus.models.edifact_components import (
     SegmentSchema,
     ValuePoolEntry,
 )
-from tests.unit_tests.serialization_test_helper import assert_serialization_roundtrip  # type:ignore[import]
+from serialization_test_helper import assert_serialization_roundtrip  # type:ignore[import]
 
 
 class TestEdifactComponents:

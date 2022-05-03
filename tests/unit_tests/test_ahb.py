@@ -20,7 +20,7 @@ from maus.models.edifact_components import (
     SegmentGroup,
     ValuePoolEntry,
 )
-from tests.unit_tests.serialization_test_helper import assert_serialization_roundtrip  # type:ignore[import]
+from serialization_test_helper import assert_serialization_roundtrip  # type:ignore[import]
 
 meta_x = AhbMetaInformation(
     pruefidentifikator="11042",
