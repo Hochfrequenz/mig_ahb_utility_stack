@@ -13,7 +13,7 @@ from uuid import UUID
 import attrs
 from marshmallow import Schema, fields, post_load  # type:ignore[import]
 
-from maus.models.edifact_components import SegmentGroup, SegmentGroupSchema
+from maus.models.edifact_components import Segment, SegmentGroup, SegmentGroupSchema
 
 
 # pylint:disable=too-many-instance-attributes
@@ -269,33 +269,44 @@ class DeepAnwendungshandbuch:
     @staticmethod
     def _query_segment_group(
         segment_group: SegmentGroup, predicate: Callable[[SegmentGroup], bool]
-    ) -> Optional[SegmentGroup]:
+    ) -> List[SegmentGroup]:
         """
         recursively search for a segment group that matches the predicate
-        :return: None if nothing was found, the matching segment group otherwise
+        :return: return empty list if nothing was found, the matching segment groups otherwise
         """
-        result = predicate(segment_group)
-        if result is True:
-            return segment_group
+        result: List[SegmentGroup] = []
+        if predicate(segment_group):
+            result.append(segment_group)
         if segment_group.segment_groups is not None:
             for sub_group in segment_group.segment_groups:
                 sub_result = DeepAnwendungshandbuch._query_segment_group(sub_group, predicate)
-                if sub_result is not None:
-                    return sub_result
-        return None
+                result += sub_result
+        return result
 
-    def get_segment_group(self, predicate: Callable[[SegmentGroup], bool]) -> Optional[SegmentGroup]:
+    def find_segment_groups(self, predicate: Callable[[SegmentGroup], bool]) -> List[SegmentGroup]:
         """
-        recursively search for segment group in this ahb that meets the predicate
-        :return: a segment group that matches the predicate, none otherwise
+        recursively search for segment group in this ahb that meets the predicate.
+        :return: list of segment groups that match the predicate; empty list otherwise
         """
+        result: List[SegmentGroup] = []
         for line in self.lines:
             if line.segment_groups is not None:
                 for segment_group in line.segment_groups:
-                    result = DeepAnwendungshandbuch._query_segment_group(segment_group, predicate)
-                    if result is not None:
-                        return result
-        return None
+                    result += DeepAnwendungshandbuch._query_segment_group(segment_group, predicate)
+        return result
+
+    def find_segments(
+        self, group_predicate: Callable[[SegmentGroup], bool], segment_predicate: Callable[[Segment], bool]
+    ) -> List[Segment]:
+        """
+        recursively search for segment characterised by the segment_predicate inside a group characterised by the
+        group_predicate.
+        :return: list of matching segments, empty list if nothing was found
+        """
+        result: List[Segment] = []
+        for segment_group in self.find_segment_groups(group_predicate):
+            result += segment_group.find_segments(segment_predicate)
+        return result
 
 
 class DeepAnwendungshandbuchSchema(Schema):
