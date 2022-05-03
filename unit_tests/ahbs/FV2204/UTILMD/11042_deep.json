@@ -462,7 +462,7 @@
                     }
                   ],
                   "discriminator": "NAD",
-                  "section_name": "Messstellenbetreibers"
+                  "section_name": "Korrespondenzanschrift des Kunden des Messstellenbetreibers"
                 },
                 {
                   "ahb_expression": "Muss",
