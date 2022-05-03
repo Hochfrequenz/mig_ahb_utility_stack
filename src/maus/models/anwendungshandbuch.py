@@ -7,20 +7,20 @@ structure.
 another segment group)
 """
 
-from typing import List, Optional, Sequence
+from typing import Callable, List, Optional, Sequence
 from uuid import UUID
 
 import attrs
 from marshmallow import Schema, fields, post_load  # type:ignore[import]
 
-from maus.models.edifact_components import SegmentGroup, SegmentGroupSchema
+from maus.models.edifact_components import Segment, SegmentGroup, SegmentGroupSchema
 
 
 # pylint:disable=too-many-instance-attributes
 @attrs.define(auto_attribs=True, kw_only=True)
 class AhbLine:
     """
-    An AhbLine is a single line inside the machine readable, flat AHB.
+    An AhbLine is a single line inside the machine-readable, flat AHB.
     """
 
     guid: Optional[UUID] = attrs.field(
@@ -227,7 +227,7 @@ class FlatAnwendungshandbuch:
         See the unittests for details.
         """
 
-        # this code is in a static method to make it easily accessible for fine grained unit testing
+        # this code is in a static method to make it easily accessible for fine-grained unit testing
         result: List[AhbLine] = sorted(ahb_lines, key=lambda x: x.segment_group_key or "")
         result.sort(key=lambda ahb_line: sg_order.index(ahb_line.segment_group_key))
         return result
@@ -265,6 +265,48 @@ class DeepAnwendungshandbuch:
             iterable_validator=attrs.validators.instance_of(list),
         )
     )  #: the nested data
+
+    @staticmethod
+    def _query_segment_group(
+        segment_group: SegmentGroup, predicate: Callable[[SegmentGroup], bool]
+    ) -> List[SegmentGroup]:
+        """
+        recursively search for a segment group that matches the predicate
+        :return: return empty list if nothing was found, the matching segment groups otherwise
+        """
+        result: List[SegmentGroup] = []
+        if predicate(segment_group):
+            result.append(segment_group)
+        if segment_group.segment_groups is not None:
+            for sub_group in segment_group.segment_groups:
+                sub_result = DeepAnwendungshandbuch._query_segment_group(sub_group, predicate)
+                result += sub_result
+        return result
+
+    def find_segment_groups(self, predicate: Callable[[SegmentGroup], bool]) -> List[SegmentGroup]:
+        """
+        recursively search for segment group in this ahb that meets the predicate.
+        :return: list of segment groups that match the predicate; empty list otherwise
+        """
+        result: List[SegmentGroup] = []
+        for line in self.lines:
+            if line.segment_groups is not None:
+                for segment_group in line.segment_groups:
+                    result += DeepAnwendungshandbuch._query_segment_group(segment_group, predicate)
+        return result
+
+    def find_segments(
+        self, group_predicate: Callable[[SegmentGroup], bool], segment_predicate: Callable[[Segment], bool]
+    ) -> List[Segment]:
+        """
+        recursively search for segment characterised by the segment_predicate inside a group characterised by the
+        group_predicate.
+        :return: list of matching segments, empty list if nothing was found
+        """
+        result: List[Segment] = []
+        for segment_group in self.find_segment_groups(group_predicate):
+            result += segment_group.find_segments(segment_predicate)
+        return result
 
 
 class DeepAnwendungshandbuchSchema(Schema):
