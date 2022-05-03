@@ -7,8 +7,6 @@ from lxml.etree import Element  # type:ignore[import]
 from maus.models.edifact_components import EdifactStackQuery
 from maus.reader.mig_reader import MigXmlReader
 
-d = Path(__file__).resolve().parents[0]
-
 ALL_MIG_XML_FILES = pytest.mark.datafiles(
     "./migs/FV2204/template_xmls/utilmd_1131.xml",
     "./migs/FV2204/template_xmls/mscons_1154.xml",
