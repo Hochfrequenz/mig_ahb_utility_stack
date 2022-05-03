@@ -20,7 +20,7 @@ from maus.models.edifact_components import SegmentGroup, SegmentGroupSchema
 @attrs.define(auto_attribs=True, kw_only=True)
 class AhbLine:
     """
-    An AhbLine is a single line inside the machine readable, flat AHB.
+    An AhbLine is a single line inside the machine-readable, flat AHB.
     """
 
     guid: Optional[UUID] = attrs.field(
@@ -227,7 +227,7 @@ class FlatAnwendungshandbuch:
         See the unittests for details.
         """
 
-        # this code is in a static method to make it easily accessible for fine grained unit testing
+        # this code is in a static method to make it easily accessible for fine-grained unit testing
         result: List[AhbLine] = sorted(ahb_lines, key=lambda x: x.segment_group_key or "")
         result.sort(key=lambda ahb_line: sg_order.index(ahb_line.segment_group_key))
         return result
