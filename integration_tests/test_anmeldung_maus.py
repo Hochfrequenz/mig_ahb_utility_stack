@@ -30,12 +30,12 @@ class TestAnmeldungMaus:
             template_path=Path(datafiles) / Path("UTILMD5.2c.template"),
             maus_path=Path("edifact-templates/maus/FV2110/UTILMD/11002_maus.json"),
         )
-        sg10 = result.maus.get_segment_group(lambda sg: sg.discriminator == "SG10")
-        assert sg10 is not None
-        nav = sg10.get_segment(
-            lambda seg: seg.discriminator == "CAV" and seg.section_name == "Netznutzungsabrechnungsvariante"
+        nav_segments = result.maus.find_segments(
+            group_predicate=lambda group: group.discriminator == "SG10",
+            segment_predicate=lambda seg: seg.discriminator == "CAV"
+            and seg.section_name == "Netznutzungsabrechnungsvariante",
         )
-        assert nav is not None
+        assert len(nav_segments) == 1  # https://github.com/Hochfrequenz/edifact-templates/issues/73
 
     @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2c.template")
     @pytest.mark.datafiles("./edifact-templates/ahbs/FV2110/UTILMD/11003.csv")

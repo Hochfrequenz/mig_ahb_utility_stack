@@ -47,7 +47,7 @@ def write_to_file_or_assert_equality(deep_ahb: DeepAnwendungshandbuch, file_path
         with open(file_path, "r", encoding="utf-8") as infile:
             json_content = json.load(infile)
             expected_maus = schema.load(json_content)
-        # assert deep_ahb == expected_maus
+        assert deep_ahb == expected_maus
 
 
 @attrs.define(kw_only=True)
