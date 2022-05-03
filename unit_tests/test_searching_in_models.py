@@ -1,6 +1,6 @@
 from typing import Callable
 
-import pytest
+import pytest  # type:ignore[import]
 
 from maus import DeepAnwendungshandbuch, Segment, SegmentGroup
 from maus.models.anwendungshandbuch import AhbMetaInformation
@@ -159,7 +159,7 @@ class TestSearchingInModels:
             ),
         ],
     )
-    def test_find_segment_group_from_deep_ahb(
+    def test_find_segments_from_deep_ahb(
         self,
         deep_ahb: DeepAnwendungshandbuch,
         group_predicate: Callable[[SegmentGroup], bool],
