@@ -7,7 +7,7 @@ structure.
 another segment group)
 """
 
-from typing import List, Optional, Sequence
+from typing import Callable, List, Optional, Sequence
 from uuid import UUID
 
 import attrs
@@ -265,6 +265,37 @@ class DeepAnwendungshandbuch:
             iterable_validator=attrs.validators.instance_of(list),
         )
     )  #: the nested data
+
+    @staticmethod
+    def _query_segment_group(
+        segment_group: SegmentGroup, predicate: Callable[[SegmentGroup], bool]
+    ) -> Optional[SegmentGroup]:
+        """
+        recursively search for a segment group that matches the predicate
+        :return: None if nothing was found, the matching segment group otherwise
+        """
+        result = predicate(segment_group)
+        if result is True:
+            return segment_group
+        if segment_group.segment_groups is not None:
+            for sub_group in segment_group.segment_groups:
+                sub_result = DeepAnwendungshandbuch._query_segment_group(sub_group, predicate)
+                if sub_result is not None:
+                    return sub_result
+        return None
+
+    def get_segment_group(self, predicate: Callable[[SegmentGroup], bool]) -> Optional[SegmentGroup]:
+        """
+        recursively search for segment group in this ahb that meets the predicate
+        :return: a segment group that matches the predicate, none otherwise
+        """
+        for line in self.lines:
+            if line.segment_groups is not None:
+                for segment_group in line.segment_groups:
+                    result = DeepAnwendungshandbuch._query_segment_group(segment_group, predicate)
+                    if result is not None:
+                        return result
+        return None
 
 
 class DeepAnwendungshandbuchSchema(Schema):
