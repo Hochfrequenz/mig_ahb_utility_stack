@@ -86,8 +86,8 @@ class FlatAhbCsvReader(FlatAhbReader):
             """
             returns true if the given raw line only contains some meaningful data in the "Segment Gruppe" key
             """
-            for key in keys_that_must_no_hold_any_values:
-                if key in raw_line and len(raw_line[key].strip()) > 0:
+            for row_key in keys_that_must_no_hold_any_values:
+                if row_key in raw_line and len(raw_line[row_key].strip()) > 0:
                     return False
             return True
 
@@ -104,13 +104,15 @@ class FlatAhbCsvReader(FlatAhbReader):
                 number_of_lines_merged += 1
             else:
                 if len(merged_section_name) > 0:
-                    artficial_merged_line: dict = {
+                    artificial_merged_line: dict = {
                         "": int(raw_line[""]) - 1,
                         "Segment Gruppe": merged_section_name.strip().replace("  ", " "),
                     }
                     for key in keys_that_must_no_hold_any_values:
-                        artficial_merged_line[key] = ""
-                    result.append(artficial_merged_line)
+                        # although we know there's no meaningful value here, we still need the keys with empty values
+                        # so that to downstream code the line seems legit ➡ We re-add them.
+                        artificial_merged_line[key] = ""
+                    result.append(artificial_merged_line)
                     merged_section_name = ""
                     number_of_lines_merged = 0
                 result.append(raw_line)
