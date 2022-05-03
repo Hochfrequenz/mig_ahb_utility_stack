@@ -87,7 +87,7 @@ class FlatAhbCsvReader(FlatAhbReader):
             returns true if the given raw line only contains some meaningful data in the "Segment Gruppe" key
             """
             for row_key in keys_that_must_no_hold_any_values:
-                if row_key in raw_line and len(raw_line[row_key].strip()) > 0:
+                if row_key in raw_line and raw_line[row_key] is not None and len(raw_line[row_key].strip()) > 0:
                     return False
             return True
 
