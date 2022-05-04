@@ -7,7 +7,7 @@ import re
 import uuid
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import List, Optional, Sequence, TextIO, Tuple
+from typing import List, Optional, Sequence, Set, TextIO, Tuple
 
 from maus.models.anwendungshandbuch import AhbLine, AhbMetaInformation, FlatAnwendungshandbuch
 from maus.models.edifact_components import gabi_edifact_qualifier_pattern
@@ -47,11 +47,77 @@ class FlatAhbCsvReader(FlatAhbReader):
         self.delimiter = delimiter
         with open(file_path, "r", encoding=encoding) as infile:
             # current_section_name: Optional[str]
-            for row in self.get_raw_rows(infile):
-                ahb_line = self.raw_ahb_row_to_ahbline(row)
-                if ahb_line is None:
-                    continue
-                self.rows.append(ahb_line)
+            raw_lines = self.get_raw_rows(infile)
+        raw_lines_with_merged_section_names = FlatAhbCsvReader.merge_section_only_lines(raw_lines)
+        for row in raw_lines_with_merged_section_names:
+            ahb_line = self.raw_ahb_row_to_ahbline(row)
+            if ahb_line is None:
+                continue
+            self.rows.append(ahb_line)
+
+    @staticmethod
+    def merge_section_only_lines(raw_lines: List[dict]) -> List[dict]:
+        """
+        merges adjacent lines from the CSV source when they only contain an AHB "section" description.
+        "Section" headings are the grey lines on the left of the AHB PDF.
+        (The first section of each AHB is "Nachrichten-Kopfsegment" in most cases.)
+        When the section heading spans multiple lines, we don't want to treat them as separate but as a single heading.
+        The method consumes a list of dicts and returns a _new_ list of dicts that is of the same length or shorter.
+        """
+        result: List[dict] = []
+
+        # imagine the the original list to be
+        # 0,asd,qwertz,
+        # 1,a very long section,
+        # 2,heading that spans,
+        # 3,multiple lines,
+        # 4,Foo,Bar,Y
+        # 5,Baz,Boom,Z
+        # we then want to merge the lines with index 1-3 into a single line
+        keys_that_must_no_hold_any_values: Set[str] = {
+            "Segment",
+            "Datenelement",
+            "Codes und Qualifier",
+            "Beschreibung",
+            "Bedingung",
+        }
+
+        def line_only_contains_segment_gruppe(raw_line: dict) -> bool:
+            """
+            returns true if the given raw line only contains some meaningful data in the "Segment Gruppe" key
+            """
+            for row_key in keys_that_must_no_hold_any_values:
+                if row_key in raw_line and raw_line[row_key] is not None and len(raw_line[row_key].strip()) > 0:
+                    return False
+            return True
+
+        merged_section_name = ""
+        number_of_lines_merged = 0
+        for raw_line in raw_lines:
+            if (
+                "Segment Gruppe" in raw_line
+                and raw_line["Segment Gruppe"]
+                and line_only_contains_segment_gruppe(raw_line)
+                and not raw_line["Segment Gruppe"].startswith("SG")
+            ):
+                merged_section_name += " " + raw_line["Segment Gruppe"]
+                number_of_lines_merged += 1
+            else:
+                # note that AHBs never end with a section heading, so all headings/sections will run into this block
+                if len(merged_section_name) > 0:
+                    artificial_merged_line: dict = {
+                        "": str(int(raw_line[""]) - 1),
+                        "Segment Gruppe": merged_section_name.strip().replace("  ", " "),
+                    }
+                    for key in keys_that_must_no_hold_any_values:
+                        # although we know there's no meaningful value here, we still need the keys with empty values
+                        # so that to downstream code the line seems legit ➡ We re-add them.
+                        artificial_merged_line[key] = ""
+                    result.append(artificial_merged_line)
+                    merged_section_name = ""
+                    number_of_lines_merged = 0
+                result.append(raw_line)
+        return result
 
     def get_raw_rows(self, file_handle: TextIO) -> List[dict]:
         """
