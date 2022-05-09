@@ -36,6 +36,24 @@ class TestAnmeldungMaus:
             and seg.section_name == "Netznutzungsabrechnungsvariante",
         )
         assert len(nav_segments) == 1  # https://github.com/Hochfrequenz/edifact-templates/issues/73
+        for expected_section_name, unexpected_section_name in [
+            (
+                "OBIS-Kennzahl der Zähleinrichtung / Mengenumwerter",
+                "OBIS-Kennzahl der Zähleinrichtung / Mengenumwerter / Smartmeter-Gateway",
+            ),
+            (
+                "OBIS-Daten der Zähleinrichtung / Mengenumwerter",
+                "OBIS-Daten der Zähleinrichtung / Mengenumwerter / Smartmeter-Gateway",
+            ),
+        ]:
+            expected_zaehleinrichtungs_obis = result.maus.find_segments(
+                segment_predicate=lambda seg: seg.section_name == expected_section_name
+            )
+            assert len(expected_zaehleinrichtungs_obis) > 0
+            unexpected_zaehleinrichtungs_obis = result.maus.find_segments(
+                segment_predicate=lambda seg: seg.section_name == unexpected_section_name
+            )
+            assert len(unexpected_zaehleinrichtungs_obis) == 0
 
     @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2c.template")
     @pytest.mark.datafiles("./edifact-templates/ahbs/FV2110/UTILMD/11003.csv")

@@ -296,7 +296,9 @@ class DeepAnwendungshandbuch:
         return result
 
     def find_segments(
-        self, group_predicate: Callable[[SegmentGroup], bool], segment_predicate: Callable[[Segment], bool]
+        self,
+        group_predicate: Callable[[SegmentGroup], bool] = lambda _: True,
+        segment_predicate: Callable[[Segment], bool] = lambda _: True,
     ) -> List[Segment]:
         """
         recursively search for segment characterised by the segment_predicate inside a group characterised by the

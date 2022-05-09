@@ -7,7 +7,7 @@ import re
 import uuid
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import List, Optional, Sequence, Set, TextIO, Tuple
+from typing import Dict, List, Literal, Optional, Sequence, Set, TextIO, Tuple, overload
 
 from maus.models.anwendungshandbuch import AhbLine, AhbMetaInformation, FlatAnwendungshandbuch
 from maus.models.edifact_components import gabi_edifact_qualifier_pattern
@@ -156,7 +156,7 @@ class FlatAhbCsvReader(FlatAhbReader):
             value_pool_entry=value_pool_entry,
             ahb_expression=ahb_row[self.pruefidentifikator] or None,
             name=description,
-            section_name=self.current_section_name,
+            section_name=_replace_hardcoded_section_names(self.current_section_name),
         )
         return result
 
@@ -235,3 +235,32 @@ class FlatAhbCsvReader(FlatAhbReader):
             ),
             lines=[row for row in self.rows if row.holds_any_information()],
         )
+
+
+@overload
+def _replace_hardcoded_section_names(section_name: str) -> str:
+    ...
+
+
+@overload
+def _replace_hardcoded_section_names(section_name: Literal[None]) -> Literal[None]:
+    ...
+
+
+def _replace_hardcoded_section_names(section_name: Optional[str]) -> Optional[str]:
+    """
+    Replace section names that differ because of "Datenschiefstände"
+    :param section_name:
+    :return:
+    """
+    if not section_name:
+        return section_name
+    replacements: Dict[str, str] = {
+        # https://github.com/Hochfrequenz/edifact-templates/issues/82
+        # pylint: disable=line-too-long
+        "OBIS-Kennzahl der Zähleinrichtung / Mengenumwerter / Smartmeter-Gateway": "OBIS-Kennzahl der Zähleinrichtung / Mengenumwerter",
+        "OBIS-Daten der Zähleinrichtung / Mengenumwerter / Smartmeter-Gateway": "OBIS-Daten der Zähleinrichtung / Mengenumwerter",
+    }
+    if section_name.strip() in replacements:
+        return replacements[section_name]
+    return section_name
