@@ -16,7 +16,7 @@ from maus.models.edifact_components import (
 from maus.reader.mig_reader import MigReader
 
 
-def _replace_disciminators_with_edifact_stack_segments(
+def _replace_discriminators_with_edifact_stack_segments(
     segments: List[Segment],
     segment_group_key: str,
     mig_reader: MigReader,
@@ -192,7 +192,7 @@ def _replace_discriminators_with_edifact_stack_groups(
     for segment_group_index, segment_group in enumerate(segment_groups):
         current_segment_group_key = segment_group.discriminator
         if result[segment_group_index].segments is not None:
-            segments_result, predecessor_qualifiers_used = _replace_disciminators_with_edifact_stack_segments(
+            segments_result, predecessor_qualifiers_used = _replace_discriminators_with_edifact_stack_segments(
                 segments=result[segment_group_index].segments,  # type:ignore[arg-type]
                 segment_group_key=current_segment_group_key,
                 mig_reader=mig_reader,
