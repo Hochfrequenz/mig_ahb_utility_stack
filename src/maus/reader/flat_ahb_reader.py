@@ -34,6 +34,15 @@ class FlatAhbReader(ABC):
         raise NotImplementedError("The inheriting class has to implement this method")
 
 
+def check_file_can_be_parsed_as_ahb_csv(file_path: Path) -> None:
+    """
+    Returns nothing iff the given file is parsable as CSV and contains no obvious errors.
+    This is not a really sophisticated analysis but just a basic minimal sanity check.
+    In case of error an exception is raised.
+    """
+    _ = FlatAhbCsvReader(file_path)  # this may die with a meaningful exception
+
+
 class FlatAhbCsvReader(FlatAhbReader):
     """
     reads csv files and returns AHBs

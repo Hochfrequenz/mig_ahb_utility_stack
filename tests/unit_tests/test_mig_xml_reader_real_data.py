@@ -5,7 +5,7 @@ from lxml import etree  # type:ignore[import]
 from lxml.etree import Element  # type:ignore[import]
 
 from maus.models.edifact_components import EdifactStackQuery
-from maus.reader.mig_reader import MigXmlReader
+from maus.reader.mig_reader import MigXmlReader, check_file_can_be_parsed_as_mig_xml
 
 ALL_MIG_XML_FILES = pytest.mark.datafiles(
     "./migs/FV2204/template_xmls/utilmd_1131.xml",
@@ -261,3 +261,8 @@ class TestMigXmlReaderRealData:
         actual_stack = reader.get_edifact_stack(query)
         assert actual_stack is not None
         assert actual_stack.to_json_path() == expected_path  # type:ignore[union-attr]
+
+    @ALL_MIG_XML_FILES
+    def test_is_parsable(self, datafiles):
+        check_file_can_be_parsed_as_mig_xml(Path(datafiles) / Path("utilmd_3225.xml"))
+        # if no exception is thrown, the test is successful

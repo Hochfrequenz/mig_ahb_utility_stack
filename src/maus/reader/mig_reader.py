@@ -9,6 +9,7 @@ from xml.etree.ElementTree import Element
 from lxml import etree  # type:ignore[import]
 
 from maus import SegmentGroupHierarchy
+from maus.edifact import EdifactFormat
 from maus.models._internal import EdifactStackSearchStrategy, MigFilterResult
 from maus.models.edifact_components import EdifactStack, EdifactStackLevel, EdifactStackQuery
 from maus.reader.etree_element_helpers import (
@@ -45,6 +46,16 @@ class MigReader(ABC):
 
 
 Result = TypeVar("Result")  #: is a type var to indicate an "arbitrary but same" type in a generic function
+
+
+def check_file_can_be_parsed_as_mig_xml(file_path: Path) -> None:
+    """
+    Returns nothing iff the given file is parsable as XML and contains no obvious errors.
+    This is not a really sophisticated analysis but just a basic minimal sanity check.
+    In case of error an exception is raised.
+    """
+    reader = MigXmlReader(file_path)
+    _ = EdifactFormat(reader.get_format_name())  # dies with an exception if the value is invalid
 
 
 # pylint:disable=c-extension-no-member
