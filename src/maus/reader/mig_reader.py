@@ -48,7 +48,7 @@ class MigReader(ABC):
 Result = TypeVar("Result")  #: is a type var to indicate an "arbitrary but same" type in a generic function
 
 
-def check_file_can_be_parsed_as_ahb_csv(file_path: Path) -> None:
+def check_file_can_be_parsed_as_mig_xml(file_path: Path) -> None:
     """
     Returns nothing iff the given file is parsable as XML and contains no obvious errors.
     This is not a really sophisticated analysis but just a basic minimal sanity check.
