@@ -154,8 +154,12 @@ def _find_stack_using_fallback_predecessors(
 ) -> Optional[EdifactStack]:
     all_fallback_predecessors: List[str] = []
     for predecessor_list in fallback_predecessors.values():
-        # the predecessors are added to this list in the order in which they occur in the AHB.
+        # The predecessors are added to this list in the order in which they occur in the AHB.
         # My _guess_ (and only a guess) is, that the reversed order has better matches.
+        # This (in UTILMD) particularly affects ( https://github.com/Hochfrequenz/edifact-templates/pull/84/files )
+        # - Lastprofildaten (Gas)/(Strom) vs. Profilschardaten
+        # - Konzessionsabgaben vs. Zuordnung Konzessionsabgaben
+        # - Kommunikationseinrichtung vs. Technische Steuereinrichtung vs. Steuer-/Abgabeninformation vs. Wandlerdaten
         # We need to find out.
         for value in reversed(predecessor_list):
             all_fallback_predecessors.append(value)
