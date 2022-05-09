@@ -3,7 +3,7 @@ from typing import List, Optional
 
 import pytest  # type:ignore[import]
 
-from maus.reader.flat_ahb_reader import FlatAhbCsvReader, is_parseable_ahb_csv_file
+from maus.reader.flat_ahb_reader import FlatAhbCsvReader, check_file_can_be_parsed_as_ahb_csv
 
 
 class TestAhbCsvReader:
@@ -238,5 +238,5 @@ class TestAhbCsvReader:
 
     @pytest.mark.datafiles("./ahbs/FV2204/UTILMD/11042.csv")
     def test_is_parsable(self, datafiles):
-        actual = is_parseable_ahb_csv_file(Path(datafiles) / Path("11042.csv"))
-        assert actual is True
+        check_file_can_be_parsed_as_ahb_csv(Path(datafiles) / Path("11042.csv"))
+        # if no exception is thrown, the test is successful

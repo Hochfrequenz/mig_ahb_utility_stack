@@ -48,14 +48,14 @@ class MigReader(ABC):
 Result = TypeVar("Result")  #: is a type var to indicate an "arbitrary but same" type in a generic function
 
 
-def is_parseable_mig_xml_file(file_path: Path) -> bool:
+def check_file_can_be_parsed_as_ahb_csv(file_path: Path) -> None:
     """
-    Returns true iff the given file is parsable as XML and contains no obvious errors.
+    Returns nothing iff the given file is parsable as XML and contains no obvious errors.
     This is not a really sophisticated analysis but just a basic minimal sanity check.
+    In case of error an exception is raised.
     """
     reader = MigXmlReader(file_path)
     _ = EdifactFormat(reader.get_format_name())  # dies with an exception if the value is invalid
-    return True
 
 
 # pylint:disable=c-extension-no-member

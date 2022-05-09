@@ -5,7 +5,7 @@ from lxml import etree  # type:ignore[import]
 from lxml.etree import Element  # type:ignore[import]
 
 from maus.models.edifact_components import EdifactStackQuery
-from maus.reader.mig_reader import MigXmlReader, is_parseable_mig_xml_file
+from maus.reader.mig_reader import MigXmlReader, check_file_can_be_parsed_as_ahb_csv
 
 ALL_MIG_XML_FILES = pytest.mark.datafiles(
     "./migs/FV2204/template_xmls/utilmd_1131.xml",
@@ -264,5 +264,5 @@ class TestMigXmlReaderRealData:
 
     @ALL_MIG_XML_FILES
     def test_is_parsable(self, datafiles):
-        actual = is_parseable_mig_xml_file(Path(datafiles) / Path("utilmd_3225.xml"))
-        assert actual is True
+        check_file_can_be_parsed_as_ahb_csv(Path(datafiles) / Path("utilmd_3225.xml"))
+        # if no exception is thrown, the test is successful
