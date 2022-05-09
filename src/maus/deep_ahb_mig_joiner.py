@@ -1,7 +1,7 @@
 """
 A module to mix/join information from the deep ahb and the MIG (beyond SGH)
 """
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Dict, List, Optional, Tuple
 
 from maus import DataElementFreeText, DataElementValuePool, DeepAnwendungshandbuch
 from maus.edifact import is_edifact_boilerplate
