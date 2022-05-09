@@ -16,6 +16,7 @@ class EdifactFormat(str, Enum):
 
     APERAK = "APERAK"
     COMDIS = "COMDIS"  #: communication dispute
+    CONTRL = "CONTRL"  #: control messages
     IFTSTA = "IFTSTA"  #: Multimodaler Statusbericht
     INSRPT = "INSRPT"  #: Prüfbericht
     INVOIC = "INVOIC"  #: invoice
@@ -51,6 +52,8 @@ _edifact_mapping: Dict[str, EdifactFormat] = {
     "37": EdifactFormat.PARTIN,
     "11": EdifactFormat.UTILMD,
     "25": EdifactFormat.UTILTS,
+    "91": EdifactFormat.CONTRL,
+    "92": EdifactFormat.APERAK,
 }
 
 
