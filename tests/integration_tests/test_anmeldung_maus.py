@@ -38,10 +38,12 @@ class TestAnmeldungMaus:
         assert len(nav_segments) == 1  # https://github.com/Hochfrequenz/edifact-templates/issues/73
         for expected_section_name, unexpected_section_name in [
             (
+                # https://github.com/Hochfrequenz/edifact-templates/issues/82
                 "OBIS-Kennzahl der Zähleinrichtung / Mengenumwerter",
                 "OBIS-Kennzahl der Zähleinrichtung / Mengenumwerter / Smartmeter-Gateway",
             ),
             (
+                # https://github.com/Hochfrequenz/edifact-templates/issues/82
                 "OBIS-Daten der Zähleinrichtung / Mengenumwerter",
                 "OBIS-Daten der Zähleinrichtung / Mengenumwerter / Smartmeter-Gateway",
             ),
@@ -54,6 +56,24 @@ class TestAnmeldungMaus:
                 segment_predicate=lambda seg: seg.section_name == unexpected_section_name
             )
             assert len(unexpected_zaehleinrichtungs_obis) == 0
+        assert (
+            len(
+                result.maus.find_segments(
+                    segment_predicate=lambda seg: seg.discriminator == "SEQ"
+                    and seg.section_name == "OBIS-Daten der Marktlokation",
+                )
+            )
+            > 0
+        )  # https://github.com/Hochfrequenz/edifact-templates/issues/81
+        assert (
+            len(
+                result.maus.find_segments(
+                    segment_predicate=lambda seg: seg.discriminator == "CAV"
+                    and seg.section_name == "Druckebene der Marktlokation",
+                )
+            )
+            > 0
+        )  # https://github.com/Hochfrequenz/edifact-templates/issues/79
 
     @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2c.template")
     @pytest.mark.datafiles("./edifact-templates/ahbs/FV2110/UTILMD/11003.csv")
