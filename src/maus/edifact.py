@@ -53,6 +53,7 @@ _edifact_mapping: Dict[str, EdifactFormat] = {
     "11": EdifactFormat.UTILMD,
     "25": EdifactFormat.UTILTS,
     "91": EdifactFormat.CONTRL,
+    "92": EdifactFormat.APERAK,
 }
 
 
