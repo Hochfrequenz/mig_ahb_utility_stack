@@ -1,7 +1,7 @@
 """
 A module to mix/join information from the deep ahb and the MIG (beyond SGH)
 """
-from typing import Dict, List, Optional, Set, Tuple
+from typing import Dict, List, Optional, Tuple
 
 from maus import DataElementFreeText, DataElementValuePool, DeepAnwendungshandbuch
 from maus.edifact import is_edifact_boilerplate
@@ -24,11 +24,11 @@ def _replace_disciminators_with_edifact_stack_segments(
     # without the fallback_predecessors the single segment groups would be handled independently of each other,
     # which is great for readability, debuggability and testing
     # but sadly the complexity of the AHBs requires a coupling.
-    fallback_predecessors: Dict[str, Set[str]],
+    fallback_predecessors: Dict[str, List[str]],
     ignore_errors: bool = False,
-) -> Tuple[List[Segment], Dict[str, Set[str]]]:
+) -> Tuple[List[Segment], Dict[str, List[str]]]:
     result = segments.copy()
-    predecessors_used: Dict[str, Set[str]] = {}  # maps the segment code to a set of qualifiers used as predecessors
+    predecessors_used: Dict[str, List[str]] = {}  # maps the segment code to a set of qualifiers used as predecessors
     for segment_index, segment in enumerate(
         s for s in segments if not is_edifact_boilerplate(s.discriminator)
     ):  # type:ignore[union-attr]
@@ -55,9 +55,9 @@ def _replace_disciminators_with_edifact_stack_segments(
                 if len(data_element.value_pool) == 1:
                     predecessor_qualifier = data_element.value_pool[0].qualifier
                     try:
-                        predecessors_used[segment.discriminator].add(predecessor_qualifier)
+                        predecessors_used[segment.discriminator].append(predecessor_qualifier)
                     except KeyError:
-                        predecessors_used[segment.discriminator] = {predecessor_qualifier}
+                        predecessors_used[segment.discriminator] = [predecessor_qualifier]
                 else:
                     predecessor_qualifier = None
     return result, predecessors_used
@@ -126,7 +126,7 @@ def _handle_value_pool(
     segment: Segment,
     data_element: DataElementValuePool,
     predecessor_qualifier: Optional[str],
-    fallback_predecessors: Dict[str, Set[str]],
+    fallback_predecessors: Dict[str, List[str]],
 ) -> Optional[EdifactStack]:
     query = EdifactStackQuery(
         segment_group_key=segment_group_key,
@@ -150,11 +150,18 @@ def _handle_value_pool(
 
 
 def _find_stack_using_fallback_predecessors(
-    mig_reader: MigReader, query_draft: EdifactStackQuery, fallback_predecessors: Dict[str, Set[str]]
+    mig_reader: MigReader, query_draft: EdifactStackQuery, fallback_predecessors: Dict[str, List[str]]
 ) -> Optional[EdifactStack]:
     all_fallback_predecessors: List[str] = []
-    for predecessor_set in fallback_predecessors.values():
-        for value in predecessor_set:
+    for predecessor_list in fallback_predecessors.values():
+        # The predecessors are added to this list in the order in which they occur in the AHB.
+        # My _guess_ (and only a guess) is, that the reversed order has better matches.
+        # This (in UTILMD) particularly affects ( https://github.com/Hochfrequenz/edifact-templates/pull/84/files )
+        # - Lastprofildaten (Gas)/(Strom) vs. Profilschardaten
+        # - Konzessionsabgaben vs. Zuordnung Konzessionsabgaben
+        # - Kommunikationseinrichtung vs. Technische Steuereinrichtung vs. Steuer-/Abgabeninformation vs. Wandlerdaten
+        # We need to find out.
+        for value in reversed(predecessor_list):
             all_fallback_predecessors.append(value)
     for fallback_predecessor in all_fallback_predecessors:
         query = EdifactStackQuery(
@@ -175,7 +182,7 @@ def _find_stack_using_fallback_predecessors(
 def _replace_discriminators_with_edifact_stack_groups(
     segment_groups: List[SegmentGroup],
     mig_reader: MigReader,
-    fallback_predecessors: Dict[str, Set[str]],
+    fallback_predecessors: Dict[str, List[str]],
     ignore_errors: bool = False,
 ) -> List[SegmentGroup]:
     """
