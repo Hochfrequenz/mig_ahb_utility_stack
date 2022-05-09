@@ -3,7 +3,7 @@ from typing import List, Optional
 
 import pytest  # type:ignore[import]
 
-from maus.reader.flat_ahb_reader import FlatAhbCsvReader
+from maus.reader.flat_ahb_reader import FlatAhbCsvReader, is_parseable_ahb_csv_file
 
 
 class TestAhbCsvReader:
@@ -235,3 +235,8 @@ class TestAhbCsvReader:
     def test_merging_of_section_only_lines(self, input_lines: List[dict], expected_lines: List[dict]):
         actual = FlatAhbCsvReader.merge_section_only_lines(input_lines)
         assert actual == expected_lines
+
+    @pytest.mark.datafiles("./ahbs/FV2204/UTILMD/11042.csv")
+    def test_is_parsable(self, datafiles):
+        actual = is_parseable_ahb_csv_file(Path(datafiles) / Path("11042.csv"))
+        assert actual is True
