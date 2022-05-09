@@ -52,6 +52,11 @@ class TestAnmeldungMaus:
                 "OBIS Daten für Marktrolle relevant",
                 "OBIS Daten für Lieferant relevant",
             ),
+            (
+                # https://github.com/Hochfrequenz/edifact-templates/issues/73
+                "Netznutzungsabrechnungsvariante",
+                "Netznutzungsabrechnungsv ariante",
+            ),
         ]:
             expected_zaehleinrichtungs_obis = result.maus.find_segments(
                 segment_predicate=lambda seg: seg.section_name == expected_section_name
