@@ -260,6 +260,8 @@ def _replace_hardcoded_section_names(section_name: Optional[str]) -> Optional[st
         # pylint: disable=line-too-long
         "OBIS-Kennzahl der Zähleinrichtung / Mengenumwerter / Smartmeter-Gateway": "OBIS-Kennzahl der Zähleinrichtung / Mengenumwerter",
         "OBIS-Daten der Zähleinrichtung / Mengenumwerter / Smartmeter-Gateway": "OBIS-Daten der Zähleinrichtung / Mengenumwerter",
+        # https://github.com/Hochfrequenz/edifact-templates/issues/80
+        "OBIS Daten für Lieferant relevant": "OBIS Daten für Marktrolle relevant",
     }
     if section_name.strip() in replacements:
         return replacements[section_name]
