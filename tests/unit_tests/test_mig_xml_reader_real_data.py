@@ -227,20 +227,19 @@ class TestMigXmlReaderRealData:
                 '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Beteiligter Marktpartner MP-ID"][0]["Codeliste"]',
                 id="UTILMD 3055, Beteiligter Marktpartner",
             ),
-            # pytest.param(
-            #    "utilmd_6411.xml",
-            #    EdifactStackQuery(
-            #        segment_group_key="SG9",
-            #        segment_code="QTY",
-            #        data_element_id="6411",
-            #        name=None,
-            #        predecessor_qualifier="265",
-            #        section_name="Arbeit / Leistung für tagesparameterabhängige Marktlokation",
-            #
-            #    ),
-            #    '$foobarsomething',
-            #    id="UTILMD 6411, Beteiligter Marktpartner",
-            # )
+            pytest.param(
+                "utilmd_6411.xml",
+                EdifactStackQuery(
+                    segment_group_key="SG9",
+                    segment_code="QTY",
+                    data_element_id="6411",
+                    name=None,
+                    predecessor_qualifier="Z01",  # from parents parent
+                    section_name="Arbeit / Leistung für tagesparameterabhängige Marktlokation",
+                ),
+                '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Daten der Marktlokation"][0]["Arbeit / Leistung für tagesparameterabhängige Marktlokation"][0]["Maßeinheit"]',
+                id="UTILMD 6411, Beteiligter Marktpartner",
+            )
             # pytest.param( # unsolved
             #    "utilmd_1154.xml",
             # EdifactStackQuery(segment_group_key='SG8', segment_code='RFF', data_element_id='1154',
