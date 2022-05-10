@@ -16,7 +16,7 @@ from maus.reader.etree_element_helpers import (
     filter_by_name,
     filter_by_section_name,
     get_ahb_name_or_none,
-    get_nested_qualifier,
+    get_nested_qualifiers,
     get_segment_group_key_or_none,
     list_to_mig_filter_result,
 )
@@ -171,7 +171,10 @@ class MigXmlReader(MigReader):
         else:
             relevant_attribute = "ref"
         filtered_by_predecessor = [
-            c for c in candidates if get_nested_qualifier(relevant_attribute, c) == query.predecessor_qualifier
+            c
+            for c in candidates
+            if get_nested_qualifiers(relevant_attribute, c) is not None
+            and query.predecessor_qualifier in get_nested_qualifiers(relevant_attribute, c)
         ]  # that's a bit dirty, better parse the ref properly instead of string-matching
         return list_to_mig_filter_result(filtered_by_predecessor)
 
@@ -185,7 +188,8 @@ class MigXmlReader(MigReader):
         filtered_by_predecessor = [
             c
             for c in candidates
-            if self.get_parent_predecessor(c, use_sanitized_tree=False) == query.predecessor_qualifier
+            if self.get_parent_predecessors(c, use_sanitized_tree=False) is not None
+            and query.predecessor_qualifier in self.get_parent_predecessors(c, use_sanitized_tree=False)
         ]
         return list_to_mig_filter_result(filtered_by_predecessor)
 
@@ -253,16 +257,17 @@ class MigXmlReader(MigReader):
         # Reading the test will most likely make its behaviour more understandable.
         return self._get_parent_x(element, get_segment_group_key_or_none, use_sanitized_tree=use_sanitized_tree)
 
-    def get_parent_predecessor(self, element: Element, use_sanitized_tree: bool) -> Optional[str]:
+    def get_parent_predecessors(self, element: Element, use_sanitized_tree: bool) -> Optional[List[str]]:
         """
         iterate from element towards root and return the first segment group found (the one closes to element).
         returns None if no segment group was found
         """
         # This method is separately unit tested.
         # Reading the test will most likely make its behaviour more understandable.
-        return self._get_parent_x(
-            element, lambda c: get_nested_qualifier("key", c), use_sanitized_tree=use_sanitized_tree
+        result = self._get_parent_x(
+            element, lambda c: get_nested_qualifiers("key", c), use_sanitized_tree=use_sanitized_tree
         )
+        return result
 
     def _handle_predecessor_if_present(self, query: EdifactStackQuery) -> Optional[EdifactStackSearchStrategy]:
         """

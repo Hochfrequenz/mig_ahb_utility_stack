@@ -103,15 +103,23 @@ class TestMigXmlReaderMwe:
                 '<?xml version="1.0"?><MSCONS><foo key="DTM:1:2[1:0=Z21]"><bar/></foo></MSCONS>',
                 "//MSCONS/foo/bar",
                 False,
-                "Z21",
+                ["Z21"],
+                id="single predecessor",
+            ),
+            pytest.param(
+                '<?xml version="1.0"?><UTILMD><class key="QTY:1:1[1:0=265|1:0=Z10|1:0=Z08]"><field /></class></UTILMD>',
+                "//UTILMD/class/field",
+                False,
+                ["265", "Z10", "Z08"],
+                id="multiple predecessors",
             ),
         ],
     )
-    def test_get_parent_predecessor(
-        self, xml_string: str, element_xpath: str, use_sanitized: bool, expected_result: Optional[str]
+    def test_get_parent_predecessors(
+        self, xml_string: str, element_xpath: str, use_sanitized: bool, expected_result: List[str]
     ):
         reader, element = TestMigXmlReaderMwe._prepare_xml_reader_and_element(xml_string, element_xpath)
-        actual = reader.get_parent_predecessor(element, use_sanitized_tree=use_sanitized)
+        actual = reader.get_parent_predecessors(element, use_sanitized_tree=use_sanitized)
         assert actual == expected_result
 
     @pytest.mark.parametrize(
