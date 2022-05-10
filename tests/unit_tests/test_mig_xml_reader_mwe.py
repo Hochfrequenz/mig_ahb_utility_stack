@@ -383,7 +383,7 @@ class TestMigXmlReaderMwe:
         assert actual == expected_result
 
     @pytest.mark.parametrize(
-        "xml_string,candidates_xpaths,query,expected_result_xpaths",
+        "xml_string,candidates_xpaths,query,skip_levels,expected_result_xpaths",
         [
             pytest.param(
                 '<?xml version="1.0"?><UTILMD><class key="LOC:2:0[1:0=Z08]"><field ref="LOC:2:0"/></class></UTILMD>',
@@ -395,15 +395,37 @@ class TestMigXmlReaderMwe:
                     data_element_id="0000",  # dummy
                     name="",  # dummy
                 ),
+                0,
                 ["//UTILMD/class/field"],
+                id="loc",
+            ),
+            pytest.param(
+                '<?xml version="1.0"?><UTILMD><asd key="FOO:4:5[1:0=Z11]"><class key="LOC:2:0[1:0=Z08]"><field ref="LOC:2:0"/></class></asd><yxc key="FOO:4:5[1:0=Z22]"><class key="LOC:2:0[1:0=Z08]"><field ref="LOC:2:0"/></class></yxc></UTILMD>',
+                ["//UTILMD/asd/class/field", "//UTILMD/yxc/class/field"],
+                EdifactStackQuery(
+                    segment_group_key="SG1",  # dummy
+                    segment_code="LOC",
+                    predecessor_qualifier="Z11",
+                    data_element_id="0000",  # dummy
+                    name="",  # dummy
+                ),
+                1,
+                ["//UTILMD/asd/class/field"],
                 id="loc",
             ),
         ],
     )
     def test_get_unique_result_by_parent_predecessor(
-        self, xml_string: str, candidates_xpaths: List[str], query: EdifactStackQuery, expected_result_xpaths: List[str]
+        self,
+        xml_string: str,
+        candidates_xpaths: List[str],
+        query: EdifactStackQuery,
+        skip_levels: int,
+        expected_result_xpaths: List[str],
     ):
         reader, candidates = TestMigXmlReaderMwe._prepare_xml_reader_and_elements(xml_string, candidates_xpaths)
         expected_result = TestMigXmlReaderMwe._prepare_mig_filter_result(reader._original_tree, expected_result_xpaths)
-        actual = reader.get_unique_result_by_parent_predecessor(candidates=candidates, query=query)
+        actual = reader.get_unique_result_by_parent_predecessor(
+            candidates=candidates, query=query, skip_levels=skip_levels
+        )
         assert actual == expected_result
