@@ -47,7 +47,7 @@ def get_nested_qualifiers(attrib_key: Literal["ref", "key"], element: Element) -
             return [single_match["qualifier"]]
         multi_match = _multiple_nestes_qualifiers_pattern.match(body)
         if multi_match:
-            # if body == QTY:1:1[1:0=265|1:0=Z10|1:0=Z08]
+            # if body == "QTY:1:1[1:0=265|1:0=Z10|1:0=Z08]"
             # then multi_match["inner"] is "1:0=265|1:0=Z10|1:0=Z08"
             return [expression.split("=")[1] for expression in multi_match["inner"].split("|")]
     return None
