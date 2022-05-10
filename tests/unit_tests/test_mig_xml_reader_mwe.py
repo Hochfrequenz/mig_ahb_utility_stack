@@ -103,15 +103,23 @@ class TestMigXmlReaderMwe:
                 '<?xml version="1.0"?><MSCONS><foo key="DTM:1:2[1:0=Z21]"><bar/></foo></MSCONS>',
                 "//MSCONS/foo/bar",
                 False,
-                "Z21",
+                ["Z21"],
+                id="single predecessor",
+            ),
+            pytest.param(
+                '<?xml version="1.0"?><UTILMD><class key="QTY:1:1[1:0=265|1:0=Z10|1:0=Z08]"><field /></class></UTILMD>',
+                "//UTILMD/class/field",
+                False,
+                ["265", "Z10", "Z08"],
+                id="multiple predecessors",
             ),
         ],
     )
-    def test_get_parent_predecessor(
-        self, xml_string: str, element_xpath: str, use_sanitized: bool, expected_result: Optional[str]
+    def test_get_parent_predecessors(
+        self, xml_string: str, element_xpath: str, use_sanitized: bool, expected_result: List[str]
     ):
         reader, element = TestMigXmlReaderMwe._prepare_xml_reader_and_element(xml_string, element_xpath)
-        actual = reader.get_parent_predecessor(element, use_sanitized_tree=use_sanitized)
+        actual = reader.get_parent_predecessors(element, use_sanitized_tree=use_sanitized)
         assert actual == expected_result
 
     @pytest.mark.parametrize(
@@ -375,7 +383,7 @@ class TestMigXmlReaderMwe:
         assert actual == expected_result
 
     @pytest.mark.parametrize(
-        "xml_string,candidates_xpaths,query,expected_result_xpaths",
+        "xml_string,candidates_xpaths,query,skip_levels,expected_result_xpaths",
         [
             pytest.param(
                 '<?xml version="1.0"?><UTILMD><class key="LOC:2:0[1:0=Z08]"><field ref="LOC:2:0"/></class></UTILMD>',
@@ -387,15 +395,37 @@ class TestMigXmlReaderMwe:
                     data_element_id="0000",  # dummy
                     name="",  # dummy
                 ),
+                0,
                 ["//UTILMD/class/field"],
+                id="loc",
+            ),
+            pytest.param(
+                '<?xml version="1.0"?><UTILMD><asd key="FOO:4:5[1:0=Z11]"><class key="LOC:2:0[1:0=Z08]"><field ref="LOC:2:0"/></class></asd><yxc key="FOO:4:5[1:0=Z22]"><class key="LOC:2:0[1:0=Z08]"><field ref="LOC:2:0"/></class></yxc></UTILMD>',
+                ["//UTILMD/asd/class/field", "//UTILMD/yxc/class/field"],
+                EdifactStackQuery(
+                    segment_group_key="SG1",  # dummy
+                    segment_code="LOC",
+                    predecessor_qualifier="Z11",
+                    data_element_id="0000",  # dummy
+                    name="",  # dummy
+                ),
+                1,
+                ["//UTILMD/asd/class/field"],
                 id="loc",
             ),
         ],
     )
     def test_get_unique_result_by_parent_predecessor(
-        self, xml_string: str, candidates_xpaths: List[str], query: EdifactStackQuery, expected_result_xpaths: List[str]
+        self,
+        xml_string: str,
+        candidates_xpaths: List[str],
+        query: EdifactStackQuery,
+        skip_levels: int,
+        expected_result_xpaths: List[str],
     ):
         reader, candidates = TestMigXmlReaderMwe._prepare_xml_reader_and_elements(xml_string, candidates_xpaths)
         expected_result = TestMigXmlReaderMwe._prepare_mig_filter_result(reader._original_tree, expected_result_xpaths)
-        actual = reader.get_unique_result_by_parent_predecessor(candidates=candidates, query=query)
+        actual = reader.get_unique_result_by_parent_predecessor(
+            candidates=candidates, query=query, skip_levels=skip_levels
+        )
         assert actual == expected_result

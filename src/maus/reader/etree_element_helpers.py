@@ -24,19 +24,32 @@ def get_segment_group_key_or_none(element: Element) -> Optional[str]:
 
 
 #: a regex to match a ref-segment: https://regex101.com/r/D81bbO/1
-_nested_qualifier_pattern = re.compile(
+_single_nested_qualifier_pattern = re.compile(
     r"^(?P<segment_code>[A-Z]+):\d+:(?:\d+|\(\d+,\d+\))\[(?:\w+:)+\w+:?=(?P<qualifier>[A-Z\d]+)\]$"
 )
 
+#: a regex to match multiple ref/key segments: https://regex101.com/r/6XooRL/1
+_multiple_nestes_qualifiers_pattern = re.compile(
+    r"(?P<segment_code>[A-Z]+):\d+:(?:\d+|\(\d+,\d+\))\[(?P<inner>(?:\d+:\d+=[A-Z\d]+\|?)+)\]$"
+)
 
-def get_nested_qualifier(attrib_key: Literal["ref", "key"], element: Element) -> Optional[str]:
+
+def get_nested_qualifiers(attrib_key: Literal["ref", "key"], element: Element) -> Optional[List[str]]:
     """
     returns the nested qualifier of an element if present; None otherwise
+    we still return None instead of an empty list, because all the framework around this method actually check for None
+    instead of empty lists
     """
     if attrib_key in element.attrib:
-        match = _nested_qualifier_pattern.match(element.attrib[attrib_key])
-        if match:
-            return match["qualifier"]
+        body: str = element.attrib[attrib_key]
+        single_match = _single_nested_qualifier_pattern.match(body)
+        if single_match:
+            return [single_match["qualifier"]]
+        multi_match = _multiple_nestes_qualifiers_pattern.match(body)
+        if multi_match:
+            # if body == "QTY:1:1[1:0=265|1:0=Z10|1:0=Z08]"
+            # then multi_match["inner"] is "1:0=265|1:0=Z10|1:0=Z08"
+            return [expression.split("=")[1] for expression in multi_match["inner"].split("|")]
     return None
 
 

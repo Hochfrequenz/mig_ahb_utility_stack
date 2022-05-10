@@ -16,7 +16,7 @@ from maus.reader.etree_element_helpers import (
     filter_by_name,
     filter_by_section_name,
     get_ahb_name_or_none,
-    get_nested_qualifier,
+    get_nested_qualifiers,
     get_segment_group_key_or_none,
     list_to_mig_filter_result,
 )
@@ -170,24 +170,29 @@ class MigXmlReader(MigReader):
             relevant_attribute = "key"
         else:
             relevant_attribute = "ref"
-        filtered_by_predecessor = [
-            c for c in candidates if get_nested_qualifier(relevant_attribute, c) == query.predecessor_qualifier
-        ]  # that's a bit dirty, better parse the ref properly instead of string-matching
-        return list_to_mig_filter_result(filtered_by_predecessor)
+        result = []
+        for candidate in candidates:
+            nested_qualifiers = get_nested_qualifiers(relevant_attribute, candidate)
+            if nested_qualifiers is not None and query.predecessor_qualifier in nested_qualifiers:
+                # that's a bit dirty, better parse the ref properly instead of string-matching
+                result.append(candidate)
+        return list_to_mig_filter_result(result)
 
     def get_unique_result_by_parent_predecessor(
-        self, candidates: List[Element], query: EdifactStackQuery
+        self, candidates: List[Element], query: EdifactStackQuery, skip_levels: int = 0
     ) -> MigFilterResult:
         """
         Keep those elements that have (in the parent class) the given predecessor qualifier
         """
         # this method is separately unittests; see the tests to get an understanding of the way it works.
-        filtered_by_predecessor = [
-            c
-            for c in candidates
-            if self.get_parent_predecessor(c, use_sanitized_tree=False) == query.predecessor_qualifier
-        ]
-        return list_to_mig_filter_result(filtered_by_predecessor)
+        result = []
+        for candidate in candidates:
+            parent_predecessors = self.get_parent_predecessors(
+                candidate, use_sanitized_tree=False, skip_levels=skip_levels
+            )
+            if parent_predecessors is not None and query.predecessor_qualifier in parent_predecessors:
+                result.append(candidate)
+        return list_to_mig_filter_result(result)
 
     def get_unique_result_by_parent_segment_group(
         self, candidates: List[Element], query: EdifactStackQuery
@@ -217,7 +222,7 @@ class MigXmlReader(MigReader):
         return list_to_mig_filter_result(filtered_by_parent_ahb_name_key)
 
     def _get_parent_x(
-        self, element: Element, evaluator: Callable[[Element], Result], use_sanitized_tree: bool
+        self, element: Element, evaluator: Callable[[Element], Result], use_sanitized_tree: bool, skip_levels: int = 0
     ) -> Optional[Result]:
         """
         get the 'X' property of the parent where 'X' is the result of the evaluator when applied to an element.
@@ -232,7 +237,7 @@ class MigXmlReader(MigReader):
             xpath = self._original_tree.getpath(element)
         path_parts = list(xpath.split("/"))
         sub_paths: List[str] = []
-        for depth in range(2, len(path_parts)):
+        for depth in range(2, len(path_parts) - skip_levels):
             sub_path = "/".join(path_parts[0:depth])
             sub_paths.append(sub_path)
         # if xpath was "/foo/bar/asd/xyz", sub_paths is ["/foo", "/foo/bar", "/foo/bar/asd"] now (xyz is not contained!)
@@ -253,16 +258,22 @@ class MigXmlReader(MigReader):
         # Reading the test will most likely make its behaviour more understandable.
         return self._get_parent_x(element, get_segment_group_key_or_none, use_sanitized_tree=use_sanitized_tree)
 
-    def get_parent_predecessor(self, element: Element, use_sanitized_tree: bool) -> Optional[str]:
+    def get_parent_predecessors(
+        self, element: Element, use_sanitized_tree: bool, skip_levels: int = 0
+    ) -> Optional[List[str]]:
         """
         iterate from element towards root and return the first segment group found (the one closes to element).
         returns None if no segment group was found
         """
         # This method is separately unit tested.
         # Reading the test will most likely make its behaviour more understandable.
-        return self._get_parent_x(
-            element, lambda c: get_nested_qualifier("key", c), use_sanitized_tree=use_sanitized_tree
+        result = self._get_parent_x(
+            element,
+            lambda c: get_nested_qualifiers("key", c),
+            use_sanitized_tree=use_sanitized_tree,
+            skip_levels=skip_levels,
         )
+        return result
 
     def _handle_predecessor_if_present(self, query: EdifactStackQuery) -> Optional[EdifactStackSearchStrategy]:
         """
@@ -386,7 +397,7 @@ class MigXmlReader(MigReader):
             )
         if query.name is None and query.predecessor_qualifier is not None:
             return EdifactStackSearchStrategy(
-                name="G filter by parent predecessor (no fallback)",
+                name="G filter by parent predecessor",
                 filter=lambda q, c: self.get_unique_result_by_parent_predecessor(
                     c, q  # type:ignore[arg-type]
                 ),
@@ -402,7 +413,17 @@ class MigXmlReader(MigReader):
                         unique_result, use_sanitized_tree=False
                     ),
                     multiple_results_strategy=None,
-                    no_result_strategy=None,
+                    no_result_strategy=EdifactStackSearchStrategy(
+                        name="O filter by predecessor after parent predecessor with and skip inner level",
+                        filter=lambda q, c: self.get_unique_result_by_parent_predecessor(
+                            c, q, skip_levels=1  # type:ignore[arg-type]
+                        ),
+                        unique_result_strategy=lambda unique_result: self.element_to_edifact_stack(
+                            unique_result, use_sanitized_tree=False
+                        ),
+                        multiple_results_strategy=None,
+                        no_result_strategy=None,
+                    ),
                 ),
                 multiple_results_strategy=None,
             )
