@@ -8,7 +8,7 @@ from maus.reader.etree_element_helpers import (
     filter_by_name,
     filter_by_section_name,
     get_ahb_name_or_none,
-    get_nested_qualifier,
+    get_nested_qualifiers,
     get_segment_group_key_or_none,
     list_to_mig_filter_result,
 )
@@ -65,17 +65,18 @@ class TestEtreeSingleElementHelpers:
         "ref_or_key, xml_string, expected",
         [
             pytest.param("ref", '<foo ref="hello"></foo>', None),
-            pytest.param("ref", '<bar ref="NAD:2:0[1:0=MS]"></bar>', "MS"),
-            pytest.param("ref", '<baz ref="RFF:1:1[RFF:1:0=Z13]"></baz>', "Z13"),
-            pytest.param("ref", '<baz ref="DTM:1:1[1:0=469]"></baz>', "469"),
+            pytest.param("ref", '<bar ref="NAD:2:0[1:0=MS]"></bar>', ["MS"]),
+            pytest.param("ref", '<baz ref="RFF:1:1[RFF:1:0=Z13]"></baz>', ["Z13"]),
+            pytest.param("ref", '<baz ref="DTM:1:1[1:0=469]"></baz>', ["469"]),
             pytest.param("key", '<baz asd="hello"></baz>', None),
-            pytest.param("key", '<foo key="NAD:2:0[1:0=MS]"></foo>', "MS"),
-            pytest.param("ref", '<field ref="FTX:4:(0,4)[1:0=ACB]" />', "ACB"),
+            pytest.param("key", '<foo key="NAD:2:0[1:0=MS]"></foo>', ["MS"]),
+            pytest.param("key", '<foo key="QTY:1:1[1:0=265|1:0=Z10|1:0=Z08]"></foo>', ["265", "Z10", "Z08"]),
+            pytest.param("ref", '<field ref="FTX:4:(0,4)[1:0=ACB]" />', ["ACB"]),
         ],
     )
-    def test_get_nested_qualifier(self, ref_or_key: Literal["ref", "key"], xml_string: str, expected: Optional[str]):
+    def test_get_nested_qualifier(self, ref_or_key: Literal["ref", "key"], xml_string: str, expected: List[str]):
         element = _string_to_element(xml_string)
-        assert get_nested_qualifier(ref_or_key, element) == expected
+        assert get_nested_qualifiers(ref_or_key, element) == expected
 
 
 class TestMultipleElementsHelpers:
