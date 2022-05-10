@@ -140,12 +140,11 @@ def _handle_value_pool(
     if stack is not None:
         return stack
     if len(data_element.value_pool) > 1:
-        if predecessor_qualifier is None:
-            stack = _find_stack_using_fallback_predecessors(
-                mig_reader, query_draft=query, fallback_predecessors=fallback_predecessors
-            )
-            if stack is not None:
-                return stack
+        stack = _find_stack_using_fallback_predecessors(
+            mig_reader, query_draft=query, fallback_predecessors=fallback_predecessors
+        )
+        if stack is not None:
+            return stack
     return None
 
 
