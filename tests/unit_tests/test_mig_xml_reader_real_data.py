@@ -18,6 +18,7 @@ ALL_MIG_XML_FILES = pytest.mark.datafiles(
     "./migs/FV2204/template_xmls/utilmd_3225.xml",
     "./migs/FV2204/template_xmls/utilmd_6063.xml",
     "./migs/FV2204/template_xmls/utilmd_9013.xml",
+    "./migs/FV2204/template_xmls/utilmd_6411.xml",
     "./migs/FV2204/template_xmls/reqote.xml",
 )
 
@@ -225,6 +226,19 @@ class TestMigXmlReaderRealData:
                 ),
                 '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Beteiligter Marktpartner MP-ID"][0]["Codeliste"]',
                 id="UTILMD 3055, Beteiligter Marktpartner",
+            ),
+            pytest.param(
+                "utilmd_6411.xml",
+                EdifactStackQuery(
+                    segment_group_key="SG9",
+                    segment_code="QTY",
+                    data_element_id="6411",
+                    name=None,
+                    predecessor_qualifier="Z08",
+                    section_name="Arbeit / Leistung für tagesparameterabhängige Marktlokation",
+                ),
+                '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Beteiligter Marktpartner MP-ID"][0]["Codeliste"]',
+                id="UTILMD 6411, Beteiligter Marktpartner",
             )
             # pytest.param( # unsolved
             #    "utilmd_1154.xml",
