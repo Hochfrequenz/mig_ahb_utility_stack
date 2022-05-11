@@ -95,3 +95,36 @@ class TestAnmeldungMaus:
             template_path=Path(datafiles) / Path("UTILMD5.2c.template"),
             maus_path=Path("edifact-templates/maus/FV2110/UTILMD/11003_maus.json"),
         )
+
+    @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2c.template")
+    @pytest.mark.datafiles("./edifact-templates/ahbs/FV2110/UTILMD/11004.csv")
+    @pytest.mark.datafiles("../unit_tests/migs/FV2204/segment_group_hierarchies/sgh_utilmd.json")
+    def test_maus_creation_11004(self, datafiles):
+        create_maus_and_assert(
+            csv_path=Path(datafiles) / "11004.csv",
+            sgh_path=Path(datafiles) / "sgh_utilmd.json",
+            template_path=Path(datafiles) / Path("UTILMD5.2c.template"),
+            maus_path=Path("edifact-templates/maus/FV2110/UTILMD/11004_maus.json"),
+        )
+
+    @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2c.template")
+    @pytest.mark.datafiles("./edifact-templates/ahbs/FV2110/UTILMD/11005.csv")
+    @pytest.mark.datafiles("../unit_tests/migs/FV2204/segment_group_hierarchies/sgh_utilmd.json")
+    def test_maus_creation_11005(self, datafiles):
+        create_maus_and_assert(
+            csv_path=Path(datafiles) / "11005.csv",
+            sgh_path=Path(datafiles) / "sgh_utilmd.json",
+            template_path=Path(datafiles) / Path("UTILMD5.2c.template"),
+            maus_path=Path("edifact-templates/maus/FV2110/UTILMD/11005_maus.json"),
+        )
+
+    @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2c.template")
+    @pytest.mark.datafiles("./edifact-templates/ahbs/FV2110/UTILMD/11006.csv")
+    @pytest.mark.datafiles("../unit_tests/migs/FV2204/segment_group_hierarchies/sgh_utilmd.json")
+    def test_maus_creation_11006(self, datafiles):
+        create_maus_and_assert(
+            csv_path=Path(datafiles) / "11006.csv",
+            sgh_path=Path(datafiles) / "sgh_utilmd.json",
+            template_path=Path(datafiles) / Path("UTILMD5.2c.template"),
+            maus_path=Path("edifact-templates/maus/FV2110/UTILMD/11006_maus.json"),
+        )
