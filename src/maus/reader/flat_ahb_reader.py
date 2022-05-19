@@ -150,7 +150,7 @@ class FlatAhbCsvReader(FlatAhbReader):
         value_pool_entry, description = FlatAhbCsvReader.separate_value_pool_entry_and_name(
             ahb_row["Codes und Qualifier"], ahb_row["Beschreibung"]
         )
-        bedingungen = FlatAhbCsvReader.extract_bedingungen(ahb_row["Bedingung"])
+        bedingungen = FlatAhbCsvReader._extract_bedingungen(ahb_row["Bedingung"])
         for bedingungs_tuple in bedingungen:
             self.bedingungen.update({bedingungs_tuple[0]: bedingungs_tuple[1]})
         segment_group: Optional[str] = None
