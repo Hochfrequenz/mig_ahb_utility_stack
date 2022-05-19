@@ -251,7 +251,7 @@ class TestAhbCsvReader:
             pytest.param(None, {}),
         ],
     )
-    def test_extract_bedingung(self, candidate: str, expected: Dict[str, str]):
+    def test_extract_bedingungen(self, candidate: str, expected: Dict[str, str]):
         actual = FlatAhbCsvReader._extract_bedingungen(candidate)
         assert actual == expected
 
