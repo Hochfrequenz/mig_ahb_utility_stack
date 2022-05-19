@@ -175,7 +175,7 @@ class FlatAhbCsvReader(FlatAhbReader):
         """
         Extracts all the condition texts found in this AHB.
         :return: a dictionary with the condition key (e.g. "46") as value and the condition text (e.g. "Wenn aus Sparte
-        Gas") as value. The value does not contain he `[46] ` prefix.
+        Gas") as value. The value does not contain the "[46]" prefix.
         """
         return self.bedingungen
 
