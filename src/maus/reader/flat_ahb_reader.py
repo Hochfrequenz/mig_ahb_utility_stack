@@ -54,6 +54,7 @@ class FlatAhbCsvReader(FlatAhbReader):
         self.current_section_name: Optional[str] = None
         self.pruefidentifikator = pruefidentifikator
         self.delimiter = delimiter
+        self.bedingungen: Dict[str, str] = {}
         with open(file_path, "r", encoding=encoding) as infile:
             # current_section_name: Optional[str]
             raw_lines = self.get_raw_rows(infile)
@@ -75,7 +76,7 @@ class FlatAhbCsvReader(FlatAhbReader):
         """
         result: List[dict] = []
 
-        # imagine the the original list to be
+        # imagine the original list to be
         # 0,asd,qwertz,
         # 1,a very long section,
         # 2,heading that spans,
@@ -149,6 +150,7 @@ class FlatAhbCsvReader(FlatAhbReader):
         value_pool_entry, description = FlatAhbCsvReader.separate_value_pool_entry_and_name(
             ahb_row["Codes und Qualifier"], ahb_row["Beschreibung"]
         )
+        self.bedingungen.update(FlatAhbCsvReader._extract_bedingungen(ahb_row["Bedingung"]))
         segment_group: Optional[str] = None
         if FlatAhbCsvReader._is_segment_group(ahb_row["Segment Gruppe"]):
             segment_group = ahb_row["Segment Gruppe"]
@@ -168,6 +170,14 @@ class FlatAhbCsvReader(FlatAhbReader):
             section_name=_replace_hardcoded_section_names(self.current_section_name),
         )
         return result
+
+    def extract_condition_texts(self) -> Dict[str, str]:
+        """
+        Extracts all the condition texts found in this AHB.
+        :return: a dictionary with the condition key (e.g. "46") as value and the condition text (e.g. "Wenn aus Sparte
+        Gas") as value. The value does not contain the "[46]" prefix.
+        """
+        return self.bedingungen
 
     @staticmethod
     def separate_value_pool_entry_and_name(
@@ -216,6 +226,20 @@ class FlatAhbCsvReader(FlatAhbReader):
         if not candidate:
             return False
         return _value_pool_entry_pattern.match(candidate) is not None
+
+    _bedingung_pattern = re.compile(r"\[(?P<key>\d+)\]\s*(?P<text>[^\[\]]+)\s*")  # https://regex101.com/r/hN5x9w/1
+
+    @staticmethod
+    def _extract_bedingungen(candidate: Optional[str]) -> Dict[str, str]:
+        """
+        Checks if the given candidate is a bedingung. If no, returns empty dict.
+        If yes returns a dictionary where the Bedingung keys (e.g. "494") are dictionary keys and the Bedingung
+        texts (e.g. "Der Wert muss ≤ der zum Erzeugungszeitpunkt sein.") are the dictionary values.
+        The result is a dict because often there are multiple conditions connected to a single line in the AHB.
+        """
+        if not candidate:
+            return {}
+        return {m[0]: m[1].strip() for m in FlatAhbCsvReader._bedingung_pattern.findall(candidate)}
 
     @staticmethod
     def _get_name_of_expression_column(field_names: Optional[Sequence[str]]) -> Optional[str]:

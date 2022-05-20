@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List, Optional
+from typing import Dict, List, Optional
 
 import pytest  # type:ignore[import]
 
@@ -240,3 +240,32 @@ class TestAhbCsvReader:
     def test_is_parsable(self, datafiles):
         check_file_can_be_parsed_as_ahb_csv(Path(datafiles) / Path("11042.csv"))
         # if no exception is thrown, the test is successful
+
+    @pytest.mark.parametrize(
+        "candidate,expected",
+        [
+            pytest.param("[123] Foo Bar", {"123": "Foo Bar"}),
+            pytest.param("[123] Foo Bar [456] Baz Bay", {"123": "Foo Bar", "456": "Baz Bay"}),
+            pytest.param("[1] X [2] Y [3] Z", {"1": "X", "2": "Y", "3": "Z"}),
+            pytest.param("", {}),
+            pytest.param(None, {}),
+        ],
+    )
+    def test_extract_bedingungen(self, candidate: str, expected: Dict[str, str]):
+        actual = FlatAhbCsvReader._extract_bedingungen(candidate)
+        assert actual == expected
+
+    @pytest.mark.datafiles("./ahbs/FV2204/UTILMD/11042.csv")
+    def test_extract_bedingungen_from_csv(self, datafiles):
+        path_to_csv: Path = datafiles / "11042.csv"
+        reader = FlatAhbCsvReader(file_path=path_to_csv)
+        actual = reader.extract_condition_texts()
+        for key, value in actual.items():
+            assert key.isnumeric()
+            assert not value.isnumeric()
+        # just two random checks
+        assert actual["931"] == "Format: ZZZ = +00"
+        assert (
+            actual["621"]
+            == "Hinweis: Es ist der MSB anzugeben, welcher ab dem Zeitpunkt der Lokation zugeordnet ist, der in DTM+76 (Datum zum geplanten Leistungsbeginn) genannt ist."
+        )
