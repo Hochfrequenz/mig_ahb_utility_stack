@@ -233,7 +233,7 @@ class FlatAhbCsvReader(FlatAhbReader):
     def _extract_bedingungen(candidate: Optional[str]) -> Dict[str, str]:
         """
         Checks if the given candidate is a bedingung. If no, returns empty dict.
-        If yes returns a dictionary where the Bedingung keys (e.g. "494") are dictionary keys and the Bedingung +
+        If yes returns a dictionary where the Bedingung keys (e.g. "494") are dictionary keys and the Bedingung
         texts (e.g. "Der Wert muss ≤ der zum Erzeugungszeitpunkt sein.") are the dictionary values.
         The result is a dict because often there are multiple conditions connected to a single line in the AHB.
         """
