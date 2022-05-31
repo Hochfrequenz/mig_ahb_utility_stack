@@ -37,6 +37,14 @@ maus.edifact module
    :undoc-members:
    :show-inheritance:
 
+maus.maus\_provider module
+--------------------------
+
+.. automodule:: maus.maus_provider
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 
