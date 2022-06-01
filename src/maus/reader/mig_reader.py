@@ -159,7 +159,6 @@ class MigXmlReader(MigReader):
         ]
         return list_to_mig_filter_result(filtered)
 
-    # pylint:disable=no-self-use
     def get_unique_result_by_predecessor(self, candidates: List[Element], query: EdifactStackQuery) -> MigFilterResult:
         """
         Keep those elements that have (in the field) the given predecessor qualifier

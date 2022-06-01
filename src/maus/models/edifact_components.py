@@ -89,7 +89,7 @@ class DataElementFreeTextSchema(DataElementSchema):
     ahb_expression = fields.String(required=True)
     entered_input = fields.String(required=False, load_default=None)
 
-    # pylint:disable=unused-argument,no-self-use
+    # pylint:disable=unused-argument
     @post_load
     def deserialize(self, data, **kwargs) -> DataElementFreeText:
         """
@@ -162,7 +162,7 @@ class ValuePoolEntrySchema(Schema):
     meaning = fields.String(required=True)
     ahb_expression = fields.String(required=True)
 
-    # pylint:disable=unused-argument,no-self-use
+    # pylint:disable=unused-argument
     @post_load
     def deserialize(self, data, **kwargs) -> ValuePoolEntry:
         """
@@ -202,7 +202,7 @@ class DataElementValuePoolSchema(DataElementSchema):
 
     value_pool = fields.List(fields.Nested(ValuePoolEntrySchema), required=True)
 
-    # pylint:disable=unused-argument,no-self-use
+    # pylint:disable=unused-argument
     @post_load
     def deserialize(self, data, **kwargs) -> DataElementValuePool:
         """
@@ -242,7 +242,7 @@ class _FreeTextOrValuePoolSchema(Schema):
     value_pool = fields.Nested("DataElementValuePoolSchema", required=False, allow_none=True)
     # see https://github.com/fuhrysteve/marshmallow-jsonschema/issues/164
 
-    # pylint:disable= unused-argument, no-self-use
+    # pylint:disable= unused-argument
     @post_load
     def deserialize(self, data, **kwargs) -> Type[DataElement]:
         """
@@ -254,7 +254,7 @@ class _FreeTextOrValuePoolSchema(Schema):
             return data["value_pool"]
         return data
 
-    # pylint:disable= unused-argument, no-self-use
+    # pylint:disable= unused-argument
     @post_dump
     def post_dump_helper(self, data, **kwargs) -> dict:
         """
@@ -266,7 +266,7 @@ class _FreeTextOrValuePoolSchema(Schema):
             return data["free_text"]
         raise NotImplementedError(f"Data {data} is not implemented for JSON serialization")
 
-    # pylint:disable= unused-argument, no-self-use
+    # pylint:disable= unused-argument
     @pre_load
     def pre_load_helper(self, data, **kwargs) -> dict:
         """
@@ -284,7 +284,7 @@ class _FreeTextOrValuePoolSchema(Schema):
             }
         raise NotImplementedError(f"Data {data} is not implemented for JSON deserialization")
 
-    # pylint:disable= unused-argument, no-self-use
+    # pylint:disable= unused-argument
     @pre_dump
     def prepare_for_serialization(self, data, **kwargs) -> _FreeTextOrValuePool:
         """
@@ -341,7 +341,7 @@ class SegmentSchema(SegmentLevelSchema):
     data_elements = fields.List(fields.Nested(_FreeTextOrValuePoolSchema))
     section_name = fields.String(required=False)
 
-    # pylint:disable=unused-argument,no-self-use
+    # pylint:disable=unused-argument
     @post_load
     def deserialize(self, data, **kwargs) -> Segment:
         """
@@ -401,7 +401,7 @@ class SegmentGroupSchema(SegmentLevelSchema):
         required=False,
     )
 
-    # pylint:disable=unused-argument,no-self-use
+    # pylint:disable=unused-argument
     @post_load
     def deserialize(self, data, **kwargs) -> SegmentGroup:
         """
