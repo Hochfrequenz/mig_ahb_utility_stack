@@ -115,7 +115,7 @@ class AhbLineSchema(Schema):
     ahb_expression = fields.String(required=False, load_default=None)
     section_name = fields.String(required=False, load_default=None)
 
-    # pylint:disable=unused-argument,no-self-use
+    # pylint:disable=unused-argument
     @post_load
     def deserialize(self, data, **kwargs) -> AhbLine:
         """
@@ -141,7 +141,7 @@ class AhbMetaInformationSchema(Schema):
 
     pruefidentifikator = fields.String(required=True)
 
-    # pylint:disable=unused-argument,no-self-use
+    # pylint:disable=unused-argument
     @post_load
     def deserialize(self, data, **kwargs) -> AhbMetaInformation:
         """
@@ -241,7 +241,7 @@ class FlatAnwendungshandbuchSchema(Schema):
     meta = fields.Nested(AhbMetaInformationSchema)
     lines = fields.List(fields.Nested(AhbLineSchema))
 
-    # pylint:disable=unused-argument,no-self-use
+    # pylint:disable=unused-argument
     @post_load
     def deserialize(self, data, **kwargs) -> FlatAnwendungshandbuch:
         """
@@ -319,7 +319,7 @@ class DeepAnwendungshandbuchSchema(Schema):
     meta = fields.Nested(AhbMetaInformationSchema)
     lines = fields.List(fields.Nested(SegmentGroupSchema))
 
-    # pylint:disable=unused-argument,no-self-use
+    # pylint:disable=unused-argument
     @post_load
     def deserialize(self, data, **kwargs) -> DeepAnwendungshandbuch:
         """

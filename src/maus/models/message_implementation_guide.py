@@ -72,7 +72,7 @@ class SegmentGroupHierarchySchema(Schema):
         fields.Nested(lambda: SegmentGroupHierarchySchema()), allow_none=True  # pylint:disable=unnecessary-lambda
     )
 
-    # pylint:disable=unused-argument,no-self-use
+    # pylint:disable=unused-argument
     @post_load
     def deserialize(self, data, **kwargs) -> SegmentGroupHierarchy:
         """
