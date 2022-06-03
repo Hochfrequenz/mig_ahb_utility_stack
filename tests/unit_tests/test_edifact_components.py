@@ -1,4 +1,5 @@
 import pytest  # type:ignore[import]
+from unit_tests.serialization_test_helper import assert_serialization_roundtrip  # type:ignore[import]
 
 from maus.models.edifact_components import (
     DataElementDataType,
@@ -14,7 +15,6 @@ from maus.models.edifact_components import (
     SegmentSchema,
     ValuePoolEntry,
 )
-from unit_tests.serialization_test_helper import assert_serialization_roundtrip  # type:ignore[import]
 
 
 class TestEdifactComponents:
