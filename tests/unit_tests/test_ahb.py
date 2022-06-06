@@ -684,7 +684,7 @@ class TestAhb:
                                                 ),
                                                 DataElementFreeText(
                                                     ahb_expression="Muss [1]",
-                                                    entered_input="xyz",
+                                                    entered_input="this should stay untouched",
                                                     discriminator="qwert",
                                                     data_element_id="4567",
                                                 ),
@@ -742,7 +742,7 @@ class TestAhb:
                                                 ),
                                                 DataElementFreeText(
                                                     ahb_expression="Muss [1]",
-                                                    entered_input="xyz",
+                                                    entered_input="this should stay untouched",
                                                     discriminator="qwert",
                                                     data_element_id="4567",
                                                 ),
