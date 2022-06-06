@@ -9,6 +9,7 @@ from maus.models.anwendungshandbuch import (
     AhbLineSchema,
     AhbMetaInformation,
     AhbMetaInformationSchema,
+    DeepAhbInputReplacement,
     DeepAnwendungshandbuch,
     DeepAnwendungshandbuchSchema,
     FlatAnwendungshandbuch,
@@ -639,3 +640,141 @@ class TestAhb:
     ):
         actual = FlatAnwendungshandbuch._sorted_lines_by_segment_groups(unsorted_input, sg_order)
         assert actual == expected_result
+
+    @pytest.mark.parametrize(
+        "original,expected",
+        [
+            pytest.param(
+                DeepAnwendungshandbuch(
+                    meta=AhbMetaInformation(pruefidentifikator="11042"),
+                    lines=[
+                        SegmentGroup(
+                            ahb_expression="expr A",
+                            discriminator="disc A",
+                            segments=[
+                                Segment(
+                                    ahb_expression="expr B",
+                                    discriminator="disc B",
+                                    section_name="foo",
+                                    data_elements=[
+                                        DataElementFreeText(
+                                            ahb_expression="Muss [1]",
+                                            entered_input="Hello Maus",
+                                            discriminator="foo",
+                                            data_element_id="4567",
+                                        ),
+                                    ],
+                                ),
+                            ],
+                            segment_groups=[
+                                SegmentGroup(
+                                    discriminator="disc C",
+                                    ahb_expression="expr C",
+                                    segments=[
+                                        Segment(
+                                            section_name="bar",
+                                            ahb_expression="expr Y",
+                                            discriminator="disc Y",
+                                            data_elements=[
+                                                DataElementFreeText(
+                                                    ahb_expression="Muss [1]",
+                                                    entered_input="Hello Elefant",
+                                                    discriminator="abc",
+                                                    data_element_id="4567",
+                                                ),
+                                                DataElementFreeText(
+                                                    ahb_expression="Muss [1]",
+                                                    entered_input="xyz",
+                                                    discriminator="qwert",
+                                                    data_element_id="4567",
+                                                ),
+                                                DataElementFreeText(
+                                                    ahb_expression="Muss [1]",
+                                                    entered_input="Not none",
+                                                    discriminator="replace_with_none_here",
+                                                    data_element_id="4567",
+                                                ),
+                                            ],
+                                        )
+                                    ],
+                                    segment_groups=None,
+                                ),
+                            ],
+                        ),
+                    ],
+                ),
+                DeepAnwendungshandbuch(
+                    meta=AhbMetaInformation(pruefidentifikator="11042"),
+                    lines=[
+                        SegmentGroup(
+                            ahb_expression="expr A",
+                            discriminator="disc A",
+                            segments=[
+                                Segment(
+                                    ahb_expression="expr B",
+                                    discriminator="disc B",
+                                    section_name="foo",
+                                    data_elements=[
+                                        DataElementFreeText(
+                                            ahb_expression="Muss [1]",
+                                            entered_input="bar",
+                                            discriminator="foo",
+                                            data_element_id="4567",
+                                        ),
+                                    ],
+                                ),
+                            ],
+                            segment_groups=[
+                                SegmentGroup(
+                                    discriminator="disc C",
+                                    ahb_expression="expr C",
+                                    segments=[
+                                        Segment(
+                                            section_name="bar",
+                                            ahb_expression="expr Y",
+                                            discriminator="disc Y",
+                                            data_elements=[
+                                                DataElementFreeText(
+                                                    ahb_expression="Muss [1]",
+                                                    entered_input="xyz",
+                                                    discriminator="abc",
+                                                    data_element_id="4567",
+                                                ),
+                                                DataElementFreeText(
+                                                    ahb_expression="Muss [1]",
+                                                    entered_input="xyz",
+                                                    discriminator="qwert",
+                                                    data_element_id="4567",
+                                                ),
+                                                DataElementFreeText(
+                                                    ahb_expression="Muss [1]",
+                                                    entered_input=None,
+                                                    discriminator="replace_with_none_here",
+                                                    data_element_id="4567",
+                                                ),
+                                            ],
+                                        )
+                                    ],
+                                    segment_groups=None,
+                                ),
+                            ],
+                        ),
+                    ],
+                ),
+            )
+        ],
+    )
+    def test_replacing_data_element_inputs(self, original: DeepAnwendungshandbuch, expected: DeepAnwendungshandbuch):
+        assert original != expected
+
+        def replacement_func(discriminator: str) -> DeepAhbInputReplacement:
+            if discriminator == "foo":
+                return DeepAhbInputReplacement(replacement_found=True, input_replacement="bar")
+            if discriminator == "abc":
+                return DeepAhbInputReplacement(replacement_found=True, input_replacement="xyz")
+            if discriminator == "replace_with_none_here":
+                return DeepAhbInputReplacement(replacement_found=True, input_replacement=None)
+            return DeepAhbInputReplacement(replacement_found=False, input_replacement=None)
+
+        original.replace_inputs_based_on_discriminator(replacement_func)
+        assert original == expected
