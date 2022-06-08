@@ -32,7 +32,8 @@ jobs:
           pip install tox
       - name: Run tox
         run: |
-          tox
+          tox -e unit_tests
+          tox -e integration_test
 
   build-n-publish:
     name: Build and publish Python 🐍 distributions 📦 to PyPI and TestPyPI
