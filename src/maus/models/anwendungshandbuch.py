@@ -10,10 +10,11 @@ another segment group)
 from typing import Callable, List, Optional, Sequence
 from uuid import UUID
 
+import attr.validators
 import attrs
 from marshmallow import Schema, fields, post_load  # type:ignore[import]
 
-from maus.models.edifact_components import Segment, SegmentGroup, SegmentGroupSchema
+from maus.models.edifact_components import DataElementFreeText, Segment, SegmentGroup, SegmentGroupSchema
 
 
 # pylint:disable=too-many-instance-attributes
@@ -251,6 +252,24 @@ class FlatAnwendungshandbuchSchema(Schema):
 
 
 @attrs.define(auto_attribs=True, kw_only=True)
+class DeepAhbInputReplacement:
+    """
+    A container class that models replacements of inputs in the DeepAnwendungshandbuch
+    """
+
+    #: true iff a replacement is applicable
+    replacement_found: bool = attrs.field(validator=attrs.validators.instance_of(bool))
+    input_replacement: Optional[str] = attrs.field(
+        validator=attrs.validators.optional(attr.validators.instance_of(str))
+    )
+    """
+    The replacement for entered_input itself. Note that the replacement may be None even if a replacement is found.
+    This implies, that you must always check for replacement_found is True first and then, iff true, replace with the
+    replacement, even if it may be None/null.
+    """
+
+
+@attrs.define(auto_attribs=True, kw_only=True)
 class DeepAnwendungshandbuch:
     """
     The data of the AHB nested as described in the MIG.
@@ -309,6 +328,32 @@ class DeepAnwendungshandbuch:
         for segment_group in self.find_segment_groups(group_predicate):
             result += segment_group.find_segments(segment_predicate)
         return result
+
+    def replace_inputs_based_on_discriminator(self, replacement_func: Callable[[str], DeepAhbInputReplacement]) -> None:
+        """
+        Replace all the entered_inputs in the entire DeepAnwendungshandbuch using the given replacement_func.
+        Note that this modifies this DeepAnwendungshandbuch instance (self).
+        """
+        _replace_inputs_based_on_discriminator(self.lines, replacement_func)
+
+
+def _replace_inputs_based_on_discriminator(
+    segment_groups: List[SegmentGroup], replacement_func: Callable[[str], DeepAhbInputReplacement]
+) -> None:
+    """
+    Replace all the entered_inputs in the entire list of segment groups using the given replacement_func.
+    """
+    for segment_group in segment_groups:
+        if segment_group.segment_groups is not None:
+            _replace_inputs_based_on_discriminator(segment_group.segment_groups, replacement_func)
+        if segment_group.segments is None:
+            continue
+        for segment in segment_group.segments:
+            for data_element in segment.data_elements:
+                if isinstance(data_element, DataElementFreeText):
+                    replacement_result = replacement_func(data_element.discriminator)
+                    if replacement_result.replacement_found is True:
+                        data_element.entered_input = replacement_result.input_replacement
 
 
 class DeepAnwendungshandbuchSchema(Schema):
