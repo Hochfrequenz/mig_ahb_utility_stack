@@ -254,7 +254,7 @@ class FlatAnwendungshandbuchSchema(Schema):
 @attrs.define(auto_attribs=True, kw_only=True)
 class DeepAhbInputReplacement:
     """
-    A container class the models replacements of inputs in the DeepAnwendungshandbuch
+    A container class that models replacements of inputs in the DeepAnwendungshandbuch
     """
 
     #: true iff a replacement is applicable
