@@ -33,7 +33,7 @@ jobs:
       - name: Run tox
         run: |
           tox -e unit_tests
-          tox -e integration_test
+          tox -e integration_tests
 
   build-n-publish:
     name: Build and publish Python 🐍 distributions 📦 to PyPI and TestPyPI
