@@ -49,7 +49,7 @@ class TestEdifact:
             ),  # or what ever is the latest version
         ],
     )
-    def test_pruefi_to_format(self, key_date: datetime, expected_result: EdifactFormatVersion):
+    def test_format_version_from_keydate(self, key_date: datetime, expected_result: EdifactFormatVersion):
         actual = get_edifact_format_version(key_date)
         assert actual == expected_result
 
