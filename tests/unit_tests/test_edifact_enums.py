@@ -1,8 +1,15 @@
+from datetime import datetime, timezone
 from typing import Optional, Tuple
 
 import pytest  # type:ignore[import]
 
-from maus.edifact import EdifactFormat, is_edifact_boilerplate, pruefidentifikator_to_format
+from maus.edifact import (
+    EdifactFormat,
+    EdifactFormatVersion,
+    get_edifact_format_version,
+    is_edifact_boilerplate,
+    pruefidentifikator_to_format,
+)
 
 
 class TestEdifact:
@@ -24,6 +31,27 @@ class TestEdifact:
         Tests that the prüfis can be mapped to an EDIFACT format
         """
         assert pruefidentifikator_to_format(expectation_tuple[0]) == expectation_tuple[1]
+
+    @pytest.mark.parametrize(
+        "key_date,expected_result",
+        [
+            pytest.param(
+                datetime(2021, 1, 1, 0, 0, 0, tzinfo=timezone.utc),
+                EdifactFormatVersion.FV2104,
+                id="Anything before 2021-04-01",
+            ),
+            pytest.param(datetime(2021, 5, 1, 0, 0, 0, tzinfo=timezone.utc), EdifactFormatVersion.FV2104),
+            pytest.param(datetime(2021, 10, 1, 0, 0, 0, tzinfo=timezone.utc), EdifactFormatVersion.FV2110),
+            pytest.param(datetime(2022, 7, 1, 0, 0, 0, tzinfo=timezone.utc), EdifactFormatVersion.FV2110),
+            pytest.param(datetime(2022, 10, 1, 0, 0, 0, tzinfo=timezone.utc), EdifactFormatVersion.FV2210),
+            pytest.param(
+                datetime(2050, 10, 1, 0, 0, 0, tzinfo=timezone.utc), EdifactFormatVersion.FV2210
+            ),  # or what ever is the latest version
+        ],
+    )
+    def test_pruefi_to_format(self, key_date: datetime, expected_result: EdifactFormatVersion):
+        actual = get_edifact_format_version(key_date)
+        assert actual == expected_result
 
     @pytest.mark.parametrize(
         "illegal_pruefi",
