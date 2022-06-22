@@ -4,7 +4,8 @@ This module manages EDIFACT related stuff. It's basically a helper module to avo
 import datetime
 import re
 from enum import Enum
-from typing import Dict, Optional
+from itertools import product
+from typing import Dict, Iterator, Optional, Tuple
 
 pruefidentifikator_pattern = re.compile(r"^[1-9]\d{4}$")
 
@@ -70,6 +71,14 @@ class EdifactFormatVersion(str, Enum):
 
     def __str__(self):
         return self.value
+
+
+def get_all_formats_and_versions() -> Iterator[Tuple[EdifactFormat, EdifactFormatVersion]]:
+    """
+    Returns an iterator that allows you to easily loop over all edifact formats and edifact format version.
+    The return value is the cartesian product of both EdifactFormat and EdifactFormatVersion enums.
+    """
+    return product(EdifactFormat, EdifactFormatVersion)
 
 
 def get_edifact_format_version(key_date: datetime.datetime) -> EdifactFormatVersion:

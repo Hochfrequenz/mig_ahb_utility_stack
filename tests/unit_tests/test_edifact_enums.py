@@ -6,6 +6,7 @@ import pytest  # type:ignore[import]
 from maus.edifact import (
     EdifactFormat,
     EdifactFormatVersion,
+    get_all_formats_and_versions,
     get_edifact_format_version,
     is_edifact_boilerplate,
     pruefidentifikator_to_format,
@@ -78,3 +79,10 @@ class TestEdifact:
     def test_is_boilerplate_segment(self, segment_code: Optional[str], expected_is_boilerplate: bool):
         actual_is_boilerplate = is_edifact_boilerplate(segment_code)
         assert actual_is_boilerplate == expected_is_boilerplate
+
+    def test_product_generator(self):
+        length_of_formats = len(EdifactFormat)
+        length_of_version = len(EdifactFormatVersion)
+        product = get_all_formats_and_versions()
+        product_list = list(product)
+        assert len(product_list) == length_of_version * length_of_formats
