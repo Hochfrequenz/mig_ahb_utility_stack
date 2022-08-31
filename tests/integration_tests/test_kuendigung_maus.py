@@ -35,9 +35,17 @@ class TestKuendigungMaus:
     @pytest.mark.datafiles("./edifact-templates/ahbs/FV2110/UTILMD/11018.csv")
     @pytest.mark.datafiles("../unit_tests/migs/FV2204/segment_group_hierarchies/sgh_utilmd.json")
     def test_maus_creation_11018(self, datafiles):
-        create_maus_and_assert(
+        result = create_maus_and_assert(
             csv_path=Path(datafiles) / "11018.csv",
             sgh_path=Path(datafiles) / "sgh_utilmd.json",
             template_path=Path(datafiles) / Path("UTILMD5.2c.template"),
             maus_path=Path("edifact-templates/maus/FV2110/UTILMD/11018_maus.json"),
         )
+        assert (
+            len(
+                result.maus.find_segments(
+                    segment_predicate=lambda seg: seg.section_name == "Datum des bereits bestaetigten Vertragsendes",
+                )  # the "ae" instead of "ä" is somehow important, we don't wan't an 'ä' for reasons
+            )
+            > 0
+        )  # https://github.com/Hochfrequenz/edifact-templates/pull/163 / ED4FTR-24952
