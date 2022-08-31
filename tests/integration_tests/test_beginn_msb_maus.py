@@ -13,6 +13,8 @@ class TestBeginnMsbMaus:
     @pytest.mark.datafiles("./edifact-templates/ahbs/FV2110/UTILMD/11042.csv")
     @pytest.mark.datafiles("../unit_tests/migs/FV2204/segment_group_hierarchies/sgh_utilmd.json")
     def test_maus_creation_11042(self, datafiles):
+        return  # return here to prevent overwriting the 11042 maus file (with manual corrections)
+        # remove the return once ttps://github.com/Hochfrequenz/edifact-templates/issues/134 is resolved
         create_maus_and_assert(
             csv_path=Path(datafiles) / "11042.csv",
             sgh_path=Path(datafiles) / "sgh_utilmd.json",
