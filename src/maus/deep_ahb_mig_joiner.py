@@ -29,10 +29,17 @@ def _replace_discriminators_with_edifact_stack_segments(
 ) -> Tuple[List[Segment], Dict[str, List[str]]]:
     result = segments.copy()
     predecessors_used: Dict[str, List[str]] = {}  # maps the segment code to a set of qualifiers used as predecessors
+    predecessor_qualifier: Optional[str] = None
     for segment_index, segment in enumerate(
         s for s in segments if not is_edifact_boilerplate(s.discriminator)
     ):  # type:ignore[union-attr]
-        predecessor_qualifier: Optional[str] = None
+        previous_predecessor_qualifier: Optional[str]
+        if predecessor_qualifier is not None:
+            # before resetting it, safe it
+            previous_predecessor_qualifier = predecessor_qualifier
+        else:
+            previous_predecessor_qualifier = None
+        predecessor_qualifier = None
         for de_index, data_element in enumerate(segment.data_elements):
             if isinstance(data_element, DataElementFreeText):
                 stack = _handle_free_text(mig_reader, segment_group_key, segment, data_element, predecessor_qualifier)
@@ -48,7 +55,18 @@ def _replace_discriminators_with_edifact_stack_segments(
                 if stack is not None:
                     result[segment_index].data_elements[de_index].discriminator = stack.to_json_path()
                 elif len(data_element.value_pool) > 1:
-                    if not ignore_errors and not _data_element_has_a_known_problem(data_element):
+                    if previous_predecessor_qualifier is not None:
+                        stack = _handle_value_pool(
+                            mig_reader,
+                            segment_group_key,
+                            segment,
+                            data_element,
+                            previous_predecessor_qualifier,
+                            fallback_predecessors,
+                        )
+                        if stack is not None:
+                            result[segment_index].data_elements[de_index].discriminator = stack.to_json_path()
+                    if stack is None and not ignore_errors and not _data_element_has_a_known_problem(data_element):
                         raise ValueError(
                             f"Any value pool with more than 1 entry has to have an edifact stack {data_element}"
                         )

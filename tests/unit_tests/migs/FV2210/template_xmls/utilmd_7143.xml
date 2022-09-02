@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+<UTILMD>
+    <class name="Dokument" ref="/" key="UNB:5:0">
+        <class name="Nachricht" ref="UNH" key="UNH:1:0" max="9999" meta.type="group">
+            <field name="Nachrichten-Referenznummer" ref="UNH:1:0" meta.id="0062"/>
+            <field
+                    name="Kategorie"
+                    migName="Beginn der Nachricht"
+                    meta.id="1001"
+                    ref="BGM:1:0"
+                    groupBy="Beginn der Nachricht"
+                    meta.help="Hier wird die Kategorie der gesamten Nachricht für alle Vorgänge angegeben."
+                    meta.type="repository"
+                    meta.typeInfo="Kategorierepository"
+            />
+            <class name="Vorgang" ref="SG4" key="IDE:2:0" max="99999" meta.type="group" groupKey="Vorgangsnummer">
+                <class name="Netznutzungsabrechnungsdaten der Marktlokation" ref="SG8" key="SEQ:1:0[SEQ:1:0=Z45]" max="99999" meta.type="group" groupKey="Referenz auf die ID der Marktlokation">
+                    <class name="Gruppenartikel-ID" ref="PIA" key="PIA:2:0[PIA:1:0=Z02]" ahbName="Gruppenartikel-ID / Artikel-ID">
+                        <field name="ID" ref="PIA:2:0[PIA:1:0=Z02]" meta.id="7140"/>
+                        <field name="Art der ID" ref="PIA:2:1[PIA:1:0=Z02]" meta.id="7143"/>
+                    </class>
+                </class>
+                <class name="Weitere Abrechnungsdaten der Marktlokation" ref="SG8" key="SEQ:1:0[SEQ:1:0=Z46]" max="99999" meta.type="group" groupKey="Referenz auf die ID der Marktlokation">
+                    <class name="Gruppenartikel-ID" ref="PIA" key="PIA:2:0[PIA:1:0=Z02]" ahbName="Artikel-ID">
+                        <field name="ID" ref="PIA:2:0[PIA:1:0=Z02]" meta.id="7140"/>
+                        <field name="Art der ID" ref="PIA:2:1[PIA:1:0=Z02]" meta.id="7143"/>
+                    </class>
+                </class>
+                <class name="Berechnung Tagesmitteltemperatur" ref="SG8" key="PIA:2:1">
+                    <field name="Art" ref="PIA:2:1[1:0=Z01]" meta.id="7143"/>
+                    <field name="Anteil A" ref="QTY:1:1[1:0=Z11]" meta.id="6060"/>
+                    <field name="Anteil B" ref="QTY:1:1[1:0=Z12]" meta.id="6060"/>
+                    <field name="Anteil C" ref="QTY:1:1[1:0=Z13]" meta.id="6060"/>
+                    <field name="Anteil D" ref="QTY:1:1[1:0=Z14]" meta.id="6060"/>
+                    <field name="Bezugstemperatur" ref="QTY:1:1[1:0=Z15]" meta.id="6060"/>
+                </class>
+            </class>
+        </class>
+    </class>
+</UTILMD>
