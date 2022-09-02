@@ -16,6 +16,7 @@ from maus.models.edifact_components import (
 from maus.reader.mig_reader import MigReader
 
 
+# pylint:disable=too-many-branches
 def _replace_discriminators_with_edifact_stack_segments(
     segments: List[Segment],
     segment_group_key: str,
@@ -30,15 +31,11 @@ def _replace_discriminators_with_edifact_stack_segments(
     result = segments.copy()
     predecessors_used: Dict[str, List[str]] = {}  # maps the segment code to a set of qualifiers used as predecessors
     predecessor_qualifier: Optional[str] = None
+    # pylint:disable=too-many-nested-blocks
     for segment_index, segment in enumerate(
         s for s in segments if not is_edifact_boilerplate(s.discriminator)
     ):  # type:ignore[union-attr]
-        previous_predecessor_qualifier: Optional[str]
-        if predecessor_qualifier is not None:
-            # before resetting it, safe it
-            previous_predecessor_qualifier = predecessor_qualifier
-        else:
-            previous_predecessor_qualifier = None
+        previous_predecessor_qualifier: Optional[str] = predecessor_qualifier or None
         predecessor_qualifier = None
         for de_index, data_element in enumerate(segment.data_elements):
             if isinstance(data_element, DataElementFreeText):
