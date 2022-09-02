@@ -248,7 +248,7 @@ class TestMigXmlReaderRealData:
                     segment_code="PIA",
                     data_element_id="7143",
                     name=None,
-                    predecessor_qualifier="Z45",
+                    predecessor_qualifier="Z45",  # <-- important is, that this is Z45 and not Z02
                     section_name="Gruppenartikel-ID / Artikel- ID",
                 ),
                 '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Netznutzungsabrechnungsdaten der Marktlokation"][0]["Gruppenartikel-ID / Artikel-ID"][0]["Art der ID"]',
