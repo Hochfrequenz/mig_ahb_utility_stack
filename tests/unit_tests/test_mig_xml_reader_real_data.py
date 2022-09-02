@@ -20,6 +20,7 @@ ALL_MIG_XML_FILES = pytest.mark.datafiles(
     "./migs/FV2204/template_xmls/utilmd_9013.xml",
     "./migs/FV2204/template_xmls/utilmd_6411.xml",
     "./migs/FV2204/template_xmls/reqote.xml",
+    "./migs/FV2210/template_xmls/utilmd_7143.xml",
 )
 
 
@@ -239,6 +240,19 @@ class TestMigXmlReaderRealData:
                 ),
                 '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Daten der Marktlokation"][0]["Arbeit / Leistung für tagesparameterabhängige Marktlokation"][0]["Maßeinheit"]',
                 id="UTILMD 6411, Beteiligter Marktpartner",
+            ),
+            pytest.param(
+                "utilmd_7143.xml",
+                EdifactStackQuery(
+                    segment_group_key="SG8",
+                    segment_code="PIA",
+                    data_element_id="7143",
+                    name=None,
+                    predecessor_qualifier="Z45",  # <-- important is, that this is Z45 and not Z02
+                    section_name="Gruppenartikel-ID / Artikel- ID",
+                ),
+                '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Netznutzungsabrechnungsdaten der Marktlokation"][0]["Gruppenartikel-ID / Artikel-ID"][0]["Art der ID"]',
+                id="UTILMD 7143, (Gruppen)ArtikelId",
             )
             # pytest.param( # unsolved
             #    "utilmd_1154.xml",
