@@ -249,7 +249,7 @@ class TestStammdatenaenderungMaus:
     @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2e.template")
     @pytest.mark.datafiles("./edifact-templates/ahbs/FV2210/UTILMD/11186.csv")
     @pytest.mark.datafiles("../unit_tests/migs/FV2210/segment_group_hierarchies/sgh_utilmd.json")
-    def test_maus_creation_11170_52e(self, datafiles):
+    def test_maus_creation_11186_52e(self, datafiles):
         create_maus_and_assert(
             csv_path=Path(datafiles) / "11186.csv",
             sgh_path=Path(datafiles) / "sgh_utilmd.json",
