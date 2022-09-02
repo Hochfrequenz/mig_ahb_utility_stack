@@ -6,7 +6,7 @@ Components contain not only EDIFACT composits but also segments and segment grou
 import re
 from abc import ABC
 from enum import Enum
-from typing import List, Optional, Type
+from typing import Callable, List, Optional, Type
 
 import attr
 import attrs
@@ -20,14 +20,14 @@ class DataElementDataType(str, Enum):
     This information is set but not used anywhere inside MAUS directly but more of a "service" to downstream code.
     """
 
-    TEXT = "TEXT"  #: plain text, f.e. a name
+    TEXT = "TEXT"  #: plain text, e.g. a name
     DATETIME = "DATETIME"  #: a datetime string, usually as RFC3339
     VALUE_POOL = "VALUE_POOL"  #: the user can choose between different possible values
 
 
 def derive_data_type_from_segment_code(segment_code: str) -> Optional[DataElementDataType]:
     """
-    derives the expected data type from the segment code, f.e. `DATETIME` for DTM segments
+    derives the expected data type from the segment code, e.g. `DATETIME` for DTM segments
     :return: The DataType if it can be derived without any doubt, None otherwise
     """
     if segment_code in {"DTM"}:
@@ -46,7 +46,7 @@ class DataElement(ABC):
     discriminator: str = attrs.field(validator=attrs.validators.instance_of(str))
     """ The discriminator uniquely identifies the data element. This _might_ be its key """
     # but could also be a reference or a name
-    #: the ID of the data element (f.e. "0062") for the Nachrichten-Referenznummer
+    #: the ID of the data element (e.g. "0062") for the Nachrichten-Referenznummer
     data_element_id: str = attrs.field(validator=attrs.validators.matches_re(r"^\d{4}$"))
     #: the type of data expected to be used with this data element
     value_type: Optional[DataElementDataType] = attrs.field(
@@ -89,7 +89,7 @@ class DataElementFreeTextSchema(DataElementSchema):
     ahb_expression = fields.String(required=True)
     entered_input = fields.String(required=False, load_default=None)
 
-    # pylint:disable=unused-argument,no-self-use
+    # pylint:disable=unused-argument
     @post_load
     def deserialize(self, data, **kwargs) -> DataElementFreeText:
         """
@@ -109,6 +109,28 @@ def _check_that_string_is_not_whitespace_or_empty(instance, attribute, value):
         raise ValueError(f"The string {attribute.name} must not consist only of whitespace: '{value}'")
 
 
+#: a pattern that matches most of the qualifiers we find in the AHBs
+_simple_edifact_qualifier_pattern = re.compile(r"^([A-Z\d]+)|(\d+\.\d+[a-z])$")
+
+#: a pattern that matches the GABi qualifiers: They contain with "-" and lower case "i"/"o"/"n"
+gabi_edifact_qualifier_pattern = re.compile(r"^(GABi)?[A-Z\d\-]+(RLM(o|m)T)?$")
+
+
+def _check_is_edifact_qualifier(instance, attribute, value):
+    """
+    Checks that the given attribute is a valid EDIFACT qualifier.
+    Raises a ValueError if not.
+    """
+    _check_that_string_is_not_whitespace_or_empty(instance, attribute, value)
+    simple_match = _simple_edifact_qualifier_pattern.match(value)
+    if simple_match is not None:
+        return
+    gabi_match = gabi_edifact_qualifier_pattern.match(value)
+    if gabi_match is not None:
+        return
+    raise ValueError(f"The qualifier {attribute.name} '{value}' is invalid")
+
+
 @attrs.define(auto_attribs=True, kw_only=True)
 class ValuePoolEntry:
     """
@@ -121,9 +143,9 @@ class ValuePoolEntry:
     - (key: "332", meaning: "DE, DVGW", ahb_expression: "X")
     """
 
-    #: the qualifier in edifact, might be f.e. "E01", "D", "9", "1.1a", "G_0057"
-    qualifier: str = attr.field(validator=attrs.validators.matches_re(r"^[A-Z\d\.a-z_]+$"))
-    #: the meaning as it is written in the AHB (f.e. "Einzug", "Entwurfs-Version", "GS1", "Codeliste Gas G_0057"
+    #: the qualifier in edifact, might be e.g. "E01", "D", "9", "1.1a", "G_0057"
+    qualifier: str = attr.field(validator=_check_is_edifact_qualifier)
+    #: the meaning as it is written in the AHB (e.g. "Einzug", "Entwurfs-Version", "GS1", "Codeliste Gas G_0057"
     meaning: str = attr.field(validator=attrs.validators.instance_of(str))
     #: the ahb expression, in most cases this is a simple "X"; it must not be empty
     ahb_expression: str = attr.field(validator=_check_that_string_is_not_whitespace_or_empty)
@@ -140,7 +162,7 @@ class ValuePoolEntrySchema(Schema):
     meaning = fields.String(required=True)
     ahb_expression = fields.String(required=True)
 
-    # pylint:disable=unused-argument,no-self-use
+    # pylint:disable=unused-argument
     @post_load
     def deserialize(self, data, **kwargs) -> ValuePoolEntry:
         """
@@ -180,7 +202,7 @@ class DataElementValuePoolSchema(DataElementSchema):
 
     value_pool = fields.List(fields.Nested(ValuePoolEntrySchema), required=True)
 
-    # pylint:disable=unused-argument,no-self-use
+    # pylint:disable=unused-argument
     @post_load
     def deserialize(self, data, **kwargs) -> DataElementValuePool:
         """
@@ -216,14 +238,11 @@ class _FreeTextOrValuePoolSchema(Schema):
     """
 
     # disable unnecessary lambda warning because of circular imports
-    free_text = fields.Nested(
-        lambda: DataElementFreeTextSchema(), allow_none=True, required=False  # pylint: disable=unnecessary-lambda
-    )  # fields.String(dump_default=False, required=False, allow_none=True)
-    value_pool = fields.Nested(
-        lambda: DataElementValuePoolSchema(), required=False, allow_none=True  # pylint: disable=unnecessary-lambda
-    )
+    free_text = fields.Nested("DataElementFreeTextSchema", allow_none=True, required=False)
+    value_pool = fields.Nested("DataElementValuePoolSchema", required=False, allow_none=True)
+    # see https://github.com/fuhrysteve/marshmallow-jsonschema/issues/164
 
-    # pylint:disable= unused-argument, no-self-use
+    # pylint:disable= unused-argument
     @post_load
     def deserialize(self, data, **kwargs) -> Type[DataElement]:
         """
@@ -235,7 +254,7 @@ class _FreeTextOrValuePoolSchema(Schema):
             return data["value_pool"]
         return data
 
-    # pylint:disable= unused-argument, no-self-use
+    # pylint:disable= unused-argument
     @post_dump
     def post_dump_helper(self, data, **kwargs) -> dict:
         """
@@ -247,7 +266,7 @@ class _FreeTextOrValuePoolSchema(Schema):
             return data["free_text"]
         raise NotImplementedError(f"Data {data} is not implemented for JSON serialization")
 
-    # pylint:disable= unused-argument, no-self-use
+    # pylint:disable= unused-argument
     @pre_load
     def pre_load_helper(self, data, **kwargs) -> dict:
         """
@@ -265,7 +284,7 @@ class _FreeTextOrValuePoolSchema(Schema):
             }
         raise NotImplementedError(f"Data {data} is not implemented for JSON deserialization")
 
-    # pylint:disable= unused-argument, no-self-use
+    # pylint:disable= unused-argument
     @pre_dump
     def prepare_for_serialization(self, data, **kwargs) -> _FreeTextOrValuePool:
         """
@@ -310,7 +329,7 @@ class Segment(SegmentLevel):
     """
     For the MIG matching it might be necessary to know the section in which the data element occured in the AHB.
     This might be necessary to e.g. distinguish gas and electricity fields which look the same otherwise.
-    See f.e. UTILMD 'Geplante Turnusablesung des MSB (Strom)' vs. 'Geplante Turnusablesung des NB (Gas)'
+    See e.g. UTILMD 'Geplante Turnusablesung des MSB (Strom)' vs. 'Geplante Turnusablesung des NB (Gas)'
     """
 
 
@@ -322,7 +341,7 @@ class SegmentSchema(SegmentLevelSchema):
     data_elements = fields.List(fields.Nested(_FreeTextOrValuePoolSchema))
     section_name = fields.String(required=False)
 
-    # pylint:disable=unused-argument,no-self-use
+    # pylint:disable=unused-argument
     @post_load
     def deserialize(self, data, **kwargs) -> Segment:
         """
@@ -352,6 +371,22 @@ class SegmentGroup(SegmentLevel):
         default=None
     )  #: groups that are nested into this group
 
+    def find_segments(self, predicate: Callable[[Segment], bool], search_recursively: bool = True) -> List[Segment]:
+        """
+        Search for a segment that matches the predicate (in this group and subgroups if 'search_recursively' is set),
+        Return results, if found. Return empty list otherwise.
+        """
+        result: List[Segment] = []
+        if self.segments is not None:
+            for segment in self.segments:
+                if predicate(segment):
+                    result.append(segment)
+        if search_recursively and self.segment_groups is not None:
+            for sub_group in self.segment_groups:
+                sub_result = sub_group.find_segments(predicate, search_recursively)
+                result += sub_result
+        return result
+
 
 class SegmentGroupSchema(SegmentLevelSchema):
     """
@@ -360,14 +395,13 @@ class SegmentGroupSchema(SegmentLevelSchema):
 
     segments = fields.List(fields.Nested(SegmentSchema), load_default=None, required=False)
     segment_groups = fields.List(
-        fields.Nested(
-            lambda: SegmentGroupSchema(),  # pylint: disable=unnecessary-lambda
-        ),
+        fields.Nested("SegmentGroupSchema"),
+        # see https://github.com/fuhrysteve/marshmallow-jsonschema/issues/164
         load_default=None,
         required=False,
     )
 
-    # pylint:disable=unused-argument,no-self-use
+    # pylint:disable=unused-argument
     @post_load
     def deserialize(self, data, **kwargs) -> SegmentGroup:
         """
@@ -382,11 +416,11 @@ class EdifactStackLevel:
     The EDIFACT stack level describes the hierarchy level of information inside an EDIFACT message.
     """
 
-    #: the name of the level, f.e. 'Dokument' or 'Nachricht' or 'Meldepunkt'
+    #: the name of the level, e.g. 'Dokument' or 'Nachricht' or 'Meldepunkt'
     name: str = attrs.field(validator=attrs.validators.instance_of(str))
     #: describes if this level is groupable / if there are multiple instances of this level within the same message
     is_groupable: bool = attrs.field(validator=attrs.validators.instance_of(bool))
-    #: the index if present (f.e. 0)
+    #: the index if present (e.g. 0)
     index: Optional[int] = attrs.field(
         default=None, validator=attrs.validators.optional(attrs.validators.instance_of(int))
     )
@@ -470,19 +504,19 @@ class EdifactStackQuery:
     of an element
     """
 
-    #: the key of the segment group, f.e. 'root' or 'SG5' or 'SG12'
+    #: the key of the segment group, e.g. 'root' or 'SG5' or 'SG12'
     segment_group_key: str = attrs.field(validator=attrs.validators.instance_of(str))
-    #: the segment code, f.e. 'NAD' or 'DTM'
+    #: the segment code, e.g. 'NAD' or 'DTM'
     segment_code: str = attrs.field(validator=attrs.validators.matches_re("^[A-Z]+$"))
-    #: the data element id, f.e. '0068'
+    #: the data element id, e.g. '0068'
     data_element_id: str = attrs.field(validator=attrs.validators.matches_re(r"^\d{4}$"))
-    #: the name of the element, f.e. "MP-ID" or "Kundennummer" or "Identifikator"; Is None for Value Pools
+    #: the name of the element, e.g. "MP-ID" or "Kundennummer" or "Identifikator"; Is None for Value Pools
     name: Optional[str] = attrs.field(validator=attrs.validators.optional(attrs.validators.instance_of(str)))
     predecessor_qualifier: Optional[str] = attrs.field(
-        default=None, validator=attrs.validators.optional(attrs.validators.matches_re(r"^[A-Z\d]+$"))
-    )
+        default=None, validator=attrs.validators.optional(_check_is_edifact_qualifier)
+    )  # GABi-RLMEV wtf
     """
-    Some names are not really unique. F.e. all date time fields carry more or less the same name in the AHB.
+    Some names are not really unique. e.g. all date time fields carry more or less the same name in the AHB.
     So to distinguish between them you may provide the predecissing qualifier.
     In case of 'DTM+137++what_youre_looking_for' the predecessor qualifier is '137'
     """
@@ -490,6 +524,6 @@ class EdifactStackQuery:
         default=None, validator=attrs.validators.optional(attrs.validators.instance_of(str))
     )
     """
-    The section name (f.e. 'Nachrichten-Kopfsegment') might also be used for MIG<->AHB matching
+    The section name (e.g. 'Nachrichten-Kopfsegment') might also be used for MIG<->AHB matching
     if the name is too broad or not unique.
     """

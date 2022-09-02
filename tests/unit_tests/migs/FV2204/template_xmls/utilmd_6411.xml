@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<UTILMD>
+    <class name="Dokument" ref="/" key="UNB:5:0">
+        <class name="Nachricht" ref="UNH" key="UNH:1:0" max="9999" meta.type="group">
+            <class name="Vorgang" ref="SG4" key="IDE:2:0" max="99999" meta.type="group" groupKey="Vorgangsnummer">
+                <class name="Daten der Marktlokation" ref="SG8" key="SEQ:1:0[SEQ:1:0=Z01]" max="99999" meta.type="group" groupKey="Referenz auf die ID der Marktlokation">
+                    <field name="Referenz auf die ID der Marktlokation" ref="RFF:1:1[1:0=Z18]" meta.id="1154" max="1" meta.ref="Meldepunkt.ID"/>
+                    <class name="Arbeit / Leistung für tagesparameterabhängige Marktlokation" ref="SG9" key="QTY:1:1[1:0=265|1:0=Z10|1:0=Z08]">
+                        <field name="Qualifier" ref="QTY:1:0" meta.id="6063" meta.type="repository" meta.typeInfo="TLPQualifierrepository"></field>
+                        <field name="Menge" ref="QTY:1:1" meta.id="6060"/>
+                        <field name="Maßeinheit" ref="QTY:1:2" meta.id="6411" meta.type="repository" meta.typeInfo="Maßeinheitrepository"/>
+                    </class>
+                </class>
+                <class name="Daten der Marktlokation der beteiligten Marktrolle" ref="SG8" key="SEQ:1:0[SEQ:1:0=Z29]" max="99999" meta.type="group" groupKey="Referenz auf die ID der Marktlokation">
+                    <field name="Referenz auf die ID der Marktlokation" ref="RFF:1:1[1:0=Z18]" meta.id="1154" max="1" meta.ref="Meldepunkt.ID"/>
+                    <class name="Arbeit / Leistung für tagesparameterabhängige Marktlokation" ref="SG9" key="QTY:1:1[1:0=265|1:0=Z10|1:0=Z08]">
+                        <field name="Qualifier" ref="QTY:1:0" meta.id="6063"></field>
+                        <field name="Menge" ref="QTY:1:1" meta.id="6060"/>
+                        <field name="Maßeinheit" ref="QTY:1:2" meta.id="6411"/>
+                    </class>
+                </class>
+            </class>
+        </class>
+    </class>
+</UTILMD>

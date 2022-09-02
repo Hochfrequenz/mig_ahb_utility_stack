@@ -1,0 +1,501 @@
+{
+  "lines": [
+    {
+      "ahb_expression": "Muss",
+      "discriminator": "root",
+      "segment_groups": [
+        {
+          "ahb_expression": "Muss",
+          "discriminator": "SG1",
+          "segment_groups": [],
+          "segments": [
+            {
+              "ahb_expression": "Muss",
+              "data_elements": [
+                {
+                  "data_element_id": "1153",
+                  "discriminator": "SG1->RFF->1153",
+                  "value_pool": [
+                    {
+                      "ahb_expression": "X",
+                      "meaning": "Pr\u00fcfidentifikator",
+                      "qualifier": "Z13"
+                    }
+                  ],
+                  "value_type": "VALUE_POOL"
+                },
+                {
+                  "data_element_id": "1154",
+                  "discriminator": "SG1->RFF->1154",
+                  "value_pool": [
+                    {
+                      "ahb_expression": "X",
+                      "meaning": "Anforderung AngebotGer\u00e4te\u00fcbernahme",
+                      "qualifier": "35001"
+                    }
+                  ],
+                  "value_type": "VALUE_POOL"
+                }
+              ],
+              "discriminator": "RFF",
+              "section_name": "Pr\u00fcfidentifikator"
+            }
+          ]
+        },
+        {
+          "ahb_expression": "Muss",
+          "discriminator": "SG11",
+          "segment_groups": [
+            {
+              "ahb_expression": "Muss",
+              "discriminator": "SG14",
+              "segment_groups": [],
+              "segments": [
+                {
+                  "ahb_expression": "Muss",
+                  "data_elements": [
+                    {
+                      "data_element_id": "3139",
+                      "discriminator": "SG14->CTA->3139",
+                      "value_pool": [
+                        {
+                          "ahb_expression": "X",
+                          "meaning": "Informationskontakt",
+                          "qualifier": "IC"
+                        }
+                      ],
+                      "value_type": "VALUE_POOL"
+                    },
+                    {
+                      "ahb_expression": "X [500]",
+                      "data_element_id": "3412",
+                      "discriminator": "Kontakt",
+                      "entered_input": null,
+                      "value_type": "TEXT"
+                    }
+                  ],
+                  "discriminator": "CTA",
+                  "section_name": "Ansprechpartner"
+                },
+                {
+                  "ahb_expression": "Muss",
+                  "data_elements": [
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3148",
+                      "discriminator": "Kommunikationsadresse,Identifikation",
+                      "entered_input": null,
+                      "value_type": "TEXT"
+                    },
+                    {
+                      "data_element_id": "3155",
+                      "discriminator": "SG14->COM->3155",
+                      "value_pool": [
+                        {
+                          "ahb_expression": "X [1P0..1]",
+                          "meaning": "Elektronische Post",
+                          "qualifier": "EM"
+                        },
+                        {
+                          "ahb_expression": "X [1P0..1]",
+                          "meaning": "Telefax",
+                          "qualifier": "FX"
+                        },
+                        {
+                          "ahb_expression": "X [1P0..1]",
+                          "meaning": "Telefon",
+                          "qualifier": "TE"
+                        },
+                        {
+                          "ahb_expression": "X [1P0..1]",
+                          "meaning": "weiteres Telefon",
+                          "qualifier": "AJ"
+                        },
+                        {
+                          "ahb_expression": "X [1P0..1]",
+                          "meaning": "Handy",
+                          "qualifier": "AL"
+                        }
+                      ],
+                      "value_type": "VALUE_POOL"
+                    }
+                  ],
+                  "discriminator": "COM",
+                  "section_name": "Kommunikationsverbindung"
+                }
+              ]
+            }
+          ],
+          "segments": [
+            {
+              "ahb_expression": "Muss",
+              "data_elements": [
+                {
+                  "data_element_id": "3035",
+                  "discriminator": "SG11->NAD->3035",
+                  "value_pool": [
+                    {
+                      "ahb_expression": "X",
+                      "meaning": "Nachrichtenaussteller bzw. -absender",
+                      "qualifier": "MS"
+                    }
+                  ],
+                  "value_type": "VALUE_POOL"
+                },
+                {
+                  "data_element_id": "3039",
+                  "discriminator": "SG11->NAD->3039",
+                  "value_pool": [],
+                  "value_type": "VALUE_POOL"
+                },
+                {
+                  "data_element_id": "3055",
+                  "discriminator": "SG11->NAD->3055",
+                  "value_pool": [
+                    {
+                      "ahb_expression": "X",
+                      "meaning": "GS1",
+                      "qualifier": "9"
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "meaning": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",
+                      "qualifier": "293"
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "meaning": "DE, DVGW Service & Consult GmbH",
+                      "qualifier": "332"
+                    }
+                  ],
+                  "value_type": "VALUE_POOL"
+                }
+              ],
+              "discriminator": "NAD",
+              "section_name": "MP-ID Absender"
+            },
+            {
+              "ahb_expression": "Muss",
+              "data_elements": [
+                {
+                  "data_element_id": "3035",
+                  "discriminator": "SG11->NAD->3035",
+                  "value_pool": [
+                    {
+                      "ahb_expression": "X",
+                      "meaning": "Absender",
+                      "qualifier": "MR"
+                    }
+                  ],
+                  "value_type": "VALUE_POOL"
+                },
+                {
+                  "data_element_id": "3039",
+                  "discriminator": "SG11->NAD->3039",
+                  "value_pool": [],
+                  "value_type": "VALUE_POOL"
+                },
+                {
+                  "data_element_id": "3055",
+                  "discriminator": "SG11->NAD->3055",
+                  "value_pool": [
+                    {
+                      "ahb_expression": "X",
+                      "meaning": "GS1",
+                      "qualifier": "9"
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "meaning": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",
+                      "qualifier": "293"
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "meaning": "DE, DVGW Service & Consult GmbH",
+                      "qualifier": "332"
+                    }
+                  ],
+                  "value_type": "VALUE_POOL"
+                }
+              ],
+              "discriminator": "NAD",
+              "section_name": "MP-ID Empf\u00e4nger"
+            },
+            {
+              "ahb_expression": "Muss",
+              "data_elements": [
+                {
+                  "data_element_id": "3035",
+                  "discriminator": "SG11->NAD->3035",
+                  "value_pool": [
+                    {
+                      "ahb_expression": "X",
+                      "meaning": "Lieferanschrift",
+                      "qualifier": "DP"
+                    }
+                  ],
+                  "value_type": "VALUE_POOL"
+                }
+              ],
+              "discriminator": "NAD",
+              "section_name": "Marktlokation bzw. Messlokation"
+            },
+            {
+              "ahb_expression": "Muss",
+              "data_elements": [
+                {
+                  "data_element_id": "3227",
+                  "discriminator": "SG11->LOC->3227",
+                  "value_pool": [
+                    {
+                      "ahb_expression": "X",
+                      "meaning": "Meldepunkt",
+                      "qualifier": "172"
+                    }
+                  ],
+                  "value_type": "VALUE_POOL"
+                },
+                {
+                  "ahb_expression": "X [951] [503]",
+                  "data_element_id": "3225",
+                  "discriminator": "Identifikator",
+                  "entered_input": null,
+                  "value_type": "TEXT"
+                }
+              ],
+              "discriminator": "LOC",
+              "section_name": "Meldepunkt"
+            }
+          ]
+        },
+        {
+          "ahb_expression": "Muss [50]",
+          "discriminator": "SG27",
+          "segment_groups": [],
+          "segments": [
+            {
+              "ahb_expression": "Muss",
+              "data_elements": [
+                {
+                  "ahb_expression": "X [903]",
+                  "data_element_id": "1082",
+                  "discriminator": "Positionsnummer",
+                  "entered_input": null,
+                  "value_type": "TEXT"
+                }
+              ],
+              "discriminator": "LIN",
+              "section_name": "Positionsdaten"
+            }
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "ahb_expression": "Muss",
+          "data_elements": [
+            {
+              "ahb_expression": "X",
+              "data_element_id": "0062",
+              "discriminator": "Nachrichten-Referenznummer",
+              "entered_input": null,
+              "value_type": "TEXT"
+            },
+            {
+              "data_element_id": "0065",
+              "discriminator": "UNH->0065",
+              "value_pool": [
+                {
+                  "ahb_expression": "X",
+                  "meaning": "Anfrage",
+                  "qualifier": "REQOTE"
+                }
+              ],
+              "value_type": "VALUE_POOL"
+            },
+            {
+              "data_element_id": "0052",
+              "discriminator": "UNH->0052",
+              "value_pool": [
+                {
+                  "ahb_expression": "X",
+                  "meaning": "Entwurfs-Version",
+                  "qualifier": "D"
+                }
+              ],
+              "value_type": "VALUE_POOL"
+            },
+            {
+              "data_element_id": "0054",
+              "discriminator": "UNH->0054",
+              "value_pool": [
+                {
+                  "ahb_expression": "X",
+                  "meaning": "Ausgabe 2010 - A",
+                  "qualifier": "10A"
+                }
+              ],
+              "value_type": "VALUE_POOL"
+            },
+            {
+              "data_element_id": "0051",
+              "discriminator": "UNH->0051",
+              "value_pool": [
+                {
+                  "ahb_expression": "X",
+                  "meaning": "UN/CEFACT",
+                  "qualifier": "UN"
+                }
+              ],
+              "value_type": "VALUE_POOL"
+            },
+            {
+              "data_element_id": "0057",
+              "discriminator": "UNH->0057",
+              "value_pool": [
+                {
+                  "ahb_expression": "X",
+                  "meaning": "Versionsnummer derzugrundeliegendenBDEW-Nachrichtenbeschreibung",
+                  "qualifier": "1.2"
+                }
+              ],
+              "value_type": "VALUE_POOL"
+            }
+          ],
+          "discriminator": "UNH",
+          "section_name": "Nachrichten-Kopfsegment"
+        },
+        {
+          "ahb_expression": "Muss",
+          "data_elements": [
+            {
+              "data_element_id": "1001",
+              "discriminator": "BGM->1001",
+              "value_pool": [
+                {
+                  "ahb_expression": "X",
+                  "meaning": "Aufforderung zurAngebotsabgabe (Anfrage)",
+                  "qualifier": "311"
+                }
+              ],
+              "value_type": "VALUE_POOL"
+            },
+            {
+              "ahb_expression": "X",
+              "data_element_id": "1004",
+              "discriminator": "Dokumentennummer",
+              "entered_input": null,
+              "value_type": "TEXT"
+            }
+          ],
+          "discriminator": "BGM",
+          "section_name": "Beginn der Nachricht"
+        },
+        {
+          "ahb_expression": "Muss",
+          "data_elements": [
+            {
+              "data_element_id": "2005",
+              "discriminator": "DTM->2005",
+              "value_pool": [
+                {
+                  "ahb_expression": "X",
+                  "meaning": "Dokumenten-/Nachrichtendatum/-zeit",
+                  "qualifier": "137"
+                }
+              ],
+              "value_type": "VALUE_POOL"
+            },
+            {
+              "ahb_expression": "X [931] [494]",
+              "data_element_id": "2380",
+              "discriminator": "Datum oder Uhrzeit oderZeitspanne, Wert",
+              "entered_input": null,
+              "value_type": "DATETIME"
+            },
+            {
+              "data_element_id": "2379",
+              "discriminator": "DTM->2379",
+              "value_pool": [
+                {
+                  "ahb_expression": "X",
+                  "meaning": "CCYYMMDDHHMMZZZ",
+                  "qualifier": "303"
+                }
+              ],
+              "value_type": "VALUE_POOL"
+            },
+            {
+              "data_element_id": "2005",
+              "discriminator": "DTM->2005",
+              "value_pool": [
+                {
+                  "ahb_expression": "X",
+                  "meaning": "Lieferdatum/-zeit, geplant",
+                  "qualifier": "76"
+                }
+              ],
+              "value_type": "VALUE_POOL"
+            },
+            {
+              "ahb_expression": "X [UB3]",
+              "data_element_id": "2380",
+              "discriminator": "Datum oder Uhrzeit oderZeitspanne, Wert",
+              "entered_input": null,
+              "value_type": "DATETIME"
+            },
+            {
+              "data_element_id": "2379",
+              "discriminator": "DTM->2379",
+              "value_pool": [
+                {
+                  "ahb_expression": "X",
+                  "meaning": "CCYYMMDDHHMMZZZ",
+                  "qualifier": "303"
+                }
+              ],
+              "value_type": "VALUE_POOL"
+            }
+          ],
+          "discriminator": "DTM",
+          "section_name": "Nachrichtendatum"
+        },
+        {
+          "ahb_expression": "Muss",
+          "data_elements": [
+            {
+              "data_element_id": "0081",
+              "discriminator": "UNS->0081",
+              "value_pool": [],
+              "value_type": "VALUE_POOL"
+            }
+          ],
+          "discriminator": "UNS",
+          "section_name": "Abschnitts-Kontrollsegment"
+        },
+        {
+          "ahb_expression": "Muss",
+          "data_elements": [
+            {
+              "ahb_expression": "X",
+              "data_element_id": "0074",
+              "discriminator": "Anzahl der Segmente in einerNachricht",
+              "entered_input": null,
+              "value_type": "TEXT"
+            },
+            {
+              "ahb_expression": "X",
+              "data_element_id": "0062",
+              "discriminator": "Nachrichten-Referenznummer",
+              "entered_input": null,
+              "value_type": "TEXT"
+            }
+          ],
+          "discriminator": "UNT",
+          "section_name": "Nachrichten-Endesegment"
+        }
+      ]
+    }
+  ],
+  "meta": { "pruefidentifikator": "35001" }
+}

@@ -1,6 +1,7 @@
 """
 This module manages EDIFACT related stuff. It's basically a helper module to avoid stringly typed parameters.
 """
+import datetime
 import re
 from enum import Enum
 from typing import Dict, Optional
@@ -16,6 +17,7 @@ class EdifactFormat(str, Enum):
 
     APERAK = "APERAK"
     COMDIS = "COMDIS"  #: communication dispute
+    CONTRL = "CONTRL"  #: control messages
     IFTSTA = "IFTSTA"  #: Multimodaler Statusbericht
     INSRPT = "INSRPT"  #: Prüfbericht
     INVOIC = "INVOIC"  #: invoice
@@ -51,6 +53,8 @@ _edifact_mapping: Dict[str, EdifactFormat] = {
     "37": EdifactFormat.PARTIN,
     "11": EdifactFormat.UTILMD,
     "25": EdifactFormat.UTILTS,
+    "91": EdifactFormat.CONTRL,
+    "92": EdifactFormat.APERAK,
 }
 
 
@@ -61,10 +65,31 @@ class EdifactFormatVersion(str, Enum):
 
     FV2104 = "FV2104"  #: valid from 2021-04-01 until 2021-10-01
     FV2110 = "FV2110"  #: valid from 2021-10-01 until 2022-04-01
-    FV2204 = "FV2204"  #: valid from 2022-04-01 onwards ("MaKo 2022")
+    FV2210 = "FV2210"  #: valid from 2022-10-01 onwards ("MaKo 2022", was 2204 previously)
+    # whenever you add another value here, please also make sure to add its key date to get_edifact_format_version below
 
     def __str__(self):
         return self.value
+
+
+def get_edifact_format_version(key_date: datetime.datetime) -> EdifactFormatVersion:
+    """
+    :return: the edifact format version that is valid on the specified key date
+    """
+    if key_date < datetime.datetime(2021, 9, 30, 22, 0, 0, 0, tzinfo=datetime.timezone.utc):
+        return EdifactFormatVersion.FV2104
+    if key_date < datetime.datetime(2022, 9, 30, 22, 0, 0, 0, tzinfo=datetime.timezone.utc):
+        return EdifactFormatVersion.FV2110
+    return EdifactFormatVersion.FV2210
+
+
+def is_edifact_boilerplate(segment_code: Optional[str]) -> bool:
+    """
+    returns true iff this segment is not relevant in a sense that it has to be validated or merged with the AHB
+    """
+    if not segment_code:
+        return True
+    return segment_code.strip() in {"UNT", "UNZ"}
 
 
 def pruefidentifikator_to_format(pruefidentifikator: str) -> Optional[EdifactFormat]:

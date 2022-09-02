@@ -28,12 +28,12 @@ class SegmentGroupHierarchy:
     """
 
     segment_group: Optional[str] = attrs.field(validator=attrs.validators.optional(attrs.validators.instance_of(str)))
-    """segment group name, f.e. "SG4" or "SG5" """
+    """segment group name, e.g. "SG4" or "SG5" """
     opening_segment: str = attrs.field(validator=attrs.validators.instance_of(str))
-    """first segment in group, f.e. 'IDE' or 'LOC' """
+    """first segment in group, e.g. 'IDE' or 'LOC' """
     sub_hierarchy: Optional[
         List["SegmentGroupHierarchy"]
-    ]  #: segment groups below this level, f.e.[(SG5, LOG), (SG6,RFF), (SG8, SEQ), ...]
+    ]  #: segment groups below this level, e.g.[(SG5, LOG), (SG6,RFF), (SG8, SEQ), ...]
 
     def flattened(self) -> List[Tuple[Optional[str], str]]:
         """
@@ -72,7 +72,7 @@ class SegmentGroupHierarchySchema(Schema):
         fields.Nested(lambda: SegmentGroupHierarchySchema()), allow_none=True  # pylint:disable=unnecessary-lambda
     )
 
-    # pylint:disable=unused-argument,no-self-use
+    # pylint:disable=unused-argument
     @post_load
     def deserialize(self, data, **kwargs) -> SegmentGroupHierarchy:
         """

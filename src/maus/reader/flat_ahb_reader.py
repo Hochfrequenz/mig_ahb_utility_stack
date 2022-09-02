@@ -7,14 +7,15 @@ import re
 import uuid
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import List, Optional, Sequence, TextIO, Tuple
+from typing import Dict, List, Literal, Optional, Sequence, Set, TextIO, Tuple, overload
 
 from maus.models.anwendungshandbuch import AhbLine, AhbMetaInformation, FlatAnwendungshandbuch
+from maus.models.edifact_components import gabi_edifact_qualifier_pattern
 
 _pruefi_pattern = re.compile(r"^\d{5}$")  #: five digits
-_value_pool_entry_pattern = re.compile(r"^[A-Z0-9]{2,}$")
+_value_pool_entry_pattern = re.compile(r"^[A-Z0-9\-i]{2,}$")  # i for GABi -- why?
 _numeric_value_pool_entry_pattern = re.compile(r"^\d+(?:\.\d+)?[a-z]?$")
-_ebd_code_pattern = re.compile(r"^E_\d+$")
+_ebd_code_pattern = re.compile(r"^([EG])_\d+$")
 _segment_group_pattern = re.compile(r"^SG\d+$")
 
 
@@ -33,6 +34,15 @@ class FlatAhbReader(ABC):
         raise NotImplementedError("The inheriting class has to implement this method")
 
 
+def check_file_can_be_parsed_as_ahb_csv(file_path: Path) -> None:
+    """
+    Returns nothing iff the given file is parsable as CSV and contains no obvious errors.
+    This is not a really sophisticated analysis but just a basic minimal sanity check.
+    In case of error an exception is raised.
+    """
+    _ = FlatAhbCsvReader(file_path)  # this may die with a meaningful exception
+
+
 class FlatAhbCsvReader(FlatAhbReader):
     """
     reads csv files and returns AHBs
@@ -44,13 +54,80 @@ class FlatAhbCsvReader(FlatAhbReader):
         self.current_section_name: Optional[str] = None
         self.pruefidentifikator = pruefidentifikator
         self.delimiter = delimiter
+        self.bedingungen: Dict[str, str] = {}
         with open(file_path, "r", encoding=encoding) as infile:
             # current_section_name: Optional[str]
-            for row in self.get_raw_rows(infile):
-                ahb_line = self.raw_ahb_row_to_ahbline(row)
-                if ahb_line is None:
-                    continue
-                self.rows.append(ahb_line)
+            raw_lines = self.get_raw_rows(infile)
+        raw_lines_with_merged_section_names = FlatAhbCsvReader.merge_section_only_lines(raw_lines)
+        for row in raw_lines_with_merged_section_names:
+            ahb_line = self.raw_ahb_row_to_ahbline(row)
+            if ahb_line is None:
+                continue
+            self.rows.append(ahb_line)
+
+    @staticmethod
+    def merge_section_only_lines(raw_lines: List[dict]) -> List[dict]:
+        """
+        merges adjacent lines from the CSV source when they only contain an AHB "section" description.
+        "Section" headings are the grey lines on the left of the AHB PDF.
+        (The first section of each AHB is "Nachrichten-Kopfsegment" in most cases.)
+        When the section heading spans multiple lines, we don't want to treat them as separate but as a single heading.
+        The method consumes a list of dicts and returns a _new_ list of dicts that is of the same length or shorter.
+        """
+        result: List[dict] = []
+
+        # imagine the original list to be
+        # 0,asd,qwertz,
+        # 1,a very long section,
+        # 2,heading that spans,
+        # 3,multiple lines,
+        # 4,Foo,Bar,Y
+        # 5,Baz,Boom,Z
+        # we then want to merge the lines with index 1-3 into a single line
+        keys_that_must_no_hold_any_values: Set[str] = {
+            "Segment",
+            "Datenelement",
+            "Codes und Qualifier",
+            "Beschreibung",
+            "Bedingung",
+        }
+
+        def line_only_contains_segment_gruppe(raw_line: dict) -> bool:
+            """
+            returns true if the given raw line only contains some meaningful data in the "Segment Gruppe" key
+            """
+            for row_key in keys_that_must_no_hold_any_values:
+                if row_key in raw_line and raw_line[row_key] is not None and len(raw_line[row_key].strip()) > 0:
+                    return False
+            return True
+
+        merged_section_name = ""
+        number_of_lines_merged = 0
+        for raw_line in raw_lines:
+            if (
+                "Segment Gruppe" in raw_line
+                and raw_line["Segment Gruppe"]
+                and line_only_contains_segment_gruppe(raw_line)
+                and not raw_line["Segment Gruppe"].startswith("SG")
+            ):
+                merged_section_name += " " + raw_line["Segment Gruppe"]
+                number_of_lines_merged += 1
+            else:
+                # note that AHBs never end with a section heading, so all headings/sections will run into this block
+                if len(merged_section_name) > 0:
+                    artificial_merged_line: dict = {
+                        "": str(int(raw_line[""]) - 1),
+                        "Segment Gruppe": merged_section_name.strip().replace("  ", " "),
+                    }
+                    for key in keys_that_must_no_hold_any_values:
+                        # although we know there's no meaningful value here, we still need the keys with empty values
+                        # so that to downstream code the line seems legit ➡ We re-add them.
+                        artificial_merged_line[key] = ""
+                    result.append(artificial_merged_line)
+                    merged_section_name = ""
+                    number_of_lines_merged = 0
+                result.append(raw_line)
+        return result
 
     def get_raw_rows(self, file_handle: TextIO) -> List[dict]:
         """
@@ -73,11 +150,12 @@ class FlatAhbCsvReader(FlatAhbReader):
         value_pool_entry, description = FlatAhbCsvReader.separate_value_pool_entry_and_name(
             ahb_row["Codes und Qualifier"], ahb_row["Beschreibung"]
         )
+        self.bedingungen.update(FlatAhbCsvReader._extract_bedingungen(ahb_row["Bedingung"]))
         segment_group: Optional[str] = None
         if FlatAhbCsvReader._is_segment_group(ahb_row["Segment Gruppe"]):
             segment_group = ahb_row["Segment Gruppe"]
         elif len(ahb_row["Segment Gruppe"]) >= 3:
-            self.current_section_name = ahb_row["Segment Gruppe"].strip() or None  # f.e. "Nachrichten-Kopfsegment"
+            self.current_section_name = ahb_row["Segment Gruppe"].strip() or None  # e.g. "Nachrichten-Kopfsegment"
             self._logger.debug("Processing %s section '%s'", self.pruefidentifikator, self.current_section_name)
             return None  # possibly a section heading like "Nachrichten-Endesegment"
             # this is different from segment group = None which is value for e.g. the UNH
@@ -89,9 +167,17 @@ class FlatAhbCsvReader(FlatAhbReader):
             value_pool_entry=value_pool_entry,
             ahb_expression=ahb_row[self.pruefidentifikator] or None,
             name=description,
-            section_name=self.current_section_name,
+            section_name=_replace_hardcoded_section_names(self.current_section_name),
         )
         return result
+
+    def extract_condition_texts(self) -> Dict[str, str]:
+        """
+        Extracts all the condition texts found in this AHB.
+        :return: a dictionary with the condition key (e.g. "46") as value and the condition text (e.g. "Wenn aus Sparte
+        Gas") as value. The value does not contain the "[46]" prefix.
+        """
+        return self.bedingungen
 
     @staticmethod
     def separate_value_pool_entry_and_name(
@@ -109,7 +195,7 @@ class FlatAhbCsvReader(FlatAhbReader):
         if FlatAhbCsvReader._is_value_pool_entry(x) and not FlatAhbCsvReader._is_value_pool_entry(y):
             return x, y or None
         if FlatAhbCsvReader._is_value_pool_entry(x) and FlatAhbCsvReader._is_value_pool_entry(y):
-            # Both look like a value pool entry. This typically happens f.e. for date qualifiers or code lists
+            # Both look like a value pool entry. This typically happens e.g. for date qualifiers or code lists
             return x, y
         return y or None, x or None
 
@@ -123,10 +209,12 @@ class FlatAhbCsvReader(FlatAhbReader):
         if _value_pool_entry_pattern.match(candidate) is not None:
             return True
         # numbers alone might be value pool entries even if they don't match the regex
-        # we don't use "isdigit" because isdigit f.e. does not match '1.2'
+        # we don't use "isdigit" because isdigit e.g. does not match '1.2'
         if _numeric_value_pool_entry_pattern.match(candidate) is not None:
             return True
         if len(candidate) == 1 and candidate.upper() == candidate:
+            return True
+        if gabi_edifact_qualifier_pattern.match(candidate) is not None:
             return True
         return _ebd_code_pattern.match(candidate) is not None
 
@@ -138,6 +226,20 @@ class FlatAhbCsvReader(FlatAhbReader):
         if not candidate:
             return False
         return _value_pool_entry_pattern.match(candidate) is not None
+
+    _bedingung_pattern = re.compile(r"\[(?P<key>\d+)\]\s*(?P<text>[^\[\]]+)\s*")  # https://regex101.com/r/hN5x9w/1
+
+    @staticmethod
+    def _extract_bedingungen(candidate: Optional[str]) -> Dict[str, str]:
+        """
+        Checks if the given candidate is a bedingung. If no, returns empty dict.
+        If yes returns a dictionary where the Bedingung keys (e.g. "494") are dictionary keys and the Bedingung
+        texts (e.g. "Der Wert muss ≤ der zum Erzeugungszeitpunkt sein.") are the dictionary values.
+        The result is a dict because often there are multiple conditions connected to a single line in the AHB.
+        """
+        if not candidate:
+            return {}
+        return {m[0]: m[1].strip() for m in FlatAhbCsvReader._bedingung_pattern.findall(candidate)}
 
     @staticmethod
     def _get_name_of_expression_column(field_names: Optional[Sequence[str]]) -> Optional[str]:
@@ -166,3 +268,34 @@ class FlatAhbCsvReader(FlatAhbReader):
             ),
             lines=[row for row in self.rows if row.holds_any_information()],
         )
+
+
+@overload
+def _replace_hardcoded_section_names(section_name: str) -> str:
+    ...
+
+
+@overload
+def _replace_hardcoded_section_names(section_name: Literal[None]) -> Literal[None]:
+    ...
+
+
+def _replace_hardcoded_section_names(section_name: Optional[str]) -> Optional[str]:
+    """
+    Replace section names that differ because of "Datenschiefstände"
+    :param section_name:
+    :return:
+    """
+    if not section_name:
+        return section_name
+    replacements: Dict[str, str] = {
+        # https://github.com/Hochfrequenz/edifact-templates/issues/82
+        # pylint: disable=line-too-long
+        "OBIS-Kennzahl der Zähleinrichtung / Mengenumwerter / Smartmeter-Gateway": "OBIS-Kennzahl der Zähleinrichtung / Mengenumwerter",
+        "OBIS-Daten der Zähleinrichtung / Mengenumwerter / Smartmeter-Gateway": "OBIS-Daten der Zähleinrichtung / Mengenumwerter",
+        # https://github.com/Hochfrequenz/edifact-templates/issues/80
+        "OBIS Daten für Lieferant relevant": "OBIS Daten für Marktrolle relevant",
+    }
+    if section_name.strip() in replacements:
+        return replacements[section_name]
+    return section_name

@@ -1,0 +1,935 @@
+{
+  "lines": [
+    {
+      "ahb_expression": "Muss",
+      "discriminator": "root",
+      "segment_groups": [
+        {
+          "ahb_expression": "Muss",
+          "discriminator": "SG2",
+          "segment_groups": [
+            {
+              "ahb_expression": "Kann",
+              "discriminator": "SG3",
+              "segment_groups": [],
+              "segments": [
+                {
+                  "ahb_expression": "Muss",
+                  "data_elements": [
+                    {
+                      "data_element_id": "3139",
+                      "discriminator": "SG3->CTA->3139",
+                      "value_pool": [
+                        {
+                          "ahb_expression": "X",
+                          "meaning": "Informationskontakt",
+                          "qualifier": "IC"
+                        }
+                      ],
+                      "value_type": "VALUE_POOL"
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3412",
+                      "discriminator": "Name vom Ansprechpartner",
+                      "entered_input": null,
+                      "value_type": "TEXT"
+                    }
+                  ],
+                  "discriminator": "CTA",
+                  "section_name": "Ansprechpartner"
+                },
+                {
+                  "ahb_expression": "Muss",
+                  "data_elements": [
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3148",
+                      "discriminator": "Nummer / Adresse",
+                      "entered_input": null,
+                      "value_type": "TEXT"
+                    },
+                    {
+                      "data_element_id": "3155",
+                      "discriminator": "SG3->COM->3155",
+                      "value_pool": [
+                        {
+                          "ahb_expression": "X [1P0..1]",
+                          "meaning": "Elektronische Post",
+                          "qualifier": "EM"
+                        },
+                        {
+                          "ahb_expression": "X [1P0..1]",
+                          "meaning": "Telefax",
+                          "qualifier": "FX"
+                        },
+                        {
+                          "ahb_expression": "X [1P0..1]",
+                          "meaning": "Telefon",
+                          "qualifier": "TE"
+                        },
+                        {
+                          "ahb_expression": "X [1P0..1]",
+                          "meaning": "weiteres Telefon",
+                          "qualifier": "AJ"
+                        },
+                        {
+                          "ahb_expression": "X [1P0..1]",
+                          "meaning": "Handy",
+                          "qualifier": "AL"
+                        }
+                      ],
+                      "value_type": "VALUE_POOL"
+                    }
+                  ],
+                  "discriminator": "COM",
+                  "section_name": "Kommunikationsverbindung"
+                }
+              ]
+            }
+          ],
+          "segments": [
+            {
+              "ahb_expression": "Muss",
+              "data_elements": [
+                {
+                  "data_element_id": "3035",
+                  "discriminator": "SG2->NAD->3035",
+                  "value_pool": [
+                    {
+                      "ahb_expression": "X",
+                      "meaning": "Dokumenten-/Nachrichtenausstellerbzw. -absender",
+                      "qualifier": "MS"
+                    }
+                  ],
+                  "value_type": "VALUE_POOL"
+                },
+                {
+                  "data_element_id": "3039",
+                  "discriminator": "SG2->NAD->3039",
+                  "value_pool": [],
+                  "value_type": "VALUE_POOL"
+                },
+                {
+                  "data_element_id": "3055",
+                  "discriminator": "SG2->NAD->3055",
+                  "value_pool": [
+                    {
+                      "ahb_expression": "X",
+                      "meaning": "GS1",
+                      "qualifier": "9"
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "meaning": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",
+                      "qualifier": "293"
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "meaning": "DE, DVGW Service & Consult GmbH",
+                      "qualifier": "332"
+                    }
+                  ],
+                  "value_type": "VALUE_POOL"
+                }
+              ],
+              "discriminator": "NAD",
+              "section_name": "MP-ID Absender"
+            },
+            {
+              "ahb_expression": "Muss",
+              "data_elements": [
+                {
+                  "data_element_id": "3035",
+                  "discriminator": "SG2->NAD->3035",
+                  "value_pool": [
+                    {
+                      "ahb_expression": "X",
+                      "meaning": "Nachrichtenempf\u00e4nger",
+                      "qualifier": "MR"
+                    }
+                  ],
+                  "value_type": "VALUE_POOL"
+                },
+                {
+                  "data_element_id": "3039",
+                  "discriminator": "SG2->NAD->3039",
+                  "value_pool": [],
+                  "value_type": "VALUE_POOL"
+                },
+                {
+                  "data_element_id": "3055",
+                  "discriminator": "SG2->NAD->3055",
+                  "value_pool": [
+                    {
+                      "ahb_expression": "X",
+                      "meaning": "GS1",
+                      "qualifier": "9"
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "meaning": "DE, BDEW (Bundesverband der Energie- und Wasserwirtschaft e.V.)",
+                      "qualifier": "293"
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "meaning": "DE, DVGW Service & Consult GmbH",
+                      "qualifier": "332"
+                    }
+                  ],
+                  "value_type": "VALUE_POOL"
+                }
+              ],
+              "discriminator": "NAD",
+              "section_name": "MP-ID Empf\u00e4nger"
+            }
+          ]
+        },
+        {
+          "ahb_expression": "Muss",
+          "discriminator": "SG4",
+          "segment_groups": [
+            {
+              "ahb_expression": "Muss ([77] u[78]) u (([61]u [584]) o[583])",
+              "discriminator": "SG5",
+              "segment_groups": [],
+              "segments": [
+                {
+                  "ahb_expression": "Muss",
+                  "data_elements": [
+                    {
+                      "data_element_id": "3227",
+                      "discriminator": "SG5->LOC->3227",
+                      "value_pool": [
+                        {
+                          "ahb_expression": "X",
+                          "meaning": "Meldepunkt",
+                          "qualifier": "172"
+                        }
+                      ],
+                      "value_type": "VALUE_POOL"
+                    },
+                    {
+                      "ahb_expression": "X [953]",
+                      "data_element_id": "3225",
+                      "discriminator": "Identifikator",
+                      "entered_input": null,
+                      "value_type": "TEXT"
+                    }
+                  ],
+                  "discriminator": "LOC",
+                  "section_name": "Meldepunkt"
+                }
+              ]
+            },
+            {
+              "ahb_expression": "Muss",
+              "discriminator": "SG6",
+              "segment_groups": [],
+              "segments": [
+                {
+                  "ahb_expression": "Muss",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG6->RFF->1153",
+                      "value_pool": [
+                        {
+                          "ahb_expression": "X",
+                          "meaning": "Pr\u00fcfidentifikator",
+                          "qualifier": "Z13"
+                        }
+                      ],
+                      "value_type": "VALUE_POOL"
+                    },
+                    {
+                      "data_element_id": "1154",
+                      "discriminator": "SG6->RFF->1154",
+                      "value_pool": [
+                        {
+                          "ahb_expression": "X",
+                          "meaning": "WiM / Anmeldung MSB",
+                          "qualifier": "11042"
+                        }
+                      ],
+                      "value_type": "VALUE_POOL"
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Pr\u00fcfidentifikator"
+                }
+              ]
+            },
+            {
+              "ahb_expression": "",
+              "discriminator": "SG8",
+              "segment_groups": [
+                {
+                  "ahb_expression": "",
+                  "discriminator": "SG9",
+                  "segment_groups": [],
+                  "segments": []
+                },
+                {
+                  "ahb_expression": "",
+                  "discriminator": "SG10",
+                  "segment_groups": [],
+                  "segments": [
+                    {
+                      "ahb_expression": "Muss",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7037",
+                          "discriminator": "SG10->CCI->7037",
+                          "value_pool": [
+                            {
+                              "ahb_expression": "X",
+                              "meaning": "Z\u00e4hlertyp",
+                              "qualifier": "E13"
+                            }
+                          ],
+                          "value_type": "VALUE_POOL"
+                        }
+                      ],
+                      "discriminator": "CCI",
+                      "section_name": "Z\u00e4hlertyp"
+                    },
+                    {
+                      "ahb_expression": "Muss",
+                      "data_elements": [
+                        {
+                          "data_element_id": "7111",
+                          "discriminator": "SG10->CAV->7111",
+                          "value_pool": [
+                            {
+                              "ahb_expression": "X",
+                              "meaning": "Ger\u00e4tenummer",
+                              "qualifier": "Z30"
+                            }
+                          ],
+                          "value_type": "VALUE_POOL"
+                        },
+                        {
+                          "ahb_expression": "X",
+                          "data_element_id": "7110",
+                          "discriminator": "Ger\u00e4tenummer",
+                          "entered_input": null,
+                          "value_type": "TEXT"
+                        }
+                      ],
+                      "discriminator": "CAV",
+                      "section_name": "Identifikation / Nummer des Ger\u00e4tes"
+                    }
+                  ]
+                }
+              ],
+              "segments": [
+                {
+                  "ahb_expression": "Muss",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1229",
+                      "discriminator": "SG8->SEQ->1229",
+                      "value_pool": [
+                        {
+                          "ahb_expression": "X",
+                          "meaning": "Z\u00e4hleinrichtungsdaten",
+                          "qualifier": "Z03"
+                        }
+                      ],
+                      "value_type": "VALUE_POOL"
+                    }
+                  ],
+                  "discriminator": "SEQ",
+                  "section_name": "Z\u00e4hleinrichtungsdaten"
+                }
+              ]
+            },
+            {
+              "ahb_expression": "",
+              "discriminator": "SG12",
+              "segment_groups": [],
+              "segments": [
+                {
+                  "ahb_expression": "Muss",
+                  "data_elements": [
+                    {
+                      "data_element_id": "3035",
+                      "discriminator": "SG12->NAD->3035",
+                      "value_pool": [
+                        {
+                          "ahb_expression": "X",
+                          "meaning": "Kunde des MSB",
+                          "qualifier": "Z07"
+                        }
+                      ],
+                      "value_type": "VALUE_POOL"
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3036",
+                      "discriminator": "Name",
+                      "entered_input": null,
+                      "value_type": "TEXT"
+                    },
+                    {
+                      "data_element_id": "3045",
+                      "discriminator": "SG12->NAD->3045",
+                      "value_pool": [
+                        {
+                          "ahb_expression": "X",
+                          "meaning": "Struktur von Personennamen",
+                          "qualifier": "Z01"
+                        },
+                        {
+                          "ahb_expression": "X",
+                          "meaning": "Struktur der Firmenbezeichnung",
+                          "qualifier": "Z02"
+                        }
+                      ],
+                      "value_type": "VALUE_POOL"
+                    }
+                  ],
+                  "discriminator": "NAD",
+                  "section_name": "Kunde des Messstellenbetreibers"
+                },
+                {
+                  "ahb_expression": "Muss",
+                  "data_elements": [
+                    {
+                      "data_element_id": "3035",
+                      "discriminator": "SG12->NAD->3035",
+                      "value_pool": [
+                        {
+                          "ahb_expression": "X",
+                          "meaning": "Korrespondenzanschriftdes Kunden des MSB",
+                          "qualifier": "Z08"
+                        }
+                      ],
+                      "value_type": "VALUE_POOL"
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3036",
+                      "discriminator": "Name",
+                      "entered_input": null,
+                      "value_type": "TEXT"
+                    },
+                    {
+                      "data_element_id": "3045",
+                      "discriminator": "SG12->NAD->3045",
+                      "value_pool": [
+                        {
+                          "ahb_expression": "X",
+                          "meaning": "Struktur von Personennamen",
+                          "qualifier": "Z01"
+                        },
+                        {
+                          "ahb_expression": "X",
+                          "meaning": "Struktur der Firmenbezeichnung",
+                          "qualifier": "Z02"
+                        }
+                      ],
+                      "value_type": "VALUE_POOL"
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3042",
+                      "discriminator": "Stra\u00dfe und Hausnummer oderPostfach",
+                      "entered_input": null,
+                      "value_type": "TEXT"
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3164",
+                      "discriminator": "Ort",
+                      "entered_input": null,
+                      "value_type": "TEXT"
+                    },
+                    {
+                      "ahb_expression": "M [268]S [166]",
+                      "data_element_id": "3251",
+                      "discriminator": "Postleitzahl",
+                      "entered_input": null,
+                      "value_type": "TEXT"
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3207",
+                      "discriminator": "L\u00e4ndername, Code",
+                      "entered_input": null,
+                      "value_type": "TEXT"
+                    }
+                  ],
+                  "discriminator": "NAD",
+                  "section_name": "Korrespondenzanschrift des Kunden des Messstellenbetreibers"
+                },
+                {
+                  "ahb_expression": "Muss",
+                  "data_elements": [
+                    {
+                      "data_element_id": "3035",
+                      "discriminator": "SG12->NAD->3035",
+                      "value_pool": [
+                        {
+                          "ahb_expression": "X",
+                          "meaning": "Messlokationsadresse",
+                          "qualifier": "Z03"
+                        }
+                      ],
+                      "value_type": "VALUE_POOL"
+                    },
+                    {
+                      "ahb_expression": "K",
+                      "data_element_id": "3124",
+                      "discriminator": "Zusatzinformation zurIdentifizierung",
+                      "entered_input": null,
+                      "value_type": "TEXT"
+                    },
+                    {
+                      "ahb_expression": "S [166]M [212]",
+                      "data_element_id": "3042",
+                      "discriminator": "Stra\u00dfe und Hausnummer oderPostfach",
+                      "entered_input": null,
+                      "value_type": "TEXT"
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3164",
+                      "discriminator": "Ort",
+                      "entered_input": null,
+                      "value_type": "TEXT"
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3251",
+                      "discriminator": "Postleitzahl",
+                      "entered_input": null,
+                      "value_type": "TEXT"
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3207",
+                      "discriminator": "L\u00e4ndername, Code",
+                      "entered_input": null,
+                      "value_type": "TEXT"
+                    }
+                  ],
+                  "discriminator": "NAD",
+                  "section_name": "Messlokationsadresse"
+                },
+                {
+                  "ahb_expression": "Muss",
+                  "data_elements": [
+                    {
+                      "data_element_id": "3035",
+                      "discriminator": "SG12->NAD->3035",
+                      "value_pool": [
+                        {
+                          "ahb_expression": "X",
+                          "meaning": "Name und Adresse f\u00fcrdie Ablesekarte",
+                          "qualifier": "Z05"
+                        }
+                      ],
+                      "value_type": "VALUE_POOL"
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3036",
+                      "discriminator": "Name",
+                      "entered_input": null,
+                      "value_type": "TEXT"
+                    },
+                    {
+                      "data_element_id": "3045",
+                      "discriminator": "SG12->NAD->3045",
+                      "value_pool": [
+                        {
+                          "ahb_expression": "X",
+                          "meaning": "Struktur von Personennamen",
+                          "qualifier": "Z01"
+                        },
+                        {
+                          "ahb_expression": "X",
+                          "meaning": "Struktur der Firmenbezeichnung",
+                          "qualifier": "Z02"
+                        }
+                      ],
+                      "value_type": "VALUE_POOL"
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3042",
+                      "discriminator": "Stra\u00dfe und Hausnummer oderPostfach",
+                      "entered_input": null,
+                      "value_type": "TEXT"
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3164",
+                      "discriminator": "Ort",
+                      "entered_input": null,
+                      "value_type": "TEXT"
+                    },
+                    {
+                      "ahb_expression": "M [268]S [166]",
+                      "data_element_id": "3251",
+                      "discriminator": "Postleitzahl",
+                      "entered_input": null,
+                      "value_type": "TEXT"
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "data_element_id": "3207",
+                      "discriminator": "L\u00e4ndername, Code",
+                      "entered_input": null,
+                      "value_type": "TEXT"
+                    }
+                  ],
+                  "discriminator": "NAD",
+                  "section_name": "Name und Adresse f\u00fcr die Ablesekarte"
+                },
+                {
+                  "ahb_expression": "Kann",
+                  "data_elements": [
+                    {
+                      "data_element_id": "1153",
+                      "discriminator": "SG12->RFF->1153",
+                      "value_pool": [
+                        {
+                          "ahb_expression": "X",
+                          "meaning": "Messlokation",
+                          "qualifier": "Z19"
+                        }
+                      ],
+                      "value_type": "VALUE_POOL"
+                    },
+                    {
+                      "ahb_expression": "X [951]",
+                      "data_element_id": "1154",
+                      "discriminator": "ID einer Messlokation",
+                      "entered_input": null,
+                      "value_type": "TEXT"
+                    }
+                  ],
+                  "discriminator": "RFF",
+                  "section_name": "Referenz auf die ID einer Messlokation"
+                }
+              ]
+            }
+          ],
+          "segments": [
+            {
+              "ahb_expression": "Muss",
+              "data_elements": [
+                {
+                  "data_element_id": "7495",
+                  "discriminator": "SG4->IDE->7495",
+                  "value_pool": [
+                    {
+                      "ahb_expression": "X",
+                      "meaning": "Transaktion",
+                      "qualifier": "24"
+                    }
+                  ],
+                  "value_type": "VALUE_POOL"
+                },
+                {
+                  "ahb_expression": "X",
+                  "data_element_id": "7402",
+                  "discriminator": "Vorgangsnummer",
+                  "entered_input": null,
+                  "value_type": "TEXT"
+                }
+              ],
+              "discriminator": "IDE",
+              "section_name": "Vorgang"
+            },
+            {
+              "ahb_expression": "Muss",
+              "data_elements": [
+                {
+                  "data_element_id": "2005",
+                  "discriminator": "SG4->DTM->2005",
+                  "value_pool": [
+                    {
+                      "ahb_expression": "X",
+                      "meaning": "Lieferdatum/-zeit, geplant",
+                      "qualifier": "76"
+                    }
+                  ],
+                  "value_type": "VALUE_POOL"
+                },
+                {
+                  "ahb_expression": "X [UB3]",
+                  "data_element_id": "2380",
+                  "discriminator": "Datum oder Uhrzeit oderZeitspanne, Wert",
+                  "entered_input": null,
+                  "value_type": "DATETIME"
+                },
+                {
+                  "data_element_id": "2379",
+                  "discriminator": "SG4->DTM->2379",
+                  "value_pool": [
+                    {
+                      "ahb_expression": "X",
+                      "meaning": "CCYYMMDDHHMMZZZ",
+                      "qualifier": "303"
+                    }
+                  ],
+                  "value_type": "VALUE_POOL"
+                }
+              ],
+              "discriminator": "DTM",
+              "section_name": "Datum zum geplanten Leistungsbeginn"
+            },
+            {
+              "ahb_expression": "Muss [61]",
+              "data_elements": [
+                {
+                  "data_element_id": "9015",
+                  "discriminator": "SG4->STS->9015",
+                  "value_pool": [
+                    {
+                      "ahb_expression": "X",
+                      "meaning": "Transaktionsgrund",
+                      "qualifier": "7"
+                    }
+                  ],
+                  "value_type": "VALUE_POOL"
+                },
+                {
+                  "data_element_id": "9013",
+                  "discriminator": "SG4->STS->9013",
+                  "value_pool": [
+                    {
+                      "ahb_expression": "X",
+                      "meaning": "Ein-/Auszug (Umzug)",
+                      "qualifier": "E01"
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "meaning": "Einzug/Neuanlage",
+                      "qualifier": "E02"
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "meaning": "Wechsel",
+                      "qualifier": "E03"
+                    },
+                    {
+                      "ahb_expression": "X",
+                      "meaning": "\u00dcbernahme aufgrund nicht erfolgtem iMS- Einbau",
+                      "qualifier": "ZJ4"
+                    }
+                  ],
+                  "value_type": "VALUE_POOL"
+                }
+              ],
+              "discriminator": "STS",
+              "section_name": "Transaktionsgrund"
+            },
+            {
+              "ahb_expression": "Kann",
+              "data_elements": [
+                {
+                  "data_element_id": "7431",
+                  "discriminator": "SG4->AGR->7431",
+                  "value_pool": [
+                    {
+                      "ahb_expression": "X",
+                      "meaning": "Vertrag",
+                      "qualifier": "9"
+                    }
+                  ],
+                  "value_type": "VALUE_POOL"
+                },
+                {
+                  "data_element_id": "7433",
+                  "discriminator": "SG4->AGR->7433",
+                  "value_pool": [
+                    {
+                      "ahb_expression": "X [1P0..1]",
+                      "meaning": "Vertrag zwischen AN und MSB",
+                      "qualifier": "Z04"
+                    },
+                    {
+                      "ahb_expression": "X [1P0..1]",
+                      "meaning": "Vertragsbeendigung liegt vor",
+                      "qualifier": "Z06"
+                    }
+                  ],
+                  "value_type": "VALUE_POOL"
+                }
+              ],
+              "discriminator": "AGR",
+              "section_name": "Beauftragung oder Beendigung liegt vor"
+            }
+          ]
+        }
+      ],
+      "segments": [
+        {
+          "ahb_expression": "Muss",
+          "data_elements": [
+            {
+              "ahb_expression": "X",
+              "data_element_id": "0062",
+              "discriminator": "Nachrichten-Referenznummer",
+              "entered_input": null,
+              "value_type": "TEXT"
+            },
+            {
+              "data_element_id": "0065",
+              "discriminator": "UNH->0065",
+              "value_pool": [
+                {
+                  "ahb_expression": "X",
+                  "meaning": "Netzanschluss-Stammdaten",
+                  "qualifier": "UTILMD"
+                }
+              ],
+              "value_type": "VALUE_POOL"
+            },
+            {
+              "data_element_id": "0052",
+              "discriminator": "UNH->0052",
+              "value_pool": [
+                {
+                  "ahb_expression": "X",
+                  "meaning": "Entwurfs-Version",
+                  "qualifier": "D"
+                }
+              ],
+              "value_type": "VALUE_POOL"
+            },
+            {
+              "data_element_id": "0054",
+              "discriminator": "UNH->0054",
+              "value_pool": [
+                {
+                  "ahb_expression": "X",
+                  "meaning": "Ausgabe 2011 - A",
+                  "qualifier": "11A"
+                }
+              ],
+              "value_type": "VALUE_POOL"
+            },
+            {
+              "data_element_id": "0051",
+              "discriminator": "UNH->0051",
+              "value_pool": [
+                {
+                  "ahb_expression": "X",
+                  "meaning": "UN/CEFACT",
+                  "qualifier": "UN"
+                }
+              ],
+              "value_type": "VALUE_POOL"
+            },
+            {
+              "data_element_id": "0057",
+              "discriminator": "UNH->0057",
+              "value_pool": [
+                {
+                  "ahb_expression": "X",
+                  "meaning": "Versionsnummer derzugrundeliegendenBDEW-Nachrichtenbeschreibung",
+                  "qualifier": "5.2d"
+                }
+              ],
+              "value_type": "VALUE_POOL"
+            }
+          ],
+          "discriminator": "UNH",
+          "section_name": "Nachrichten-Kopfsegment"
+        },
+        {
+          "ahb_expression": "Muss",
+          "data_elements": [
+            {
+              "data_element_id": "1001",
+              "discriminator": "BGM->1001",
+              "value_pool": [
+                {
+                  "ahb_expression": "X",
+                  "meaning": "Anmeldungen",
+                  "qualifier": "E01"
+                }
+              ],
+              "value_type": "VALUE_POOL"
+            },
+            {
+              "ahb_expression": "X",
+              "data_element_id": "1004",
+              "discriminator": "Dokumentennummer",
+              "entered_input": null,
+              "value_type": "TEXT"
+            }
+          ],
+          "discriminator": "BGM",
+          "section_name": "Beginn der Nachricht"
+        },
+        {
+          "ahb_expression": "Muss",
+          "data_elements": [
+            {
+              "data_element_id": "2005",
+              "discriminator": "DTM->2005",
+              "value_pool": [
+                {
+                  "ahb_expression": "X",
+                  "meaning": "Dokumenten-/Nachrichtendatum/-zeit",
+                  "qualifier": "137"
+                }
+              ],
+              "value_type": "VALUE_POOL"
+            },
+            {
+              "ahb_expression": "X [931] [494]",
+              "data_element_id": "2380",
+              "discriminator": "Datum oder Uhrzeit oderZeitspanne, Wert",
+              "entered_input": null,
+              "value_type": "DATETIME"
+            },
+            {
+              "data_element_id": "2379",
+              "discriminator": "DTM->2379",
+              "value_pool": [
+                {
+                  "ahb_expression": "X",
+                  "meaning": "CCYYMMDDHHMMZZZ",
+                  "qualifier": "303"
+                }
+              ],
+              "value_type": "VALUE_POOL"
+            }
+          ],
+          "discriminator": "DTM",
+          "section_name": "Nachrichtendatum"
+        },
+        {
+          "ahb_expression": "Muss",
+          "data_elements": [
+            {
+              "ahb_expression": "X",
+              "data_element_id": "0074",
+              "discriminator": "Anzahl der Segmente in einerNachricht",
+              "entered_input": null,
+              "value_type": "TEXT"
+            },
+            {
+              "ahb_expression": "X",
+              "data_element_id": "0062",
+              "discriminator": "Nachrichten-Referenznummer",
+              "entered_input": null,
+              "value_type": "TEXT"
+            }
+          ],
+          "discriminator": "UNT",
+          "section_name": "Nachrichten-Endesegment"
+        }
+      ]
+    }
+  ],
+  "meta": { "pruefidentifikator": "11042" }
+}
