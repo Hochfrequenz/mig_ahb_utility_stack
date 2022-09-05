@@ -57,6 +57,7 @@ class TestEdifactComponents:
                     ],
                     discriminator="foo",
                     data_element_id="0022",
+                    entered_input="asd",
                 ),
                 {
                     "value_pool": [
@@ -66,6 +67,7 @@ class TestEdifactComponents:
                     "discriminator": "foo",
                     "data_element_id": "0022",
                     "value_type": "VALUE_POOL",
+                    "entered_input": "asd",
                 },
             ),
         ],
@@ -88,6 +90,7 @@ class TestEdifactComponents:
                             ],
                             discriminator="baz",
                             data_element_id="0329",
+                            entered_input="foo",
                         ),
                         DataElementFreeText(
                             ahb_expression="Muss [1]",
@@ -110,6 +113,7 @@ class TestEdifactComponents:
                             "discriminator": "baz",
                             "data_element_id": "0329",
                             "value_type": "VALUE_POOL",
+                            "entered_input": "foo",
                         },
                         {
                             "ahb_expression": "Muss [1]",
@@ -147,6 +151,7 @@ class TestEdifactComponents:
                                     ],
                                     discriminator="baz",
                                     data_element_id="3333",
+                                    entered_input="MAUS",
                                 ),
                                 DataElementFreeText(
                                     ahb_expression="Muss [1]",
@@ -187,6 +192,7 @@ class TestEdifactComponents:
                                         {"qualifier": "HELLO", "meaning": "world", "ahb_expression": "X"},
                                         {"qualifier": "MAUS", "meaning": "rocks", "ahb_expression": "X"},
                                     ],
+                                    "entered_input": "MAUS",
                                     "discriminator": "baz",
                                     "data_element_id": "3333",
                                     "value_type": "VALUE_POOL",

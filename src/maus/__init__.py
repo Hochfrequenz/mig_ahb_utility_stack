@@ -34,6 +34,7 @@ def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElem
             discriminator=ahb_lines[0].get_discriminator(include_name=False),
             value_pool=[],
             data_element_id=ahb_lines[0].data_element,  # type:ignore[arg-type]
+            entered_input=None,
         )
         for data_element_value_entry in ahb_lines:
             if data_element_value_entry.name is None:
