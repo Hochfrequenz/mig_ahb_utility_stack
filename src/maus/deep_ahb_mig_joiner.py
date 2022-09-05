@@ -96,6 +96,7 @@ def _data_element_has_a_known_problem(data_element: DataElement):
             ValuePoolEntry(qualifier="Z11", meaning="Gerätenummer des Mengenumwerters", ahb_expression="X"),
             ValuePoolEntry(qualifier="Z14", meaning="Smartmeter-Gateway", ahb_expression="X"),
         ],
+        entered_input=None,
     ):
         # https://github.com/Hochfrequenz/edifact-templates/issues/65
         return True
@@ -108,6 +109,7 @@ def _data_element_has_a_known_problem(data_element: DataElement):
                 qualifier="Z06", meaning="gegenüber Lieferant bestätigtes Kündigungsdatum", ahb_expression="X"
             ),
         ],
+        entered_input=None,
     ):
         # https://github.com/Hochfrequenz/edifact-templates/issues/69
         return True
