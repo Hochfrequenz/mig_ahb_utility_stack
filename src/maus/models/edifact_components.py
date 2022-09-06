@@ -49,9 +49,18 @@ class DataElement(ABC):
     #: the ID of the data element (e.g. "0062") for the Nachrichten-Referenznummer
     data_element_id: str = attrs.field(validator=attrs.validators.matches_re(r"^\d{4}$"))
     #: the type of data expected to be used with this data element
+    entered_input: Optional[str] = attrs.field(validator=attrs.validators.optional(attrs.validators.instance_of(str)))
+    """
+    If the message which is evaluated contains data for this data element, this is set to a value which is not None.
+    The field can either carry a free text or an element from a value pool (depending on the value_type)
+    """
     value_type: Optional[DataElementDataType] = attrs.field(
         validator=attrs.validators.optional(attrs.validators.instance_of(DataElementDataType)), default=None
     )
+    """
+    The value_type allows to describe which type of data we're expecting to be used within this data element.
+    The value_type does not discriminate the type of the data element itself.
+    """
 
 
 class DataElementSchema(Schema):
@@ -61,6 +70,7 @@ class DataElementSchema(Schema):
 
     discriminator = fields.String(required=True)
     data_element_id = fields.String(required=True)
+    entered_input = fields.String(required=False, load_default=None)
     value_type = EnumField(DataElementDataType, required=False)
 
 
@@ -77,8 +87,6 @@ class DataElementFreeText(DataElement):
     )
     ahb_expression: str = attrs.field(validator=attrs.validators.instance_of(str))
     """any freetext data element has an ahb expression attached. Could be 'X' but also 'M [13]'"""
-    entered_input: Optional[str] = attrs.field(validator=attrs.validators.optional(attrs.validators.instance_of(str)))
-    """If the message contains data for this data element, this is not None."""
 
 
 class DataElementFreeTextSchema(DataElementSchema):
@@ -87,7 +95,6 @@ class DataElementFreeTextSchema(DataElementSchema):
     """
 
     ahb_expression = fields.String(required=True)
-    entered_input = fields.String(required=False, load_default=None)
 
     # pylint:disable=unused-argument
     @post_load

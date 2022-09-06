@@ -323,6 +323,7 @@ class TestAhb:
                                             ],
                                             discriminator="baz",
                                             data_element_id="0123",
+                                            entered_input="HELLO",
                                         ),
                                         DataElementFreeText(
                                             ahb_expression="Muss [1]",
@@ -371,6 +372,7 @@ class TestAhb:
                                             "discriminator": "baz",
                                             "data_element_id": "0123",
                                             "value_type": "VALUE_POOL",
+                                            "entered_input": "HELLO",
                                         },
                                         {
                                             "ahb_expression": "Muss [1]",
@@ -427,6 +429,7 @@ class TestAhb:
                                                 ValuePoolEntry(qualifier="MAUS", meaning="rocks", ahb_expression="X"),
                                             ],
                                             discriminator="baz",
+                                            entered_input="HELLO",
                                             data_element_id="0123",
                                         ),
                                         DataElementFreeText(
@@ -459,6 +462,7 @@ class TestAhb:
                                                 ValuePoolEntry(qualifier="MAUS", meaning="rocks", ahb_expression="X"),
                                             ],
                                             discriminator="baz",
+                                            entered_input="MAUS",
                                             data_element_id="0123",
                                         ),
                                         DataElementFreeText(
