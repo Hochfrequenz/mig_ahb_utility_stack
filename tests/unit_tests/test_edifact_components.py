@@ -336,7 +336,7 @@ class TestEdifactComponents:
             pytest.param(["FOO", "MAUS", "HELLO"], True),
         ],
     )
-    def test_is_subset_of(self, candidate, expected: bool):
+    def test_has_value_pool_which_is_subset_of(self, candidate, expected: bool):
         data_element = DataElementValuePool(
             value_pool=[
                 ValuePoolEntry(qualifier="HELLO", meaning="world", ahb_expression="A"),
@@ -347,7 +347,7 @@ class TestEdifactComponents:
             data_element_id="0022",
             entered_input="asd",
         )
-        assert data_element.is_subset_of(candidate) == expected
+        assert data_element.has_value_pool_which_is_subset_of(candidate) == expected
 
     @pytest.mark.parametrize(
         "candidates,expected",
