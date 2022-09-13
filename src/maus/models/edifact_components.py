@@ -218,11 +218,7 @@ class DataElementValuePool(DataElement):
         ...
         You need to transform the value pool from edifact to something that matches the domain from your application.
         To do so, provide this method with an edifact_to_domain_mapping:
-        {
-            "E01": "EINZUG",
-            "E02": "WECHSEL",
-            "E03": "STILLLEGUNG"
-        }
+        {"E01": "EINZUG","E02": "WECHSEL","E03": "STILLLEGUNG"}
         where each entry represents the mapping of an edifact qualifier to your application domain.
 
         This method replaces the keys of the ValuePoolEntries if they are found in the mapping.
