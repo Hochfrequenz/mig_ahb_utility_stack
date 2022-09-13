@@ -6,7 +6,7 @@ Components contain not only EDIFACT composits but also segments and segment grou
 import re
 from abc import ABC
 from enum import Enum
-from typing import Callable, List, Optional, Type
+from typing import Callable, Dict, Iterable, List, Mapping, Optional, Type
 
 import attr
 import attrs
@@ -200,6 +200,60 @@ class DataElementValuePool(DataElement):
     """
     The value pool contains at least one value :class:`.ValuePoolEntry`
     """
+
+    def replace_value_pool(self, edifact_to_domain_mapping: Mapping[str, str]) -> None:
+        """
+        If your data model comes from another domain than edifact the value pool from the AHBs, you can, in general, not
+        use the same keys. Think e.g. of the Transaktionsgrund in UTILMD. In EDIFACT you might have the values:
+        Edifact Domain:
+        - E01 = Einzug/Auszug
+        - E03 = Wechsel
+        - Z33 = Auszug/Stilllegung
+        ...
+        But if, in your application, you're modelling these values with other values (think e.g. of readable enums):
+        Application Domain:
+        - EINZUG = Einzug/Auszug
+        - WECHSEL = Wechsel
+        - STILLLEGUNG = Auszug/Stilllegung
+        ...
+        You need to transform the value pool from edifact to something that matches the domain from your application.
+        To do so, provide this method with an edifact_to_domain_mapping:
+        {
+            "E01": "EINZUG",
+            "E02": "WECHSEL",
+            "E03": "STILLLEGUNG"
+        }
+        where each entry represents the mapping of an edifact qualifier to your application domain.
+
+        This method replaces the keys of the ValuePoolEntries if they are found in the mapping.
+        By doing so, it allows transforming checks against value pools from the edifact to your application domain.
+        This problem does not occur for free text data elements.
+        """
+        existing_value_pool_entries: Dict[str, ValuePoolEntry] = {x.qualifier: x for x in self.value_pool}
+        for existing_value_pool_qualifier, value_pool_entry in existing_value_pool_entries.items():
+            if existing_value_pool_qualifier in edifact_to_domain_mapping:
+                value_pool_entry.qualifier = edifact_to_domain_mapping[existing_value_pool_qualifier]
+
+    def has_value_pool_which_is_subset_of(self, entries: Iterable[str]) -> bool:
+        """
+        returns true iff all qualifiers from the data elements value pool are found in entries
+        """
+        return all(x.qualifier in entries for x in self.value_pool)
+
+    def find_suitable_replacement(self, replacement_candidates: Iterable[Dict[str, str]]) -> Optional[Dict[str, str]]:
+        """
+        returns a single element from the replacement_candidates iff it is the only matching dictionary whose values are
+        a suitable subset for the data elements value pool. Returns None if no match was found. Also returns None if no
+        unique match was found.
+        """
+        suitable_replacements = [
+            candidate
+            for candidate in replacement_candidates
+            if self.has_value_pool_which_is_subset_of(candidate.keys())
+        ]
+        if len(suitable_replacements) == 1:
+            return suitable_replacements[0]
+        return None
 
 
 class DataElementValuePoolSchema(DataElementSchema):
