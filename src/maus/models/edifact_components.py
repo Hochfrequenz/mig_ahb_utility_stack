@@ -11,7 +11,7 @@ from typing import Callable, Dict, Iterable, List, Mapping, Optional, Type
 import attr
 import attrs
 from marshmallow import Schema, fields, post_dump, post_load, pre_dump, pre_load  # type:ignore[import]
-from marshmallow_enum import EnumField  # type:ignore[import]
+from marshmallow.fields import Enum as MarshmallowEnum
 
 
 class DataElementDataType(str, Enum):
@@ -71,7 +71,7 @@ class DataElementSchema(Schema):
     discriminator = fields.String(required=True)
     data_element_id = fields.String(required=True)
     entered_input = fields.String(required=False, load_default=None)
-    value_type = EnumField(DataElementDataType, required=False)
+    value_type = MarshmallowEnum(DataElementDataType, required=False)
 
 
 @attrs.define(auto_attribs=True, kw_only=True)
