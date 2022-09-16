@@ -33,7 +33,7 @@ def generate_value_pool_replacement(
     When there is a value pool in an AHB, you might have a similar value pool in your application domain.
     Both the edifact and the non-edifact value pool elements can be found by using a respective accessor method.
     :param edifact_accessor: function to get a value from the edifact-data structure
-    :param non_edifact_accessor: funcitno to get a value from the non edifact-data structure
+    :param non_edifact_accessor: function to get a value from the non edifact-data structure
     :param edifact_to_non_edifact_path_mapping: a mapping from unique discriminators in the edifact data structure to
     the discriminators in the application data model
     :return: a dictionary which can be used to replace elements in the value pool.
@@ -47,4 +47,5 @@ def generate_value_pool_replacement(
         if edi_value is None:
             continue
         edi_to_non_edi_value_mapping.update({edi_value: non_edi_value})
+    # todo: i think this function does not account for real world complexity yet. we should write an integration test
     return edi_to_non_edi_value_mapping

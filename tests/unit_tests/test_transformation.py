@@ -1,14 +1,14 @@
 from typing import Dict, Optional
 
 import pytest  # type:ignore[import]
-from jsonpath_ng.ext import parse  # jsonpath is just installed in the tests
+from jsonpath_ng.ext import parse  # type:ignore[import] #  jsonpath is just installed in the tests
 
 from maus.models.edifact_components import DataElementValuePool, ValuePoolEntry
 from maus.transformation import generate_value_pool_replacement
 
 
 class TestTransformation:
-    def test_find_equivalent_after_transformation(self):
+    def test_value_pool_replacement_is_found_after_transformation(self):
         non_edifact_representation = {
             "a key": [{"an entry": "NON_EDIFACT_Z09"}],
             "another key": [{}, {}, {"another entry": "NON_EDIFACT_E01"}],
