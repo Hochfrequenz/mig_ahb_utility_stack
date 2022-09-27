@@ -145,3 +145,9 @@ class TestTransformation:
                 ),
             ],
         )
+        assert application_domain_data == {
+            "noise": "foo",
+            "transaktionsdaten": {
+                "transaktionsgrund": None,
+            },
+        }  # the original data should not have been modified
