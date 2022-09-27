@@ -303,3 +303,45 @@ class TestEdifactComponents:
         assert sg is not None
         assert sg.segment_groups is None
         assert sg.segments is None
+
+    def test_replacing_value_pool_entries(self):
+        data_element = DataElementValuePool(
+            value_pool=[
+                ValuePoolEntry(qualifier="HELLO", meaning="world", ahb_expression="A"),
+                ValuePoolEntry(qualifier="MAUS", meaning="rocks", ahb_expression="B"),
+                ValuePoolEntry(qualifier="FOO", meaning="bar", ahb_expression="C"),
+            ],
+            discriminator="foo",
+            data_element_id="0022",
+            entered_input="asd",
+        )
+        mapping = {"HELLO": "GOODBYE", "MAUS": "KATZE"}
+        data_element.replace_value_pool(mapping)
+        # the same instance of the data element has been modified. we're not working on a copy.
+        assert data_element.value_pool == [
+            ValuePoolEntry(qualifier="GOODBYE", meaning="world", ahb_expression="A"),
+            ValuePoolEntry(qualifier="KATZE", meaning="rocks", ahb_expression="B"),
+            ValuePoolEntry(qualifier="FOO", meaning="bar", ahb_expression="C"),
+        ]
+
+    @pytest.mark.parametrize(
+        "candidate,expected",
+        [
+            pytest.param({"asd"}, False),
+            pytest.param({"HELLO"}, False),
+            pytest.param({"HELLO", "MAUS", "FOO"}, True),
+            pytest.param(["FOO", "MAUS", "HELLO"], True),
+        ],
+    )
+    def test_has_value_pool_which_is_subset_of(self, candidate, expected: bool):
+        data_element = DataElementValuePool(
+            value_pool=[
+                ValuePoolEntry(qualifier="HELLO", meaning="world", ahb_expression="A"),
+                ValuePoolEntry(qualifier="MAUS", meaning="rocks", ahb_expression="B"),
+                ValuePoolEntry(qualifier="FOO", meaning="bar", ahb_expression="C"),
+            ],
+            discriminator="foo",
+            data_element_id="0022",
+            entered_input="asd",
+        )
+        assert data_element.has_value_pool_which_is_subset_of(candidate) == expected
