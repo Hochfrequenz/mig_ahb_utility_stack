@@ -1,5 +1,3 @@
-from typing import Dict, List, Optional
-
 import pytest  # type:ignore[import]
 from unit_tests.serialization_test_helper import assert_serialization_roundtrip  # type:ignore[import]
 
@@ -332,7 +330,6 @@ class TestEdifactComponents:
             pytest.param({"asd"}, False),
             pytest.param({"HELLO"}, False),
             pytest.param({"HELLO", "MAUS", "FOO"}, True),
-            pytest.param(["HELLO", "MAUS", "FOO"], True),
             pytest.param(["FOO", "MAUS", "HELLO"], True),
         ],
     )
@@ -348,47 +345,3 @@ class TestEdifactComponents:
             entered_input="asd",
         )
         assert data_element.has_value_pool_which_is_subset_of(candidate) == expected
-
-    @pytest.mark.parametrize(
-        "candidates,expected",
-        [
-            pytest.param(
-                [
-                    {"HELLO": "GOODBYE", "aber": "es fehlen MAUS UND FOO"},
-                    {"HELLO": "GOODBYE", "MAUS": "KATZE", "FOO": "BAR"},
-                    {},
-                ],
-                {"HELLO": "GOODBYE", "MAUS": "KATZE", "FOO": "BAR"},
-                id="exactly one match",
-            ),
-            pytest.param(
-                [
-                    {"HELLO": "GOODBYE", "aber": "es fehlen MAUS UND FOO"},
-                    {"MAUS": "KATZE"},
-                ],
-                None,
-                id="no match",
-            ),
-            pytest.param(
-                [
-                    {"HELLO": "GOODBYE", "MAUS": "KATZE", "FOO": "BAR"},
-                    {"HELLO": "HALLO", "MAUS": "MOUSE", "FOO": "BAZ"},
-                ],
-                None,
-                id="no unique match",
-            ),
-        ],
-    )
-    def test_find_suitable_replacement(self, candidates: List[Dict[str, str]], expected: Optional[Dict[str, str]]):
-        data_element = DataElementValuePool(
-            value_pool=[
-                ValuePoolEntry(qualifier="HELLO", meaning="world", ahb_expression="A"),
-                ValuePoolEntry(qualifier="MAUS", meaning="rocks", ahb_expression="B"),
-                ValuePoolEntry(qualifier="FOO", meaning="bar", ahb_expression="C"),
-            ],
-            discriminator="foo",
-            data_element_id="0022",
-            entered_input="asd",
-        )
-        actual = data_element.find_suitable_replacement(candidates)
-        assert actual == expected
