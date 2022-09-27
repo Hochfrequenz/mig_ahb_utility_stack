@@ -11,39 +11,85 @@ def _get_value_using_json_path(data: dict, path: str) -> Optional[Any]:
     return parse(path).find(data)[0].value
 
 
-def get_value_from_application_domain(application_data: dict, application_discriminator: str) -> Optional[str]:
-    """
-    finds data in the non-edifact/application domain data model
-    """
-    return _get_value_using_json_path(application_data, application_discriminator)
-
-
-def get_value_from_edifact_domain(edifact_data: dict, edi_discriminator: str) -> Optional[str]:
-    """
-    finds data in the edifact data model ("EdiSeed")
-    """
-    return _get_value_using_json_path(edifact_data, edi_discriminator)
-
-
 def _set_value_using_json_path(data: dict, path: str, new_value: Any) -> None:
     current_datum = parse(path).find(data)[0]
     current_datum.full_path.update(data, new_value)
 
 
-def set_value_from_application_domain(application_data: dict, application_discriminator: str, new_value: Any) -> None:
-    """
-    finds data in the non-edifact/application domain data model and replaces them with new_value.
-    This modifies the application_data instance.
-    """
-    _set_value_using_json_path(data=application_data, path=application_discriminator, new_value=new_value)
+class DummyApplicationAccessor:
+    # a class that obeys the type hints of the transformation.ApplicationAccessor
+    def get_value(self, application_data: dict, application_discriminator: str) -> Optional[str]:
+        """
+        finds data in the non-edifact/application domain data model
+        """
+        return _get_value_using_json_path(application_data, application_discriminator)
+
+    def set_value(self, _: dict, __: str) -> None:
+        raise NotImplementedError("Not needed as of now")
 
 
-def set_value_from_edifact_domain(edifact_data: dict, edi_discriminator: str, new_value: Any) -> None:
-    """
-    finds data in the edifact domain data model ("EdiSeed") and replaces them with new_value.
-    This modifies the edifact_data instance.
-    """
-    _set_value_using_json_path(data=edifact_data, path=edi_discriminator, new_value=new_value)
+class DummyEdifactAccessor:
+    # a class that obeys the type hints of the transformation.EdifactAccessor
+    def get_value(self, edifact_data: dict, edi_discriminator: str) -> Optional[str]:
+        """
+        finds data in the edifact data model ("EdiSeed")
+        """
+        return _get_value_using_json_path(edifact_data, edi_discriminator)
+
+    def set_value(self, edifact_data: dict, edi_discriminator: str, new_value: Any) -> None:
+        """
+        finds data in the edifact domain data model ("EdiSeed") and replaces them with new_value.
+        This modifies the edifact_data instance.
+        """
+        _set_value_using_json_path(data=edifact_data, path=edi_discriminator, new_value=new_value)
+
+
+class DummyBo4eEdifactConverter:
+    """this converter obeys the protocol of transformation.ApplicationEdifactConverter"""
+
+    async def transform_application_to_edi_domain(self, application_domain_dict: dict):
+        """
+        Generate the edifact representations from the given application_domain_data.
+        In real life this should call the transformation application➡edifact data model mapping logic.
+        This is just a stub with hardcoded mappings.
+        """
+        # in real live this should call the transformer (edifact ↔ non-edifact)
+        transaktionsgrund_application_domain = application_domain_dict["transaktionsdaten"]["transaktionsgrund"]
+        application_to_edi_mapping_transaktionsgrund = {"EINZUG": "E01", "NEUANLAGE": "E02", "WECHSEL": "E03"}
+        try:
+            edifact_transaktionsgrund = application_to_edi_mapping_transaktionsgrund[
+                transaktionsgrund_application_domain
+            ]
+        except KeyError:
+            edifact_transaktionsgrund = None
+
+        return {  # data in edifact domain
+            "Transaktionsgrund": edifact_transaktionsgrund,
+            "EdiFoo": "EdiBar",
+            "TheThing": {"TheProperty": "Value1", "AnotherProperty": "AnotherValue"},
+        }
+
+    async def transform_edi_to_application_domain(self, edifact_seed: dict):
+        """
+        Generate the application representations from the given edifact seed.
+        In real life this should call the transformation edifact➡application data model mapping logic.
+        This is just a stub with hardcoded mappings.
+        """
+        transaktionsgrund_edifact_domain = edifact_seed["Transaktionsgrund"]
+        edi_to_application_mapping_transaktionsgrund = {"E01": "EINZUG", "E02": "NEUANLAGE", "E03": "WECHSEL"}
+        try:
+            application_transaktionsgrund = edi_to_application_mapping_transaktionsgrund[
+                transaktionsgrund_edifact_domain
+            ]
+        except KeyError:
+            application_transaktionsgrund = None
+
+        return {
+            "noise": "foo",
+            "transaktionsdaten": {
+                "transaktionsgrund": application_transaktionsgrund,
+            },
+        }
 
 
 class TestTransformation:
@@ -71,60 +117,15 @@ class TestTransformation:
                 ValuePoolEntry(meaning="the meaning of E03 from the AHB", ahb_expression="Muss [3]", qualifier="E03"),
             ],
         )
-
-        async def generate_edi_represenation(application_domain_dict: dict):
-            """
-            Generate the edifact representations from the given application_domain_data.
-            In real life this should call the transformation application➡edifact data model mapping logic.
-            This is just a stub with hardcoded mappings.
-            """
-            # in real live this should call the transformer (edifact ↔ non-edifact)
-            transaktionsgrund_application_domain = application_domain_dict["transaktionsdaten"]["transaktionsgrund"]
-            application_to_edi_mapping_transaktionsgrund = {"EINZUG": "E01", "NEUANLAGE": "E02", "WECHSEL": "E03"}
-            try:
-                edifact_transaktionsgrund = application_to_edi_mapping_transaktionsgrund[
-                    transaktionsgrund_application_domain
-                ]
-            except KeyError:
-                edifact_transaktionsgrund = None
-
-            return {  # data in edifact domain
-                "Transaktionsgrund": edifact_transaktionsgrund,
-                "EdiFoo": "EdiBar",
-                "TheThing": {"TheProperty": "Value1", "AnotherProperty": "AnotherValue"},
-            }
-
-        async def generate_application_represenation(edifact_seed: dict):
-            """
-            Generate the application representations from the given edifact seed.
-            In real life this should call the transformation edifact➡application data model mapping logic.
-            This is just a stub with hardcoded mappings.
-            """
-            transaktionsgrund_edifact_domain = edifact_seed["Transaktionsgrund"]
-            edi_to_application_mapping_transaktionsgrund = {"E01": "EINZUG", "E02": "NEUANLAGE", "E03": "WECHSEL"}
-            try:
-                application_transaktionsgrund = edi_to_application_mapping_transaktionsgrund[
-                    transaktionsgrund_edifact_domain
-                ]
-            except KeyError:
-                application_transaktionsgrund = None
-
-            return {
-                "noise": "foo",
-                "transaktionsdaten": {
-                    "transaktionsgrund": application_transaktionsgrund,
-                },
-            }
-
+        converter = DummyBo4eEdifactConverter()
+        edifact_accessor = DummyEdifactAccessor()
+        application_accessor = DummyApplicationAccessor()
         value_mapping = await generate_value_pool_replacement(
             application_data_model=application_domain_data,
             data_element=data_element,
-            get_edifact_value=get_value_from_edifact_domain,
-            get_application_value=get_value_from_application_domain,
-            set_edifact_value=set_value_from_edifact_domain,
-            # set_application_value=set_value_from_application_domain,
-            transform_application_to_edi_domain=generate_edi_represenation,
-            transform_edi_to_application_domain=generate_application_represenation,
+            converter=converter,
+            edifact_accessor=edifact_accessor,
+            application_accessor=application_accessor,
             edifact_to_non_edifact_path_mapping=edi_to_application_data_model_mapping,
         )
         data_element.replace_value_pool(value_mapping)

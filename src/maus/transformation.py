@@ -22,7 +22,7 @@ This module contains methods that are relevant when transforming data between yo
 and the application domain ("non-edifact").
 """
 import asyncio
-from typing import Any, Awaitable, Callable, Dict, List, Mapping, Optional, TypeVar
+from typing import Any, Awaitable, Dict, List, Mapping, Optional, Protocol, TypeVar
 
 from maus import DataElementValuePool, ValuePoolEntry
 
@@ -35,37 +35,83 @@ ApplicationData = TypeVar("ApplicationData")
 the type which you use to model the data in your application (e.g. the type of your BO4E, BOneyComb)
 """
 
-# todo: fix all the linter warnings in this method
+
+class ApplicationEdifactConverter(Protocol[EdifactData, ApplicationData]):
+    """
+    this class describes a converter from the Application Domain to the EDIFACT Domain
+    """
+
+    async def transform_application_to_edi_domain(self, application_data: ApplicationData) -> EdifactData:
+        """
+        Transforms the given application data (e.g. bo4e/boneycomb) into the edifact domain (e.g. ediseed)
+        :param application_data:
+        :return: the converted data
+        """
+
+    async def transform_edi_to_application_domain(self, edifact_data: EdifactData) -> ApplicationData:
+        """
+        Transforms the given edifact data (e.g. ediseed) into the application domain (e.g. bo4e/boneycomb)
+        :param edifact_data:
+        :return: the converted data
+        """
+
+
+DataModel_contra = TypeVar("DataModel_contra", contravariant=True)
+
+
+class Accessor(Protocol[DataModel_contra]):
+    """description of a class that allows to get and set values from a generic data model"""
+
+    def get_value(self, data: DataModel_contra, discriminator: str) -> Optional[Any]:
+        """
+        Gets the value described by the discriminator from the given data
+        :param data: the data to be read
+        :param discriminator: describes _which_ value should be read and returned
+        :return: the value or None
+        """
+
+    def set_value(self, data: DataModel_contra, discriminator: str, value: Any) -> None:
+        """
+        Sets the value that is described by the disciminator in the given data instance.
+        :param value: the value to be set
+        :param data: the data to be modified
+        :param discriminator: describes _which_ value should be set
+        :return: nothing; it modifies the instance of data
+        """
+
+
+EdifactAccessor = Accessor[EdifactData]  #: a class that allows to access (read/write) in the edifact data model
+ApplicationAccessor = Accessor[ApplicationData]  #: a class that allows to access (read/write) in the application data
+
+# I feel like there's no way to boil this down to fewer arguments (6/5) without tradeoffs in readability.
+# pylint:disable=too-many-arguments
 async def generate_value_pool_replacement(
     application_data_model: ApplicationData,
     data_element: DataElementValuePool,
-    transform_application_to_edi_domain: Callable[[ApplicationData], Awaitable[EdifactData]],
-    transform_edi_to_application_domain: Callable[[EdifactData], Awaitable[ApplicationData]],
-    get_edifact_value: Callable[[EdifactData, str], Optional[Any]],
-    get_application_value: Callable[[ApplicationData, str], Optional[Any]],
-    set_edifact_value: Callable[[EdifactData, str, Any], None],
-    # set_application_value: Callable[[TApplicationData, str, Any], None],
+    converter: ApplicationEdifactConverter,
+    edifact_accessor: EdifactAccessor,
+    application_accessor: ApplicationAccessor,
     edifact_to_non_edifact_path_mapping: Mapping[str, str],
 ) -> Dict[str, str]:
     """
     generate the value pool replacement dict for the given data_element
     :param application_data_model: the application representation of the data
     :param data_element: the data_element for which the replacement shall be computed
-    :param transform_application_to_edi_domain: function to transform application data (e.g. bo4e) to ediseed
-    :param transform_edi_to_application_domain:  function to transform ediseed to application data (e.g. bo4e)
-    :param get_edifact_value: returns value for given edifact discriminator
-    :param get_application_value: returns value for given application data model discriminator
-    :param set_edifact_value: set the value in the edifact domain
+    :param converter: a converter between application and edifact domain
+    :param application_accessor: Allows to modify and access a given application data model
+    :param edifact_accessor: Allows to modify and access a given edifact data model
     :param edifact_to_non_edifact_path_mapping: maps application domain (keys) to edifact domain (values) discriminators
     :return: a edifact (key) to non-edifact (value) mapping of values from the given data element value pool
     """
-    initial_edifact_data = await transform_application_to_edi_domain(application_data_model)
+    initial_edifact_data = await converter.transform_application_to_edi_domain(application_data_model)
     edi_to_non_edi_value_mapping: Dict[str, str] = {}
     for edi_path, non_edi_path in edifact_to_non_edifact_path_mapping.items():
         if edi_path != data_element.discriminator:
             continue
-        non_edi_value = get_application_value(application_data_model, non_edi_path)
-        edi_value = get_edifact_value(initial_edifact_data, edi_path)  # this is the current value from the initial data
+        non_edi_value = application_accessor.get_value(application_data_model, non_edi_path)
+        edi_value = edifact_accessor.get_value(
+            initial_edifact_data, edi_path
+        )  # this is the current value from the initial data
         if edi_value is not None:
             edi_to_non_edi_value_mapping.update({edi_value: non_edi_value})
         break
@@ -76,16 +122,15 @@ async def generate_value_pool_replacement(
         # modified_edifact_data = initial_edifact_data.copy() #only works on dicts
         modified_edifact_data = initial_edifact_data  # ⚠ this modifies the reference!
         modified_edi_value = value_pool_entry.qualifier
-        set_edifact_value(modified_edifact_data, edi_path, value_pool_entry.qualifier)
+        edifact_accessor.set_value(modified_edifact_data, edi_path, value_pool_entry.qualifier)
         # now we transform the modified edifact data back to the application domain
-        modified_application_data = await transform_edi_to_application_domain(modified_edifact_data)
-        modified_application_value = get_application_value(modified_application_data, non_edi_path)
+        modified_application_data = await converter.transform_edi_to_application_domain(modified_edifact_data)
+        modified_application_value = application_accessor.get_value(modified_application_data, non_edi_path)
         return {modified_edi_value: modified_application_value}
 
-    value_pool_mapping_tasks: List[Awaitable[Dict[str, Optional[str]]]] = []
-    for value_pool_entry in data_element.value_pool:
-        value_pool_mapping_tasks.append(_get_value_pool_mapping(value_pool_entry))
-    results = await asyncio.gather(*value_pool_mapping_tasks)
-    for result in results:
+    value_pool_mapping_tasks: List[Awaitable[Dict[str, Optional[str]]]] = [
+        _get_value_pool_mapping(value_pool_entry) for value_pool_entry in data_element.value_pool
+    ]
+    for result in await asyncio.gather(*value_pool_mapping_tasks):
         edi_to_non_edi_value_mapping.update(result)
     return edi_to_non_edi_value_mapping
