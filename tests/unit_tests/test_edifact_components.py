@@ -324,6 +324,31 @@ class TestEdifactComponents:
             ValuePoolEntry(qualifier="FOO", meaning="bar", ahb_expression="C"),
         ]
 
+    def test_replacing_value_pool_entries_with_merger(self):
+        data_element = DataElementValuePool(
+            value_pool=[
+                ValuePoolEntry(qualifier="HELLO", meaning="world", ahb_expression="A"),
+                ValuePoolEntry(qualifier="MAUS", meaning="rocks", ahb_expression="B"),
+                ValuePoolEntry(qualifier="FOO", meaning="bar", ahb_expression="C"),
+            ],
+            discriminator="foo",
+            data_element_id="0022",
+            entered_input="asd",
+        )
+        mapping = {"HELLO": "GOODBYE", "MAUS": "KATZE"}
+
+        def merge_meaning_and_old_qualifier(meaning: str, old_qualifier: str) -> str:
+            # just a dummy function to demonstrate the behaviour
+            return meaning + f" ({old_qualifier})"
+
+        data_element.replace_value_pool(mapping, merge_meaning_and_old_qualifier)
+        # the same instance of the data element has been modified. we're not working on a copy.
+        assert data_element.value_pool == [
+            ValuePoolEntry(qualifier="GOODBYE", meaning="world (HELLO)", ahb_expression="A"),
+            ValuePoolEntry(qualifier="KATZE", meaning="rocks (MAUS)", ahb_expression="B"),
+            ValuePoolEntry(qualifier="FOO", meaning="bar", ahb_expression="C"),  # this hasn't been replaced
+        ]
+
     @pytest.mark.parametrize(
         "candidate,expected",
         [
