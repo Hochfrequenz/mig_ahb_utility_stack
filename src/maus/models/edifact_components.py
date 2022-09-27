@@ -201,7 +201,11 @@ class DataElementValuePool(DataElement):
     The value pool contains at least one value :class:`.ValuePoolEntry`
     """
 
-    def replace_value_pool(self, edifact_to_domain_mapping: Mapping[str, str]) -> None:
+    def replace_value_pool(
+        self,
+        edifact_to_domain_mapping: Mapping[str, str],
+        meaning_qualifier_merger: Optional[Callable[[str, str], str]] = None,
+    ) -> None:
         """
         If your data model comes from another domain than edifact the value pool from the AHBs, you can, in general, not
         use the same keys. Think e.g. of the Transaktionsgrund in UTILMD. In EDIFACT you might have the values:
@@ -224,10 +228,17 @@ class DataElementValuePool(DataElement):
         This method replaces the keys of the ValuePoolEntries if they are found in the mapping.
         By doing so, it allows transforming checks against value pools from the edifact to your application domain.
         This problem does not occur for free text data elements.
+
+        Provide an optional meaning_qualifier_merger that allows you to 'store' the old qualifier in the meaning.
+        This is an _unstructured_ way to save the information that is lost with the replacement.
         """
         existing_value_pool_entries: Dict[str, ValuePoolEntry] = {x.qualifier: x for x in self.value_pool}
         for existing_value_pool_qualifier, value_pool_entry in existing_value_pool_entries.items():
             if existing_value_pool_qualifier in edifact_to_domain_mapping:
+                if meaning_qualifier_merger is not None:
+                    value_pool_entry.meaning = meaning_qualifier_merger(
+                        value_pool_entry.meaning, existing_value_pool_qualifier
+                    )
                 value_pool_entry.qualifier = edifact_to_domain_mapping[existing_value_pool_qualifier]
 
     def has_value_pool_which_is_subset_of(self, entries: Iterable[str]) -> bool:
