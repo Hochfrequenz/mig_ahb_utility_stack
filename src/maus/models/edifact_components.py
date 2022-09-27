@@ -236,21 +236,6 @@ class DataElementValuePool(DataElement):
         """
         return all(x.qualifier in entries for x in self.value_pool)
 
-    def find_suitable_replacement(self, replacement_candidates: Iterable[Dict[str, str]]) -> Optional[Dict[str, str]]:
-        """
-        returns a single element from the replacement_candidates iff it is the only matching dictionary whose values are
-        a suitable subset for the data elements value pool. Returns None if no match was found. Also returns None if no
-        unique match was found.
-        """
-        suitable_replacements = [
-            candidate
-            for candidate in replacement_candidates
-            if self.has_value_pool_which_is_subset_of(candidate.keys())
-        ]
-        if len(suitable_replacements) == 1:
-            return suitable_replacements[0]
-        return None
-
 
 class DataElementValuePoolSchema(DataElementSchema):
     """
