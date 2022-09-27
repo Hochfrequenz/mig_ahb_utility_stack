@@ -330,7 +330,6 @@ class TestEdifactComponents:
             pytest.param({"asd"}, False),
             pytest.param({"HELLO"}, False),
             pytest.param({"HELLO", "MAUS", "FOO"}, True),
-            pytest.param(["HELLO", "MAUS", "FOO"], True),
             pytest.param(["FOO", "MAUS", "HELLO"], True),
         ],
     )
