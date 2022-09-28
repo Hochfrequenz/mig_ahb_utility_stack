@@ -333,11 +333,6 @@ class DeepAnwendungshandbuch:
         result: List[Segment] = []
         for segment_group in self.find_segment_groups(group_predicate):
             result += segment_group.find_segments(segment_predicate)
-        for line in self.lines:
-            if line.segments is not None:
-                for segment in line.segments:
-                    if segment_predicate(segment):
-                        result.append(segment)
         return result
 
     def replace_inputs_based_on_discriminator(self, replacement_func: Callable[[str], DeepAhbInputReplacement]) -> None:
