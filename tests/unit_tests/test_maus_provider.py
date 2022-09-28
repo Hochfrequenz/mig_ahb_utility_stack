@@ -11,8 +11,6 @@ from maus.edifact import EdifactFormat, EdifactFormatVersion
 from maus.maus_provider import FileBasedMausProvider, MausProvider
 from maus.models.anwendungshandbuch import AhbMetaInformation, DeepAnwendungshandbuchSchema
 
-pytestmark = pytest.mark.asyncio
-
 
 class MyFooBarMausProvider(FileBasedMausProvider):
     """
