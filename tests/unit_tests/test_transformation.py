@@ -3,8 +3,16 @@ from typing import Any, Optional
 import pytest  # type:ignore[import]
 from jsonpath_ng.ext import parse  # type:ignore[import] #  jsonpath is just installed in the tests
 
-from maus.models.edifact_components import DataElementValuePool, ValuePoolEntry
-from maus.transformation import generate_value_pool_replacement
+from maus import DeepAnwendungshandbuch
+from maus.models.anwendungshandbuch import AhbMetaInformation
+from maus.models.edifact_components import (
+    DataElementFreeText,
+    DataElementValuePool,
+    Segment,
+    SegmentGroup,
+    ValuePoolEntry,
+)
+from maus.transformation import generate_value_pool_replacement, transform_all_value_pools
 
 
 def _get_value_using_json_path(data: dict, path: str) -> Optional[Any]:
@@ -130,6 +138,102 @@ class TestTransformation:
         )
         data_element.replace_value_pool(value_mapping)
         assert data_element == DataElementValuePool(
+            discriminator="$['Transaktionsgrund']",
+            data_element_id="1234",
+            entered_input=None,
+            value_pool=[
+                # here we got the application (e.g. bo4e) qualifiers with the respective expressions from the AHB
+                ValuePoolEntry(
+                    meaning="the meaning of E01 from the AHB", ahb_expression="Muss [1]", qualifier="EINZUG"
+                ),
+                ValuePoolEntry(
+                    meaning="the meaning of E02 from the AHB", ahb_expression="Muss [2]", qualifier="NEUANLAGE"
+                ),
+                ValuePoolEntry(
+                    meaning="the meaning of E03 from the AHB", ahb_expression="Muss [3]", qualifier="WECHSEL"
+                ),
+            ],
+        )
+        assert application_domain_data == {
+            "noise": "foo",
+            "transaktionsdaten": {
+                "transaktionsgrund": None,
+            },
+        }  # the original data should not have been modified
+
+    async def test_value_pool_mapping_in_deep_ahb(self):
+        application_domain_data = {
+            "noise": "foo",
+            "transaktionsdaten": {
+                "transaktionsgrund": None,
+            },
+        }  #: some data to start with, e.g. entered by a user in a frontend, hardcoded, whatever
+        edi_to_application_data_model_mapping = {
+            "$['Transaktionsgrund']": "$['transaktionsdaten']['transaktionsgrund']",
+            "$['EdiFoo']": "$['stammdaten'][0]['applicationFoo']",
+            "$['TheThing']['TheProperty']": "$['stammdaten'][0]['theProperty']",
+            "$['TheThing']['AnotherProperty']": "$['stammdaten'][0]['anotherProperty']",
+        }  #: a mapping that allows us to find data in both application and edifact domain
+
+        deep_ahb = DeepAnwendungshandbuch(
+            meta=AhbMetaInformation(pruefidentifikator="11042"),
+            lines=[
+                SegmentGroup(
+                    ahb_expression="expr A",
+                    discriminator="disc A",
+                    segments=[
+                        Segment(
+                            ahb_expression="expr B",
+                            discriminator="disc B",
+                            data_elements=[
+                                DataElementValuePool(
+                                    discriminator="$['Transaktionsgrund']",
+                                    # this is the original edifact domain discriminator
+                                    data_element_id="1234",
+                                    entered_input=None,
+                                    value_pool=[
+                                        ValuePoolEntry(
+                                            meaning="the meaning of E01 from the AHB",
+                                            ahb_expression="Muss [1]",
+                                            qualifier="E01",
+                                        ),
+                                        ValuePoolEntry(
+                                            meaning="the meaning of E02 from the AHB",
+                                            ahb_expression="Muss [2]",
+                                            qualifier="E02",
+                                        ),
+                                        ValuePoolEntry(
+                                            meaning="the meaning of E03 from the AHB",
+                                            ahb_expression="Muss [3]",
+                                            qualifier="E03",
+                                        ),
+                                    ],
+                                ),
+                                DataElementFreeText(
+                                    ahb_expression="Muss [1]",
+                                    entered_input="Hello Mice",
+                                    discriminator="bar",
+                                    data_element_id="4567",
+                                ),
+                            ],
+                        ),
+                    ],
+                    segment_groups=[],
+                ),
+            ],
+        )
+        converter = DummyBo4eEdifactConverter()
+        edifact_accessor = DummyEdifactAccessor()
+        application_accessor = DummyApplicationAccessor()
+        await transform_all_value_pools(
+            application_data_model=application_domain_data,
+            deep_ahb=deep_ahb,
+            converter=converter,
+            edifact_accessor=edifact_accessor,
+            application_accessor=application_accessor,
+            edifact_to_non_edifact_path_mapping=edi_to_application_data_model_mapping,
+        )
+        assert deep_ahb.get_all_value_pools()[0] == DataElementValuePool(
             discriminator="$['Transaktionsgrund']",
             data_element_id="1234",
             entered_input=None,
