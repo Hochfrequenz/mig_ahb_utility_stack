@@ -132,6 +132,40 @@ class TestEdifactComponents:
         assert_serialization_roundtrip(segment, SegmentSchema(), expected_json_dict)
 
     @pytest.mark.parametrize(
+        "segment,expected_result_length",
+        [
+            pytest.param(
+                Segment(
+                    ahb_expression="X",
+                    section_name="foo",
+                    data_elements=[
+                        DataElementValuePool(
+                            value_pool=[
+                                ValuePoolEntry(qualifier="HELLO", meaning="world", ahb_expression="X"),
+                                ValuePoolEntry(qualifier="MAUS", meaning="rocks", ahb_expression="X"),
+                            ],
+                            discriminator="baz",
+                            data_element_id="0329",
+                            entered_input="foo",
+                        ),
+                        DataElementFreeText(
+                            ahb_expression="Muss [1]",
+                            entered_input="Hello Maus",
+                            discriminator="bar",
+                            data_element_id="0330",
+                        ),
+                    ],
+                    discriminator="foo",
+                ),
+                1,
+            )
+        ],
+    )
+    def test_segment_get_value_pools(self, segment: Segment, expected_result_length: int):
+        actual = segment.get_all_value_pools()
+        assert len(actual) == expected_result_length
+
+    @pytest.mark.parametrize(
         "segment_group, expected_json_dict",
         [
             pytest.param(
@@ -303,6 +337,71 @@ class TestEdifactComponents:
         assert sg is not None
         assert sg.segment_groups is None
         assert sg.segments is None
+
+    @pytest.mark.parametrize(
+        "segment_group, expected_result_length",
+        [
+            pytest.param(
+                SegmentGroup(
+                    ahb_expression="expr A",
+                    discriminator="disc A",
+                    segments=[
+                        Segment(
+                            ahb_expression="expr B",
+                            discriminator="disc B",
+                            section_name="bar",
+                            data_elements=[
+                                DataElementValuePool(
+                                    value_pool=[
+                                        ValuePoolEntry(qualifier="HELLO", meaning="world", ahb_expression="X"),
+                                        ValuePoolEntry(qualifier="MAUS", meaning="rocks", ahb_expression="X"),
+                                    ],
+                                    discriminator="baz",
+                                    data_element_id="3333",
+                                    entered_input="MAUS",
+                                ),
+                                DataElementFreeText(
+                                    ahb_expression="Muss [1]",
+                                    entered_input="Hello Maus",
+                                    discriminator="bar",
+                                    data_element_id="4444",
+                                ),
+                            ],
+                        ),
+                    ],
+                    segment_groups=[
+                        SegmentGroup(
+                            discriminator="disc C",
+                            ahb_expression="expr C",
+                            segments=[
+                                Segment(
+                                    section_name="foo",
+                                    ahb_expression="expr Y",
+                                    discriminator="disc Y",
+                                    data_elements=[
+                                        DataElementValuePool(
+                                            value_pool=[
+                                                ValuePoolEntry(qualifier="HELLO", meaning="world", ahb_expression="X"),
+                                                ValuePoolEntry(qualifier="MAUS", meaning="rocks", ahb_expression="X"),
+                                            ],
+                                            discriminator="baz",
+                                            data_element_id="3333",
+                                            entered_input="MAUS",
+                                        ),
+                                    ],
+                                )
+                            ],
+                            segment_groups=None,
+                        ),
+                    ],
+                ),
+                2,
+            )
+        ],
+    )
+    def test_segment_group_get_value_pools(self, segment_group: SegmentGroup, expected_result_length: int):
+        actual = segment_group.get_all_value_pools()
+        assert len(actual) == expected_result_length
 
     def test_replacing_value_pool_entries(self):
         data_element = DataElementValuePool(

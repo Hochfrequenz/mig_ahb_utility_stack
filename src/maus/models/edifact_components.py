@@ -385,6 +385,13 @@ class Segment(SegmentLevel):
     See e.g. UTILMD 'Geplante Turnusablesung des MSB (Strom)' vs. 'Geplante Turnusablesung des NB (Gas)'
     """
 
+    def get_all_value_pools(self) -> List[DataElementValuePool]:
+        """
+        find all value pools in this segment
+        :return: a list of all value pools
+        """
+        return [de for de in self.data_elements if isinstance(de, DataElementValuePool)]
+
 
 class SegmentSchema(SegmentLevelSchema):
     """
@@ -438,6 +445,16 @@ class SegmentGroup(SegmentLevel):
             for sub_group in self.segment_groups:
                 sub_result = sub_group.find_segments(predicate, search_recursively)
                 result += sub_result
+        return result
+
+    def get_all_value_pools(self) -> List[DataElementValuePool]:
+        """
+        recursively find all value pools in this segmentgroup
+        :return: a list of all value pools
+        """
+        result: List[DataElementValuePool] = []
+        for segment in self.find_segments(lambda _: True):
+            result += segment.get_all_value_pools()
         return result
 
 
