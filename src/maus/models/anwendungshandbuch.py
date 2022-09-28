@@ -365,8 +365,8 @@ class DeepAnwendungshandbuch:
         for segment in self.find_segments():
             for sub_result in segment.get_all_value_pools():
                 add_to_result(sub_result)
-        for sg in self.find_segment_groups(lambda _: True):
-            for sub_result in sg.get_all_value_pools():
+        for segment_group in self.find_segment_groups(lambda _: True):
+            for sub_result in segment_group.get_all_value_pools():
                 add_to_result(sub_result)
         return list(result)
 
