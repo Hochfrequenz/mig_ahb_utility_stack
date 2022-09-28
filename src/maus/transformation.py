@@ -146,13 +146,6 @@ async def transform_all_value_pools(
 ) -> None:
     """
     transforms all value pools in the given deep ahb
-    :param application_data_model:
-    :param deep_ahb:
-    :param converter:
-    :param edifact_accessor:
-    :param application_accessor:
-    :param edifact_to_non_edifact_path_mapping:
-    :return:
     """
     replacement_tasks: List[Awaitable] = []
 
