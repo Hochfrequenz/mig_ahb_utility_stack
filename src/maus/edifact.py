@@ -66,6 +66,7 @@ class EdifactFormatVersion(str, Enum):
     FV2104 = "FV2104"  #: valid from 2021-04-01 until 2021-10-01
     FV2110 = "FV2110"  #: valid from 2021-10-01 until 2022-04-01
     FV2210 = "FV2210"  #: valid from 2022-10-01 onwards ("MaKo 2022", was 2204 previously)
+    FV2304 = "FV2304"  #: valid from 2023-04-01 onwards
     # whenever you add another value here, please also make sure to add its key date to get_edifact_format_version below
 
     def __str__(self):
@@ -80,7 +81,9 @@ def get_edifact_format_version(key_date: datetime.datetime) -> EdifactFormatVers
         return EdifactFormatVersion.FV2104
     if key_date < datetime.datetime(2022, 9, 30, 22, 0, 0, 0, tzinfo=datetime.timezone.utc):
         return EdifactFormatVersion.FV2110
-    return EdifactFormatVersion.FV2210
+    if key_date < datetime.datetime(2023, 4, 1, 22, 0, 0, 0, tzinfo=datetime.timezone.utc):
+        return EdifactFormatVersion.FV2210
+    return EdifactFormatVersion.FV2304
 
 
 def is_edifact_boilerplate(segment_code: Optional[str]) -> bool:
