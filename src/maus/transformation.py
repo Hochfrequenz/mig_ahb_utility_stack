@@ -24,7 +24,7 @@ and the application domain ("non-edifact").
 import asyncio
 from typing import Any, Awaitable, Dict, List, Mapping, Optional, Protocol, TypeVar
 
-from maus import DataElementValuePool, ValuePoolEntry
+from maus import DataElementValuePool, DeepAnwendungshandbuch, ValuePoolEntry
 
 EdifactData = TypeVar("EdifactData")
 """
@@ -134,3 +134,32 @@ async def generate_value_pool_replacement(
     for result in await asyncio.gather(*value_pool_mapping_tasks):
         edi_to_non_edi_value_mapping.update(result)
     return edi_to_non_edi_value_mapping
+
+
+async def transform_all_value_pools(
+    application_data_model: ApplicationData,
+    deep_ahb: DeepAnwendungshandbuch,
+    converter: ApplicationEdifactConverter,
+    edifact_accessor: EdifactAccessor,
+    application_accessor: ApplicationAccessor,
+    edifact_to_non_edifact_path_mapping: Mapping[str, str],
+) -> None:
+    """
+    transforms all value pools in the given deep ahb
+    """
+    replacement_tasks: List[Awaitable] = []
+
+    async def transform_value_pool(value_pool: DataElementValuePool):
+        replacement = await generate_value_pool_replacement(
+            application_data_model=application_data_model,
+            data_element=value_pool,
+            converter=converter,
+            edifact_accessor=edifact_accessor,
+            application_accessor=application_accessor,
+            edifact_to_non_edifact_path_mapping=edifact_to_non_edifact_path_mapping,
+        )
+        value_pool.replace_value_pool(replacement)
+
+    for value_pool in deep_ahb.get_all_value_pools():
+        replacement_tasks.append(transform_value_pool(value_pool))
+    await asyncio.gather(*replacement_tasks)
