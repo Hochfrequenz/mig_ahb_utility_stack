@@ -356,8 +356,9 @@ class DeepAnwendungshandbuch:
         added_discriminators: Set[str] = set()  # checks like "str in set" are way faster than "value pool in list"
 
         def add_to_result(value_pool: DataElementValuePool):
-            # todo: if this "foo in list" check turns out to be too slow, check against set of added_discriminators
-            # BUT this would need a bit more testing
+            if value_pool.discriminator in added_discriminators:
+                # assumption: the discriminator is truly unique in an AHB
+                return
             if value_pool not in result:
                 added_discriminators.add(value_pool.discriminator)
                 result.append(value_pool)
