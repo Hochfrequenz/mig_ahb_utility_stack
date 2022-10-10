@@ -23,6 +23,7 @@ ALL_MIG_XML_FILES = pytest.mark.datafiles(
     "./migs/FV2210/template_xmls/utilmd_7143.xml",
     "./migs/FV2210/template_xmls/utilmd_7059.xml",
     "./migs/FV2210/template_xmls/utilmd_7037.xml",
+    "./migs/FV2210/template_xmls/utilmd_7037_z02.xml",
 )
 
 
@@ -270,7 +271,7 @@ class TestMigXmlReaderRealData:
                 id="UTILMD 7059, Stromprofildaten 7039",
             ),
             pytest.param(
-                "utilmd_7037.xml",
+                "utilmd_7037_z02.xml",
                 EdifactStackQuery(
                     segment_group_key="SG10",
                     segment_code="CCI",
