@@ -73,6 +73,13 @@ class DataElementSchema(Schema):
     entered_input = fields.String(required=False, load_default=None)
     value_type = MarshmallowEnum(DataElementDataType, required=False)
 
+    # pylint:disable= unused-argument
+    @post_dump
+    def _remove_null_entered_input(self, data: dict, **kwargs) -> dict:
+        if "entered_input" in data and data["entered_input"] is None:
+            del data["entered_input"]
+        return data
+
 
 @attrs.define(auto_attribs=True, kw_only=True)
 class DataElementFreeText(DataElement):
