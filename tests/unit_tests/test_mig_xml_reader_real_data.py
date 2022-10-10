@@ -22,6 +22,7 @@ ALL_MIG_XML_FILES = pytest.mark.datafiles(
     "./migs/FV2204/template_xmls/reqote.xml",
     "./migs/FV2210/template_xmls/utilmd_7143.xml",
     "./migs/FV2210/template_xmls/utilmd_7059.xml",
+    "./migs/FV2210/template_xmls/utilmd_7037.xml",
 )
 
 
@@ -266,7 +267,20 @@ class TestMigXmlReaderRealData:
                     section_name="Normiertes Profil (Strom)",
                 ),
                 '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Profildaten (Strom)"][0]["Normiertes Profil (Strom)"][0]["Klassentyp"]',
-                id="UTILMD 7059, Stromprofildaten",
+                id="UTILMD 7059, Stromprofildaten 7039",
+            ),
+            pytest.param(
+                "utilmd_7037.xml",
+                EdifactStackQuery(
+                    segment_group_key="SG10",
+                    segment_code="CCI",
+                    data_element_id="7037",
+                    name=None,
+                    predecessor_qualifier="Z02",
+                    section_name="Normiertes Profil (Strom)",
+                ),
+                '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Profildaten (Strom)"][0]["Normiertes Profil (Strom)"][0]["Klassentyp"]',
+                id="UTILMD 7059, Stromprofildaten 7037",
             )
             # pytest.param( # unsolved
             #    "utilmd_1154.xml",
