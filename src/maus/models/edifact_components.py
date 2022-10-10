@@ -342,7 +342,8 @@ class _FreeTextOrValuePoolSchema(Schema):
                 "free_text": data,
                 "value_pool": None,
             }
-        raise NotImplementedError(f"Data {data} is not implemented for JSON deserialization")
+        # entered_input may be None and not have been dumped
+        return {"free_text": data, "value_pool": None}
 
     # pylint:disable= unused-argument
     @pre_dump
