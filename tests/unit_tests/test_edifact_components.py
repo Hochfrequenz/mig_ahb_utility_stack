@@ -2,9 +2,11 @@ import pytest  # type:ignore[import]
 from unit_tests.serialization_test_helper import assert_serialization_roundtrip  # type:ignore[import]
 
 from maus.models.edifact_components import (
+    DataElement,
     DataElementDataType,
     DataElementFreeText,
     DataElementFreeTextSchema,
+    DataElementSchema,
     DataElementValuePool,
     DataElementValuePoolSchema,
     EdifactStack,
@@ -74,6 +76,38 @@ class TestEdifactComponents:
     )
     def test_value_pool_serialization_roundtrip(self, value_pool: DataElementValuePool, expected_json_dict: dict):
         assert_serialization_roundtrip(value_pool, DataElementValuePoolSchema(), expected_json_dict)
+
+    @pytest.mark.parametrize(
+        "data_element, schema",
+        [
+            pytest.param(
+                DataElementValuePool(
+                    value_pool=[
+                        ValuePoolEntry(qualifier="HELLO", meaning="world", ahb_expression="X"),
+                        ValuePoolEntry(qualifier="MAUS", meaning="rocks", ahb_expression="X"),
+                    ],
+                    discriminator="foo",
+                    data_element_id="0022",
+                    entered_input=None,
+                ),
+                DataElementValuePoolSchema(),
+            ),
+            pytest.param(
+                DataElementFreeText(
+                    ahb_expression="Muss [1]",
+                    entered_input=None,
+                    discriminator="bar",
+                    data_element_id="0330",
+                ),
+                DataElementFreeTextSchema(),
+            ),
+        ],
+    )
+    def test_empty_entered_input_is_not_dumped(self, data_element: DataElement, schema: DataElementSchema):
+        assert data_element.entered_input is None
+        schema = DataElementValuePoolSchema()
+        json_dict = schema.dump(data_element)
+        assert "entered_input" not in json_dict
 
     @pytest.mark.parametrize(
         "segment, expected_json_dict",
