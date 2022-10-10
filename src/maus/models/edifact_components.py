@@ -73,6 +73,13 @@ class DataElementSchema(Schema):
     entered_input = fields.String(required=False, load_default=None)
     value_type = MarshmallowEnum(DataElementDataType, required=False)
 
+    # pylint:disable= unused-argument
+    @post_dump
+    def _remove_null_entered_input(self, data: dict, **kwargs) -> dict:
+        if "entered_input" in data and data["entered_input"] is None:
+            del data["entered_input"]
+        return data
+
 
 @attrs.define(auto_attribs=True, kw_only=True)
 class DataElementFreeText(DataElement):
@@ -335,7 +342,8 @@ class _FreeTextOrValuePoolSchema(Schema):
                 "free_text": data,
                 "value_pool": None,
             }
-        raise NotImplementedError(f"Data {data} is not implemented for JSON deserialization")
+        # entered_input may be None and not have been dumped
+        return {"free_text": data, "value_pool": None}
 
     # pylint:disable= unused-argument
     @pre_dump
