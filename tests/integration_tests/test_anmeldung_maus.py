@@ -194,3 +194,14 @@ class TestAnmeldungMaus:
             template_path=Path(datafiles) / Path("UTILMD5.2e.template"),
             maus_path=Path("edifact-templates/maus/FV2210/UTILMD/11006_maus.json"),
         )
+
+    @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2e.template")
+    @pytest.mark.datafiles("./edifact-templates/ahbs/FV2210/UTILMD/11023.csv")
+    @pytest.mark.datafiles("../unit_tests/migs/FV2210/segment_group_hierarchies/sgh_utilmd.json")
+    def test_maus_creation_11023_52e(self, datafiles):
+        create_maus_and_assert(
+            csv_path=Path(datafiles) / "11023.csv",
+            sgh_path=Path(datafiles) / "sgh_utilmd.json",
+            template_path=Path(datafiles) / Path("UTILMD5.2e.template"),
+            maus_path=Path("edifact-templates/maus/FV2210/UTILMD/11023_maus.json"),
+        )
