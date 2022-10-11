@@ -259,4 +259,15 @@ class TestStammdatenaenderungMaus:
             maus_path=Path("edifact-templates/maus/FV2110/UTILMD/11194_maus.json"),
         )
 
+    @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2e.template")
+    @pytest.mark.datafiles("./edifact-templates/ahbs/FV2210/UTILMD/11123.csv")
+    @pytest.mark.datafiles("../unit_tests/migs/FV2210/segment_group_hierarchies/sgh_utilmd.json")
+    def test_maus_creation_11123_52e(self, datafiles):
+        create_maus_and_assert(
+            csv_path=Path(datafiles) / "11123.csv",
+            sgh_path=Path(datafiles) / "sgh_utilmd.json",
+            template_path=Path(datafiles) / Path("UTILMD5.2e.template"),
+            maus_path=Path("edifact-templates/maus/FV2210/UTILMD/11123_maus.json"),
+        )
+
     # 11194 seems to be gone in FV2210
