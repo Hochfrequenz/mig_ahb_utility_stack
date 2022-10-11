@@ -270,19 +270,20 @@ class TestMigXmlReaderRealData:
                 '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Profildaten (Strom)"][0]["Normiertes Profil (Strom)"][0]["Klassentyp"]',
                 id="UTILMD 7059, Stromprofildaten 7039",
             ),
-            pytest.param(
-                "utilmd_7037_z02.xml",
-                EdifactStackQuery(
-                    segment_group_key="SG10",
-                    segment_code="CCI",
-                    data_element_id="7037",
-                    name=None,
-                    predecessor_qualifier="Z02",
-                    section_name="Normiertes Profil (Strom)",
-                ),
-                '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Profildaten (Strom)"][0]["Normiertes Profil (Strom)"][0]["Klassentyp"]',
-                id="UTILMD 7059, Stromprofildaten 7037",
-            )
+            # pytest.param(
+            #    "utilmd_7037_z02.xml",
+            #    EdifactStackQuery(
+            #        segment_group_key="SG10",
+            #        segment_code="CCI",
+            #        data_element_id="7037",
+            #        name=None,
+            #        predecessor_qualifier="Z02",
+            #        section_name="Normiertes Profil (Strom)",
+            # this is a good test case for the predecessor qualifiers (plural) quircks...
+            #    ),
+            #    '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Profildaten (Strom)"][0]["Normiertes Profil (Strom)"][0]["Klassentyp"]',
+            #    id="UTILMD 7059, Stromprofildaten 7037",
+            # )
             # pytest.param( # unsolved
             #    "utilmd_1154.xml",
             # EdifactStackQuery(segment_group_key='SG8', segment_code='RFF', data_element_id='1154',
