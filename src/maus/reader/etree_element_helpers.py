@@ -28,9 +28,9 @@ _single_nested_qualifier_pattern = re.compile(
     r"^(?P<segment_code>[A-Z]+):\d+:(?:\d+|\(\d+,\d+\))\[(?:\w+:)+\w+:?=(?P<qualifier>[A-Z\d]+)\]$"
 )
 
-#: a regex to match multiple ref/key segments: https://regex101.com/r/6XooRL/1
+#: a regex to match multiple ref/key segments: https://regex101.com/r/6XooRL/2
 _multiple_nestes_qualifiers_pattern = re.compile(
-    r"(?P<segment_code>[A-Z]+):\d+:(?:\d+|\(\d+,\d+\))\[(?P<inner>(?:\d+:\d+=[A-Z\d]+\|?)+)\]$"
+    r"(?P<segment_code>[A-Z]+):\d+:(?:\d+|\(\d+,\d+\))\[(?P<inner>(?:(?:[A-Z]+:)?\d+:\d+=[A-Z\d]+\|?)+)\]$"
 )
 
 
