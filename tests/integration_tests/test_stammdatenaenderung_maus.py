@@ -270,4 +270,26 @@ class TestStammdatenaenderungMaus:
             maus_path=Path("edifact-templates/maus/FV2210/UTILMD/11123_maus.json"),
         )
 
+    @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2e.template")
+    @pytest.mark.datafiles("./edifact-templates/ahbs/FV2210/UTILMD/11218.csv")
+    @pytest.mark.datafiles("../unit_tests/migs/FV2210/segment_group_hierarchies/sgh_utilmd.json")
+    def test_maus_creation_11218_52e(self, datafiles):
+        create_maus_and_assert(
+            csv_path=Path(datafiles) / "11218.csv",
+            sgh_path=Path(datafiles) / "sgh_utilmd.json",
+            template_path=Path(datafiles) / Path("UTILMD5.2e.template"),
+            maus_path=Path("edifact-templates/maus/FV2210/UTILMD/11218_maus.json"),
+        )
+
+    @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2e.template")
+    @pytest.mark.datafiles("./edifact-templates/ahbs/FV2210/UTILMD/11219.csv")
+    @pytest.mark.datafiles("../unit_tests/migs/FV2210/segment_group_hierarchies/sgh_utilmd.json")
+    def test_maus_creation_11219_52e(self, datafiles):
+        create_maus_and_assert(
+            csv_path=Path(datafiles) / "11219.csv",
+            sgh_path=Path(datafiles) / "sgh_utilmd.json",
+            template_path=Path(datafiles) / Path("UTILMD5.2e.template"),
+            maus_path=Path("edifact-templates/maus/FV2210/UTILMD/11219_maus.json"),
+        )
+
     # 11194 seems to be gone in FV2210
