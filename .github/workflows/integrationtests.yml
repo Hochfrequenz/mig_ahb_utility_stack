@@ -9,7 +9,7 @@ jobs:
         python-version: [3.9, "3.10"]
         os: [ubuntu-latest]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.workflow_run.head_branch }}
           token: ${{secrets.edifact_templates_pat}} # expires 2023-04-24
