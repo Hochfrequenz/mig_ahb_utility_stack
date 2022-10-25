@@ -62,6 +62,7 @@ class TestMaus:
                         ),
                     ],
                     data_element_id="0333",
+                    entered_input=None,
                 ),
             ),
             pytest.param(
@@ -163,6 +164,7 @@ class TestMaus:
                             ahb_expression="X",
                         ),
                     ],
+                    entered_input=None,
                     data_element_id="0333",
                 ),
             ),
@@ -240,6 +242,7 @@ class TestMaus:
                                                 ahb_expression="X",
                                             ),
                                         ],
+                                        entered_input=None,
                                         data_element_id="0333",
                                     )
                                 ],
@@ -294,6 +297,7 @@ class TestMaus:
                                                 ahb_expression="X",
                                             ),
                                         ],
+                                        entered_input=None,
                                         data_element_id="0333",
                                     )
                                 ],
@@ -451,6 +455,7 @@ class TestMaus:
                                                             ahb_expression="X",
                                                         ),
                                                     ],
+                                                    entered_input=None,
                                                     data_element_id="0333",
                                                 )
                                             ],

@@ -323,6 +323,7 @@ class TestAhb:
                                             ],
                                             discriminator="baz",
                                             data_element_id="0123",
+                                            entered_input="HELLO",
                                         ),
                                         DataElementFreeText(
                                             ahb_expression="Muss [1]",
@@ -371,6 +372,7 @@ class TestAhb:
                                             "discriminator": "baz",
                                             "data_element_id": "0123",
                                             "value_type": "VALUE_POOL",
+                                            "entered_input": "HELLO",
                                         },
                                         {
                                             "ahb_expression": "Muss [1]",
@@ -427,6 +429,7 @@ class TestAhb:
                                                 ValuePoolEntry(qualifier="MAUS", meaning="rocks", ahb_expression="X"),
                                             ],
                                             discriminator="baz",
+                                            entered_input="HELLO",
                                             data_element_id="0123",
                                         ),
                                         DataElementFreeText(
@@ -459,6 +462,7 @@ class TestAhb:
                                                 ValuePoolEntry(qualifier="MAUS", meaning="rocks", ahb_expression="X"),
                                             ],
                                             discriminator="baz",
+                                            entered_input="MAUS",
                                             data_element_id="0123",
                                         ),
                                         DataElementFreeText(
@@ -778,3 +782,48 @@ class TestAhb:
 
         original.replace_inputs_based_on_discriminator(replacement_func)
         assert original == expected
+
+    @pytest.mark.parametrize(
+        "deep_ahb, expected_result_length",
+        [
+            pytest.param(
+                DeepAnwendungshandbuch(
+                    meta=AhbMetaInformation(pruefidentifikator="11042"),
+                    lines=[
+                        SegmentGroup(
+                            ahb_expression="expr A",
+                            discriminator="disc A",
+                            segments=[
+                                Segment(
+                                    ahb_expression="expr B",
+                                    discriminator="disc B",
+                                    data_elements=[
+                                        DataElementValuePool(
+                                            value_pool=[
+                                                ValuePoolEntry(qualifier="HELLO", meaning="world", ahb_expression="X"),
+                                                ValuePoolEntry(qualifier="MAUS", meaning="rocks", ahb_expression="X"),
+                                            ],
+                                            discriminator="baz",
+                                            entered_input="MAUS",
+                                            data_element_id="0123",
+                                        ),
+                                        DataElementFreeText(
+                                            ahb_expression="Muss [1]",
+                                            entered_input="Hello Mice",
+                                            discriminator="bar",
+                                            data_element_id="4567",
+                                        ),
+                                    ],
+                                ),
+                            ],
+                            segment_groups=[],
+                        ),
+                    ],
+                ),
+                1,
+            )
+        ],
+    )
+    def test_deep_ahb_get_value_pools(self, deep_ahb: DeepAnwendungshandbuch, expected_result_length: int):
+        actual = deep_ahb.get_all_value_pools()
+        assert len(actual) == 1

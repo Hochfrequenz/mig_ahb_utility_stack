@@ -1,0 +1,60 @@
+<?xml version="1.0" ?>
+<UTILMD>
+    <class name="Dokument" ref="/" key="UNB:5:0">
+        <class name="Nachricht" ref="UNH" key="UNH:1:0" max="9999" meta.type="group">
+            <class name="Vorgang" ref="SG4" key="IDE:2:0" max="99999" meta.type="group" groupKey="Vorgangsnummer">
+                <class name="Daten der Marktlokation der beteiligten Marktrolle" ref="SG8" key="SEQ:1:0[SEQ:1:0=Z29]" max="99999" meta.type="group" groupKey="Referenz auf die ID der Marktlokation">
+                    <class name="OBIS-Daten der Marktlokation" ref="SG8" key="SEQ:1:0[SEQ:1:0=Z02]" max="99999" groupKey="OBIS-Kennzahl der Marktlokation" meta.objType="OBIS-Kennzahl">
+                        <field name="Referenz auf die ID der Marktlokation" ref="RFF:1:1[1:0=Z18]" meta.id="1154" max="1" meta.ref="Meldepunkt.ID"/>
+                        <field name="OBIS-Kennzahl der Marktlokation" ref="PIA:2:0" meta.id="7140"/>
+                        <class name="Wertegranularität" ref="SG10" key="CAV:1:0[CCI:3:0=ZE4]">
+                            <field name="Granularität" meta.id="7111" ref="CAV:1:0"/>
+                        </class>
+                        <class name="Zugeordnete Zählzeit" ref="SG10" key="CCI:3:0[1:0=Z39|1:0=Z41]">
+                            <field name="Art" meta.id="7059" ref="CCI:1:0"/>
+                            <field name="Code" meta.id="7037" ref="CCI:3:0"/>
+                        </class>
+                        <field name="Schwachlastfähigkeit" ref="CCI:3:0[1:0=Z10]" meta.sg="SG10" meta.id="7037" meta.type="repository" meta.typeInfo="Schwachlastrepository"/>
+                        <class name="Zugeordnetes Zählzeitregister" ref="SG10" key="CCI:3:0[1:0=Z38]">
+                            <field name="Code" meta.id="7037" ref="CCI:3:0"/>
+                        </class>
+                        <class name="OBIS Daten für Marktrolle relevant" ref="SG10" key="CCI:3:0[3:0=ZA7|3:0=ZA8|3:0=ZA9]" max="3" groupKey="Marktrolle">
+                            <field name="Marktrolle" ref="CCI:3:0" meta.id="7037" meta.type="repository" meta.typeInfo="Marktrollenrepository"/>
+                            <class name="Verwendungszweck der Werte" ref="SG10" key="CAV:1:0" max="4" groupKey="Zweck">
+                                <field name="Zweck" ref="CAV:1:0" meta.id="7111" meta.type="repository" meta.typeInfo="Verwendungszweckrepository"/>
+                            </class>
+                        </class>
+                        <class name="Verbrauchsart und Nutzung an der Marktlokation" ref="SG10" key="CAV:1:0[CCI:1:0=Z17]">
+                            <field name="Verbrauchsart" ref="CAV:1:0[1:0=Z64|1:0=Z65|1:0=Z66|1:0=Z87|1:0=ZA8|1:0=ZB3]" meta.id="7111" meta.type="repository" meta.typeInfo="Verbrauchsartrepository"/>
+                            <field name="Unterbrechbarkeit" ref="CAV:1:0[1:0=Z62|1:0=Z63]" meta.id="7111" meta.type="repository" meta.typeInfo="Unterbrechbarkeitrepository"/>
+                            <field name="Wärmenutzung" ref="CAV:1:0[1:0=Z56|1:0=Z57|1:0=Z61]" meta.id="7111" meta.type="repository" meta.typeInfo="Wärmenutzungrepository"/>
+                        </class>
+                    </class>
+                    <class name="Profildaten (Strom)" ref="SG8" key="SEQ:1:0[SEQ:1:0=Z21]" max="99999">
+                        <field name="Versionsangabe des Profils" ref="RFF:1:1[1:0=Z12]" meta.id="1154"/>
+                        <field name="Referenz auf die ID der Marktlokation" ref="RFF:1:1[1:0=Z18]" meta.id="1154" meta.ref="Meldepunkt.ID"/>
+                        <field name="Profiltyp" ref="CCI:3:0[CCI:1:0=Z07]" meta.id="7037"/>
+                        <class name="Normiertes Profil (Strom)" ref="SG10" key="CAV:1:0[CCI:1:0=Z02|CCI:1:0=Z04]" max="1">
+                            <field name="Klassentyp" ref="CCI:1:0" meta.id="7059" meta.type="repository" meta.typeInfo="Profiltyprepository"/>
+                            <field name="Typ" ref="CCI:3:0" meta.id="7037" meta.type="repository" meta.typeInfo="Profilverfahrenrepository"/>
+                            <field name="Profil" ref="CAV:1:0" meta.id="7111"/>
+                            <field name="Codeliste" ref="CAV:1:2"/>
+                        </class>
+                        <field name="Normierungsfaktor" ref="CCI:3:0[CCI:1:0=Z06]" meta.id="7037"/>
+                        <class name="Bilanzierungsgebiet" ref="SG10" key="CCI:3:0[1:0=Z20]">
+                            <field name="Gebiet" ref="CCI:3:0" meta.id="7037"/>
+                        </class>
+                    </class>
+                    <class name="Profildaten der beteiligten Marktrolle" ref="SG8" key="SEQ:1:0[SEQ:1:0=Z33]" max="99999">
+                        <class name="Normiertes Profil (Strom)" ref="SG10" key="CAV:1:0[CCI:1:0=Z02|CCI:1:0=Z04]" max="1">
+                            <field name="Klassentyp" ref="CCI:1:0" meta.id="7059" meta.type="repository" meta.typeInfo="Profiltyprepository"/>
+                            <field name="Typ" ref="CCI:3:0" meta.id="7037" meta.type="repository" meta.typeInfo="Profilverfahrenrepository"/>
+                            <field name="Profil" ref="CAV:1:0" meta.id="7111"/>
+                            <field name="Codeliste" ref="CAV:1:2"/>
+                        </class>
+                    </class>
+                </class>
+            </class>
+        </class>
+    </class>
+</UTILMD>

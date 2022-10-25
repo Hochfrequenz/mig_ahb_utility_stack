@@ -7,14 +7,20 @@ structure.
 another segment group)
 """
 
-from typing import Callable, List, Optional, Sequence
+from typing import Callable, List, Optional, Sequence, Set
 from uuid import UUID
 
 import attr.validators
 import attrs
 from marshmallow import Schema, fields, post_load  # type:ignore[import]
 
-from maus.models.edifact_components import DataElementFreeText, Segment, SegmentGroup, SegmentGroupSchema
+from maus.models.edifact_components import (
+    DataElementFreeText,
+    DataElementValuePool,
+    Segment,
+    SegmentGroup,
+    SegmentGroupSchema,
+)
 
 
 # pylint:disable=too-many-instance-attributes
@@ -327,6 +333,11 @@ class DeepAnwendungshandbuch:
         result: List[Segment] = []
         for segment_group in self.find_segment_groups(group_predicate):
             result += segment_group.find_segments(segment_predicate)
+        for line in self.lines:
+            if line.segments is not None:
+                for segment in line.segments:
+                    if segment_predicate(segment):
+                        result.append(segment)
         return result
 
     def replace_inputs_based_on_discriminator(self, replacement_func: Callable[[str], DeepAhbInputReplacement]) -> None:
@@ -335,6 +346,30 @@ class DeepAnwendungshandbuch:
         Note that this modifies this DeepAnwendungshandbuch instance (self).
         """
         _replace_inputs_based_on_discriminator(self.lines, replacement_func)
+
+    def get_all_value_pools(self) -> List[DataElementValuePool]:
+        """
+        recursively find all value pools in the deep ahb
+        :return: a list of all value pools
+        """
+        result: List[DataElementValuePool] = []
+        added_discriminators: Set[str] = set()  # checks like "str in set" are way faster than "value pool in list"
+
+        def add_to_result(value_pool: DataElementValuePool):
+            if value_pool.discriminator in added_discriminators:
+                # assumption: the discriminator is truly unique in an AHB
+                return
+            if value_pool not in result:
+                added_discriminators.add(value_pool.discriminator)
+                result.append(value_pool)
+
+        for segment in self.find_segments():
+            for sub_result in segment.get_all_value_pools():
+                add_to_result(sub_result)
+        for segment_group in self.find_segment_groups(lambda _: True):
+            for sub_result in segment_group.get_all_value_pools():
+                add_to_result(sub_result)
+        return list(result)
 
 
 def _replace_inputs_based_on_discriminator(

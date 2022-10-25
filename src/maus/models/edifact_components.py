@@ -6,12 +6,12 @@ Components contain not only EDIFACT composits but also segments and segment grou
 import re
 from abc import ABC
 from enum import Enum
-from typing import Callable, List, Optional, Type
+from typing import Callable, Dict, Iterable, List, Mapping, Optional, Type
 
 import attr
 import attrs
 from marshmallow import Schema, fields, post_dump, post_load, pre_dump, pre_load  # type:ignore[import]
-from marshmallow_enum import EnumField  # type:ignore[import]
+from marshmallow.fields import Enum as MarshmallowEnum
 
 
 class DataElementDataType(str, Enum):
@@ -49,9 +49,18 @@ class DataElement(ABC):
     #: the ID of the data element (e.g. "0062") for the Nachrichten-Referenznummer
     data_element_id: str = attrs.field(validator=attrs.validators.matches_re(r"^\d{4}$"))
     #: the type of data expected to be used with this data element
+    entered_input: Optional[str] = attrs.field(validator=attrs.validators.optional(attrs.validators.instance_of(str)))
+    """
+    If the message which is evaluated contains data for this data element, this is set to a value which is not None.
+    The field can either carry a free text or an element from a value pool (depending on the value_type)
+    """
     value_type: Optional[DataElementDataType] = attrs.field(
         validator=attrs.validators.optional(attrs.validators.instance_of(DataElementDataType)), default=None
     )
+    """
+    The value_type allows to describe which type of data we're expecting to be used within this data element.
+    The value_type does not discriminate the type of the data element itself.
+    """
 
 
 class DataElementSchema(Schema):
@@ -61,7 +70,15 @@ class DataElementSchema(Schema):
 
     discriminator = fields.String(required=True)
     data_element_id = fields.String(required=True)
-    value_type = EnumField(DataElementDataType, required=False)
+    entered_input = fields.String(required=False, load_default=None)
+    value_type = MarshmallowEnum(DataElementDataType, required=False)
+
+    # pylint:disable= unused-argument
+    @post_dump
+    def _remove_null_entered_input(self, data: dict, **kwargs) -> dict:
+        if "entered_input" in data and data["entered_input"] is None:
+            del data["entered_input"]
+        return data
 
 
 @attrs.define(auto_attribs=True, kw_only=True)
@@ -77,8 +94,6 @@ class DataElementFreeText(DataElement):
     )
     ahb_expression: str = attrs.field(validator=attrs.validators.instance_of(str))
     """any freetext data element has an ahb expression attached. Could be 'X' but also 'M [13]'"""
-    entered_input: Optional[str] = attrs.field(validator=attrs.validators.optional(attrs.validators.instance_of(str)))
-    """If the message contains data for this data element, this is not None."""
 
 
 class DataElementFreeTextSchema(DataElementSchema):
@@ -87,7 +102,6 @@ class DataElementFreeTextSchema(DataElementSchema):
     """
 
     ahb_expression = fields.String(required=True)
-    entered_input = fields.String(required=False, load_default=None)
 
     # pylint:disable=unused-argument
     @post_load
@@ -194,6 +208,52 @@ class DataElementValuePool(DataElement):
     The value pool contains at least one value :class:`.ValuePoolEntry`
     """
 
+    def replace_value_pool(
+        self,
+        edifact_to_domain_mapping: Mapping[str, str],
+        meaning_qualifier_merger: Optional[Callable[[str, str], str]] = None,
+    ) -> None:
+        """
+        If your data model comes from another domain than edifact the value pool from the AHBs, you can, in general, not
+        use the same keys. Think e.g. of the Transaktionsgrund in UTILMD. In EDIFACT you might have the values:
+        Edifact Domain:
+        - E01 = Einzug/Auszug
+        - E03 = Wechsel
+        - Z33 = Auszug/Stilllegung
+        ...
+        But if, in your application, you're modelling these values with other values (think e.g. of readable enums):
+        Application Domain:
+        - EINZUG = Einzug/Auszug
+        - WECHSEL = Wechsel
+        - STILLLEGUNG = Auszug/Stilllegung
+        ...
+        You need to transform the value pool from edifact to something that matches the domain from your application.
+        To do so, provide this method with an edifact_to_domain_mapping:
+        {"E01": "EINZUG","E02": "WECHSEL","E03": "STILLLEGUNG"}
+        where each entry represents the mapping of an edifact qualifier to your application domain.
+
+        This method replaces the keys of the ValuePoolEntries if they are found in the mapping.
+        By doing so, it allows transforming checks against value pools from the edifact to your application domain.
+        This problem does not occur for free text data elements.
+
+        Provide an optional meaning_qualifier_merger that allows you to 'store' the old qualifier in the meaning.
+        This is an _unstructured_ way to save the information that is lost with the replacement.
+        """
+        existing_value_pool_entries: Dict[str, ValuePoolEntry] = {x.qualifier: x for x in self.value_pool}
+        for existing_value_pool_qualifier, value_pool_entry in existing_value_pool_entries.items():
+            if existing_value_pool_qualifier in edifact_to_domain_mapping:
+                if meaning_qualifier_merger is not None:
+                    value_pool_entry.meaning = meaning_qualifier_merger(
+                        value_pool_entry.meaning, existing_value_pool_qualifier
+                    )
+                value_pool_entry.qualifier = edifact_to_domain_mapping[existing_value_pool_qualifier]
+
+    def has_value_pool_which_is_subset_of(self, entries: Iterable[str]) -> bool:
+        """
+        returns true iff all qualifiers from the data elements value pool are found in entries
+        """
+        return all(x.qualifier in entries for x in self.value_pool)
+
 
 class DataElementValuePoolSchema(DataElementSchema):
     """
@@ -282,7 +342,8 @@ class _FreeTextOrValuePoolSchema(Schema):
                 "free_text": data,
                 "value_pool": None,
             }
-        raise NotImplementedError(f"Data {data} is not implemented for JSON deserialization")
+        # entered_input may be None and not have been dumped
+        return {"free_text": data, "value_pool": None}
 
     # pylint:disable= unused-argument
     @pre_dump
@@ -331,6 +392,13 @@ class Segment(SegmentLevel):
     This might be necessary to e.g. distinguish gas and electricity fields which look the same otherwise.
     See e.g. UTILMD 'Geplante Turnusablesung des MSB (Strom)' vs. 'Geplante Turnusablesung des NB (Gas)'
     """
+
+    def get_all_value_pools(self) -> List[DataElementValuePool]:
+        """
+        find all value pools in this segment
+        :return: a list of all value pools
+        """
+        return [de for de in self.data_elements if isinstance(de, DataElementValuePool)]
 
 
 class SegmentSchema(SegmentLevelSchema):
@@ -385,6 +453,16 @@ class SegmentGroup(SegmentLevel):
             for sub_group in self.segment_groups:
                 sub_result = sub_group.find_segments(predicate, search_recursively)
                 result += sub_result
+        return result
+
+    def get_all_value_pools(self) -> List[DataElementValuePool]:
+        """
+        recursively find all value pools in this segmentgroup
+        :return: a list of all value pools
+        """
+        result: List[DataElementValuePool] = []
+        for segment in self.find_segments(lambda _: True):
+            result += segment.get_all_value_pools()
         return result
 
 
