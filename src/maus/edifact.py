@@ -50,6 +50,7 @@ _edifact_mapping: Dict[str, EdifactFormat] = {
     "27": EdifactFormat.PRICAT,
     "15": EdifactFormat.QUOTES,
     "33": EdifactFormat.REMADV,
+    "35": EdifactFormat.REQOTE,
     "37": EdifactFormat.PARTIN,
     "11": EdifactFormat.UTILMD,
     "25": EdifactFormat.UTILTS,
