@@ -119,6 +119,36 @@ class TestSearchingInModels:
                 lambda sg: sg.discriminator == "SG3",
                 1,
             ),
+            pytest.param(
+                DeepAnwendungshandbuch(
+                    lines=[
+                        SegmentGroup(discriminator="SG1", ahb_expression="Foo"),
+                        SegmentGroup(
+                            discriminator="SG2",
+                            ahb_expression="Bar",
+                            segment_groups=[SegmentGroup(discriminator="SG3", ahb_expression="Baz")],
+                        ),
+                    ],
+                    meta=AhbMetaInformation(pruefidentifikator="11111"),
+                ),
+                lambda sg: sg.discriminator == "SG1",
+                1,
+            ),
+            pytest.param(
+                DeepAnwendungshandbuch(
+                    lines=[
+                        SegmentGroup(discriminator="SG1", ahb_expression="Foo"),
+                        SegmentGroup(
+                            discriminator="SG2",
+                            ahb_expression="Bar",
+                            segment_groups=[SegmentGroup(discriminator="SG3", ahb_expression="Baz")],
+                        ),
+                    ],
+                    meta=AhbMetaInformation(pruefidentifikator="11111"),
+                ),
+                lambda sg: sg.discriminator.startswith("SG"),
+                3,
+            ),
         ],
     )
     def test_find_segment_group_from_deep_ahb(

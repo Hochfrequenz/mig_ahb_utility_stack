@@ -318,6 +318,9 @@ class DeepAnwendungshandbuch:
             if line.segment_groups is not None:
                 for segment_group in line.segment_groups:
                     result += DeepAnwendungshandbuch._query_segment_group(segment_group, predicate)
+            for line_result in DeepAnwendungshandbuch._query_segment_group(line, predicate):
+                if line_result not in result:
+                    result.append(line_result)
         return result
 
     def find_segments(
