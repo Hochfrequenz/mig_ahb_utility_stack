@@ -1,8 +1,15 @@
-from typing import Callable
+from typing import Callable, List
 
 import pytest  # type:ignore[import]
 
-from maus import DeepAnwendungshandbuch, Segment, SegmentGroup
+from maus import (
+    DataElementFreeText,
+    DataElementValuePool,
+    DeepAnwendungshandbuch,
+    Segment,
+    SegmentGroup,
+    ValuePoolEntry,
+)
 from maus.models.anwendungshandbuch import AhbMetaInformation
 
 
@@ -198,3 +205,52 @@ class TestSearchingInModels:
     ):
         actual = deep_ahb.find_segments(group_predicate, segment_predicate)
         assert len(actual) == number_of_results
+
+    @pytest.mark.parametrize(
+        "deep_ahb, expected_result",
+        [
+            pytest.param(
+                DeepAnwendungshandbuch(
+                    meta=AhbMetaInformation(pruefidentifikator="11042"),
+                    lines=[
+                        SegmentGroup(
+                            ahb_expression="expr A",
+                            discriminator="disc A",
+                            segments=[
+                                Segment(
+                                    ahb_expression="expr B",
+                                    discriminator="disc B",
+                                    data_elements=[
+                                        DataElementValuePool(
+                                            value_pool=[
+                                                ValuePoolEntry(
+                                                    qualifier="HELLO", meaning="world", ahb_expression="X [1]"
+                                                ),
+                                                ValuePoolEntry(
+                                                    qualifier="MAUS", meaning="rocks", ahb_expression="X [2]"
+                                                ),
+                                            ],
+                                            discriminator="baz",
+                                            entered_input="MAUS",
+                                            data_element_id="0123",
+                                        ),
+                                        DataElementFreeText(
+                                            ahb_expression="Muss [3]",
+                                            entered_input="Hello Mice",
+                                            discriminator="bar",
+                                            data_element_id="4567",
+                                        ),
+                                    ],
+                                ),
+                            ],
+                            segment_groups=[],
+                        ),
+                    ],
+                ),
+                ["Muss [3]", "X [1]", "X [2]", "expr A", "expr B"],
+            )
+        ],
+    )
+    def test_deep_ahb_get_value_pools(self, deep_ahb: DeepAnwendungshandbuch, expected_result: List[str]):
+        actual = deep_ahb.get_all_expressions()
+        assert actual == expected_result
