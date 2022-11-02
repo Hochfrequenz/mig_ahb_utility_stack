@@ -50,6 +50,7 @@ _edifact_mapping: Dict[str, EdifactFormat] = {
     "27": EdifactFormat.PRICAT,
     "15": EdifactFormat.QUOTES,
     "33": EdifactFormat.REMADV,
+    "35": EdifactFormat.REQOTE,
     "37": EdifactFormat.PARTIN,
     "11": EdifactFormat.UTILMD,
     "25": EdifactFormat.UTILTS,
@@ -81,7 +82,7 @@ def get_edifact_format_version(key_date: datetime.datetime) -> EdifactFormatVers
         return EdifactFormatVersion.FV2104
     if key_date < datetime.datetime(2022, 9, 30, 22, 0, 0, 0, tzinfo=datetime.timezone.utc):
         return EdifactFormatVersion.FV2110
-    if key_date < datetime.datetime(2023, 4, 1, 22, 0, 0, 0, tzinfo=datetime.timezone.utc):
+    if key_date < datetime.datetime(2023, 3, 31, 22, 0, 0, 0, tzinfo=datetime.timezone.utc):
         return EdifactFormatVersion.FV2210
     return EdifactFormatVersion.FV2304
 
