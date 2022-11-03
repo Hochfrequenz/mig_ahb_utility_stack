@@ -1,6 +1,7 @@
 """
 Classes that allow to read XML files that contain structural information (Message Implementation Guide information)
 """
+import re
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Callable, List, Literal, Optional, TypeVar, Union
@@ -61,7 +62,14 @@ def check_file_can_be_parsed_as_mig_xml(file_path: Path) -> None:
 # pylint:disable=c-extension-no-member
 class MigXmlReader(MigReader):
     """
-    Reads an XML file an transforms it into a Segment Group Hierarchy
+    Reads an XML file and transforms it into a Segment Group Hierarchy
+    """
+
+    _pipe_separated_names_with_digit_suffix_pattern = re.compile(
+        r"^(?P<name_without_suffix>[\w\s]+)(?P<names_with_suffix>(?:\|\1\d+)+)$"
+    )
+    """
+    https://regex101.com/r/wg5Fs5/1
     """
 
     def __init__(self, init_param: Union[str, Path]):
@@ -76,7 +84,7 @@ class MigXmlReader(MigReader):
             raise ValueError(f"The type of '{init_param}' is not valid")
         # the original tree is the unmodified MIG XML Structure with all its quircks
         self._original_tree: etree.ElementTree = etree.ElementTree(self._original_root)
-        # but turns out it's much easier to handle a sanitized tree that is simplified in a sense that
+        # but turns out, it's much easier to handle a sanitized tree that is simplified in a sense that
         # * has only lower case (ahb)names which are easy to match because they don't contain whitespace,"-" or casing
         # * has the same structure as the _original_tree so that absolute path expressions from the sanitized tree match
         self._sanitized_tree: etree.ElementTree = etree.ElementTree(self._sanitized_root)
@@ -206,6 +214,20 @@ class MigXmlReader(MigReader):
         ]
         return list_to_mig_filter_result(filtered_by_segment_group_key)
 
+    # pylint:disable=unused-argument
+    def get_first_if_candidates_only_differ_by_trailing_number(
+        self, candidates: List[Element], query: EdifactStackQuery
+    ) -> MigFilterResult:
+        """
+        Act as if the result was unique if all the remaining candidates only differ by a trailing number.
+        Then return the first entry and treat it as unique, although it actually isn't.
+        """
+        concatenated_names = "|".join(c.attrib["name"] for c in candidates)
+        match = self._pipe_separated_names_with_digit_suffix_pattern.match(concatenated_names)
+        if match:
+            return MigFilterResult(candidates=None, is_unique=True, unique_result=candidates[0])
+        return MigFilterResult(candidates=None, is_unique=None, unique_result=None)
+
     def get_unique_result_by_parent_ahb_name_section_name(
         self, candidates: List[Element], query: EdifactStackQuery
     ) -> MigFilterResult:
@@ -314,7 +336,18 @@ class MigXmlReader(MigReader):
                     unique_result_strategy=lambda unique_result: self.element_to_edifact_stack(
                         unique_result, use_sanitized_tree=False
                     ),
-                    multiple_results_strategy=None,
+                    multiple_results_strategy=EdifactStackSearchStrategy(
+                        # this is to match "Name des Beteiligten", "Name des Beteiligten1", "Name des Beteiligten2", ...
+                        name="P check if candidates only differ by a number suffix, then choose first",
+                        filter=lambda q, c: self.get_first_if_candidates_only_differ_by_trailing_number(
+                            c, q  # type:ignore[arg-type]
+                        ),
+                        unique_result_strategy=lambda unique_result: self.element_to_edifact_stack(
+                            unique_result, use_sanitized_tree=False
+                        ),
+                        multiple_results_strategy=None,
+                        no_result_strategy=None,
+                    ),
                 ),  # Z18 goes here
             ),
             multiple_results_strategy=EdifactStackSearchStrategy(
