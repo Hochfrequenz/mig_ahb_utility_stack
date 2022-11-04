@@ -153,6 +153,18 @@ class TestMigXmlReaderMwe:
                     ]
                 ),
             ),
+            pytest.param(
+                '<?xml version="1.0"?><UTILMD><class name="Dokument" ref="/" key="UNB:5:0"><class name="Absender_NAD" migName="MP-ID Absender" max="1" ref="SG2" key="NAD:2:0[1:0=MS]" ahbName="MP-ID Absender" meta.type="group" meta.objType="Marktpartner"></class></class></UTILMD>',
+                "//UTILMD/class/class",
+                False,
+                EdifactStack(
+                    levels=[
+                        EdifactStackLevel(name="Dokument", is_groupable=True),
+                        EdifactStackLevel(name="MP-ID Absender", is_groupable=True),
+                        # "MP-ID Absender" shall be preferred over "Absender_NAD"
+                    ]
+                ),
+            ),
         ],
     )
     def test_element_to_edifact_stack(

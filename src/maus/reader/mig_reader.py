@@ -104,10 +104,12 @@ class MigXmlReader(MigReader):
             # here we _always_ need to use the original root!
             leaf_element = self._original_root.xpath(iter_path)[0]  # type:ignore[attr-defined]
             level_name: str
-            if "ahbName" in leaf_element.attrib:
-                level_name = leaf_element.attrib["ahbName"]
-            else:
+            if "migName" in leaf_element.attrib:
+                level_name = leaf_element.attrib["migName"]
+            elif "name" in leaf_element.attrib:
                 level_name = leaf_element.attrib["name"]
+            elif "ahbName" in leaf_element.attrib:
+                level_name = leaf_element.attrib["ahbName"]
             # https://stackoverflow.com/questions/47972143/using-attr-with-pylint
             # pylint: disable=no-member
             stack.levels.append(EdifactStackLevel(name=level_name, is_groupable=leaf_element.tag == "class"))
