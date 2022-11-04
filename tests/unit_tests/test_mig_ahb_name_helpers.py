@@ -23,6 +23,7 @@ class TestMigAhbNameHelpers:
             pytest.param("Foo-Bar ", "foobar", id="minus"),
             pytest.param("Foo Bar ", "foobar", id="words"),
             pytest.param("Foo\nBar ", "foobar", id="new line"),
+            pytest.param("Straße ", "strasse", id="scharf-ss"),
         ],
     )
     def test_make_name_comparable(self, x: str, expected_result: str):
@@ -40,6 +41,7 @@ class TestMigAhbNameHelpers:
             pytest.param("X", "x", True),
             pytest.param("X", "y", False),
             pytest.param("Gültigkeit, Beginndatum", "Gültigkeit,Beginndatum", True),
+            pytest.param("Straße und Hausnummer oderPostfach", "Strasse und Hausnummer oder Postfach", True),
             pytest.param(
                 "Referenz Vorgangsnummer (aus Anfragenachricht)", "Referenz Vorgangsnummer (aus Anfragenachricht)", True
             ),
