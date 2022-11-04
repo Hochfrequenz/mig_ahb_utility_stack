@@ -165,6 +165,18 @@ class TestMigXmlReaderMwe:
                     ]
                 ),
             ),
+            pytest.param(
+                '<?xml version="1.0"?><UTILMD><class name="Dokument" ref="/" key="UNB:5:0"><class name="Nachricht" ref="UNH" key="UNH:1:0" max="9999" meta.type="group"><field name="Nachrichten-Referenznummer" ref="UNH:1:0" meta.id="0062" /><field name="Kategorie" migName="Beginn der Nachricht" meta.id="1001" ref="BGM:1:0" groupBy="Beginn der Nachricht" meta.help="Hier wird die Kategorie der gesamten Nachricht für alle Vorgänge angegeben." meta.type="repository" meta.typeInfo="Kategorierepository"/></class></class></UTILMD>',
+                "//UTILMD/class/class/field[2]",
+                False,
+                EdifactStack(
+                    levels=[
+                        EdifactStackLevel(name="Dokument", is_groupable=True),
+                        EdifactStackLevel(name="Nachricht", is_groupable=True),
+                        EdifactStackLevel(name="Kategorie", is_groupable=False),
+                    ]
+                ),
+            ),
         ],
     )
     def test_element_to_edifact_stack(
