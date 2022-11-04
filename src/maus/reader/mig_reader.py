@@ -106,10 +106,10 @@ class MigXmlReader(MigReader):
             level_name: str
             if "migName" in leaf_element.attrib:
                 level_name = leaf_element.attrib["migName"]
-            elif "name" in leaf_element.attrib:
-                level_name = leaf_element.attrib["name"]
             elif "ahbName" in leaf_element.attrib:
                 level_name = leaf_element.attrib["ahbName"]
+            elif "name" in leaf_element.attrib:
+                level_name = leaf_element.attrib["name"]
             # https://stackoverflow.com/questions/47972143/using-attr-with-pylint
             # pylint: disable=no-member
             stack.levels.append(EdifactStackLevel(name=level_name, is_groupable=leaf_element.tag == "class"))
