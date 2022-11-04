@@ -46,7 +46,7 @@ class TestBeginnMsbMaus:
             in nad_de_discriminators
         )
         assert (
-            '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0][Korrespondenzanschrift des Kunden des Messstellenbetreibers"][0]["Struktur"]'
+            '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Korrespondenzanschrift des Kunden des Messstellenbetreibers"][0]["Struktur"]'
             in nad_de_discriminators
         )
         assert (
