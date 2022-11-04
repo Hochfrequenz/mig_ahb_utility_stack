@@ -23,6 +23,7 @@ def make_name_comparable(orig_str: Optional[str]) -> Optional[str]:
     if orig_str is None:
         return None
     result: str = orig_str.lower()
+    result = result.replace("ß", "ss")
     for removable_character in [" ", "-", "\n"]:
         result = result.replace(removable_character, "")
     return result
