@@ -374,6 +374,27 @@ class DeepAnwendungshandbuch:
                 add_to_result(sub_result)
         return list(result)
 
+    def get_all_expressions(self) -> List[str]:
+        """
+        recursively iterate through the deep ahb and return all distinct expressions found
+        """
+        result: Set[str] = set()
+        for segment in self.find_segments():
+            if segment.ahb_expression:
+                result.add(segment.ahb_expression)
+            for data_element in segment.data_elements:
+                if isinstance(data_element, DataElementFreeText):
+                    if data_element.ahb_expression:
+                        result.add(data_element.ahb_expression)
+                elif isinstance(data_element, DataElementValuePool):
+                    for value_pool_entry in data_element.value_pool:
+                        if value_pool_entry.ahb_expression:
+                            result.add(value_pool_entry.ahb_expression)
+        for segment_group in self.find_segment_groups(lambda _: True):
+            if segment_group.ahb_expression:
+                result.add(segment_group.ahb_expression)
+        return sorted(result)
+
 
 def _replace_inputs_based_on_discriminator(
     segment_groups: List[SegmentGroup], replacement_func: Callable[[str], DeepAhbInputReplacement]
