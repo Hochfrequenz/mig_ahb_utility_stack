@@ -251,6 +251,6 @@ class TestSearchingInModels:
             )
         ],
     )
-    def test_deep_ahb_get_value_pools(self, deep_ahb: DeepAnwendungshandbuch, expected_result: List[str]):
+    def test_get_all_expressions(self, deep_ahb: DeepAnwendungshandbuch, expected_result: List[str]):
         actual = deep_ahb.get_all_expressions()
         assert actual == expected_result
