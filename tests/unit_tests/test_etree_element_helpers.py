@@ -73,6 +73,8 @@ class TestEtreeSingleElementHelpers:
             pytest.param("key", '<foo key="QTY:1:1[1:0=265|1:0=Z10|1:0=Z08]"></foo>', ["265", "Z10", "Z08"]),
             pytest.param("ref", '<field ref="FTX:4:(0,4)[1:0=ACB]" />', ["ACB"]),
             pytest.param("ref", '<field ref="CAV:1:0[CCI:1:0=Z02|CCI:1:0=Z04]" />', ["Z02", "Z04"]),
+            pytest.param("key", '<class key="NAD:5:(0,3)[NAD:1:0=Z08]" ref="SG12" />', ["Z08"]),
+            pytest.param("key", '<class key="NAD:4:(0,4)[NAD:1:0=Z07]" ref="SG12" />', ["Z07"]),
         ],
     )
     def test_get_nested_qualifier(self, ref_or_key: Literal["ref", "key"], xml_string: str, expected: List[str]):
