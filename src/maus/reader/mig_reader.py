@@ -104,13 +104,20 @@ class MigXmlReader(MigReader):
             # here we _always_ need to use the original root!
             leaf_element = self._original_root.xpath(iter_path)[0]  # type:ignore[attr-defined]
             level_name: str
-            if "ahbName" in leaf_element.attrib:
-                level_name = leaf_element.attrib["ahbName"]
+            is_groupable = leaf_element.tag == "class"
+            attribute_keys_sorted_by_priority: List[str]
+            if is_groupable:
+                attribute_keys_sorted_by_priority = ["ahbName", "migName", "name"]
             else:
-                level_name = leaf_element.attrib["name"]
+                # I didn't create the data. I'm just trying to cope with it...
+                attribute_keys_sorted_by_priority = ["ahbName", "name", "migName"]
+            for attribute_key in attribute_keys_sorted_by_priority:
+                if attribute_key in leaf_element.attrib:
+                    level_name = leaf_element.attrib[attribute_key]
+                    break
             # https://stackoverflow.com/questions/47972143/using-attr-with-pylint
             # pylint: disable=no-member
-            stack.levels.append(EdifactStackLevel(name=level_name, is_groupable=leaf_element.tag == "class"))
+            stack.levels.append(EdifactStackLevel(name=level_name, is_groupable=is_groupable))
         return stack
 
     @staticmethod
