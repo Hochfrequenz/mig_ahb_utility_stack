@@ -1,8 +1,15 @@
-from typing import Callable
+from typing import Callable, List
 
 import pytest  # type:ignore[import]
 
-from maus import DeepAnwendungshandbuch, Segment, SegmentGroup
+from maus import (
+    DataElementFreeText,
+    DataElementValuePool,
+    DeepAnwendungshandbuch,
+    Segment,
+    SegmentGroup,
+    ValuePoolEntry,
+)
 from maus.models.anwendungshandbuch import AhbMetaInformation
 
 
@@ -119,6 +126,36 @@ class TestSearchingInModels:
                 lambda sg: sg.discriminator == "SG3",
                 1,
             ),
+            pytest.param(
+                DeepAnwendungshandbuch(
+                    lines=[
+                        SegmentGroup(discriminator="SG1", ahb_expression="Foo"),
+                        SegmentGroup(
+                            discriminator="SG2",
+                            ahb_expression="Bar",
+                            segment_groups=[SegmentGroup(discriminator="SG3", ahb_expression="Baz")],
+                        ),
+                    ],
+                    meta=AhbMetaInformation(pruefidentifikator="11111"),
+                ),
+                lambda sg: sg.discriminator == "SG1",
+                1,
+            ),
+            pytest.param(
+                DeepAnwendungshandbuch(
+                    lines=[
+                        SegmentGroup(discriminator="SG1", ahb_expression="Foo"),
+                        SegmentGroup(
+                            discriminator="SG2",
+                            ahb_expression="Bar",
+                            segment_groups=[SegmentGroup(discriminator="SG3", ahb_expression="Baz")],
+                        ),
+                    ],
+                    meta=AhbMetaInformation(pruefidentifikator="11111"),
+                ),
+                lambda sg: sg.discriminator.startswith("SG"),
+                3,
+            ),
         ],
     )
     def test_find_segment_group_from_deep_ahb(
@@ -168,3 +205,52 @@ class TestSearchingInModels:
     ):
         actual = deep_ahb.find_segments(group_predicate, segment_predicate)
         assert len(actual) == number_of_results
+
+    @pytest.mark.parametrize(
+        "deep_ahb, expected_result",
+        [
+            pytest.param(
+                DeepAnwendungshandbuch(
+                    meta=AhbMetaInformation(pruefidentifikator="11042"),
+                    lines=[
+                        SegmentGroup(
+                            ahb_expression="expr A",
+                            discriminator="disc A",
+                            segments=[
+                                Segment(
+                                    ahb_expression="expr B",
+                                    discriminator="disc B",
+                                    data_elements=[
+                                        DataElementValuePool(
+                                            value_pool=[
+                                                ValuePoolEntry(
+                                                    qualifier="HELLO", meaning="world", ahb_expression="X [1]"
+                                                ),
+                                                ValuePoolEntry(
+                                                    qualifier="MAUS", meaning="rocks", ahb_expression="X [2]"
+                                                ),
+                                            ],
+                                            discriminator="baz",
+                                            entered_input="MAUS",
+                                            data_element_id="0123",
+                                        ),
+                                        DataElementFreeText(
+                                            ahb_expression="Muss [3]",
+                                            entered_input="Hello Mice",
+                                            discriminator="bar",
+                                            data_element_id="4567",
+                                        ),
+                                    ],
+                                ),
+                            ],
+                            segment_groups=[],
+                        ),
+                    ],
+                ),
+                ["Muss [3]", "X [1]", "X [2]", "expr A", "expr B"],
+            )
+        ],
+    )
+    def test_get_all_expressions(self, deep_ahb: DeepAnwendungshandbuch, expected_result: List[str]):
+        actual = deep_ahb.get_all_expressions()
+        assert actual == expected_result
