@@ -74,7 +74,7 @@ def _replace_discriminators_with_edifact_stack_segments(
                     except KeyError:
                         predecessors_used[segment.discriminator] = [predecessor_qualifier]
                 else:
-                    predecessor_qualifier = None
+                    pass  # predecessor_qualifier = None
     return result, predecessors_used
 
 

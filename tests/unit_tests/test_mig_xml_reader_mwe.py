@@ -260,6 +260,39 @@ class TestMigXmlReaderMwe:
         "xml_string,candidates_xpaths,query,expected_result_xpaths",
         [
             pytest.param(
+                '<?xml version="1.0"?><UTILMD><class name="Kunde des Messstellenbetreibers" ref="SG12" key="NAD:4:(0,4)[NAD:1:0=Z07]" groupKey="Name des Beteiligten" meta.objType="Personen"><field name="Name des Beteiligten" ref="NAD:4:0" meta.id="3036" meta.orderId="2" /><field name="Name des Beteiligten1" ref="NAD:4:1" meta.id="3036" meta.orderId="3" /><field name="Name des Beteiligten2" ref="NAD:4:2" meta.id="3036" meta.orderId="4" /><field name="Name des Beteiligten3" ref="NAD:4:3" meta.id="3036" meta.orderId="5" /><field name="Name des Beteiligten4" ref="NAD:4:4" meta.id="3036" meta.orderId="6" /></class></UTILMD>',
+                [
+                    "//UTILMD/class/field[1]",
+                    "//UTILMD/class/field[2]",
+                    "//UTILMD/class/field[3]",
+                    "//UTILMD/class/field[4]",
+                    "//UTILMD/class/field[5]",
+                ],
+                EdifactStackQuery(
+                    segment_group_key="SG12",
+                    segment_code="NAD",
+                    data_element_id="3036",
+                    name="Name",
+                    section_name="Kunde des Messstellenbetreibers",
+                    predecessor_qualifier="Z07",
+                ),
+                ["//UTILMD/class/field[1]"],
+                id="Kunde des Messstellenbetreibers/Name",
+            ),
+        ],
+    )
+    def test_get_first_if_candidates_only_differ_by_trailing_number(
+        self, xml_string: str, candidates_xpaths: List[str], query: EdifactStackQuery, expected_result_xpaths: List[str]
+    ):
+        reader, candidates = TestMigXmlReaderMwe._prepare_xml_reader_and_elements(xml_string, candidates_xpaths)
+        expected_result = TestMigXmlReaderMwe._prepare_mig_filter_result(reader._original_tree, expected_result_xpaths)
+        actual = reader.get_first_if_candidates_only_differ_by_trailing_number(candidates=candidates, query=query)
+        assert actual == expected_result
+
+    @pytest.mark.parametrize(
+        "xml_string,candidates_xpaths,query,expected_result_xpaths",
+        [
+            pytest.param(
                 '<?xml version="1.0"?><REQOTE><class ahbName="MP-ID Absender"><foo/></class><class ahbName="MP-ID Empfänger"><bar/></class></REQOTE>',
                 ["//REQOTE/class/foo", "//REQOTE/class/bar"],
                 EdifactStackQuery(
