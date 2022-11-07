@@ -437,6 +437,21 @@ class TestMigXmlReaderMwe:
                 ["//UTILMD/asd/class/field"],
                 id="loc",
             ),
+            pytest.param(
+                '<?xml version="1.0"?><UTILMD><class name="Korrespondenzanschrift des Kunden des Lieferanten" ref="SG12" key="NAD:5:(0,3)[NAD:1:0=Z04]" meta.objType="Personen"><field name="Strasse und Hausnummer oder Postfach" ref="NAD:5:0" meta.id="3042" /></class><class name="Korrespondenzanschrift des Kunden des Messstellenbetreibers" ahbName="Korrespondenzanschrift des Kunden des MSB" ref="SG12" key="NAD:5:(0,3)[NAD:1:0=Z08]" meta.objType="Personen"><field name="Strasse und Hausnummer oder Postfach" ref="NAD:5:0" meta.id="3042" /></class></UTILMD>',
+                ["//UTILMD/class[1]/field", "//UTILMD/class[2]/field"],
+                EdifactStackQuery(
+                    segment_group_key="SG12",  # dummy
+                    segment_code="NAD",
+                    predecessor_qualifier="Z08",
+                    data_element_id="3042",  # dummy
+                    name="Straße und Hausnummer oderPostfach",
+                    section_name="Korrespondenzanschrift des Kunden des Messstellenbetreibers",
+                ),
+                0,
+                ["//UTILMD/class[2]/field"],
+                id="anschrift des msb-kunden",
+            ),
         ],
     )
     def test_get_unique_result_by_parent_predecessor(
