@@ -115,7 +115,7 @@ class MigXmlReader(MigReader):
             is_groupable = leaf_element.tag == "class"
             attribute_keys_sorted_by_priority: List[str]
             if is_groupable:
-                attribute_keys_sorted_by_priority = ["ahbName", "migName", "name"]
+                attribute_keys_sorted_by_priority = ["migName", "ahbName", "name"]
             else:
                 # I didn't create the data. I'm just trying to cope with it...
                 attribute_keys_sorted_by_priority = ["ahbName", "name", "migName"]
