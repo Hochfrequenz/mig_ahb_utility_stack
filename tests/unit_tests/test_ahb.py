@@ -1,3 +1,4 @@
+import enum
 import uuid
 from typing import List, Optional, Set
 
@@ -50,11 +51,23 @@ line_y = AhbLine(
 )
 
 
+class _SerializationFramework(str, enum.Enum):
+    MARSHMALLOW = "MARSHMALLOW"
+    CATTRS = "CATTRS"
+
+
 class TestAhb:
     """
     Tests the behaviour of the Anwendungshandbuch model
     """
 
+    @pytest.mark.parametrize(
+        "serialization_framework",
+        [
+            pytest.param(_SerializationFramework.MARSHMALLOW),
+            pytest.param(_SerializationFramework.CATTRS),
+        ],
+    )
     @pytest.mark.parametrize(
         "ahb, expected_json_dict",
         [
@@ -68,8 +81,13 @@ class TestAhb:
             ),
         ],
     )
-    def test_ahb_meta_information_serialization_roundtrip(self, ahb: AhbMetaInformation, expected_json_dict: dict):
-        assert_serialization_roundtrip(ahb, AhbMetaInformationSchema(), expected_json_dict)
+    def test_ahb_meta_information_serialization_roundtrip(
+        self, ahb: AhbMetaInformation, serialization_framework: _SerializationFramework, expected_json_dict: dict
+    ):
+        if serialization_framework == _SerializationFramework.MARSHMALLOW:
+            assert_serialization_roundtrip(ahb, AhbMetaInformationSchema(), expected_json_dict)
+        if serialization_framework == _SerializationFramework.CATTRS:
+            assert_serialization_roundtrip(ahb, AhbMetaInformation, expected_json_dict)
 
     @pytest.mark.parametrize(
         "ahb_x, ahb_y, are_equal",
@@ -82,6 +100,13 @@ class TestAhb:
         actual = ahb_x == ahb_y
         assert actual == are_equal
 
+    @pytest.mark.parametrize(
+        "serialization_framework",
+        [
+            pytest.param(_SerializationFramework.MARSHMALLOW),
+            pytest.param(_SerializationFramework.CATTRS),
+        ],
+    )
     @pytest.mark.parametrize(
         "ahb_line, expected_json_dict",
         [
@@ -109,8 +134,13 @@ class TestAhb:
             ),
         ],
     )
-    def test_ahbline_serialization_roundtrip(self, ahb_line: AhbLine, expected_json_dict: dict):
-        assert_serialization_roundtrip(ahb_line, AhbLineSchema(), expected_json_dict)
+    def test_ahbline_serialization_roundtrip(
+        self, ahb_line: AhbLine, serialization_framework: _SerializationFramework, expected_json_dict: dict
+    ):
+        if serialization_framework == _SerializationFramework.MARSHMALLOW:
+            assert_serialization_roundtrip(ahb_line, AhbLineSchema(), expected_json_dict)
+        if serialization_framework == _SerializationFramework.CATTRS:
+            assert_serialization_roundtrip(ahb_line, AhbMetaInformation, expected_json_dict)
 
     @pytest.mark.parametrize(
         "line_x, line_y, are_equal",
