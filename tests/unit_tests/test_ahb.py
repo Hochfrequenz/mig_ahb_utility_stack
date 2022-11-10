@@ -1,5 +1,5 @@
 import uuid
-from typing import List, Optional, Set
+from typing import Any, List, Optional, Set
 
 import pytest  # type:ignore[import]
 from unit_tests.serialization_test_helper import assert_serialization_roundtrip  # type:ignore[import]
@@ -152,7 +152,7 @@ class TestAhb:
             ),
             pytest.param(
                 AhbLine(
-                    ahb_expression=" ",
+                    ahb_expression=None,
                     segment_group_key="",
                     segment_code="",
                     data_element="   ",

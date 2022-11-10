@@ -14,6 +14,7 @@ import attr.validators
 import attrs
 from marshmallow import Schema, fields, post_load  # type:ignore[import]
 
+from maus.models import _check_that_string_is_not_whitespace_or_empty
 from maus.models.edifact_components import (
     DataElementFreeText,
     DataElementValuePool,
@@ -63,7 +64,11 @@ class AhbLine:
     # name can only be determined in the context in which it is used. This is one of many shortcoming of the current AHB
     # structure: Things in the same column don't necessarily mean the same thing.
     ahb_expression: Optional[str] = attrs.field(
-        validator=attrs.validators.optional(validator=attrs.validators.instance_of(str))
+        validator=attrs.validators.optional(
+            validator=attrs.validators.and_(
+                attrs.validators.instance_of(str), _check_that_string_is_not_whitespace_or_empty
+            )
+        )
     )
     """a requirement indicator + an optional condition ("ahb expression"), e.g. 'Muss [123] O [456]' """
     # note: to parse expressions from AHBs consider using AHBicht: https://github.com/Hochfrequenz/ahbicht/
