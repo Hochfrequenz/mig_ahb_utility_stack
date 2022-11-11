@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 
 import pytest  # type:ignore[import]
 from unit_tests.serialization_test_helper import assert_serialization_roundtrip  # type:ignore[import]

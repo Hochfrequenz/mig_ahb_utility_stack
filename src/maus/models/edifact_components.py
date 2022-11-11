@@ -13,6 +13,8 @@ import attrs
 from marshmallow import Schema, fields, post_dump, post_load, pre_dump, pre_load  # type:ignore[import]
 from marshmallow.fields import Enum as MarshmallowEnum
 
+from maus.models import _check_that_string_is_not_whitespace_or_empty
+
 
 class DataElementDataType(str, Enum):
     """
@@ -92,7 +94,11 @@ class DataElementFreeText(DataElement):
         validator=attrs.validators.optional(attrs.validators.instance_of(DataElementDataType)),  # type:ignore[arg-type]
         default=DataElementDataType.TEXT,
     )
-    ahb_expression: str = attrs.field(validator=attrs.validators.instance_of(str))
+    ahb_expression: Optional[str] = attrs.field(
+        validator=attrs.validators.optional(
+            attrs.validators.and_(attrs.validators.instance_of(str), _check_that_string_is_not_whitespace_or_empty)
+        )
+    )
     """any freetext data element has an ahb expression attached. Could be 'X' but also 'M [13]'"""
 
 
@@ -101,7 +107,7 @@ class DataElementFreeTextSchema(DataElementSchema):
     A Schema to serialize DataElementFreeTexts
     """
 
-    ahb_expression = fields.String(required=True)
+    ahb_expression = fields.String(allow_none=True, required=True)
 
     # pylint:disable=unused-argument
     @post_load
@@ -110,17 +116,6 @@ class DataElementFreeTextSchema(DataElementSchema):
         Converts the barely typed data dictionary into an actual :class:`.DataElementFreeText`
         """
         return DataElementFreeText(**data)
-
-
-# pylint: disable=unused-argument
-def _check_that_string_is_not_whitespace_or_empty(instance, attribute, value):
-    """
-    Check that string in the instance attribute value is not empty
-    """
-    if not value:
-        raise ValueError(f"The string {attribute.name} must not be None or empty")
-    if len(value.strip()) == 0:
-        raise ValueError(f"The string {attribute.name} must not consist only of whitespace: '{value}'")
 
 
 #: a pattern that matches most of the qualifiers we find in the AHBs
@@ -365,7 +360,11 @@ class SegmentLevel(ABC):
     """
 
     discriminator: str  # no validator here, because it might be None on initialization and will be set later (trust me)
-    ahb_expression: str = attrs.field(validator=attrs.validators.instance_of(str))
+    ahb_expression: Optional[str] = attrs.field(
+        validator=attrs.validators.optional(
+            attrs.validators.and_(attrs.validators.instance_of(str), _check_that_string_is_not_whitespace_or_empty)
+        )
+    )
 
 
 class SegmentLevelSchema(Schema):
@@ -374,7 +373,7 @@ class SegmentLevelSchema(Schema):
     """
 
     discriminator = fields.String(required=True)
-    ahb_expression = fields.String(required=True)
+    ahb_expression = fields.String(allow_none=True, required=True)
 
 
 @attrs.define(auto_attribs=True, kw_only=True)

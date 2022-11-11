@@ -55,7 +55,7 @@ def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElem
     else:
         result = DataElementFreeText(
             entered_input=None,
-            ahb_expression=ahb_lines[0].ahb_expression or "",
+            ahb_expression=(ahb_lines[0].ahb_expression or "").strip() or None,
             discriminator=ahb_lines[0].name or ahb_lines[0].get_discriminator(include_name=True),
             data_element_id=ahb_lines[0].data_element,  # type:ignore[arg-type]
         )
@@ -110,7 +110,7 @@ def group_lines_by_segment_group(
                 this_sg = list(sg_group)
                 sg_draft = SegmentGroup(
                     discriminator=segment_group_key,  # type:ignore[arg-type] # might be None now, will be replace later
-                    ahb_expression=this_sg[0].ahb_expression or "",  # segment groups barely ever have an expression
+                    ahb_expression=(this_sg[0].ahb_expression or "").strip() or None,
                     segments=group_lines_by_segment(this_sg),
                     segment_groups=[],
                 )
