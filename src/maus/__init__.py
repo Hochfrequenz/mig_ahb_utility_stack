@@ -132,7 +132,7 @@ def nest_segment_groups_into_each_other(
             if segment_group_hierarchy.sub_hierarchy is None:
                 break
             for sub_sgh in segment_group_hierarchy.sub_hierarchy:
-                # pass the remaining groups to to the remaining hierarchy
+                # pass the remaining groups to the remaining hierarchy
                 sub_results = nest_segment_groups_into_each_other(flat_groups[n + 1 :], sub_sgh)
                 for sub_result in sub_results:
                     # for any entry coming from nest_segment_groups_into_each other, it is ensured,
