@@ -94,9 +94,9 @@ class DataElementFreeText(DataElement):
         validator=attrs.validators.optional(attrs.validators.instance_of(DataElementDataType)),  # type:ignore[arg-type]
         default=DataElementDataType.TEXT,
     )
-    ahb_expression: Optional[str] = attrs.field(
-        validator=attrs.validators.optional(
-            attrs.validators.and_(attrs.validators.instance_of(str), _check_that_string_is_not_whitespace_or_empty)
+    ahb_expression: str = attrs.field(
+        validator=attrs.validators.and_(
+            attrs.validators.instance_of(str), _check_that_string_is_not_whitespace_or_empty
         )
     )
     """any freetext data element has an ahb expression attached. Could be 'X' but also 'M [13]'"""
@@ -360,9 +360,9 @@ class SegmentLevel(ABC):
     """
 
     discriminator: str  # no validator here, because it might be None on initialization and will be set later (trust me)
-    ahb_expression: Optional[str] = attrs.field(
-        validator=attrs.validators.optional(
-            attrs.validators.and_(attrs.validators.instance_of(str), _check_that_string_is_not_whitespace_or_empty)
+    ahb_expression: str = attrs.field(
+        validator=attrs.validators.and_(
+            attrs.validators.instance_of(str), _check_that_string_is_not_whitespace_or_empty
         )
     )
 

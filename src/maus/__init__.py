@@ -3,7 +3,9 @@ MAUS is the MIG AHB Utility stack.
 This module contains methods to merge data from Message Implementation Guide and Anwendungshandbuch
 """
 from itertools import groupby
-from typing import List, Sequence
+from typing import Callable, List, Optional, Sequence
+
+from more_itertools import mark_ends, split_when
 
 from maus.models.anwendungshandbuch import AhbLine, DeepAnwendungshandbuch, FlatAnwendungshandbuch
 from maus.models.edifact_components import (
@@ -18,7 +20,7 @@ from maus.models.edifact_components import (
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
 
 
-def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElement:
+def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> Optional[DataElement]:
     """
     Merges lines that have the same data element into a single data element instance which is returned
     """
@@ -28,7 +30,7 @@ def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElem
             "You must only use this function with lines that share the same data element but the "
             f"parameter ahb_lines contains: {', '.join([x or '' for x in distinct_data_element_keys])} "
         )
-    result: DataElement
+    result: Optional[DataElement] = None
     if ahb_lines[0].value_pool_entry is not None:
         result = DataElementValuePool(
             discriminator=ahb_lines[0].get_discriminator(include_name=False),
@@ -53,17 +55,18 @@ def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElem
             )
             result.value_pool.append(value_pool_entry)  # type:ignore[index]
     else:
-        result = DataElementFreeText(
-            entered_input=None,
-            ahb_expression=(ahb_lines[0].ahb_expression or "").strip() or None,
-            discriminator=ahb_lines[0].name or ahb_lines[0].get_discriminator(include_name=True),
-            data_element_id=ahb_lines[0].data_element,  # type:ignore[arg-type]
-        )
-        # a free text field never spans more than 1 line
-
-        data_type = derive_data_type_from_segment_code(ahb_lines[0].segment_code)  # type:ignore[arg-type]
-        if data_type is not None:
-            result.value_type = data_type
+        ahb_expression = (ahb_lines[0].ahb_expression or "").strip() or None
+        if ahb_expression is not None:
+            result = DataElementFreeText(
+                entered_input=None,
+                ahb_expression=ahb_expression,
+                discriminator=ahb_lines[0].name or ahb_lines[0].get_discriminator(include_name=True),
+                data_element_id=ahb_lines[0].data_element,  # type:ignore[arg-type]
+            )
+            # a free text field never spans more than 1 line
+            data_type = derive_data_type_from_segment_code(ahb_lines[0].segment_code)  # type:ignore[arg-type]
+            if data_type is not None:
+                result.value_type = data_type
     return result
 
 
@@ -90,7 +93,8 @@ def group_lines_by_segment(segment_group_lines: List[AhbLine]) -> List[Segment]:
             if data_element_key is None:
                 continue
             data_element = merge_lines_with_same_data_element(list(data_element_lines))
-            segment.data_elements.append(data_element)  # type:ignore[union-attr] # yes, it's not none
+            if data_element is not None:
+                segment.data_elements.append(data_element)  # type:ignore[union-attr] # yes, it's not none
         result.append(segment)
     return result
 
@@ -102,19 +106,44 @@ def group_lines_by_segment_group(
     Group the lines by their segment group and arrange the segment groups in a flat/not deep list
     """
     result: List[SegmentGroup] = []
-    for hierarchy_segment_group, _ in segment_group_hierarchy.flattened():  # flatten = ignore hierarchy, preserve order
+    # flatten = ignore hierarchy, preserve order
+    for hierarchy_segment_group, opening_segment_code in segment_group_hierarchy.flattened():
         # here we assume, that the ahb_lines are easily groupable
         # (meaning, the ran through FlatAhb.sort_lines_by_segment_groups once)
         for segment_group_key, sg_group in groupby(ahb_lines, key=lambda line: line.segment_group_key):
-            if hierarchy_segment_group == segment_group_key:
-                this_sg = list(sg_group)
-                sg_draft = SegmentGroup(
-                    discriminator=segment_group_key,  # type:ignore[arg-type] # might be None now, will be replace later
-                    ahb_expression=(this_sg[0].ahb_expression or "").strip() or None,
-                    segments=group_lines_by_segment(this_sg),
-                    segment_groups=[],
+            # There might be multiple segment groups with the same segment_group_key next to each other (SG12 addresses)
+            # That's why it is not sufficient to only group by segment_group_key.
+            # The bug symptom is, that if the first segment group with a key is not present in an AHB (like for example
+            # the "SG12: Kunde des Lieferanten" is not necessary in 11042 but occurs first in the 11042 AHB with an
+            # empty ahb expression, because it is required in the 11043, in the next column in the AHB), all segment
+            # groups with the same key are removed from the DeepAnwendungshandbuch and the second SG12 has no chance to
+            # stay in the deep ahb, although it's a distinct segment group, that just shares the same key.
+            # To prevent this behaviour, we have to interrupt the groupby with a split_when everytime, that the segment
+            # groups' opening segment occurs in the ahb_lines.
+            if hierarchy_segment_group != segment_group_key:
+                continue
+            segment_groups_with_same_key: List[List[AhbLine]]
+            if opening_segment_code is None:
+                # there is only one root
+                segment_groups_with_same_key = [sg_group]
+            else:
+                is_opening_segment_line: Callable[[AhbLine], bool] = (
+                    lambda line: line.segment_group_key == segment_group_key and line.segment_code is None
                 )
-                result.append(sg_draft)
+                segment_groups_with_same_key = list(
+                    split_when(sg_group, lambda x, y: is_opening_segment_line(y) and not is_opening_segment_line(x))
+                )
+            for distinct_segment_group in segment_groups_with_same_key:
+                this_sg = list(distinct_segment_group)
+                ahb_expression = (this_sg[0].ahb_expression or "").strip() or None
+                if ahb_expression is not None:
+                    sg_draft = SegmentGroup(
+                        discriminator=segment_group_key,  # type:ignore[arg-type] # might be None now, will be replace later
+                        ahb_expression=ahb_expression,
+                        segments=group_lines_by_segment(this_sg),
+                        segment_groups=[],
+                    )
+                    result.append(sg_draft)
     return result
 
 
