@@ -10,6 +10,8 @@ lxml==4.9.1
     # via -r requirements.in
 marshmallow==3.18.0
     # via -r requirements.in
+more-itertools==9.0.0
+    # via -r requirements.in
 packaging==21.3
     # via marshmallow
 pyparsing==3.0.7
