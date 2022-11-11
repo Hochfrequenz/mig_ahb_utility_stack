@@ -110,7 +110,7 @@ def group_lines_by_segment_group(
                 this_sg = list(sg_group)
                 sg_draft = SegmentGroup(
                     discriminator=segment_group_key,  # type:ignore[arg-type] # might be None now, will be replace later
-                    ahb_expression=this_sg[0].ahb_expression or "",  # segment groups barely ever have an expression
+                    ahb_expression=(this_sg[0].ahb_expression or "").strip() or None,
                     segments=group_lines_by_segment(this_sg),
                     segment_groups=[],
                 )

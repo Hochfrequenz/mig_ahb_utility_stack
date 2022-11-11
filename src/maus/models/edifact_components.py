@@ -373,7 +373,7 @@ class SegmentLevelSchema(Schema):
     """
 
     discriminator = fields.String(required=True)
-    ahb_expression = fields.String(required=True)
+    ahb_expression = fields.String(allow_none=True, required=True)
 
 
 @attrs.define(auto_attribs=True, kw_only=True)
