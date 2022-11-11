@@ -360,7 +360,11 @@ class SegmentLevel(ABC):
     """
 
     discriminator: str  # no validator here, because it might be None on initialization and will be set later (trust me)
-    ahb_expression: str = attrs.field(validator=attrs.validators.instance_of(str))
+    ahb_expression: Optional[str] = attrs.field(
+        validator=attrs.validators.optional(
+            attrs.validators.and_(attrs.validators.instance_of(str), _check_that_string_is_not_whitespace_or_empty)
+        )
+    )
 
 
 class SegmentLevelSchema(Schema):
