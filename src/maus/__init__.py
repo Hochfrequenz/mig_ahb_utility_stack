@@ -148,6 +148,7 @@ def group_lines_by_segment_group(
                     split_when(sg_group, lambda x, y: _is_opening_segment_line_border(x, y, opening_segment_code))
                 )
             for distinct_segment_group in segment_groups_with_same_key:
+                # todo: monday check why 11042 SG10 is split up wrong
                 this_sg = list(distinct_segment_group)
                 try:
                     ahb_expression = first_true(
