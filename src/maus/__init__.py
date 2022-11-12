@@ -3,9 +3,9 @@ MAUS is the MIG AHB Utility stack.
 This module contains methods to merge data from Message Implementation Guide and Anwendungshandbuch
 """
 from itertools import groupby
-from typing import Callable, List, Optional, Sequence
+from typing import List, Optional, Sequence
 
-from more_itertools import first_true, mark_ends, split_when
+from more_itertools import first_true, split_when  # type:ignore[import]
 
 from maus.models.anwendungshandbuch import AhbLine, DeepAnwendungshandbuch, FlatAnwendungshandbuch
 from maus.models.edifact_components import (
@@ -99,6 +99,23 @@ def group_lines_by_segment(segment_group_lines: List[AhbLine]) -> List[Segment]:
     return result
 
 
+def _is_opening_segment_line_border(this_line: AhbLine, next_line: AhbLine, opening_segment_code: str) -> bool:
+    """
+    returns true iff this_line and next_line are the border between two neighboughring segment groups with the same
+    segment group key
+    :param this_line:
+    :param next_line:
+    :param opening_segment_code:
+    :return:
+    """
+    this_line_is_opening_segment = this_line.segment_code == opening_segment_code
+    next_line_is_opening_segment = this_line.segment_code != opening_segment_code and next_line == opening_segment_code
+    next_line_has_empty_segment = next_line.segment_code is None
+    if next_line_is_opening_segment is False and next_line_has_empty_segment is False:
+        return False
+    return (not this_line_is_opening_segment) and next_line_has_empty_segment
+
+
 def group_lines_by_segment_group(
     ahb_lines: List[AhbLine], segment_group_hierarchy: SegmentGroupHierarchy
 ) -> List[SegmentGroup]:
@@ -127,23 +144,14 @@ def group_lines_by_segment_group(
                 # there is only one root
                 segment_groups_with_same_key = [sg_group]
             else:
-
-                def is_opening_segment_line(this_line: AhbLine, next_line: AhbLine) -> bool:
-                    this_line_is_opening_segment = this_line.segment_code == opening_segment_code
-                    next_line_is_opening_segment = (
-                        this_line.segment_code != opening_segment_code and next_line == opening_segment_code
-                    )
-                    next_line_has_empty_segment = next_line.segment_code is None
-                    if next_line_is_opening_segment is False and next_line_has_empty_segment is False:
-                        return False
-                    return (not this_line_is_opening_segment) and next_line_has_empty_segment
-
-                segment_groups_with_same_key = list(split_when(sg_group, lambda x, y: is_opening_segment_line(x, y)))
+                segment_groups_with_same_key = list(
+                    split_when(sg_group, lambda x, y: _is_opening_segment_line_border(x, y, opening_segment_code))
+                )
             for distinct_segment_group in segment_groups_with_same_key:
                 this_sg = list(distinct_segment_group)
                 try:
                     ahb_expression = first_true(
-                        this_sg, pred=lambda line: (line.ahb_expression or "").strip() or None is not None
+                        this_sg, pred=lambda line: ((line.ahb_expression or "").strip() or None) is not None
                     ).ahb_expression
                 except AttributeError:
                     # This happens when none of the lines in the entire distinct_segment_group has an ahb_expression.
@@ -154,7 +162,7 @@ def group_lines_by_segment_group(
                     continue
                 if ahb_expression is not None:
                     sg_draft = SegmentGroup(
-                        discriminator=segment_group_key,  # type:ignore[arg-type] # might be None now, will be replace later
+                        discriminator=segment_group_key,  # type:ignore[arg-type] # might be None, will replace later
                         ahb_expression=ahb_expression,
                         segments=group_lines_by_segment(this_sg),
                         segment_groups=[],
