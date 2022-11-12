@@ -5,7 +5,7 @@ This module contains methods to merge data from Message Implementation Guide and
 from itertools import groupby
 from typing import Callable, List, Optional, Sequence
 
-from more_itertools import mark_ends, split_when
+from more_itertools import first_true, mark_ends, split_when
 
 from maus.models.anwendungshandbuch import AhbLine, DeepAnwendungshandbuch, FlatAnwendungshandbuch
 from maus.models.edifact_components import (
@@ -127,15 +127,31 @@ def group_lines_by_segment_group(
                 # there is only one root
                 segment_groups_with_same_key = [sg_group]
             else:
-                is_opening_segment_line: Callable[[AhbLine], bool] = (
-                    lambda line: line.segment_group_key == segment_group_key and line.segment_code is None
-                )
-                segment_groups_with_same_key = list(
-                    split_when(sg_group, lambda x, y: is_opening_segment_line(y) and not is_opening_segment_line(x))
-                )
+
+                def is_opening_segment_line(this_line: AhbLine, next_line: AhbLine) -> bool:
+                    this_line_is_opening_segment = this_line.segment_code == opening_segment_code
+                    next_line_is_opening_segment = (
+                        this_line.segment_code != opening_segment_code and next_line == opening_segment_code
+                    )
+                    next_line_has_empty_segment = next_line.segment_code is None
+                    if next_line_is_opening_segment is False and next_line_has_empty_segment is False:
+                        return False
+                    return (not this_line_is_opening_segment) and next_line_has_empty_segment
+
+                segment_groups_with_same_key = list(split_when(sg_group, lambda x, y: is_opening_segment_line(x, y)))
             for distinct_segment_group in segment_groups_with_same_key:
                 this_sg = list(distinct_segment_group)
-                ahb_expression = (this_sg[0].ahb_expression or "").strip() or None
+                try:
+                    ahb_expression = first_true(
+                        this_sg, pred=lambda line: (line.ahb_expression or "").strip() or None is not None
+                    ).ahb_expression
+                except AttributeError:
+                    # This happens when none of the lines in the entire distinct_segment_group has an ahb_expression.
+                    # It means that the group is indeed not necessary. One example are e.g. the first two SG12 in 11042
+                    # AHB: "Kunde des Lieferanten" and "Korrespondenzanschrift des Kunden des Lieferanten" which are
+                    # both only relevant in neighbouring 11043). So the SG12 is just an artefact of the paper and table
+                    # based description.
+                    continue
                 if ahb_expression is not None:
                     sg_draft = SegmentGroup(
                         discriminator=segment_group_key,  # type:ignore[arg-type] # might be None now, will be replace later
