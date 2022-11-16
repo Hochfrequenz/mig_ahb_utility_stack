@@ -161,8 +161,7 @@ def _enhance_with_next_segment(ahb_lines: List[AhbLine]) -> List[Tuple[AhbLine, 
             next_line_with_segment_code = first_true(ahb_lines[index:], pred=lambda line: line.segment_code is not None)
             if next_line_with_segment_code is None:
                 break
-            else:
-                result.append((ahb_line, next_line_with_segment_code.segment_code))
+            result.append((ahb_line, next_line_with_segment_code.segment_code))
     return result
 
 
