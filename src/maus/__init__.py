@@ -3,9 +3,9 @@ MAUS is the MIG AHB Utility stack.
 This module contains methods to merge data from Message Implementation Guide and Anwendungshandbuch
 """
 from itertools import groupby
-from typing import List, Optional, Sequence
+from typing import List, Optional, Sequence, Tuple
 
-from more_itertools import first_true, split_when  # type:ignore[import]
+from more_itertools import first_true, locate, peekable, seekable, split_when  # type:ignore[import]
 
 from maus.models.anwendungshandbuch import AhbLine, DeepAnwendungshandbuch, FlatAnwendungshandbuch
 from maus.models.edifact_components import (
@@ -99,21 +99,71 @@ def group_lines_by_segment(segment_group_lines: List[AhbLine]) -> List[Segment]:
     return result
 
 
-def _is_opening_segment_line_border(this_line: AhbLine, next_line: AhbLine, opening_segment_code: str) -> bool:
+def _is_opening_segment_line_border(
+    this_line: AhbLine, next_line: AhbLine, next_filled_segment: Optional[str], opening_segment_code: str
+) -> bool:
     """
-    returns true iff this_line and next_line are the border between two neighboughring segment groups with the same
-    segment group key
-    :param this_line:
-    :param next_line:
-    :param opening_segment_code:
-    :return:
+    returns true iff this_line and next_line are the border between two neighbouring segment groups with the same.
+    This means that this_line is the last one in one segment group SGx and the next_line is in the first segment group
+    SGx (note that both SGx are the same!)
     """
+    # There are unit tests just for this method.
+    # If you suspect the "group_by_segment_group" method to have a bug, check the tests for this method first.
+    if this_line.section_name == next_line.section_name:
+        # The first section of the next segment group (hopefully) never has the same section name as the last entry in
+        # the previous group
+        return False
     this_line_is_opening_segment = this_line.segment_code == opening_segment_code
-    next_line_is_opening_segment = this_line.segment_code != opening_segment_code and next_line == opening_segment_code
+    next_line_is_opening_segment = next_line == opening_segment_code
+    this_line_has_empty_segment = this_line.segment_code is None
+    if (
+        (this_line_is_opening_segment is False)
+        and (next_line_is_opening_segment is False)
+        and (this_line_has_empty_segment is True)
+    ):
+        return False
     next_line_has_empty_segment = next_line.segment_code is None
     if next_line_is_opening_segment is False and next_line_has_empty_segment is False:
         return False
-    return (not this_line_is_opening_segment) and next_line_has_empty_segment
+    return next_filled_segment == opening_segment_code
+
+
+def _enhance_with_next_segment(ahb_lines: List[AhbLine]) -> List[Tuple[AhbLine, str]]:
+    """
+    loop over the given ahb_lines, and return the same (unmodified) lines + the for each line the next segment code,
+    which is not none. Here's an example:
+    lines:
+    [
+    (line: Segment Group, Segment, Data Element)
+    {SG1, None, None}
+    {SG1, ABC, None}
+    {SG1, ABC, 1234}
+    {SG2, None, None}
+    {SG2, DEF, None}
+    {SG2, DEF, 5678}
+    ]
+    will return:
+    [
+    (line, str)
+    {SG1, None, None}, ABC
+    {SG1, ABC, None}, ABC
+    {SG1, ABC, 1234}, ABC
+    {SG2, None, None}, DEF
+    {SG2, DEF, None}, DEF
+    {SG2, DEF, 5678}, DEF
+    ]
+    """
+    result: List[Tuple[AhbLine, str]] = []
+    for index, ahb_line in enumerate(ahb_lines):
+        if ahb_line.segment_code:
+            result.append((ahb_line, ahb_line.segment_code))
+        else:
+            next_line_with_segment_code = first_true(ahb_lines[index:], pred=lambda line: line.segment_code is not None)
+            if next_line_with_segment_code is None:
+                break
+            else:
+                result.append((ahb_line, next_line_with_segment_code.segment_code))
+    return result
 
 
 def group_lines_by_segment_group(
@@ -125,7 +175,7 @@ def group_lines_by_segment_group(
     result: List[SegmentGroup] = []
     # flatten = ignore hierarchy, preserve order
     for hierarchy_segment_group, opening_segment_code in segment_group_hierarchy.flattened():
-        # here we assume, that the ahb_lines are easily groupable
+        # here we assume, that the ahb_lines are easily group-able
         # (meaning, the ran through FlatAhb.sort_lines_by_segment_groups once)
         for segment_group_key, sg_group in groupby(ahb_lines, key=lambda line: line.segment_group_key):
             # There might be multiple segment groups with the same segment_group_key next to each other (SG12 addresses)
@@ -144,9 +194,15 @@ def group_lines_by_segment_group(
                 # there is only one root
                 segment_groups_with_same_key = [sg_group]
             else:
-                segment_groups_with_same_key = list(
-                    split_when(sg_group, lambda x, y: _is_opening_segment_line_border(x, y, opening_segment_code))
-                )
+                segment_groups_with_same_key = [
+                    [line_segment_tuple[0] for line_segment_tuple in _sg]
+                    for _sg in split_when(
+                        _enhance_with_next_segment(list(sg_group)),
+                        lambda x, y: _is_opening_segment_line_border(
+                            x[0], y[0], next_filled_segment=y[1], opening_segment_code=opening_segment_code
+                        ),
+                    )
+                ]
             for distinct_segment_group in segment_groups_with_same_key:
                 # todo: monday check why 11042 SG10 is split up wrong
                 this_sg = list(distinct_segment_group)
