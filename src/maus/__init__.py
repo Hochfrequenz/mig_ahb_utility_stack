@@ -203,7 +203,6 @@ def group_lines_by_segment_group(
                     )
                 ]
             for distinct_segment_group in segment_groups_with_same_key:
-                # todo: monday check why 11042 SG10 is split up wrong
                 this_sg = list(distinct_segment_group)
                 try:
                     ahb_expression = first_true(
@@ -217,6 +216,10 @@ def group_lines_by_segment_group(
                     # based description.
                     continue
                 if ahb_expression is not None:
+                    # todo: the flattened order is not 100% correct yet:
+                    # if there are 2 SG2 but only one (the first) of them contains a nested SG3, then the order is wrong
+                    # expected: SG2 (NAD+MS), SG3, SG2 (NAD+MR)
+                    # actual: SG2 (NAD+MS), SG2 (NAD+MR), SG3
                     sg_draft = SegmentGroup(
                         discriminator=segment_group_key,  # type:ignore[arg-type] # might be None, will replace later
                         ahb_expression=ahb_expression,
