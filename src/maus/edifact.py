@@ -87,6 +87,14 @@ def get_edifact_format_version(key_date: datetime.datetime) -> EdifactFormatVers
     return EdifactFormatVersion.FV2304
 
 
+def get_current_edifact_format_version() -> EdifactFormatVersion:
+    """
+    returns the edifact_format_version that is valid as of now
+    """
+    tz_aware_now = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
+    return get_edifact_format_version(tz_aware_now)
+
+
 def is_edifact_boilerplate(segment_code: Optional[str]) -> bool:
     """
     returns true iff this segment is not relevant in a sense that it has to be validated or merged with the AHB
