@@ -193,6 +193,29 @@ def group_lines_by_segment_group(
                 # there is only one root
                 segment_groups_with_same_key = [sg_group]
             else:
+                # The following logic separates adjacent segment groups even if they share the same segment group key.
+                # To not reinvent the wheel we use the split_when function from more_itertools to split our iterable
+                # sg_group at the borders of the segment groups. The actual logic _is_opening_segment_line_border is
+                # unit tested separately. So if you suspect a border of two segment groups to not be not detected
+                # correctly, then try to use the parametrized unit tests of _is_opening_segment_line_border first.
+                # This will be much less time-consuming than debugging through an entire AHB in an integration test.
+                # Another issue is: We cannot determine from the AHBLines alone if there is a segment group border,
+                # because the lines do not always contain all information we need.
+                # Imagine the following lines (index at left end):
+                # 0 ...
+                # 1 SG5 ABC 1234
+                #   <here's a border we need to detect>
+                # 2 SG5
+                # 3 SG5 ABC
+                # 4 SG5 ABC 1234
+                # ...
+                # Obviously there is a SG5 border between line 1 and 2 if ABC is the opening segment of SG5.
+                # But from looking at lines 1 and 2 alone (in a sliding "line window" of size 2) we cannot say, if after
+                # line 2 there is a continuation of the first SG5 or if a new SG5 begins, because we do not know if
+                # line 2 will be followed by another segment of the first SG5 or a new "ABC" opening segment.
+                # So we artificially enhance the lines before applying the segment group border detection, by using
+                # the _enhance_with_next_segment function. It adds the information that line 3 contains the segment
+                # code "ABC" to be available at line 2 already. This helper function is unit tested separately, too.
                 segment_groups_with_same_key = [
                     [line_segment_tuple[0] for line_segment_tuple in _sg]
                     for _sg in split_when(
@@ -212,7 +235,7 @@ def group_lines_by_segment_group(
                     # This happens when none of the lines in the entire distinct_segment_group has an ahb_expression.
                     # It means that the group is indeed not necessary. One example are e.g. the first two SG12 in 11042
                     # AHB: "Kunde des Lieferanten" and "Korrespondenzanschrift des Kunden des Lieferanten" which are
-                    # both only relevant in neighbouring 11043). So the SG12 is just an artefact of the paper and table
+                    # both only relevant in neighbouring 11043. So the SG12 is just an artefact of the paper and table
                     # based description.
                     continue
                 if ahb_expression is not None:
