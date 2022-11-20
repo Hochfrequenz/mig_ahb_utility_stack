@@ -6,6 +6,7 @@ import pytest  # type:ignore[import]
 from maus.edifact import (
     EdifactFormat,
     EdifactFormatVersion,
+    get_current_edifact_format_version,
     get_edifact_format_version,
     is_edifact_boilerplate,
     pruefidentifikator_to_format,
@@ -52,6 +53,10 @@ class TestEdifact:
     def test_format_version_from_keydate(self, key_date: datetime, expected_result: EdifactFormatVersion):
         actual = get_edifact_format_version(key_date)
         assert actual == expected_result
+
+    def test_get_current_format_version(self):
+        actual = get_current_edifact_format_version()
+        assert isinstance(actual, EdifactFormatVersion) is True
 
     @pytest.mark.parametrize(
         "illegal_pruefi",
