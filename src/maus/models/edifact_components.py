@@ -365,6 +365,20 @@ class SegmentLevel(ABC):
             attrs.validators.and_(attrs.validators.instance_of(str), _check_that_string_is_not_whitespace_or_empty)
         )
     )
+    ahb_line_index: Optional[int] = attrs.field(
+        validator=attrs.validators.optional(attrs.validators.instance_of(int)), default=None
+    )
+    """
+    Allows sorting the segments depending on where they occured in the FlatAnwendungshandbuch.
+    It won't be serialized though.
+    """
+
+    def reset_ahb_line_index(self) -> None:
+        """
+        sets the ahb_line_index to None.
+        This is to allow comparisons regardless of the index
+        """
+        self.ahb_line_index = None
 
 
 class SegmentLevelSchema(Schema):
@@ -374,6 +388,7 @@ class SegmentLevelSchema(Schema):
 
     discriminator = fields.String(required=True)
     ahb_expression = fields.String(allow_none=True, required=True)
+    # ahb_line =
 
 
 @attrs.define(auto_attribs=True, kw_only=True)
@@ -437,6 +452,15 @@ class SegmentGroup(SegmentLevel):
     segment_groups: Optional[List["SegmentGroup"]] = attrs.field(
         default=None
     )  #: groups that are nested into this group
+
+    def reset_ahb_line_index(self) -> None:
+        self.ahb_line_index = None
+        if self.segment_groups:
+            for segment_group in self.segment_groups:
+                segment_group.reset_ahb_line_index()
+        if self.segments:
+            for segment in self.segments:
+                segment.reset_ahb_line_index()
 
     def find_segments(self, predicate: Callable[[Segment], bool], search_recursively: bool = True) -> List[Segment]:
         """

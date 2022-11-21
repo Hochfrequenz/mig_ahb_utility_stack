@@ -59,10 +59,11 @@ class FlatAhbCsvReader(FlatAhbReader):
             # current_section_name: Optional[str]
             raw_lines = self.get_raw_rows(infile)
         raw_lines_with_merged_section_names = FlatAhbCsvReader.merge_section_only_lines(raw_lines)
-        for row in raw_lines_with_merged_section_names:
+        for row_index, row in enumerate(raw_lines_with_merged_section_names):
             ahb_line = self.raw_ahb_row_to_ahbline(row)
             if ahb_line is None:
                 continue
+            ahb_line.index = row_index  # it is ascending but not continuous
             self.rows.append(ahb_line)
 
     @staticmethod

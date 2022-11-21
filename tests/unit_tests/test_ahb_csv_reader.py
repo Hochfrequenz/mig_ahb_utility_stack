@@ -204,6 +204,7 @@ class TestAhbCsvReader:
         flat_ahb = reader.to_flat_ahb()
         assert len(flat_ahb.lines) < len(reader.rows)  # filter out the empty lines
         assert flat_ahb.get_segment_groups() == [None, "SG2", "SG3", "SG4", "SG5", "SG6", "SG8", "SG9", "SG10", "SG12"]
+        assert all([line.index is not None for line in flat_ahb.lines]) is True
 
     @pytest.mark.parametrize(
         "input_lines,expected_lines",
