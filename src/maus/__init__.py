@@ -5,7 +5,7 @@ This module contains methods to merge data from Message Implementation Guide and
 from itertools import groupby
 from typing import List, Optional, Sequence, Tuple
 
-from more_itertools import first_true, locate, peekable, seekable, split_when  # type:ignore[import]
+from more_itertools import first, first_true, locate, peekable, seekable, split_when  # type:ignore[import]
 
 from maus.models.anwendungshandbuch import AhbLine, DeepAnwendungshandbuch, FlatAnwendungshandbuch
 from maus.models.edifact_components import (
@@ -272,6 +272,9 @@ def nest_segment_groups_into_each_other(
                 for sub_result in sub_results:
                     # for any entry coming from nest_segment_groups_into_each other, it is ensured,
                     # that the segment groups are maybe an empty list but never None.
+                    # The result entry to append to is the segment group whose last ahbline number is closest before
+                    # the subresults first ahb line number
+                    first_ahbline_number_of_sub_result = first(sub_result.segments).ahbline
                     result[-1].segment_groups.append(sub_result)  # type:ignore[union-attr]
     return result
 
