@@ -79,6 +79,10 @@ class AhbLine:
     """
     The section name describes the purpose of a segment, e.g. "Nachrichten-Kopfsegment" or "Beginn der Nachricht"
     """
+    index: Optional[int] = attrs.field(validator=attrs.validators.optional(attrs.validators.ge(0)), default=None)
+    """
+    index is a number that describes the position of the AHBLine inside the original PDF- and FlatAnwendungshandbuch.
+    """
 
     def holds_any_information(self) -> bool:
         """
@@ -126,6 +130,7 @@ class AhbLineSchema(Schema):
     name = fields.String(required=False, load_default=None)
     ahb_expression = fields.String(required=False, load_default=None)
     section_name = fields.String(required=False, load_default=None)
+    index = fields.Int(required=False, load_default=None, dump_default=None)
 
     # pylint:disable=unused-argument
     @post_load

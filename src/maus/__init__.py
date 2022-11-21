@@ -78,7 +78,7 @@ def group_lines_by_segment(segment_group_lines: List[AhbLine]) -> List[Segment]:
     for segment_key, segments in groupby(segment_group_lines, key=lambda line: line.segment_code):
         if segment_key is None:
             continue  # filter out segment group level
-        this_segment_lines = list(segments)
+        this_segment_lines: List[AhbLine] = list(segments)
         if not this_segment_lines[0].ahb_expression:
             # segments with an empty AHB expression shall not be included
             # https://github.com/Hochfrequenz/mig_ahb_utility_stack/issues/38
@@ -88,6 +88,7 @@ def group_lines_by_segment(segment_group_lines: List[AhbLine]) -> List[Segment]:
             data_elements=[],
             ahb_expression=this_segment_lines[0].ahb_expression,
             section_name=this_segment_lines[0].section_name,
+            ahb_line_index=this_segment_lines[0].index,
         )
         for data_element_key, data_element_lines in groupby(this_segment_lines, key=lambda line: line.data_element):
             if data_element_key is None:
@@ -248,6 +249,7 @@ def group_lines_by_segment_group(
                         ahb_expression=ahb_expression,
                         segments=group_lines_by_segment(this_sg),
                         segment_groups=[],
+                        ahb_line_index=this_sg[0].index,
                     )
                     result.append(sg_draft)
     return result
@@ -275,6 +277,7 @@ def nest_segment_groups_into_each_other(
                     # The result entry to append to is the segment group whose last ahbline number is closest before
                     # the subresults first ahb line number
                     first_ahbline_number_of_sub_result = first(sub_result.segments).ahbline
+                    sub_result.reset_ahb_line_index()
                     result[-1].segment_groups.append(sub_result)  # type:ignore[union-attr]
     return result
 
@@ -291,6 +294,7 @@ def to_deep_ahb(
     # in a first step we group the lines by their segment groups but ignore the actual hierarchy except for the order
     result.lines = nest_segment_groups_into_each_other(flat_groups, segment_group_hierarchy)
     for segment_group in result.lines:
+        segment_group.reset_ahb_line_index()
         if not isinstance(segment_group, SegmentGroup):
             continue
         if segment_group.discriminator is None:
