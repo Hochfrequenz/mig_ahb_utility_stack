@@ -455,10 +455,12 @@ class SegmentGroup(SegmentLevel):
 
     def reset_ahb_line_index(self) -> None:
         self.ahb_line_index = None
-        for segment_group in self.segment_groups:
-            segment_group.reset_ahb_line_index()
-        for segment in self.segments:
-            segment.reset_ahb_line_index()
+        if self.segment_groups:
+            for segment_group in self.segment_groups:
+                segment_group.reset_ahb_line_index()
+        if self.segments:
+            for segment in self.segments:
+                segment.reset_ahb_line_index()
 
     def find_segments(self, predicate: Callable[[Segment], bool], search_recursively: bool = True) -> List[Segment]:
         """
