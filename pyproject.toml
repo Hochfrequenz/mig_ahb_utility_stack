@@ -20,3 +20,8 @@ disable = "fixme"
 # even if they have no @pytest.mark.asyncio marker.
 # https://github.com/pytest-dev/pytest-asyncio#auto-mode
 asyncio_mode = "auto"
+
+[project.optional-dependencies]
+mapping = [
+    "lxml",
+]
