@@ -23,5 +23,5 @@ asyncio_mode = "auto"
 
 [project.optional-dependencies]
 mapping = [
-    "lxml",
+    "lxml"
 ]
