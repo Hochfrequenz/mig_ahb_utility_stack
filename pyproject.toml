@@ -21,6 +21,33 @@ disable = "fixme"
 # https://github.com/pytest-dev/pytest-asyncio#auto-mode
 asyncio_mode = "auto"
 
+
+[project]
+name = "maus"
+dynamic = ["version"]
+description = "Python Library that consolidates Anwendungshandbücher (AHB) and Message Implementation Guides (MIG)."
+readme = "README.md"
+license = "mit"
+requires-python = ">=3.8"
+authors = [
+    { name = "Hochfrequenz Unternehmensberatung GmbH", email = "info@hochfrequenz.de" },
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.8",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "attrs>=21.4.0",
+    "marshmallow>=3.18.0",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/Hochfrequenz/mig_ahb_utility_stack"
+"Bug Tracker" = "https://github.com/Hochfrequenz/mig_ahb_utility_stack/issues"
+
 [project.optional-dependencies]
 mapping = [
     "lxml",
