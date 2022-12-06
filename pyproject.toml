@@ -50,5 +50,5 @@ dependencies = [
 
 [project.optional-dependencies]
 mapping = [
-    "lxml",
+    "lxml"
 ]
