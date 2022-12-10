@@ -14,7 +14,7 @@ from marshmallow import Schema, fields, post_load
 # From a parsed .tree file it is possible to also derive the segment group hierarchy.
 
 
-@attrs.define(auto_attribs=True, kw_only=True)
+@attrs.define(auto_attribs=True, kw_only=True, frozen=True)
 class SegmentGroupHierarchy:
     """
     Models the hierarchy of segment groups within an EDIFACT format.
