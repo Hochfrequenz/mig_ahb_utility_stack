@@ -5,6 +5,8 @@ This module contains methods to merge data from Message Implementation Guide and
 from itertools import groupby
 from typing import List, Sequence
 
+from more_itertools import last
+
 from maus.models.anwendungshandbuch import AhbLine, DeepAnwendungshandbuch, FlatAnwendungshandbuch
 from maus.models.edifact_components import (
     DataElement,
@@ -16,6 +18,7 @@ from maus.models.edifact_components import (
     derive_data_type_from_segment_code,
 )
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
+from maus.navigation import determine_location
 
 
 def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElement:
@@ -120,30 +123,6 @@ def group_lines_by_segment_group(
     return result
 
 
-def nest_segment_groups_into_each_other(
-    flat_groups: List[SegmentGroup], segment_group_hierarchy: SegmentGroupHierarchy
-) -> List[SegmentGroup]:
-    """
-    Take the pre-grouped but flat/"not nested" groups and nest them into each other as described in the SGH
-    """
-    result: List[SegmentGroup] = []
-    for n, segment_group in enumerate(flat_groups):  # pylint:disable=invalid-name
-        if segment_group.discriminator == segment_group_hierarchy.segment_group:
-            # this is the root level for the given hierarchy
-            result.append(segment_group)
-            if segment_group_hierarchy.sub_hierarchy is None:
-                break
-            for sub_sgh in segment_group_hierarchy.sub_hierarchy:
-                # pass the remaining groups to to the remaining hierarchy
-                sub_results = nest_segment_groups_into_each_other(flat_groups[n + 1 :], sub_sgh)
-                for sub_result in sub_results:
-                    # for any entry coming from nest_segment_groups_into_each other, it is ensured,
-                    # that the segment groups are maybe an empty list but never None.
-                    sub_result.reset_ahb_line_index()
-                    result[-1].segment_groups.append(sub_result)  # type:ignore[union-attr]
-    return result
-
-
 def to_deep_ahb(
     flat_ahb: FlatAnwendungshandbuch, segment_group_hierarchy: SegmentGroupHierarchy
 ) -> DeepAnwendungshandbuch:
@@ -151,14 +130,28 @@ def to_deep_ahb(
     Converts a flat ahb into a nested ahb using the provided segment hierarchy
     """
     result = DeepAnwendungshandbuch(meta=flat_ahb.meta, lines=[])
-    flat_ahb.sort_lines_by_segment_groups()
-    flat_groups = group_lines_by_segment_group(flat_ahb.lines, segment_group_hierarchy)
-    # in a first step we group the lines by their segment groups but ignore the actual hierarchy except for the order
-    result.lines = nest_segment_groups_into_each_other(flat_groups, segment_group_hierarchy)
-    for segment_group in result.lines:
-        segment_group.reset_ahb_line_index()
-        if not isinstance(segment_group, SegmentGroup):
-            continue
-        if segment_group.discriminator is None:
-            segment_group.discriminator = "root"
+    for line_index, ahb_line in enumerate(flat_ahb.lines):
+        position = determine_location(segment_group_hierarchy, current_index=line_index, ahb_lines=flat_ahb.lines)
+        youngest_layer = last(position.layers)
+        if not any((line.discriminator == youngest_layer.segment_group_key for line in result.lines)):
+            segment_group = SegmentGroup(
+                discriminator=ahb_line.segment_group_key,  # type:ignore[arg-type] # might be None now, will be replaced later
+                ahb_expression=(ahb_line.ahb_expression or "Dummy MUSS SG").strip() or None,
+                segments=[],
+                segment_groups=[],
+                ahb_line_index=ahb_line.index,
+            )
+            result.lines.append(segment_group)
+        else:
+            if not result.lines[-1].segments:
+                result.lines[-1].segments = []
+            result.lines[-1].segments.append(
+                Segment(
+                    discriminator=ahb_line.segment_code,  # type:ignore[arg-type] # shall not be none after sanitizing
+                    data_elements=[],
+                    ahb_expression=ahb_line.ahb_expression or "Dummy Muss S",
+                    section_name=ahb_line.section_name,
+                    ahb_line_index=line_index,
+                )
+            )
     return result
