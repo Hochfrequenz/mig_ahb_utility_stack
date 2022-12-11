@@ -203,7 +203,7 @@ def determine_location(
     the MIG.
     """
     # todo: we'd probably be MUCH faster if we computed the position once for all ahb lines instead of starting from 0 for each ahbline.
-    # the performance of this method is O(n^n) for a n lines ahbs
+    # the performance of this method is O(n^n) for a n lines ahbs; first make it work, then make it fast.
     starting_layer = AhbLocationLayer(
         segment_group_key=segment_group_hierarchy.segment_group,
         opening_segment_code=segment_group_hierarchy.opening_segment,
@@ -260,7 +260,8 @@ def determine_location(
             else:
                 # We're sure that it's at least a step OUT, because it's an SG change and no suitable sub hierarchy was
                 # found. The remaining question is: "How many segment groups did we leave at once?"
-                layers.pop()
+                layers.pop()  # this is the exit from the current group
+                last_layer = last(layers)
                 probably_current_sgh = parent_sgh[-1]
                 if probably_current_sgh.segment_group != this_ahb_line.segment_group_key:
                     # we didn't move back to the parent but made a shortcut directly into the next (neighbouring)
@@ -272,16 +273,31 @@ def determine_location(
                             opening_qualifier=this_next_qualifier,
                         )
                     )
+                    continue
                     # don't pop because the parent stays the same
                 else:
                     current_sgh = parent_sgh.pop()
+                    if (
+                        last_layer.segment_group_key == this_ahb_line.segment_group_key
+                        and last_layer.opening_qualifier != this_next_qualifier
+                    ):
+                        # remove the outdated SG with the same SG key (eg. in the SG2(MS)/SG3->SG2(MR) transition)
+                        layers.pop()
+                        layers.append(# re-add it with the same SG x but a changed opening qualifier
+                            AhbLocationLayer(
+                                segment_group_key=this_ahb_line.segment_group_key,
+                                opening_segment_code=this_next_segment,
+                                opening_qualifier=this_next_qualifier,
+                            )
+                        )
+                        continue
             # now we're sure that it's a step _into_ a segment group because the step out runs into the for-else.
             layers.append(
-              AhbLocationLayer(
-                   segment_group_key=sub_hierarchy.segment_group,
-                   opening_segment_code=sub_hierarchy.opening_segment,
-                   opening_qualifier=this_next_qualifier,
-               )
+                AhbLocationLayer(
+                    segment_group_key=sub_hierarchy.segment_group,
+                    opening_segment_code=sub_hierarchy.opening_segment,
+                    opening_qualifier=this_next_qualifier,
+                )
             )
             parent_sgh.append(current_sgh)
             current_sgh = sub_hierarchy

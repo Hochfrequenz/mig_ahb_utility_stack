@@ -320,7 +320,7 @@ class TestNavigation:
                         AhbLocationLayer(segment_group_key="SG2", opening_segment_code="NAD", opening_qualifier="MS"),
                     ]
                 ),
-                id="switch from UNH into SG2"
+                id="switch from UNH into SG2",
             ),
             pytest.param(
                 sgh_utilmd_fv2204,
@@ -363,7 +363,7 @@ class TestNavigation:
                         AhbLocationLayer(segment_group_key="SG3", opening_segment_code="CTA", opening_qualifier="IC"),
                     ]
                 ),
-                id="UNH to SG2 to SG3"
+                id="UNH to SG2 to SG3",
             ),
             pytest.param(
                 sgh_utilmd_fv2204,
@@ -398,16 +398,26 @@ class TestNavigation:
                         name="Informationskontakt",
                         ahb_expression="X",
                     ),
+                    AhbLine(
+                        guid=UUID("895d49d9-de4d-4af8-9180-06cb6719b537"),
+                        segment_group_key="SG2",
+                        segment_code="NAD",
+                        data_element="3035",
+                        value_pool_entry="MR",
+                        section_name="MP-ID Empfänger",
+                        name="Nachrichtenaussteller bzw. -absender",
+                        ahb_expression="X",
+                    ),
                 ],
                 AhbLocation(
                     layers=[
                         AhbLocationLayer(segment_group_key=None, opening_segment_code="UNH", opening_qualifier=None),
-                        # we entered the SG2 NAD+MS and SG3 CTA+IC, then left them again, that's why they are not part#
-                        # of this location
+                        # we entered the SG2 NAD+MS and SG3 CTA+IC, then left them again, that's why they are not part
+                        # of this location anymore although we iterated over them.
                         AhbLocationLayer(segment_group_key="SG2", opening_segment_code="NAD", opening_qualifier="MR"),
                     ]
                 ),
-                id="UNH to SG2 NAD MS to SG3 back to next SG2 NAD MR"
+                id="UNH to SG2 NAD MS to SG3 back to next SG2 NAD MR",
             ),
         ],
     )
