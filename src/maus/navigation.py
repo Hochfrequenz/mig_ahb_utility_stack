@@ -283,7 +283,7 @@ def determine_location(
                     ):
                         # remove the outdated SG with the same SG key (eg. in the SG2(MS)/SG3->SG2(MR) transition)
                         layers.pop()
-                        layers.append(# re-add it with the same SG x but a changed opening qualifier
+                        layers.append(  # re-add it with the same SG x but a changed opening qualifier
                             AhbLocationLayer(
                                 segment_group_key=this_ahb_line.segment_group_key,
                                 opening_segment_code=this_next_segment,
