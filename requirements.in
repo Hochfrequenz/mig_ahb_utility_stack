@@ -1,4 +1,4 @@
 attrs
 marshmallow
-lxml
+lxml>=4.9.2
 # whenever adding something here, don't forget to also add it to setup.cfg
