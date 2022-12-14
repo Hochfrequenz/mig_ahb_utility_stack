@@ -6,7 +6,7 @@
 #
 attrs==22.1.0
     # via -r requirements.in
-lxml==4.9.1
+lxml==4.9.2
     # via -r requirements.in
 marshmallow==3.19.0
     # via -r requirements.in
