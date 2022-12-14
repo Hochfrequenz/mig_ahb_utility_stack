@@ -290,7 +290,7 @@ def determine_location(
                                 opening_qualifier=this_next_qualifier,
                             )
                         )
-                        continue
+                    continue
             # now we're sure that it's a step _into_ a segment group because the step out runs into the for-else.
             layers.append(
                 AhbLocationLayer(
