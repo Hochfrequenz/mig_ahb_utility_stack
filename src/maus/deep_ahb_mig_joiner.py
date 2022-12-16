@@ -78,6 +78,7 @@ def _replace_discriminators_with_edifact_stack_segments(
     return result, predecessors_used
 
 
+# pylint:disable=too-many-return-statements
 def _data_element_has_a_known_problem(data_element: DataElement):
     if data_element.discriminator == "SG10->CAV->7110":
         # https://github.com/Hochfrequenz/edifact-templates/issues/59
@@ -87,6 +88,9 @@ def _data_element_has_a_known_problem(data_element: DataElement):
         return True
     if data_element.discriminator == "SG6->DTM->2379":
         # https://github.com/Hochfrequenz/edifact-templates/issues/63
+        return True
+    if data_element.discriminator == "SG9->QTY->6411":
+        # we ignore it for now and hope to resolve this with maus 0.3
         return True
     if data_element == DataElementValuePool(
         discriminator="SG8->RFF->1153",
