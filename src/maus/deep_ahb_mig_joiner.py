@@ -78,6 +78,7 @@ def _replace_discriminators_with_edifact_stack_segments(
     return result, predecessors_used
 
 
+# pylint:disable=too-many-return-statements
 def _data_element_has_a_known_problem(data_element: DataElement):
     if data_element.discriminator == "SG10->CAV->7110":
         # https://github.com/Hochfrequenz/edifact-templates/issues/59
