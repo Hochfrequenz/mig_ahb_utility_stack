@@ -476,7 +476,7 @@ class TestNavigation:
                 AhbLocation(
                     layers=[
                         AhbLocationLayer(segment_group_key=None, opening_segment_code="UNH", opening_qualifier=None),
-                        AhbLocationLayer(segment_group_key="SG4",  opening_segment_code="IDE", opening_qualifier="24")
+                        AhbLocationLayer(segment_group_key="SG4", opening_segment_code="IDE", opening_qualifier="24"),
                     ]
                 ),
                 id="UNH to SG4",
