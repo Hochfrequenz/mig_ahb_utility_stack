@@ -168,6 +168,7 @@ class AhbMetaInformationSchema(Schema):
         return AhbMetaInformation(**data)
 
 
+# pylint:disable=unused-argument
 def _check_that_nearly_all_lines_have_a_segment_group(instance, attribute, value: List[AhbLine]):
     """
     Loops over all provided ahb lines and checks that only at the beginning and the end there are lines without a
