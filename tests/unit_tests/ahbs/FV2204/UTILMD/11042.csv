@@ -209,8 +209,7 @@
 189,SG10,CAV,7111,Z91,MSB,,
 190,SG10,CAV,1131,MP-ID,,,"[621] Hinweis: Es ist der MSB anzugeben, welcher ab dem Zeitpunkt der Lokation zugeordnet ist, der in DTM+76 (Datum zum geplanten Leistungsbeginn) genannt ist."
 191,SG10,CAV,7110,Z19,Auf vertraglicher Grundlage gegenüber Anschlussnutzer / Anschlussnehmer,,
-192,SG10,CAV,7110,Z20,In der Ausübung der,,
-193,,,,,Weiterverpflichtung durchden gMSB,,
+192,SG10,CAV,7110,Z20,In der Ausübung der Weiterverpflichtung durch den gMSB,,
 194,Spannungsebene der Marktlokation,,,,,,
 195,SG10,,,,,,
 196,SG10,CCI,,,,,
@@ -351,9 +350,6 @@
 324,SG8,PIA,,,,,
 325,SG8,PIA,4347,5,Produktidentifikation,,
 326,SG8,PIA,7140,OBIS-Kennzahl der Marktlokation,,,"[314] Es sind alle OBIS- Kennzahlen gem. EDI@Energy Codeliste der OBIS-Kennzahlen und Medien für den deutschen Energiemarkt Kap. 3 anzugeben welche an der Marktlokation erforderlich sind, dabei muss der Mindestumfang aus Kap. 3.4 eingehalten werden "
-327,,,,,,," [315] Es sind alle OBIS- Kennzahlen gem. EDI@Energy Codeliste der OBIS-Kennzahlen und Medien für den deutschen Energiemarkt Kap. 4 anzugeben welche an der Marktlokation erforderlich sind, dabei muss der Mindestumfang aus Kap. 4.5 eingehalten werden
-[492] Wenn MP-ID in NAD+MR (Nachrichtenempfänger) aus Sparte Strom
-[493] Wenn MP-ID in NAD+MR (Nachrichtenempfänger) aus Sparte Gas"
 328,SG8,PIA,7143,SRW,OBIS-Kennzahl,,
 329,Zugeordnete Zählzeit,,,,,,
 330,SG10,,,,,,"[386] Wenn mehr als eine SG8 SEQ+Z02 (OBIS- Daten der Marktlokation) mit einer OBIS-Kennzahl für Energiemenge im PIA+5 vorhanden
@@ -603,7 +599,7 @@
 567,SG10,CAV,,,,,
 568,SG10,CAV,7111,Z88,NB,,
 569,SG10,CAV,7110,Z06,vorhanden,,
-570,,,,Z07,nicht vorhanden,,
+570,SG10,CAV,7110,Z07,nicht vorhanden,,
 571,Zugeordnete Zählzeit,,,,,,
 572,SG10,,,,,,"[393] Wenn in derselben SG8 SEQ+Z19 (Erforderlicher Wert der Messlokation) das SG10 CCI+Z35 CAV+ZC4 (Kumuliert) vorhanden
 [418] Wenn in derselben SG8 SEQ+Z19 (Erforderlicher Wert der Messlokation) das SG10 CCI+Z35 CAV+ZC2 (Wirkarbeit) vorhanden
@@ -679,7 +675,7 @@
 636,SG10,CAV,7110,G6,Gaszähler G6,,
 637,SG10,CAV,7110,G65,Gaszähler G65,,
 638,SG10,CAV,7110,G650,Gaszähler G650,,
-639,,,,G6500,Gaszähler G6500,,
+639,SG10,CAV,7110,G6500,Gaszähler G6500,,
 640,Identifikation / Nummer des Gerätes,,,,,,
 641,SG10,,,,,,
 642,SG10,CAV,,,,Muss,
