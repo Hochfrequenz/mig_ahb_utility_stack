@@ -178,7 +178,7 @@ class TestAhbCsvReader:
     def test_csv_file_reading_11042(self, datafiles):
         path_to_csv: Path = datafiles / "11042.csv"
         reader = FlatAhbCsvReader(file_path=path_to_csv)
-        assert len(reader.rows) == 846
+        assert len(reader.rows) == 844
         assert (
             len(
                 [
@@ -195,7 +195,7 @@ class TestAhbCsvReader:
         assert first_row.ahb_expression == "Muss"
 
         # last row assertions
-        last_row = reader.rows[845]
+        last_row = reader.rows[-1]
         assert last_row.segment_code == "UNT"
         assert last_row.data_element == "0062"
         assert last_row.name == "Nachrichten-Referenznummer"
