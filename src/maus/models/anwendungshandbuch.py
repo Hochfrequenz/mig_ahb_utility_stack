@@ -13,6 +13,7 @@ from uuid import UUID
 import attr.validators
 import attrs
 from marshmallow import Schema, fields, post_load  # type:ignore[import]
+from more_itertools import last, split_when
 
 from maus.models import _check_that_string_is_not_whitespace_or_empty
 from maus.models.edifact_components import (
@@ -167,6 +168,20 @@ class AhbMetaInformationSchema(Schema):
         return AhbMetaInformation(**data)
 
 
+# pylint:disable=unused-argument
+def _check_that_nearly_all_lines_have_a_segment_group(instance, attribute, value: List[AhbLine]):
+    """
+    Loops over all provided ahb lines and checks that only at the beginning and the end there are lines without a
+    segment group. In between every line has to have a segment group specified. This is necessary for the navigation
+    to work because it primarily focuses and relies on correct SG information in the lines .
+    """
+    switches_from_no_sg_to_sg = list(
+        split_when(value, lambda x, y: x.segment_group_key is None and y.segment_group_key is not None)
+    )
+    if len(switches_from_no_sg_to_sg) > 2:
+        raise ValueError(f"There is a None segment group in line {last(switches_from_no_sg_to_sg[1])}")
+
+
 @attrs.define(auto_attribs=True, kw_only=True)
 class FlatAnwendungshandbuch:
     """
@@ -181,7 +196,9 @@ class FlatAnwendungshandbuch:
     lines: List[AhbLine] = attrs.field(
         validator=attrs.validators.deep_iterable(
             member_validator=attrs.validators.instance_of(AhbLine),
-            iterable_validator=attrs.validators.instance_of(list),
+            iterable_validator=attrs.validators.and_(
+                attrs.validators.instance_of(list), _check_that_nearly_all_lines_have_a_segment_group
+            ),
         )
     )  #: ordered list lines as they occur in the AHB
 
