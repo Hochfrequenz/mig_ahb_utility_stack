@@ -18,7 +18,7 @@ from maus.models.edifact_components import (
     derive_data_type_from_segment_code,
 )
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
-from maus.navigation import determine_location
+from maus.navigation import determine_locations
 
 
 def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElement:
