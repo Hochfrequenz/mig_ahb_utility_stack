@@ -5,7 +5,7 @@ This module contains methods to merge data from Message Implementation Guide and
 from itertools import groupby
 from typing import List, Sequence
 
-from more_itertools import last
+from more_itertools import last, first
 
 from maus.models.anwendungshandbuch import AhbLine, DeepAnwendungshandbuch, FlatAnwendungshandbuch
 from maus.models.edifact_components import (
@@ -18,7 +18,7 @@ from maus.models.edifact_components import (
     derive_data_type_from_segment_code,
 )
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
-from maus.navigation import determine_locations
+from maus.navigation import determine_locations, AhbLocation
 
 
 def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElement:
@@ -58,9 +58,9 @@ def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElem
     else:
         result = DataElementFreeText(
             entered_input=None,
-            ahb_expression=(ahb_lines[0].ahb_expression or "").strip() or None,
+            ahb_expression=ahb_lines[0].ahb_expression,
             discriminator=ahb_lines[0].name or ahb_lines[0].get_discriminator(include_name=True),
-            data_element_id=ahb_lines[0].data_element,  # type:ignore[arg-type]
+            data_element_id=first(ahb_lines, lambda line: line.data_element is not None).data_element,  # type:ignore[arg-type]
         )
         # a free text field never spans more than 1 line
 
@@ -122,7 +122,6 @@ def group_lines_by_segment_group(
                 result.append(sg_draft)
     return result
 
-
 def to_deep_ahb(
     flat_ahb: FlatAnwendungshandbuch, segment_group_hierarchy: SegmentGroupHierarchy
 ) -> DeepAnwendungshandbuch:
@@ -133,25 +132,37 @@ def to_deep_ahb(
     for position, layer_group in groupby(
         determine_locations(segment_group_hierarchy, flat_ahb.lines), key=lambda line_and_position: line_and_position[1]
     ):
-        youngest_layer = last(position.layers)
-        if not any((line.discriminator == youngest_layer.segment_group_key for line in result.lines)):
-            segment_group = SegmentGroup(
-                discriminator=ahb_line.segment_group_key,  # type:ignore[arg-type] # might be None now, will be replaced later
-                ahb_expression=(ahb_line.ahb_expression or "Dummy MUSS SG").strip() or None,
-                segments=[],
-                segment_groups=[],
-                ahb_line_index=ahb_line.index,
-            )
-            result.lines.append(segment_group)
+        data_element_lines = [x[0] for x in layer_group]
+        if any((True for l in data_element_lines if l.data_element is not None)):
+            if not any((True for l in data_element_lines if l.ahb_expression is not None)):
+                continue
+            data_element = merge_lines_with_same_data_element(data_element_lines)
+            last(result.lines).segments.append(data_element)
         else:
-            if not result.lines[-1].segments:
-                result.lines[-1].segments = []
-            segment = Segment(
-                discriminator=ahb_line.segment_code,  # type:ignore[arg-type] # shall not be none after sanitizing
-                data_elements=[],
-                ahb_expression=ahb_line.ahb_expression or "Dummy Muss S",
-                section_name=ahb_line.section_name,
-                ahb_line_index=ahb_line.index,
-            )
-            result.lines[-1].segments.append(segment)
+            first_line = first(data_element_lines)
+            if not any((line.discriminator == youngest_layer.segment_group_key for line in result.lines)):
+                first_line = first(data_element_lines)
+                segment_group = SegmentGroup(
+                    discriminator=first_line.segment_group_key,
+                    # type:ignore[arg-type] # might be None now, will be replaced later
+                    ahb_expression=(first_line.ahb_expression or "Dummy MUSS SG").strip() or None,
+                    segments=[],
+                    segment_groups=[],
+                    ahb_line_index=first_line.index,
+                )
+                result.lines.append(segment_group)
+            else:
+                if not result.lines[-1].segments:
+                    result.lines[-1].segments = []
+                segment = Segment(
+                    discriminator=first_line.segment_code,  # type:ignore[arg-type] # shall not be none after sanitizing
+                    data_elements=[],
+                    ahb_expression=first_line.ahb_expression or "Dummy Muss S",
+                    section_name=first_line.section_name,
+                    ahb_line_index=first_line.index,
+                )
+                result.lines[-1].segments.append(segment)
+        youngest_layer = last(position.layers)
+        continue
+
     return result
