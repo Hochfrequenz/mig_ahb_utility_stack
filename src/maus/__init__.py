@@ -5,7 +5,7 @@ This module contains methods to merge data from Message Implementation Guide and
 from itertools import groupby
 from typing import List, Sequence
 
-from more_itertools import last, first
+from more_itertools import first, last
 
 from maus.models.anwendungshandbuch import AhbLine, DeepAnwendungshandbuch, FlatAnwendungshandbuch
 from maus.models.edifact_components import (
@@ -18,7 +18,7 @@ from maus.models.edifact_components import (
     derive_data_type_from_segment_code,
 )
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
-from maus.navigation import determine_locations, AhbLocation
+from maus.navigation import AhbLocation, determine_locations
 
 
 def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElement:
@@ -60,7 +60,9 @@ def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElem
             entered_input=None,
             ahb_expression=ahb_lines[0].ahb_expression,
             discriminator=ahb_lines[0].name or ahb_lines[0].get_discriminator(include_name=True),
-            data_element_id=first(ahb_lines, lambda line: line.data_element is not None).data_element,  # type:ignore[arg-type]
+            data_element_id=first(
+                ahb_lines, lambda line: line.data_element is not None
+            ).data_element,  # type:ignore[arg-type]
         )
         # a free text field never spans more than 1 line
 
@@ -122,6 +124,7 @@ def group_lines_by_segment_group(
                 result.append(sg_draft)
     return result
 
+
 def to_deep_ahb(
     flat_ahb: FlatAnwendungshandbuch, segment_group_hierarchy: SegmentGroupHierarchy
 ) -> DeepAnwendungshandbuch:
@@ -134,7 +137,7 @@ def to_deep_ahb(
     ):
         data_element_lines = [x[0] for x in layer_group]
         if not any((True for l in data_element_lines if l.segment_code is not None)):
-            continue # section heading only
+            continue  # section heading only
         if any((True for l in data_element_lines if l.data_element is not None)):
             if not any((True for l in data_element_lines if l.ahb_expression is not None)):
                 # if none of the items is marked with an ahb expression it's probably not required in this AHB
