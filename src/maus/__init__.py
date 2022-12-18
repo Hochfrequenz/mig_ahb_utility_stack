@@ -133,14 +133,18 @@ def to_deep_ahb(
         determine_locations(segment_group_hierarchy, flat_ahb.lines), key=lambda line_and_position: line_and_position[1]
     ):
         data_element_lines = [x[0] for x in layer_group]
+        if not any((True for l in data_element_lines if l.segment_code is not None)):
+            continue # section heading only
         if any((True for l in data_element_lines if l.data_element is not None)):
             if not any((True for l in data_element_lines if l.ahb_expression is not None)):
+                # if none of the items is marked with an ahb expression it's probably not required in this AHB
                 continue
             data_element = merge_lines_with_same_data_element(data_element_lines)
-            last(result.lines).segments.append(data_element)
+            last(last(result.lines).segments).data_elements.append(data_element)
         else:
             first_line = first(data_element_lines)
             if not any((line.discriminator == youngest_layer.segment_group_key for line in result.lines)):
+                # a new segment group has been opened
                 first_line = first(data_element_lines)
                 segment_group = SegmentGroup(
                     discriminator=first_line.segment_group_key,
@@ -151,17 +155,19 @@ def to_deep_ahb(
                     ahb_line_index=first_line.index,
                 )
                 result.lines.append(segment_group)
-            else:
-                if not result.lines[-1].segments:
-                    result.lines[-1].segments = []
-                segment = Segment(
-                    discriminator=first_line.segment_code,  # type:ignore[arg-type] # shall not be none after sanitizing
-                    data_elements=[],
-                    ahb_expression=first_line.ahb_expression or "Dummy Muss S",
-                    section_name=first_line.section_name,
-                    ahb_line_index=first_line.index,
-                )
-                result.lines[-1].segments.append(segment)
+            assert first_line.data_element is None
+            # this assertion is because we assume that the lines always come like this:
+            # Section Heading
+            # SGx Foo      <-- a line with only the segment code but no actual content, this is where we're right now
+            # SGx Foo 1234 <-- the first interesting line
+            segment = Segment(
+                discriminator=first_line.segment_code,  # type:ignore[arg-type] # shall not be none after sanitizing
+                data_elements=[],
+                ahb_expression=first_line.ahb_expression or "Dummy Muss S",
+                section_name=first_line.section_name,
+                ahb_line_index=first_line.index,
+            )
+            last(result.lines).segments.append(segment)
         youngest_layer = last(position.layers)
         continue
 
