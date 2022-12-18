@@ -1,3 +1,8 @@
+"""
+the navigation module is contains models and code that allow to "navigate" through the AHB and MIG structure.
+I.e. it allows to loop over an Anwendungshandbuch and "remember" which turns we took in the MIG structure (each turn is
+a AhbLocationLayer) in order to arrive at a certain line of the AHB. This information is stored in an AhbLocation.5
+"""
 from typing import Callable, List, Optional, Tuple, TypeVar
 
 import attrs
@@ -9,14 +14,14 @@ T = TypeVar("T")
 
 
 def _enhance_with_next_line_that_fulfills_predicate(
-    ahb_lines: List[AhbLine], predicate: Callable[[AhbLine], bool], selector: Callable[[AhbLine], Optional[T]]
-) -> List[Tuple[AhbLine, T]]:
+    ahb_lines: List[AhbLine], predicate: Callable[[AhbLine], bool], selector: Callable[[AhbLine], T]
+) -> List[Tuple[AhbLine, Optional[T]]]:
     """
     For each line in ahb_line, find the next line that fulfills the predicate and return its property described by the
     selector.
     """
     # this function is not unit tested directly but only via _enhance_with_segment and _enhance_with_first_qualifier
-    result: List[Tuple[AhbLine, T]] = []
+    result: List[Tuple[AhbLine, Optional[T]]] = []
     for index, ahb_line in enumerate(ahb_lines):
         if predicate(ahb_line):
             result.append((ahb_line, selector(ahb_line)))
@@ -61,7 +66,8 @@ def _enhance_with_next_segment(ahb_lines: List[AhbLine]) -> List[Tuple[AhbLine, 
     return _enhance_with_next_line_that_fulfills_predicate(
         ahb_lines=ahb_lines,
         predicate=lambda line: line.segment_code is not None,
-        selector=lambda line: line.segment_code,  # type:ignore[return-value]  # we know it's not None (predicate)
+        selector=lambda line: line.segment_code,  # type:ignore[return-value, arg-type]
+        # predicate ensures that the selector does _not_ return None
     )
 
 
@@ -91,7 +97,8 @@ def _enhance_with_next_value_pool_entry(ahb_lines: List[AhbLine]) -> List[Tuple[
     return _enhance_with_next_line_that_fulfills_predicate(
         ahb_lines=ahb_lines,
         predicate=lambda line: line.value_pool_entry is not None,
-        selector=lambda line: line.value_pool_entry,  # type:ignore[return-value]  # we know it's not None (predicate)
+        selector=lambda line: line.value_pool_entry,  # type:ignore[return-value, arg-type]
+        # predicate ensures that the selector does _not_ return None
     )
 
 
@@ -124,6 +131,7 @@ def _is_opening_segment_line_border(
     return next_filled_segment == opening_segment_code
 
 
+# pylint:disable=too-few-public-methods
 @attrs.define(auto_attribs=True, kw_only=True, frozen=True)
 class AhbLocationLayer:
     """
@@ -154,6 +162,7 @@ class AhbLocationLayer:
     """
 
 
+# pylint:disable=too-few-public-methods
 @attrs.define(kw_only=True, auto_attribs=True, frozen=True)
 class AhbLocation:
     """
@@ -273,7 +282,6 @@ def determine_location(
                             opening_qualifier=this_next_qualifier,
                         )
                     )
-                    continue
                     # don't pop because the parent stays the same
                 else:
                     current_sgh = parent_sgh.pop()
@@ -290,7 +298,7 @@ def determine_location(
                                 opening_qualifier=this_next_qualifier,
                             )
                         )
-                    continue
+                continue
             # now we're sure that it's a step _into_ a segment group because the step out runs into the for-else.
             layers.append(
                 AhbLocationLayer(
@@ -302,6 +310,4 @@ def determine_location(
             parent_sgh.append(current_sgh)
             current_sgh = sub_hierarchy
             assert current_sgh.segment_group == this_ahb_line.segment_group_key
-    if len(layers) < 1:
-        print("Hwaaaaaat")
     return AhbLocation(layers=layers)

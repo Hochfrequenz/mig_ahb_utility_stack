@@ -130,7 +130,7 @@ def to_deep_ahb(
     Converts a flat ahb into a nested ahb using the provided segment hierarchy
     """
     result = DeepAnwendungshandbuch(meta=flat_ahb.meta, lines=[])
-    for line_index, ahb_line in enumerate(flat_ahb.lines):
+    for line_index, ahb_line_group in enumerate(flat_ahb.lines, lambda l: l.data_element):  # todo: group
         position = determine_location(segment_group_hierarchy, current_index=line_index, ahb_lines=flat_ahb.lines)
         youngest_layer = last(position.layers)
         if not any((line.discriminator == youngest_layer.segment_group_key for line in result.lines)):
@@ -145,13 +145,12 @@ def to_deep_ahb(
         else:
             if not result.lines[-1].segments:
                 result.lines[-1].segments = []
-            result.lines[-1].segments.append(
-                Segment(
-                    discriminator=ahb_line.segment_code,  # type:ignore[arg-type] # shall not be none after sanitizing
-                    data_elements=[],
-                    ahb_expression=ahb_line.ahb_expression or "Dummy Muss S",
-                    section_name=ahb_line.section_name,
-                    ahb_line_index=line_index,
-                )
+            segment = Segment(
+                discriminator=ahb_line.segment_code,  # type:ignore[arg-type] # shall not be none after sanitizing
+                data_elements=[],
+                ahb_expression=ahb_line.ahb_expression or "Dummy Muss S",
+                section_name=ahb_line.section_name,
+                ahb_line_index=line_index,
             )
+            result.lines[-1].segments.append(segment)
     return result
