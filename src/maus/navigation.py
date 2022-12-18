@@ -1,8 +1,9 @@
 """
 the navigation module is contains models and code that allow to "navigate" through the AHB and MIG structure.
 I.e. it allows to loop over an Anwendungshandbuch and "remember" which turns we took in the MIG structure (each turn is
-a AhbLocationLayer) in order to arrive at a certain line of the AHB. This information is stored in an AhbLocation.5
+a AhbLocationLayer) in order to arrive at a certain line of the AHB. This information is stored in an AhbLocation.
 """
+import sys
 from typing import Callable, List, Optional, Tuple, TypeVar
 
 import attrs
@@ -232,13 +233,15 @@ def determine_locations(
     current_sgh = segment_group_hierarchy
     parent_sgh: List[SegmentGroupHierarchy] = []
     result: List[Tuple[AhbLine, AhbLocation]] = []
-    for current_index, this_ahb_line, this_next_segment, this_next_qualifier in list(
+    zip_kwars = {}
+    if sys.version_info.minor >= 10:  # we implicitly assume python 3 here
+        zip_kwars = {"strict": True}  # strict=True has been introduced in 3.10
+    for this_ahb_line, this_next_segment, this_next_qualifier in list(
         zip(
-            range(0, len(ahb_lines)),
             ahb_lines,
             [x[1] for x in _enhance_with_next_segment(ahb_lines)],
             [x[1] for x in _enhance_with_next_value_pool_entry(ahb_lines)],
-            strict=True,
+            **zip_kwars
         )
     ):
         last_layer = last(layers)
