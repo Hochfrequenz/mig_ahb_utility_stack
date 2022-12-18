@@ -12,7 +12,7 @@ from maus.navigation import (
     _enhance_with_next_segment,
     _enhance_with_next_value_pool_entry,
     _is_opening_segment_line_border,
-    determine_location,
+    determine_locations,
 )
 
 sgh_utilmd_fv2204 = SegmentGroupHierarchy(
@@ -488,5 +488,7 @@ class TestNavigation:
         The test setup gives a segment group hierarchy and some ahb lines.
         The test then iterates over the given lines. And asserts that the results returned are as expected, one by one
         """
-        actual = determine_location(sgh, current_index=len(lines), ahb_lines=lines)
+        actual_locations = determine_locations(sgh, ahb_lines=lines)
+        assert len(actual_locations) == len(lines)
+        actual = actual_locations[len(lines) - 1][1]
         assert actual == expected_location

@@ -201,18 +201,17 @@ class AhbLocation:
     """
 
 
-def determine_location(
-    segment_group_hierarchy: SegmentGroupHierarchy, current_index: int, ahb_lines: List[AhbLine]
-) -> AhbLocation:
+def determine_locations(
+    segment_group_hierarchy: SegmentGroupHierarchy, ahb_lines: List[AhbLine]
+) -> List[Tuple[AhbLine, AhbLocation]]:
     """
-    Determines the position of the last item in ahb_lines by iterating over all lines and taking into account the
-    given segment group hierarchy. This only works, if ahb_lines always starts at the first AHB line of the AHB.
-    If you provide a full AHB from top to bottom as ahb_lines, the result will always be root.
-    This creates an instance of the AhbLocation which can then be passed around, to e.g. locate the same items in
-    the MIG.
+    If you provide _all_ lines of an AHB from top to bottom, this function will enrich the list of ahb_lines with the
+    respective locations of the single AHBLines. These locations can then be used to find/match the lines with the MIG.
+    :param segment_group_hierarchy: the general structure of the MIG
+    :param ahb_lines: all lines of an AHB
+    :return: the same lines that have been entered but together with their location which is derived from the segment
+    group hierarchy.
     """
-    # todo: we'd probably be MUCH faster if we computed the position once for all ahb lines instead of starting from 0 for each ahbline.
-    # the performance of this method is O(n^n) for a n lines ahbs; first make it work, then make it fast.
     starting_layer = AhbLocationLayer(
         segment_group_key=segment_group_hierarchy.segment_group,
         opening_segment_code=segment_group_hierarchy.opening_segment,
@@ -232,18 +231,21 @@ def determine_location(
     # We only need to look at one item at a time
     current_sgh = segment_group_hierarchy
     parent_sgh: List[SegmentGroupHierarchy] = []
-    for this_ahb_line, this_next_segment, this_next_qualifier in list(
+    result: List[Tuple[AhbLine, AhbLocation]] = []
+    for current_index, this_ahb_line, this_next_segment, this_next_qualifier in list(
         zip(
+            range(0, len(ahb_lines)),
             ahb_lines,
             [x[1] for x in _enhance_with_next_segment(ahb_lines)],
             [x[1] for x in _enhance_with_next_value_pool_entry(ahb_lines)],
             strict=True,
         )
-    )[0:current_index]:
+    ):
         last_layer = last(layers)
         if this_ahb_line.segment_group_key == last_layer.segment_group_key:
             # todo: check for neighbouring segment group SGx->SGx
             # no segment group chance
+            result.append((this_ahb_line, AhbLocation(layers=layers)))
             continue
         if (
             this_ahb_line.segment_group_key == last_layer.segment_group_key
@@ -298,6 +300,7 @@ def determine_location(
                                 opening_qualifier=this_next_qualifier,
                             )
                         )
+                result.append((this_ahb_line, AhbLocation(layers=layers)))
                 continue
             # now we're sure that it's a step _into_ a segment group because the step out runs into the for-else.
             layers.append(
@@ -310,4 +313,5 @@ def determine_location(
             parent_sgh.append(current_sgh)
             current_sgh = sub_hierarchy
             assert current_sgh.segment_group == this_ahb_line.segment_group_key
-    return AhbLocation(layers=layers)
+        result.append((this_ahb_line, AhbLocation(layers=layers)))
+    return result
