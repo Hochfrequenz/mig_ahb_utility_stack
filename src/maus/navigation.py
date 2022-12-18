@@ -235,7 +235,7 @@ def determine_locations(
     result: List[Tuple[AhbLine, AhbLocation]] = []
     zip_kwars = {}
     if sys.version_info.minor >= 10:  # we implicitly assume python 3 here
-        zip_kwars = {"strict": True} # strict=True has been introduced in 3.10
+        zip_kwars = {"strict": True}  # strict=True has been introduced in 3.10
     for this_ahb_line, this_next_segment, this_next_qualifier in list(
         zip(
             ahb_lines,
