@@ -1,7 +1,7 @@
 """
 the navigation module is contains models and code that allow to "navigate" through the AHB and MIG structure.
 I.e. it allows to loop over an Anwendungshandbuch and "remember" which turns we took in the MIG structure (each turn is
-a AhbLocationLayer) in order to arrive at a certain line of the AHB. This information is stored in an AhbLocation.5
+a AhbLocationLayer) in order to arrive at a certain line of the AHB. This information is stored in an AhbLocation.
 """
 import sys
 from typing import Callable, List, Optional, Tuple, TypeVar
