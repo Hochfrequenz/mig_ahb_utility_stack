@@ -233,22 +233,24 @@ def determine_locations(
     current_sgh = segment_group_hierarchy
     parent_sgh: List[SegmentGroupHierarchy] = []
     result: List[Tuple[AhbLine, AhbLocation]] = []
-    zip_kwars = {}
+    zip_kwargs = {}
     if sys.version_info.minor >= 10:  # we implicitly assume python 3 here
-        zip_kwars = {"strict": True}  # strict=True has been introduced in 3.10
+        zip_kwargs = {"strict": True}  # strict=True has been introduced in 3.10
     for this_ahb_line, this_next_segment, this_next_qualifier in list(
         zip(
             ahb_lines,
             [x[1] for x in _enhance_with_next_segment(ahb_lines)],
             [x[1] for x in _enhance_with_next_value_pool_entry(ahb_lines)],
-            **zip_kwars
+            **zip_kwargs
         )
     ):
         last_layer = last(layers)
         if this_ahb_line.segment_group_key == last_layer.segment_group_key:
             # todo: check for neighbouring segment group SGx->SGx
             # no segment group chance
-            result.append((this_ahb_line, AhbLocation(layers=layers)))
+            result.append(
+                (this_ahb_line, AhbLocation(layers=layers.copy(), data_element_id=this_ahb_line.data_element))
+            )
             continue
         if (
             this_ahb_line.segment_group_key == last_layer.segment_group_key
@@ -303,7 +305,12 @@ def determine_locations(
                                 opening_qualifier=this_next_qualifier,
                             )
                         )
-                result.append((this_ahb_line, AhbLocation(layers=layers)))
+                result.append(
+                    (
+                        this_ahb_line,
+                        AhbLocation(layers=layers.copy(), data_element_id=this_ahb_line.data_element),
+                    )
+                )
                 continue
             # now we're sure that it's a step _into_ a segment group because the step out runs into the for-else.
             layers.append(
@@ -316,5 +323,5 @@ def determine_locations(
             parent_sgh.append(current_sgh)
             current_sgh = sub_hierarchy
             assert current_sgh.segment_group == this_ahb_line.segment_group_key
-        result.append((this_ahb_line, AhbLocation(layers=layers)))
+        result.append((this_ahb_line, AhbLocation(layers=layers.copy(), data_element_id=this_ahb_line.data_element)))
     return result

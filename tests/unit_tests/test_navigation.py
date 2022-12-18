@@ -3,6 +3,7 @@ from uuid import UUID
 
 import pytest  # type:ignore[import]
 from jsonpath_ng.ext import parse  # type:ignore[import] #  jsonpath is just installed in the tests
+from more_itertools import last
 
 from maus import SegmentGroupHierarchy
 from maus.models.anwendungshandbuch import AhbLine
@@ -286,7 +287,8 @@ class TestNavigation:
                 AhbLocation(
                     layers=[
                         AhbLocationLayer(opening_qualifier=None, segment_group_key=None, opening_segment_code="UNH")
-                    ]
+                    ],
+                    data_element_id="0065",
                 ),
                 id="first segment on root level = stay",
             ),
@@ -318,7 +320,8 @@ class TestNavigation:
                     layers=[
                         AhbLocationLayer(segment_group_key=None, opening_segment_code="UNH", opening_qualifier=None),
                         AhbLocationLayer(segment_group_key="SG2", opening_segment_code="NAD", opening_qualifier="MS"),
-                    ]
+                    ],
+                    data_element_id="3035",
                 ),
                 id="switch from UNH into SG2",
             ),
@@ -361,7 +364,8 @@ class TestNavigation:
                         AhbLocationLayer(segment_group_key=None, opening_segment_code="UNH", opening_qualifier=None),
                         AhbLocationLayer(segment_group_key="SG2", opening_segment_code="NAD", opening_qualifier="MS"),
                         AhbLocationLayer(segment_group_key="SG3", opening_segment_code="CTA", opening_qualifier="IC"),
-                    ]
+                    ],
+                    data_element_id="3139",
                 ),
                 id="UNH to SG2 to SG3",
             ),
@@ -415,7 +419,8 @@ class TestNavigation:
                         # we entered the SG2 NAD+MS and SG3 CTA+IC, then left them again, that's why they are not part
                         # of this location anymore although we iterated over them.
                         AhbLocationLayer(segment_group_key="SG2", opening_segment_code="NAD", opening_qualifier="MR"),
-                    ]
+                    ],
+                    data_element_id="3035",
                 ),
                 id="UNH to SG2 NAD MS to SG3 back to next SG2 NAD MR",
             ),
@@ -477,7 +482,8 @@ class TestNavigation:
                     layers=[
                         AhbLocationLayer(segment_group_key=None, opening_segment_code="UNH", opening_qualifier=None),
                         AhbLocationLayer(segment_group_key="SG4", opening_segment_code="IDE", opening_qualifier="24"),
-                    ]
+                    ],
+                    data_element_id="7495",
                 ),
                 id="UNH to SG4",
             ),
@@ -488,7 +494,92 @@ class TestNavigation:
         The test setup gives a segment group hierarchy and some ahb lines.
         The test then iterates over the given lines. And asserts that the results returned are as expected, one by one
         """
-        actual_locations = determine_locations(sgh, ahb_lines=lines)
+        actual_locations = [x[1] for x in determine_locations(sgh, ahb_lines=lines)]
         assert len(actual_locations) == len(lines)
-        actual = actual_locations[len(lines) - 1][1]
+        actual = last(actual_locations)
         assert actual == expected_location
+
+    @pytest.mark.parametrize(
+        "x,y,are_equal",
+        [
+            pytest.param(
+                AhbLocationLayer(segment_group_key="SG1", opening_segment_code="FOO", opening_qualifier="X"),
+                AhbLocationLayer(segment_group_key="SG1", opening_segment_code="FOO", opening_qualifier="X"),
+                True,
+            ),
+            pytest.param(
+                AhbLocationLayer(segment_group_key="SG1", opening_segment_code="FOO", opening_qualifier="X"),
+                AhbLocationLayer(segment_group_key="SG1", opening_segment_code="FOO", opening_qualifier="Y"),
+                False,
+            ),
+            pytest.param(
+                AhbLocationLayer(segment_group_key="SG1", opening_segment_code="BAZ", opening_qualifier="X"),
+                AhbLocationLayer(segment_group_key="SG1", opening_segment_code="BAR", opening_qualifier="X"),
+                False,
+            ),
+            pytest.param(
+                AhbLocationLayer(segment_group_key="SG1", opening_segment_code="BAR", opening_qualifier="X"),
+                AhbLocationLayer(segment_group_key="SG2", opening_segment_code="BAR", opening_qualifier="X"),
+                False,
+            ),
+        ],
+    )
+    def test_layer_equality(self, x: AhbLocationLayer, y: AhbLocationLayer, are_equal: bool):
+        actual = x == y
+        assert actual is are_equal
+
+    @pytest.mark.parametrize(
+        "x,y,are_equal",
+        [
+            pytest.param(
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(segment_group_key="SG1", opening_segment_code="FOO", opening_qualifier="X"),
+                        AhbLocationLayer(segment_group_key="SG1", opening_segment_code="FOO", opening_qualifier="X"),
+                    ]
+                ),
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(segment_group_key="SG1", opening_segment_code="FOO", opening_qualifier="X"),
+                        AhbLocationLayer(segment_group_key="SG1", opening_segment_code="FOO", opening_qualifier="X"),
+                    ]
+                ),
+                True,
+            ),
+            pytest.param(
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(segment_group_key="SG1", opening_segment_code="FOO", opening_qualifier="X"),
+                        AhbLocationLayer(segment_group_key="SG1", opening_segment_code="FOO", opening_qualifier="X"),
+                    ],
+                ),
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(segment_group_key="SG1", opening_segment_code="FOO", opening_qualifier="X"),
+                        AhbLocationLayer(segment_group_key="SG1", opening_segment_code="BAR", opening_qualifier="X"),
+                    ],
+                ),
+                False,
+            ),
+            pytest.param(
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(segment_group_key="SG1", opening_segment_code="FOO", opening_qualifier="X"),
+                        AhbLocationLayer(segment_group_key="SG1", opening_segment_code="FOO", opening_qualifier="X"),
+                    ],
+                    data_element_id="7890",
+                ),
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(segment_group_key="SG1", opening_segment_code="FOO", opening_qualifier="X"),
+                        AhbLocationLayer(segment_group_key="SG1", opening_segment_code="BAR", opening_qualifier="X"),
+                    ],
+                    data_element_id="7890",
+                ),
+                False,
+            ),
+        ],
+    )
+    def test_location_equality(self, x: AhbLocation, y: AhbLocation, are_equal: bool):
+        actual = x == y
+        assert actual is are_equal
