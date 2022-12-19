@@ -351,6 +351,7 @@ def determine_locations(
         result.append((this_ahb_line, AhbLocation(layers=layers.copy(), data_element_id=this_ahb_line.data_element)))
     return result
 
+
 """
 def find_location(deep_ahb, location: AhbLocation) -> Optional[Union[SegmentGroup, List[Segment]]]:
     layers = location.layers.copy()

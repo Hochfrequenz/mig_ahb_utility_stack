@@ -102,6 +102,38 @@ def group_lines_by_segment(segment_group_lines: List[AhbLine]) -> List[Segment]:
     return result
 
 
+def _get_last_segment_groups(lines: List[SegmentGroup]) -> List[SegmentGroup]:
+    """
+    returns the "youngest" segment group list inside the given lines
+    :param lines:
+    :return:
+    """
+    for line in lines:
+        if line.segment_groups is not None:
+            if len(line.segment_groups) > 0:
+                return _get_last_segment_groups(line.segment_groups)
+            else:
+                return line.segment_groups
+    else:
+        return lines
+
+
+def _get_last_segments(lines: List[SegmentGroup]) -> List[Segment]:
+    """
+    returns the "youngest" list of segments inside the given lines
+    :param lines:
+    :return:
+    """
+    for line in lines:
+        if line.segment_groups is not None:
+            if len(line.segment_groups) > 0:
+                return _get_last_segments(line.segment_groups)
+            else:
+                return line.segments
+    else:
+        return line.segments
+
+
 def group_lines_by_segment_group(
     ahb_lines: List[AhbLine], segment_group_hierarchy: SegmentGroupHierarchy
 ) -> List[SegmentGroup]:
@@ -144,10 +176,7 @@ def to_deep_ahb(
                 # if none of the items is marked with an ahb expression it's probably not required in this AHB
                 continue
             data_element = merge_lines_with_same_data_element(data_element_lines)
-            if "last_position" in locals() and position.is_sub_location_of(last_position):
-                last(last(result.lines).segments).data_elements.append(data_element)
-            else:
-                last(last(result.lines).segments).data_elements.append(data_element)
+            append_next_data_elements_here.append(data_element)
         else:
             first_line = first(data_element_lines)
             last_line = last(data_element_lines)
@@ -164,10 +193,19 @@ def to_deep_ahb(
                     segment_groups=[],
                     ahb_line_index=first_line.index,
                 )
-                if "last_position" in locals() and position.is_sub_location_of(last_position):
-                    last(result.lines).segment_groups.append(segment_group)
-                else:
+                if "append_next_segments_here" in locals():
+                    del append_next_segments_here
+                append_next_segments_here = segment_group.segments
+                if segment_group.discriminator == "root":
                     result.lines.append(segment_group)
+                    append_next_sg_here = segment_group.segment_groups
+                elif position.is_sub_location_of(previous_position):
+                    append_next_sg_here.append(segment_group)
+                    if "append_next_sg_here" in locals():
+                        del append_next_sg_here
+                    append_next_sg_here = segment_group.segment_groups
+                else:
+                    append_next_sg_here.append(segment_group)
             assert last_line.data_element is None
             assert last_line.segment_code is not None
             # this assertion is because we assume that the lines always come like this:
@@ -181,12 +219,9 @@ def to_deep_ahb(
                 section_name=first_line.section_name,
                 ahb_line_index=first_line.index,
             )
-            if "last_position" in locals() and position.is_sub_location_of(last_position):
-                if not last(result.lines).segment_groups:
-                    last(result.lines).segments.append(segment)
-                else:
-                    last(last(result.lines).segment_groups).segments.append(segment)
-            else:
-                last(result.lines).segments.append(segment)
-        last_position = position
+            if "append_next_data_elements_here" in locals():
+                del append_next_data_elements_here
+            append_next_data_elements_here = segment.data_elements
+            append_next_segments_here.append(segment)
+        previous_position = position
     return result
