@@ -102,38 +102,6 @@ def group_lines_by_segment(segment_group_lines: List[AhbLine]) -> List[Segment]:
     return result
 
 
-def _get_last_segment_groups(lines: List[SegmentGroup]) -> List[SegmentGroup]:
-    """
-    returns the "youngest" segment group list inside the given lines
-    :param lines:
-    :return:
-    """
-    for line in lines:
-        if line.segment_groups is not None:
-            if len(line.segment_groups) > 0:
-                return _get_last_segment_groups(line.segment_groups)
-            else:
-                return line.segment_groups
-    else:
-        return lines
-
-
-def _get_last_segments(lines: List[SegmentGroup]) -> List[Segment]:
-    """
-    returns the "youngest" list of segments inside the given lines
-    :param lines:
-    :return:
-    """
-    for line in lines:
-        if line.segment_groups is not None:
-            if len(line.segment_groups) > 0:
-                return _get_last_segments(line.segment_groups)
-            else:
-                return line.segments
-    else:
-        return line.segments
-
-
 def group_lines_by_segment_group(
     ahb_lines: List[AhbLine], segment_group_hierarchy: SegmentGroupHierarchy
 ) -> List[SegmentGroup]:
@@ -205,6 +173,7 @@ def to_deep_ahb(
                         del append_next_sg_here
                     append_next_sg_here = segment_group.segment_groups
                 else:
+                    # todo: breakpoint here for sg.discriminator=="SG4" what if prvious location and this locaiton are neighbours?
                     append_next_sg_here.append(segment_group)
             assert last_line.data_element is None
             assert last_line.segment_code is not None
