@@ -4,6 +4,7 @@ from typing import Any, List, Optional, Set
 import pytest  # type:ignore[import]
 from unit_tests.serialization_test_helper import assert_serialization_roundtrip  # type:ignore[import]
 
+from maus import AhbLocation
 from maus.models.anwendungshandbuch import (
     AhbLine,
     AhbLineSchema,
@@ -853,3 +854,58 @@ class TestAhb:
     def test_deep_ahb_get_value_pools(self, deep_ahb: DeepAnwendungshandbuch, expected_result_length: int):
         actual = deep_ahb.get_all_value_pools()
         assert len(actual) == 1
+"""
+    _find_this_sg2 = SegmentGroup(
+        ahb_expression="expr A",
+        discriminator="SG2",
+        segments=[
+            Segment(
+                ahb_expression="expr B",
+                discriminator="FOO",
+                data_elements=[
+                    DataElementValuePool(
+                        value_pool=[
+                            ValuePoolEntry(qualifier="HELLO", meaning="world", ahb_expression="X"),
+                            ValuePoolEntry(qualifier="MAUS", meaning="rocks", ahb_expression="X"),
+                        ],
+                        discriminator="baz",
+                        entered_input="MAUS",
+                        data_element_id="0123",
+                    ),
+                    DataElementFreeText(
+                        ahb_expression="Muss [1]",
+                        entered_input="Hello Mice",
+                        discriminator="bar",
+                        data_element_id="4567",
+                    ),
+                ],
+            ),
+        ],
+        segment_groups=[],
+    )
+
+    @pytest.mark.parametrize(
+        "deep_ahb,location, expected_result",
+        [
+            pytest.param(
+                DeepAnwendungshandbuch(
+                    meta=AhbMetaInformation(pruefidentifikator="11042"),
+                    lines=[
+                        _find_this_sg2,
+                    ],
+                ),
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(segment_group_key="SG2", opening_segment_code="FOO", opening_qualifier="ASD")
+                    ]
+                ),
+                _find_this_sg2,
+            )
+        ],
+    )
+    def test_deep_ahb_find_location(
+        self, deep_ahb: DeepAnwendungshandbuch, location: AhbLocation, expected_result: Optional[SegmentGroup]
+    ):
+        actual = find_location(deep_ahb, location)
+        assert actual == expected_result
+"""

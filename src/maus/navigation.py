@@ -4,12 +4,12 @@ I.e. it allows to loop over an Anwendungshandbuch and "remember" which turns we 
 a AhbLocationLayer) in order to arrive at a certain line of the AHB. This information is stored in an AhbLocation.
 """
 import sys
-from typing import Callable, List, Optional, Tuple, TypeVar
+from typing import Callable, List, Optional, Tuple, TypeVar, Union
 
 import attrs
-from more_itertools import first_true, last
+from more_itertools import first_true, last, first, one
 
-from maus import AhbLine, SegmentGroupHierarchy
+from maus import AhbLine, SegmentGroupHierarchy, Segment, SegmentGroup, DeepAnwendungshandbuch
 
 T = TypeVar("T")
 
@@ -350,3 +350,37 @@ def determine_locations(
             assert current_sgh.segment_group == this_ahb_line.segment_group_key
         result.append((this_ahb_line, AhbLocation(layers=layers.copy(), data_element_id=this_ahb_line.data_element)))
     return result
+
+"""
+def find_location(deep_ahb, location: AhbLocation) -> Optional[Union[SegmentGroup, List[Segment]]]:
+    layers = location.layers.copy()
+    last_layer = last(layers)
+    segment_groups = deep_ahb.find_segment_groups(
+        lambda sg: sg.discriminator == last_layer.segment_group_key
+        and first(sg.segments).discriminator == last_layer.opening_segment_code
+    )
+    return one(segment_groups)
+
+    def _find_layer(self, layer:AhbLocationLayer)->Optional[SegmentGroup]:
+        segment_groups = self.find_segment_groups(
+            lambda sg: sg.discriminator == layer.segment_group_key and first(
+                sg.segments).discriminator == layer.opening_segment_code)
+
+
+def insert(deep_ahb: DeepAnwendungshandbuch, location: AhbLocation, element) -> None:
+
+    insert the given element at the specified location
+    :param location: where the item shall be added
+    :param element: the item/element ot be added
+    
+    target_position = None
+    for layer in location.layers:
+        sgs = deep_ahb.find_segments(lambda sg: sg.discriminator == layer.segment_group_key)
+        for sg in sgs:
+            if first(sg.segments).discriminator == layer.opening_segment_code:
+                if isinstance(element, Segment):
+                    sg.segments.append(element)
+                elif isinstance(element, SegmentGroup):
+                    sg.segment_groups.append(element)
+                sg.segments.append()
+"""

@@ -7,15 +7,14 @@ structure.
 another segment group)
 """
 
-from typing import Callable, List, Optional, Sequence, Set, Union
+from typing import Callable, List, Optional, Sequence, Set
 from uuid import UUID
 
 import attr.validators
 import attrs
 from marshmallow import Schema, fields, post_load  # type:ignore[import]
-from more_itertools import last, split_when, first
+from more_itertools import last, split_when
 
-from maus import AhbLocation
 from maus.models import _check_that_string_is_not_whitespace_or_empty
 from maus.models.edifact_components import (
     DataElementFreeText,
@@ -23,8 +22,6 @@ from maus.models.edifact_components import (
     Segment,
     SegmentGroup,
     SegmentGroupSchema,
-    SegmentLevel,
-    DataElement,
 )
 
 
@@ -424,23 +421,6 @@ class DeepAnwendungshandbuch:
             if segment_group.ahb_expression:
                 result.add(segment_group.ahb_expression)
         return sorted(result)
-
-    def insert(self, location: AhbLocation, element: Union[SegmentLevel, DataElement]) -> None:
-        """
-        insert the given element at the specified location
-        :param location: where the item shall be added
-        :param element: the item/element ot be added
-        """
-        target_position = None
-        for layer in location.layers:
-            sgs = self.find_segments(lambda sg: sg.discriminator == layer.segment_group_key)
-            for sg in sgs:
-                if first(sg.segments).discriminator == layer.opening_segment_code:
-                    if isinstance(element, Segment):
-                        sg.segments.append(element)
-                    elif isinstance(element, SegmentGroup):
-                        sg.segment_groups.append(element)
-                    sg.segments.append()
 
 
 def _replace_inputs_based_on_discriminator(

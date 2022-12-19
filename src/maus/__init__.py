@@ -157,7 +157,7 @@ def to_deep_ahb(
             ):
                 # a new segment group has been opened
                 segment_group = SegmentGroup(
-                    discriminator=first_line.segment_group_key,
+                    discriminator=first_line.segment_group_key or "root",
                     # type:ignore[arg-type] # might be None now, will be replaced later
                     ahb_expression=(first_line.ahb_expression or "Dummy MUSS SG").strip() or None,
                     segments=[],
@@ -183,8 +183,9 @@ def to_deep_ahb(
             )
             if "last_position" in locals() and position.is_sub_location_of(last_position):
                 if not last(result.lines).segment_groups:
-                    last(result.lines).segment_groups = []
-                last(last(result.lines).segment_groups).segments.append(segment)
+                    last(result.lines).segments.append(segment)
+                else:
+                    last(last(result.lines).segment_groups).segments.append(segment)
             else:
                 last(result.lines).segments.append(segment)
         last_position = position
