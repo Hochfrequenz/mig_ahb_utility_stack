@@ -200,7 +200,30 @@ class AhbLocation:
     """
     qualifier to identify the matching data element if the data_element id is not unique
     """
+    def is_sub_location_of(self, other: "AhbLocation") -> bool:
+        """
+        Returns true iff this (self) location is a sub position of the other provided location.
+        ([Foo][0][Bar]).is_sub_position_of([Foo][0]) is true.
+        """
+        # this is kind of copied and pasted from EdifactStack.is_sub_stack_of
+        # but any generalisation is probably not worth the loss of readability
+        if len(other.layers) > len(self.layers):
+            # self cannot be a sub path of other if other is "deeper"
+            return False
+        for layer_self, layer_other in zip(other.layers, self.layers):  # , strict=False):
+            # strict is False because it's ok if we stop the iteration if self.levels is "exhausted"; explicit is better
+            # the type-ignore for the strict=False is necessary for Python<3.10
+            if layer_self != layer_other:
+                return False
+        # the iteration stopped meaning that for all layers that both other and self share, they are identical.
+        # That's the definition of a sub location. It also means that any stack is a sub location of itself.
+        return True
 
+    def is_parent_of(self, other: "AhbLocation") -> bool:
+        """
+        Returns true iff this other stack is a sub position of self.
+        """
+        return other.is_sub_location_of(self)
 
 def determine_locations(
     segment_group_hierarchy: SegmentGroupHierarchy, ahb_lines: List[AhbLine]
