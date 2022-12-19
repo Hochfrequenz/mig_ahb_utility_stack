@@ -22,7 +22,9 @@ from maus.models.edifact_components import (
     DataElementValuePool,
     Segment,
     SegmentGroup,
-    SegmentGroupSchema, SegmentLevel, DataElement,
+    SegmentGroupSchema,
+    SegmentLevel,
+    DataElement,
 )
 
 
@@ -423,7 +425,7 @@ class DeepAnwendungshandbuch:
                 result.add(segment_group.ahb_expression)
         return sorted(result)
 
-    def insert(self, location:AhbLocation, element:Union[SegmentLevel, DataElement])->None:
+    def insert(self, location: AhbLocation, element: Union[SegmentLevel, DataElement]) -> None:
         """
         insert the given element at the specified location
         :param location: where the item shall be added
@@ -439,6 +441,7 @@ class DeepAnwendungshandbuch:
                     elif isinstance(element, SegmentGroup):
                         sg.segment_groups.append(element)
                     sg.segments.append()
+
 
 def _replace_inputs_based_on_discriminator(
     segment_groups: List[SegmentGroup], replacement_func: Callable[[str], DeepAhbInputReplacement]

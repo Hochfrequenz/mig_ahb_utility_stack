@@ -15,7 +15,8 @@ from maus.models.edifact_components import (
     Segment,
     SegmentGroup,
     ValuePoolEntry,
-    derive_data_type_from_segment_code, SegmentLevel,
+    derive_data_type_from_segment_code,
+    SegmentLevel,
 )
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
 from maus.navigation import AhbLocation, determine_locations
@@ -186,5 +187,5 @@ def to_deep_ahb(
                 last(last(result.lines).segment_groups).segments.append(segment)
             else:
                 last(result.lines).segments.append(segment)
-        last_position=position
+        last_position = position
     return result
