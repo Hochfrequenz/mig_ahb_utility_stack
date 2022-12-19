@@ -200,6 +200,7 @@ class AhbLocation:
     """
     qualifier to identify the matching data element if the data_element id is not unique
     """
+
     def is_sub_location_of(self, other: "AhbLocation") -> bool:
         """
         Returns true iff this (self) location is a sub position of the other provided location.
@@ -224,6 +225,7 @@ class AhbLocation:
         Returns true iff this other stack is a sub position of self.
         """
         return other.is_sub_location_of(self)
+
 
 def determine_locations(
     segment_group_hierarchy: SegmentGroupHierarchy, ahb_lines: List[AhbLine]
