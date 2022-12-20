@@ -275,7 +275,7 @@ class _AhbLocationDistance:
         validator=attrs.validators.and_(attrs.validators.instance_of(int), attrs.validators.ge(0))
     )
     """
-    Describes the number of layer (down) between the common ancestor of both locations and the target location. 
+    Describes the number of layer (down) between the common ancestor of both locations and the target location.
     Is always >= 0.
     """
 
