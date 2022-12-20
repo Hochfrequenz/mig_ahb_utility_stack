@@ -226,6 +226,7 @@ class AhbLocation:
         """
         return other.is_sub_location_of(self)
 
+
 def find_common_ancestor(location_x: AhbLocation, location_y: AhbLocation) -> AhbLocation:
     """
     Finds the last common ancestor of location_x and location_y.
@@ -248,7 +249,8 @@ def find_common_ancestor(location_x: AhbLocation, location_y: AhbLocation) -> Ah
         # We raise an exception if len(result_layers) is 0 because this case shouldn't happen in locations that
         # originate from the same AHB.
         raise ValueError("There is no common ancestor") from value_error
-    
+
+
 def determine_locations(
     segment_group_hierarchy: SegmentGroupHierarchy, ahb_lines: List[AhbLine]
 ) -> List[Tuple[AhbLine, AhbLocation]]:
