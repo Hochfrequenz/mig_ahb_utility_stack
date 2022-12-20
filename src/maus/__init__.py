@@ -14,9 +14,9 @@ from maus.models.edifact_components import (
     DataElementValuePool,
     Segment,
     SegmentGroup,
+    SegmentLevel,
     ValuePoolEntry,
     derive_data_type_from_segment_code,
-    SegmentLevel,
 )
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
 from maus.navigation import AhbLocation, determine_locations
@@ -133,6 +133,7 @@ def to_deep_ahb(
     Converts a flat ahb into a nested ahb using the provided segment hierarchy
     """
     result = DeepAnwendungshandbuch(meta=flat_ahb.meta, lines=[])
+    parent_group_lists: List[List[SegmentGroup]] = []
     for position, layer_group in groupby(
         determine_locations(segment_group_hierarchy, flat_ahb.lines), key=lambda line_and_position: line_and_position[1]
     ):
@@ -167,14 +168,33 @@ def to_deep_ahb(
                 if segment_group.discriminator == "root":
                     result.lines.append(segment_group)
                     append_next_sg_here = segment_group.segment_groups
+                    parent_group_lists.append(result.lines)
                 elif position.is_sub_location_of(previous_position):
                     append_next_sg_here.append(segment_group)
+                    parent_group_lists.append(append_next_sg_here)
                     if "append_next_sg_here" in locals():
                         del append_next_sg_here
                     append_next_sg_here = segment_group.segment_groups
                 else:
-                    # todo: breakpoint here for sg.discriminator=="SG4" what if prvious location and this locaiton are neighbours?
-                    append_next_sg_here.append(segment_group)
+                    # todo: breakpoint here for sg.discriminator=="SG4" what if prvious location and this locaiton are neighbours                    append_here = last(parent_group_lists)
+                    this_layers = position.layers.copy()
+                    prev_layers = previous_position.layers.copy()
+                    for i in range(0, len(prev_layers) - len(this_layers)):
+                        # parent_group_lists.pop()
+                        prev_layers.pop()
+                    this_layers.reverse()
+                    this_layers = list(this_layers)
+                    prev_layers.reverse()
+                    prev_layers = list(prev_layers)
+                    for prev_layer, this_layer in zip(prev_layers, this_layers):
+                        if prev_layer != this_layer:
+                            append_to_here = parent_group_lists.pop()
+                        else:
+                            break
+                    append_to_here = parent_group_lists.pop()
+                    append_to_here.append(segment_group)
+                    # append_here.append(segment_group)
+                    # append_next_sg_here.append(segment_group)
             assert last_line.data_element is None
             assert last_line.segment_code is not None
             # this assertion is because we assume that the lines always come like this:
