@@ -14,6 +14,7 @@ from maus.navigation import (
     _enhance_with_next_value_pool_entry,
     _is_opening_segment_line_border,
     determine_locations,
+    find_common_ancestor,
 )
 
 sgh_utilmd_fv2204 = SegmentGroupHierarchy(
@@ -555,3 +556,96 @@ class TestNavigation:
     ):
         assert location_x.is_sub_location_of(location_y) == x_is_sub_of_y
         assert location_y.is_parent_of(location_x) == y_is_parent_of_x
+
+    @pytest.mark.parametrize(
+        "location_x, location_y, expected",
+        [
+            pytest.param(
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(segment_group_key="SG0", opening_segment_code="FOO", opening_qualifier="ASD"),
+                        AhbLocationLayer(segment_group_key="SG1", opening_segment_code="BAR", opening_qualifier="QWE"),
+                    ]
+                ),
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(segment_group_key="SG0", opening_segment_code="FOO", opening_qualifier="ASD"),
+                        AhbLocationLayer(segment_group_key="SG1", opening_segment_code="BAR", opening_qualifier="QWE"),
+                    ]
+                ),
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(segment_group_key="SG0", opening_segment_code="FOO", opening_qualifier="ASD"),
+                        AhbLocationLayer(segment_group_key="SG1", opening_segment_code="BAR", opening_qualifier="QWE"),
+                    ]
+                ),
+                id="x == y",
+            ),
+            pytest.param(
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(segment_group_key="SG0", opening_segment_code="FOO", opening_qualifier="ASD"),
+                        AhbLocationLayer(segment_group_key="SG1", opening_segment_code="BAR", opening_qualifier="QWE"),
+                    ]
+                ),
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(segment_group_key="SG0", opening_segment_code="FOO", opening_qualifier="ASD"),
+                    ]
+                ),
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(segment_group_key="SG0", opening_segment_code="FOO", opening_qualifier="ASD"),
+                    ]
+                ),
+                id="x is parent of y",
+            ),
+            pytest.param(
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(segment_group_key="SG0", opening_segment_code="FOO", opening_qualifier="ASD"),
+                        AhbLocationLayer(segment_group_key="SG1", opening_segment_code="BAR", opening_qualifier="QWE"),
+                    ]
+                ),
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(segment_group_key="SG0", opening_segment_code="FOO", opening_qualifier="ASD"),
+                        AhbLocationLayer(segment_group_key="SG1", opening_segment_code="BAR", opening_qualifier="IOP"),
+                    ]
+                ),
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(segment_group_key="SG0", opening_segment_code="FOO", opening_qualifier="ASD"),
+                    ]
+                ),
+                id="x and y are siblings",
+            ),
+        ],
+    )
+    def test_find_common_ancestor(self, location_x: AhbLocation, location_y: AhbLocation, expected: AhbLocation):
+        actual = find_common_ancestor(location_x, location_y)
+        assert actual == expected
+
+    @pytest.mark.parametrize(
+        "location_x, location_y",
+        [
+            pytest.param(
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(segment_group_key="SG0", opening_segment_code="FOO", opening_qualifier="ASD"),
+                        AhbLocationLayer(segment_group_key="SG1", opening_segment_code="BAR", opening_qualifier="QWE"),
+                    ]
+                ),
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(segment_group_key="SG7", opening_segment_code="FOO", opening_qualifier="ASD"),
+                        AhbLocationLayer(segment_group_key="SG1", opening_segment_code="BAR", opening_qualifier="QWE"),
+                    ]
+                ),
+                id="there is no common root",
+            ),
+        ],
+    )
+    def test_find_no_common_ancestor(self, location_x: AhbLocation, location_y: AhbLocation):
+        with pytest.raises(ValueError):
+            _ = find_common_ancestor(location_x, location_y)
