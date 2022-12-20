@@ -4,12 +4,12 @@ I.e. it allows to loop over an Anwendungshandbuch and "remember" which turns we 
 a AhbLocationLayer) in order to arrive at a certain line of the AHB. This information is stored in an AhbLocation.
 """
 import sys
-from typing import Callable, List, Optional, Tuple, TypeVar, Union
+from typing import Callable, List, Optional, Tuple, TypeVar
 
 import attrs
-from more_itertools import first_true, last, first, one
+from more_itertools import first_true, last
 
-from maus import AhbLine, SegmentGroupHierarchy, Segment, SegmentGroup, DeepAnwendungshandbuch
+from maus import AhbLine, SegmentGroupHierarchy
 
 T = TypeVar("T")
 
@@ -227,6 +227,30 @@ class AhbLocation:
         return other.is_sub_location_of(self)
 
 
+def find_common_ancestor(location_x: AhbLocation, location_y: AhbLocation) -> AhbLocation:
+    """
+    Finds the last common ancestor of location_x and location_y.
+    If the layers of location X are:  [A,B,C,F,G,H]
+    And the layers of location Y are: [A,B,C,D,E,F]
+    then the last common ancestor is: [A,B,C]
+    :param location_x:
+    :param location_y:
+    :return: the location that is the last common ancestor of x and y
+    """
+    result_layers: List[AhbLocationLayer] = []
+    for layer_x, layer_y in zip(location_x.layers, location_y.layers):
+        if layer_x == layer_y:
+            result_layers.append(layer_x)
+        else:
+            break
+    try:
+        return AhbLocation(layers=result_layers)
+    except ValueError as value_error:
+        # We raise an exception if len(result_layers) is 0 because this case shouldn't happen in locations that
+        # originate from the same AHB.
+        raise ValueError("There is no common ancestor") from value_error
+
+
 def determine_locations(
     segment_group_hierarchy: SegmentGroupHierarchy, ahb_lines: List[AhbLine]
 ) -> List[Tuple[AhbLine, AhbLocation]]:
@@ -350,38 +374,3 @@ def determine_locations(
             assert current_sgh.segment_group == this_ahb_line.segment_group_key
         result.append((this_ahb_line, AhbLocation(layers=layers.copy(), data_element_id=this_ahb_line.data_element)))
     return result
-
-
-"""
-def find_location(deep_ahb, location: AhbLocation) -> Optional[Union[SegmentGroup, List[Segment]]]:
-    layers = location.layers.copy()
-    last_layer = last(layers)
-    segment_groups = deep_ahb.find_segment_groups(
-        lambda sg: sg.discriminator == last_layer.segment_group_key
-        and first(sg.segments).discriminator == last_layer.opening_segment_code
-    )
-    return one(segment_groups)
-
-    def _find_layer(self, layer:AhbLocationLayer)->Optional[SegmentGroup]:
-        segment_groups = self.find_segment_groups(
-            lambda sg: sg.discriminator == layer.segment_group_key and first(
-                sg.segments).discriminator == layer.opening_segment_code)
-
-
-def insert(deep_ahb: DeepAnwendungshandbuch, location: AhbLocation, element) -> None:
-
-    insert the given element at the specified location
-    :param location: where the item shall be added
-    :param element: the item/element ot be added
-    
-    target_position = None
-    for layer in location.layers:
-        sgs = deep_ahb.find_segments(lambda sg: sg.discriminator == layer.segment_group_key)
-        for sg in sgs:
-            if first(sg.segments).discriminator == layer.opening_segment_code:
-                if isinstance(element, Segment):
-                    sg.segments.append(element)
-                elif isinstance(element, SegmentGroup):
-                    sg.segment_groups.append(element)
-                sg.segments.append()
-"""
