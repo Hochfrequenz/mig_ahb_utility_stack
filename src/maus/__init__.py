@@ -178,9 +178,9 @@ def to_deep_ahb(
                 else:
                     # todo: breakpoint here for sg.discriminator=="SG4" what if prvious location and this locaiton are neighbours                    append_here = last(parent_group_lists)
                     distance = calculate_distance(previous_position, position)
-                    for i in range(0, distance.layers_up):
+                    for _ in range(0, distance.layers_up):
                         append_next_sg_here = parent_group_lists.pop()
-                    for j in range(0, distance.layers_down - 1):
+                    for _ in range(0, distance.layers_down - 1):
                         parent_group_lists.append(append_next_sg_here)
                         append_next_sg_here = last(append_next_sg_here).segment_groups
                     append_next_sg_here.append(segment_group)

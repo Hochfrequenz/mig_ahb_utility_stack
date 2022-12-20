@@ -370,12 +370,15 @@ def determine_locations(
             else:
                 # We're sure that it's at least a step OUT, because it's an SG change and no suitable sub hierarchy was
                 # found. The remaining question is: "How many segment groups did we leave at once?"
-                layers.pop()  # this is the exit from the current group
+                backup_layer = layers.pop()  # this is the exit from the current group
                 last_layer = last(layers)
                 probably_current_sgh = parent_sgh[-1]
                 if probably_current_sgh.segment_group != this_ahb_line.segment_group_key:
                     # we didn't move back to the parent but made a shortcut directly into the next (neighbouring)
                     # segment group.
+                    # if not AhbLocation(layers=layers.copy()).is_sub_location_of(last(result)[1]):
+                    # todo: for the sg4-sg5 transition we want the backuplayer to be re-added, for others we dont.
+                    # layers.append(backup_layer)
                     layers.append(
                         AhbLocationLayer(
                             segment_group_key=this_ahb_line.segment_group_key,
