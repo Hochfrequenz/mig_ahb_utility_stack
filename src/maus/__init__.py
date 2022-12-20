@@ -19,7 +19,7 @@ from maus.models.edifact_components import (
     derive_data_type_from_segment_code,
 )
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
-from maus.navigation import AhbLocation, determine_locations
+from maus.navigation import AhbLocation, determine_locations, calculate_distance
 
 
 def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElement:
@@ -177,21 +177,9 @@ def to_deep_ahb(
                     append_next_sg_here = segment_group.segment_groups
                 else:
                     # todo: breakpoint here for sg.discriminator=="SG4" what if prvious location and this locaiton are neighbours                    append_here = last(parent_group_lists)
-                    this_layers = position.layers.copy()
-                    prev_layers = previous_position.layers.copy()
-                    for i in range(0, len(prev_layers) - len(this_layers)):
-                        # parent_group_lists.pop()
-                        prev_layers.pop()
-                    this_layers.reverse()
-                    this_layers = list(this_layers)
-                    prev_layers.reverse()
-                    prev_layers = list(prev_layers)
-                    for prev_layer, this_layer in zip(prev_layers, this_layers):
-                        if prev_layer != this_layer:
-                            append_to_here = parent_group_lists.pop()
-                        else:
-                            break
-                    append_to_here = parent_group_lists.pop()
+                    distance = calculate_distance(previous_position, position)
+                    for i in range(0, distance.layers_up):
+                        append_to_here = parent_group_lists.pop()
                     append_to_here.append(segment_group)
                     # append_here.append(segment_group)
                     # append_next_sg_here.append(segment_group)
