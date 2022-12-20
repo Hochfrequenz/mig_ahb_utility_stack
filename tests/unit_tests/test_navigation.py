@@ -10,9 +10,11 @@ from maus.models.anwendungshandbuch import AhbLine
 from maus.navigation import (
     AhbLocation,
     AhbLocationLayer,
+    _AhbLocationDistance,
     _enhance_with_next_segment,
     _enhance_with_next_value_pool_entry,
     _is_opening_segment_line_border,
+    calculate_distance,
     determine_locations,
     find_common_ancestor,
 )
@@ -649,3 +651,59 @@ class TestNavigation:
     def test_find_no_common_ancestor(self, location_x: AhbLocation, location_y: AhbLocation):
         with pytest.raises(ValueError):
             _ = find_common_ancestor(location_x, location_y)
+
+    @pytest.mark.parametrize(
+        "location_x, location_y, expected",
+        [
+            pytest.param(
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(segment_group_key="SG0", opening_segment_code="FOO", opening_qualifier="ASD"),
+                        AhbLocationLayer(segment_group_key="SG1", opening_segment_code="BAR", opening_qualifier="QWE"),
+                    ]
+                ),
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(segment_group_key="SG0", opening_segment_code="FOO", opening_qualifier="ASD"),
+                        AhbLocationLayer(segment_group_key="SG1", opening_segment_code="BAR", opening_qualifier="QWE"),
+                    ]
+                ),
+                _AhbLocationDistance(layers_down=0, layers_up=0),
+                id="x == y",
+            ),
+            pytest.param(
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(segment_group_key="SG0", opening_segment_code="FOO", opening_qualifier="ASD"),
+                        AhbLocationLayer(segment_group_key="SG1", opening_segment_code="BAR", opening_qualifier="QWE"),
+                    ]
+                ),
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(segment_group_key="SG0", opening_segment_code="FOO", opening_qualifier="ASD"),
+                    ]
+                ),
+                _AhbLocationDistance(layers_down=0, layers_up=1),
+                id="x is parent of y",
+            ),
+            pytest.param(
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(segment_group_key="SG0", opening_segment_code="FOO", opening_qualifier="ASD"),
+                        AhbLocationLayer(segment_group_key="SG1", opening_segment_code="BAR", opening_qualifier="QWE"),
+                    ]
+                ),
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(segment_group_key="SG0", opening_segment_code="FOO", opening_qualifier="ASD"),
+                        AhbLocationLayer(segment_group_key="SG1", opening_segment_code="BAR", opening_qualifier="IOP"),
+                    ]
+                ),
+                _AhbLocationDistance(layers_down=1, layers_up=1),
+                id="x and y are siblings",
+            ),
+        ],
+    )
+    def test_calculate_distance(self, location_x: AhbLocation, location_y: AhbLocation, expected: _AhbLocationDistance):
+        actual = calculate_distance(location_x, location_y)
+        assert actual == expected

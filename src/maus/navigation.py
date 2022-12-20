@@ -251,6 +251,51 @@ def find_common_ancestor(location_x: AhbLocation, location_y: AhbLocation) -> Ah
         raise ValueError("There is no common ancestor") from value_error
 
 
+@attrs.define(auto_attribs=True, frozen=True, kw_only=True)
+class _AhbLocationDistance:
+    """
+    Describes the differences in the hierarchy between two locations.
+    Assume the start location is layers=[A,B,C,D,E,F] and the target location is layers=[A,B,G,H].
+    Then the distance is (with B as common ancestor):
+    layers_up = 4 (F--1-->E--2-->D--3-->C--4-->B)
+    layers_down = 2 (B--1-->G--2-->H)
+    A distance with layers_down == layers_up == 1 means the two locations are sibling.
+    A distance with layers_down == 0 means that the target location is a parent of the source location.
+    A distance with layers_up == 0 means that the source location is a parent of the target location.
+    """
+
+    layers_up: int = attrs.field(
+        validator=attrs.validators.and_(attrs.validators.instance_of(int), attrs.validators.ge(0))
+    )
+    """
+    Describes the number of layers (up) between the source location and the common ancestor of both locations.
+    Is always >= 0.
+    """
+    layers_down: int = attrs.field(
+        validator=attrs.validators.and_(attrs.validators.instance_of(int), attrs.validators.ge(0))
+    )
+    """
+    Describes the number of layer (down) between the common ancestor of both locations and the target location.
+    Is always >= 0.
+    """
+
+
+def calculate_distance(location_x: AhbLocation, location_y: AhbLocation) -> _AhbLocationDistance:
+    """
+    Calculate the "distance" between two locations.
+    The distance is measured in how many layers you have to go up and how many down reach location_y from location_y.
+    For more information see the docstring of `_AhbLocationDistance`
+    :param location_x: the start location
+    :param location_y: the target location
+    :return: the number of layers between location_x and location_y via their common ancestor.
+    """
+    common_ancestor = find_common_ancestor(location_x, location_y)
+    return _AhbLocationDistance(
+        layers_up=len(location_x.layers) - len(common_ancestor.layers),
+        layers_down=len(location_y.layers) - len(common_ancestor.layers),
+    )
+
+
 def determine_locations(
     segment_group_hierarchy: SegmentGroupHierarchy, ahb_lines: List[AhbLine]
 ) -> List[Tuple[AhbLine, AhbLocation]]:
