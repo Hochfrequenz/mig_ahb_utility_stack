@@ -16,7 +16,7 @@ from maus.models.edifact_components import (
     SegmentGroup,
     SegmentLevel,
     ValuePoolEntry,
-    derive_data_type_from_segment_code,
+    derive_data_type_from_segment_code, EdifactStack,
 )
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
 from maus.navigation import AhbLocation, calculate_distance, determine_locations
@@ -139,7 +139,11 @@ def to_deep_ahb(
         determine_locations(segment_group_hierarchy, flat_ahb.lines), key=lambda line_and_position: line_and_position[1]
     ):
         data_element_lines = [x[0] for x in layer_group]  # index 1 is the position
-        stack = mig_reader.get_edifact_stack(position)
+        try:
+            stack = mig_reader.get_edifact_stack(position)
+        except ValueError as value_error:
+            # there is a fundamental problem with our xml templates: they do not contain entries which are constant
+            stack = EdifactStack.from_json_path('$["Dokument"][0]["Nachricht"][0]["UNKNOWN"]')
         if not any((True for line in data_element_lines if line.segment_code is not None)):
             continue  # section heading only
         if any((True for line in data_element_lines if line.data_element is not None)):
@@ -167,7 +171,7 @@ def to_deep_ahb(
                 if "append_next_segments_here" in locals():
                     del append_next_segments_here
                 append_next_segments_here = segment_group.segments
-                if segment_group.discriminator == '$["Dokument"][0]':
+                if segment_group.discriminator == '$["Dokument"][0]["Nachricht"][0]':
                     result.lines.append(segment_group)
                     append_next_sg_here = segment_group.segment_groups
                     parent_group_lists.append(result.lines)

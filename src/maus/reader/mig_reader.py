@@ -130,7 +130,7 @@ class MigXmlReader(MigReader):
         candidates: List[Element]
         final_query_path = f"/{self.get_format_name()}"
         for layer in ahb_location.layers:
-            query_path = final_query_path + f"/class[@ref='{layer.segment_group_key or '/'}']"
+            query_path = final_query_path + f"/class[@ref='/']/class[@ref='{layer.segment_group_key or 'UNH'}']"
             candidates = list(self._original_root.xpath(query_path))
             if len(candidates) == 0:
                 raise ValueError(f"No element found for path {query_path}")
