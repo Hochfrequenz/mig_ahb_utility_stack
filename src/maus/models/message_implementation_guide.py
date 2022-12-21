@@ -72,7 +72,7 @@ class SegmentGroupHierarchy:
             return False
         if self.segment_group == segment_group_key_y:
             # because, if segment_group_x exists, it will be hierarchically below the root (y)
-            all_sg_keys_in_this_sgh: Set[str] = {x[0] for x in self.flattened()}
+            all_sg_keys_in_this_sgh: Set[Optional[str]] = {x[0] for x in self.flattened()}
             if segment_group_key_x in all_sg_keys_in_this_sgh:
                 return True
         for sub_hierarchy in self.sub_hierarchy or []:
