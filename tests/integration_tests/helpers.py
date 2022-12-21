@@ -5,7 +5,6 @@ from sys import gettrace
 import attrs
 
 from maus import DeepAnwendungshandbuch, SegmentGroupHierarchy, to_deep_ahb
-from maus.deep_ahb_mig_joiner import replace_discriminators_with_edifact_stack
 from maus.models.anwendungshandbuch import DeepAnwendungshandbuchSchema, FlatAnwendungshandbuch
 from maus.models.message_implementation_guide import SegmentGroupHierarchySchema
 from maus.reader.flat_ahb_reader import FlatAhbCsvReader
@@ -75,12 +74,10 @@ def create_maus_and_assert(
     flat_ahb = reader.to_flat_ahb()
     with open(sgh_path, "r", encoding="utf-8") as sgh_file:
         sgh = SegmentGroupHierarchySchema().loads(sgh_file.read())
-    actual_deep_ahb = to_deep_ahb(flat_ahb, sgh)
-    actual_json = DeepAnwendungshandbuchSchema().dumps(actual_deep_ahb, ensure_ascii=True, sort_keys=True)
     mig_reader = MigXmlReader(template_path)
+    actual_deep_ahb = to_deep_ahb(flat_ahb, sgh, mig_reader)
+    actual_json = DeepAnwendungshandbuchSchema().dumps(actual_deep_ahb, ensure_ascii=True, sort_keys=True)
     maus = DeepAnwendungshandbuchSchema().loads(actual_json)  # maus is a copy of the (unchanged) actual_deep_ahb
-    assert mig_reader is not None
-    replace_discriminators_with_edifact_stack(maus, mig_reader, ignore_errors=False)
     actual_maus_json = DeepAnwendungshandbuchSchema().dumps(maus, ensure_ascii=True, sort_keys=True, indent=True)
     assert actual_maus_json is not None
     write_to_file_or_assert_equality(maus, maus_path)

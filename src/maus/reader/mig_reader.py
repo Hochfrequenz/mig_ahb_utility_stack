@@ -33,7 +33,7 @@ class MigReader(ABC):
 
     # pylint:disable=too-many-arguments
     @abstractmethod
-    def get_edifact_stack(self, query: Union[EdifactStackQuery, AhbLocation]) -> Optional[EdifactStack]:
+    def get_edifact_stack(self, location: AhbLocation) -> Optional[EdifactStack]:
         """
         Returns the edifact stack for the given combination of segment group, key, data element and name
         """

@@ -228,14 +228,3 @@ def _replace_discriminators_with_edifact_stack_groups(
                 fallback_predecessors=predecessor_qualifiers_used,
             )
     return result
-
-
-def replace_discriminators_with_edifact_stack(
-    deep_ahb: DeepAnwendungshandbuch, mig_reader: MigReader, ignore_errors: bool = False
-) -> None:
-    """
-    replaces all discriminators in deep_ahb with an edifact seed path from the provided mig_reader
-    """
-    deep_ahb.lines = _replace_discriminators_with_edifact_stack_groups(
-        deep_ahb.lines, mig_reader, fallback_predecessors={}, ignore_errors=ignore_errors
-    )

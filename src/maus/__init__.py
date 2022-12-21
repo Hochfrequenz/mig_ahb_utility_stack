@@ -20,9 +20,10 @@ from maus.models.edifact_components import (
 )
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
 from maus.navigation import AhbLocation, calculate_distance, determine_locations
+from maus.reader.mig_reader import MigReader
 
 
-def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElement:
+def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine], first_stack_path: str) -> DataElement:
     """
     Merges lines that have the same data element into a single data element instance which is returned
     """
@@ -35,7 +36,7 @@ def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElem
     result: DataElement
     if ahb_lines[0].value_pool_entry is not None:
         result = DataElementValuePool(
-            discriminator=ahb_lines[0].get_discriminator(include_name=False),
+            discriminator=first_stack_path,
             value_pool=[],
             data_element_id=ahb_lines[0].data_element,  # type:ignore[arg-type]
             entered_input=None,
@@ -60,7 +61,7 @@ def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElem
         result = DataElementFreeText(
             entered_input=None,
             ahb_expression=ahb_lines[0].ahb_expression,
-            discriminator=ahb_lines[0].name or ahb_lines[0].get_discriminator(include_name=True),
+            discriminator=first_stack_path,
             data_element_id=first(
                 ahb_lines, lambda line: line.data_element is not None
             ).data_element,  # type:ignore[arg-type]
@@ -127,7 +128,7 @@ def group_lines_by_segment_group(
 
 
 def to_deep_ahb(
-    flat_ahb: FlatAnwendungshandbuch, segment_group_hierarchy: SegmentGroupHierarchy
+    flat_ahb: FlatAnwendungshandbuch, segment_group_hierarchy: SegmentGroupHierarchy, mig_reader: MigReader
 ) -> DeepAnwendungshandbuch:
     """
     Converts a flat ahb into a nested ahb using the provided segment hierarchy
@@ -138,13 +139,14 @@ def to_deep_ahb(
         determine_locations(segment_group_hierarchy, flat_ahb.lines), key=lambda line_and_position: line_and_position[1]
     ):
         data_element_lines = [x[0] for x in layer_group]  # index 1 is the position
+        stack = mig_reader.get_edifact_stack(position)
         if not any((True for line in data_element_lines if line.segment_code is not None)):
             continue  # section heading only
         if any((True for line in data_element_lines if line.data_element is not None)):
             if not any((True for line in data_element_lines if line.ahb_expression is not None)):
                 # if none of the items is marked with an ahb expression it's probably not required in this AHB
                 continue
-            data_element = merge_lines_with_same_data_element(data_element_lines)
+            data_element = merge_lines_with_same_data_element(data_element_lines, first_stack_path=stack.to_json_path())
             append_next_data_elements_here.append(data_element)
         else:
             first_line = first(data_element_lines)
@@ -155,7 +157,7 @@ def to_deep_ahb(
             ):
                 # a new segment group has been opened
                 segment_group = SegmentGroup(
-                    discriminator=first_line.segment_group_key or "root",
+                    discriminator=stack.to_json_path(),
                     # type:ignore[arg-type] # might be None now, will be replaced later
                     ahb_expression=(first_line.ahb_expression or "Dummy MUSS SG").strip() or None,
                     segments=[],
@@ -198,7 +200,7 @@ def to_deep_ahb(
             # SGx Foo      <-- a line with only the segment code but no actual content; this is where we're right now
             # SGx Foo 1234 <-- the first interesting line
             segment = Segment(
-                discriminator=last_line.segment_code,
+                discriminator=stack.to_json_path(),
                 data_elements=[],
                 ahb_expression=first_line.ahb_expression or "Dummy Muss S",
                 section_name=first_line.section_name,
