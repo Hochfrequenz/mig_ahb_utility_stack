@@ -289,7 +289,7 @@ class TestNavigation:
                 ],
                 AhbLocation(
                     layers=[
-                        AhbLocationLayer(opening_qualifier=None, segment_group_key=None, opening_segment_code="UNH")
+                        AhbLocationLayer(opening_qualifier="UTILMD", segment_group_key=None, opening_segment_code="UNH")
                     ],
                     data_element_id="0065",
                 ),

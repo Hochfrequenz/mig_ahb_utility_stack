@@ -4,6 +4,7 @@ I.e. it allows to loop over an Anwendungshandbuch and "remember" which turns we 
 a AhbLocationLayer) in order to arrive at a certain line of the AHB. This information is stored in an AhbLocation.
 """
 import sys
+from enum import Enum
 from typing import Callable, List, Optional, Tuple, TypeVar
 
 import attrs
@@ -296,7 +297,225 @@ def calculate_distance(location_x: AhbLocation, location_y: AhbLocation) -> _Ahb
     )
 
 
+class _DifferentialAhbLineHierarchyChange(Enum):
+    """
+    Describes the different scenarios that can happen when moving from one AHBline to the next.
+    """
+
+    STAY = 1  #: Stay in the same ("selbe") segment group; e.g. UTILMD SG4 IDE+24 -> SG4 IDE+24
+    MOVE_TO_NEIGHBOUR_SAME_KEY = 2
+    """
+    Stay on the same hierarchy level but move to a neighbouring group that has the same segment group key.
+    E.g. UTILMD SG2 NAD+MS -> SG2 NAD+MR
+    """
+    MOVE_TO_NEIGHBOUR_DIFFERENT_KEY = 4
+    """
+    Stay on the same hierarchy level but move to a neighbouring group with a different segment group key.
+    E.g. UTILMD SG5 LOC -> SG6 RFF
+    """
+    DIVE_INTO_SUB_GROUP = 8
+    """
+    Move into a nested subgroup with a different segment group key.
+    E.g. UTILMD SG2->SG3
+    """
+    LEAVE_TO_PARENT = 16
+    """
+    Leave a segment group back to the parent hierarchy level. E.g. UTILMD SG3 -> SG2
+    """
+    LEAVE_TO_PARENT_AND_DIVE_INTO_SUB_GROUP = DIVE_INTO_SUB_GROUP + LEAVE_TO_PARENT
+    """
+    often when leaving one sub group we directly dive into the next one.
+    """
+
+
+def _this_line_is_hierarchically_below_the_previous_sg_key(
+    this_line: AhbLine, previous_segment_group_key, segment_group_hierarchy: SegmentGroupHierarchy
+) -> bool:
+    """
+    returns true iff this_line is hierarchically below the previous segment group key; false otherwise
+    :param this_line: e.g. SG3 CTA
+    :param previous_segment_group_key: SG2
+    :param segment_group_hierarchy: [UNH, [SG2 [SG3]], [SG2], [SG4[SG...]]]
+    :return: true if SG3 hierarchically line is below SG2
+    """
+    if this_line.segment_group_key == previous_segment_group_key:
+        return False
+    if segment_group_hierarchy.segment_group == previous_segment_group_key:
+        # anything is below root
+        return True
+    this_sgh = segment_group_hierarchy
+
+
+def _determine_hierarchy_change(
+    this_ahb_line: AhbLine,
+    this_next_segment: str,
+    this_next_qualifier: str,
+    previous_locations: List[AhbLocation],
+    segment_group_hierarchy: SegmentGroupHierarchy,
+) -> _DifferentialAhbLineHierarchyChange:
+    """
+    Determine which kind of transition happens between two AHB lines
+    :return: see `_DifferentialAhbLineHierarchyChange`
+    """
+    previous_sg_key: Optional[str] = None
+    previous_opening_qualifier: str = None  # type:ignore[assignment]
+    previous_opening_segment_code: str = None  # type:ignore[assignment]
+    if len(previous_locations) > 0:
+        last_layer = last(last(previous_locations).layers)
+        previous_sg_key = last_layer.segment_group_key
+        previous_opening_qualifier = last_layer.opening_qualifier
+        previous_opening_segment_code = last_layer.opening_segment_code
+    if this_ahb_line.segment_group_key == previous_sg_key:  # No segment group change (key);
+        if this_next_segment != previous_opening_segment_code:
+            return _DifferentialAhbLineHierarchyChange.STAY
+        # next segment opens a new group with the same key
+        if this_next_qualifier == previous_opening_qualifier:
+            return _DifferentialAhbLineHierarchyChange.STAY
+        return _DifferentialAhbLineHierarchyChange.MOVE_TO_NEIGHBOUR_SAME_KEY
+    # An SG change happened. Now we have to distinguish. Did we switch...
+    # * ...to a sub group nested inside (add layers)
+    # * ...back to a parent group (remove layers)
+    # * ...even both: move to parent (remove layer) and then dive into another subgroup (add layer) at the same time
+
+    for sub_hierarchy in segment_group_hierarchy.sub_hierarchy or []:
+        if sub_hierarchy.segment_group == this_ahb_line.segment_group_key and sub_hierarchy.opening_segment == (
+            this_ahb_line.segment_code or this_next_segment
+        ):
+            break
+        pass
+
+
 def determine_locations(
+    segment_group_hierarchy: SegmentGroupHierarchy, ahb_lines: List[AhbLine]
+) -> List[Tuple[AhbLine, AhbLocation]]:
+    """
+    If you provide _all_ lines of an AHB from top to bottom, this function will enrich the list of ahb_lines with the
+    respective locations of the single AHBLines. These locations can then be used to find/match the lines with the MIG.
+    :param segment_group_hierarchy: the general structure of the MIG
+    :param ahb_lines: all lines of an AHB
+    :return: the same lines that have been entered but together with their location which is derived from the segment
+    group hierarchy.
+    """
+    starting_layer = AhbLocationLayer(
+        segment_group_key=segment_group_hierarchy.segment_group,
+        opening_segment_code=segment_group_hierarchy.opening_segment,
+        opening_qualifier=None,
+    )
+    layers: List[AhbLocationLayer] = [starting_layer]
+    # the layers are the internal representation of the position.
+    # layers[0] is always the SGH root.
+    # layers[-1] is the segment group that is also denoted at the beginning of the current AHBLine.
+
+    # Basically we now iterate over the ahb_lines lines and try to remember which segment groups we entered on our
+    # way and which one we also exited so that in the end, we know where the last item of ahb_lines is located.
+    # To account reduce the complexity in this function, we first enhance the lines with additional information:
+    # 1. what is the next segment code?
+    # 2. what is the next qualifier?
+    # Using these helper functions saves us from looking ahead in our iteration.
+    # We only need to look at one item at a time
+    current_sgh = segment_group_hierarchy
+    parent_sgh: List[SegmentGroupHierarchy] = []
+    result: List[Tuple[AhbLine, AhbLocation]] = []
+    zip_kwargs = {}
+    if sys.version_info.minor >= 10:  # we implicitly assume python 3 here
+        zip_kwargs = {"strict": True}  # strict=True has been introduced in 3.10
+    for this_ahb_line, this_next_segment, this_next_qualifier in list(
+        zip(
+            ahb_lines,
+            [x[1] for x in _enhance_with_next_segment(ahb_lines)],
+            [x[1] for x in _enhance_with_next_value_pool_entry(ahb_lines)],
+            **zip_kwargs
+        )
+    ):
+        change = _determine_hierarchy_change(
+            this_ahb_line, this_next_segment, this_next_qualifier, [x[1] for x in result]
+        )
+        if change == _DifferentialAhbLineHierarchyChange.STAY:
+            # No segment group change; The layers represent the location already.
+            result.append(
+                (this_ahb_line, AhbLocation(layers=layers.copy(), data_element_id=this_ahb_line.data_element))
+            )
+            continue
+        if change == _DifferentialAhbLineHierarchyChange.MOVE_TO_NEIGHBOUR_SAME_KEY:
+            # Switch to a neighbouring segment group (SGx->SGx) but with a different opening qualifier.
+            # For e.g. UTILMD this happens at SG2 which first occurs for NAD+MS (with embedded SG3) and then as NAD+MR.
+            # The parent stays the same (no pop to parent nor change of current sgh)
+            layers.pop()
+            layers.append(
+                AhbLocationLayer(
+                    segment_group_key=this_ahb_line.segment_group_key,
+                    opening_segment_code=this_next_segment,
+                    opening_qualifier=this_next_qualifier,
+                )
+            )
+            result.append(
+                (this_ahb_line, AhbLocation(layers=layers.copy(), data_element_id=this_ahb_line.data_element))
+            )
+            continue
+        # switch to a sublevel or to a neighbouring group with a different SG key (SGx->SGy)
+        for sub_hierarchy in current_sgh.sub_hierarchy or []:
+            if sub_hierarchy.segment_group == this_ahb_line.segment_group_key and sub_hierarchy.opening_segment == (
+                this_ahb_line.segment_code or this_next_segment
+            ):
+                break
+        else:
+            # We're sure that it's at least a step OUT, because it's an SG change and no suitable sub hierarchy was
+            # found. The remaining question is: "How many segment groups did we leave at once?"
+            backup_layer = layers.pop()  # this is the exit from the current group
+            last_layer = last(layers)
+            probably_current_sgh = parent_sgh[-1]
+            if probably_current_sgh.segment_group != this_ahb_line.segment_group_key:
+                # we didn't move back to the parent but made a shortcut directly into the next (neighbouring)
+                # segment group.
+                # if not AhbLocation(layers=layers.copy()).is_sub_location_of(last(result)[1]):
+                # todo: for the sg4-sg5 transition we want the backuplayer to be re-added, for others we dont.
+                # layers.append(backup_layer)
+                layers.append(
+                    AhbLocationLayer(
+                        segment_group_key=this_ahb_line.segment_group_key,
+                        opening_segment_code=this_next_segment,
+                        opening_qualifier=this_next_qualifier,
+                    )
+                )
+                # don't pop because the parent stays the same
+            else:
+                current_sgh = parent_sgh.pop()
+                if (
+                    last_layer.segment_group_key == this_ahb_line.segment_group_key
+                    and last_layer.opening_qualifier != this_next_qualifier
+                ):
+                    # remove the outdated SG with the same SG key (eg. in the SG2(MS)/SG3->SG2(MR) transition)
+                    layers.pop()
+                    layers.append(  # re-add it with the same SG x but a changed opening qualifier
+                        AhbLocationLayer(
+                            segment_group_key=this_ahb_line.segment_group_key,
+                            opening_segment_code=this_next_segment,
+                            opening_qualifier=this_next_qualifier,
+                        )
+                    )
+            result.append(
+                (
+                    this_ahb_line,
+                    AhbLocation(layers=layers.copy(), data_element_id=this_ahb_line.data_element),
+                )
+            )
+            continue
+        # now we're sure that it's a step _into_ a segment group because the step out runs into the for-else.
+        layers.append(
+            AhbLocationLayer(
+                segment_group_key=sub_hierarchy.segment_group,
+                opening_segment_code=sub_hierarchy.opening_segment,
+                opening_qualifier=this_next_qualifier,
+            )
+        )
+        parent_sgh.append(current_sgh)
+        current_sgh = sub_hierarchy
+        assert current_sgh.segment_group == this_ahb_line.segment_group_key
+        result.append((this_ahb_line, AhbLocation(layers=layers.copy(), data_element_id=this_ahb_line.data_element)))
+    return result
+
+
+def determine_locations2(
     segment_group_hierarchy: SegmentGroupHierarchy, ahb_lines: List[AhbLine]
 ) -> List[Tuple[AhbLine, AhbLocation]]:
     """
