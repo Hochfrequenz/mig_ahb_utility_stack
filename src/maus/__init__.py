@@ -167,7 +167,7 @@ def to_deep_ahb(
                 if "append_next_segments_here" in locals():
                     del append_next_segments_here
                 append_next_segments_here = segment_group.segments
-                if segment_group.discriminator == "root":
+                if segment_group.discriminator == '$["Dokument"][0]':
                     result.lines.append(segment_group)
                     append_next_sg_here = segment_group.segment_groups
                     parent_group_lists.append(result.lines)
