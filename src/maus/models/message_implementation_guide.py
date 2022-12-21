@@ -2,7 +2,7 @@
 """
 Contains classes to Model Message Implementation Guides (MIG)
 """
-from typing import List, Optional, Tuple
+from typing import List, Optional, Set, Tuple
 
 import attrs
 from marshmallow import Schema, fields, post_load
@@ -56,6 +56,27 @@ class SegmentGroupHierarchy:
             if sub_hier.segment_group == segment_group_key:
                 return True
             if sub_hier.is_hierarchically_below(segment_group_key):
+                return True
+        return False
+
+    def sg_is_hierarchically_below(
+        self, segment_group_key_x: Optional[str], segment_group_key_y: Optional[str]
+    ) -> bool:
+        """
+        returns true iff segment group with segment_group_key_x is hierarchically below the segment_group with key_y
+        :param segment_group_key_x:
+        :param segment_group_key_y:
+        :return:
+        """
+        if segment_group_key_x == segment_group_key_y:
+            return False
+        if self.segment_group == segment_group_key_y:
+            # because, if segment_group_x exists, it will be hierarchically below the root (y)
+            all_sg_keys_in_this_sgh: Set[str] = {x[0] for x in self.flattened()}
+            if segment_group_key_x in all_sg_keys_in_this_sgh:
+                return True
+        for sub_hierarchy in self.sub_hierarchy or []:
+            if sub_hierarchy.sg_is_hierarchically_below(segment_group_key_x, segment_group_key_y) is True:
                 return True
         return False
 
