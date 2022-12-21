@@ -299,6 +299,48 @@ class TestNavigation:
                 sgh_utilmd_fv2204,
                 [
                     AhbLine(
+                        guid=UUID("0e774e0c-7714-4853-82c8-742e65362eae"),
+                        segment_group_key=None,
+                        segment_code="UNH",
+                        data_element="0062",
+                        value_pool_entry=None,
+                        name="Nachrichtenreferenznummer",
+                        section_name="Nachrichten-Kopfsegment",
+                        ahb_expression="X",
+                    ),
+                    AhbLine(
+                        guid=UUID("21a6dacb-479f-48f7-9cda-41a01f0d6f0a"),
+                        segment_group_key=None,
+                        segment_code="UNH",
+                        data_element="0065",
+                        value_pool_entry="UTILMD",
+                        name=None,
+                        section_name="Nachrichten-Kopfsegment",
+                        ahb_expression="X",
+                    ),
+                    AhbLine(
+                        guid=UUID("807efb26-5003-4ba0-b98a-602f9eb1f7e5"),
+                        segment_group_key=None,
+                        segment_code="UNH",
+                        data_element="0052",
+                        value_pool_entry="D",
+                        name="Entwurfsversion",
+                        section_name="Nachrichten-Kopfsegment",
+                        ahb_expression="X",
+                    ),
+                ],
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(opening_qualifier="UTILMD", segment_group_key=None, opening_segment_code="UNH")
+                    ],
+                    data_element_id="0052",
+                ),
+                id="first segment on root level = stay don't move to non-existent neighbour",
+            ),
+            pytest.param(
+                sgh_utilmd_fv2204,
+                [
+                    AhbLine(
                         guid=UUID("98f29214-5ec2-4635-8fcd-67e26804c2fe"),
                         segment_group_key=None,
                         segment_code="UNH",
@@ -321,7 +363,9 @@ class TestNavigation:
                 ],
                 AhbLocation(
                     layers=[
-                        AhbLocationLayer(segment_group_key=None, opening_segment_code="UNH", opening_qualifier=None),
+                        AhbLocationLayer(
+                            segment_group_key=None, opening_segment_code="UNH", opening_qualifier="UTILMD"
+                        ),
                         AhbLocationLayer(segment_group_key="SG2", opening_segment_code="NAD", opening_qualifier="MS"),
                     ],
                     data_element_id="3035",
@@ -364,7 +408,9 @@ class TestNavigation:
                 ],
                 AhbLocation(
                     layers=[
-                        AhbLocationLayer(segment_group_key=None, opening_segment_code="UNH", opening_qualifier=None),
+                        AhbLocationLayer(
+                            segment_group_key=None, opening_segment_code="UNH", opening_qualifier="UTILMD"
+                        ),
                         AhbLocationLayer(segment_group_key="SG2", opening_segment_code="NAD", opening_qualifier="MS"),
                         AhbLocationLayer(segment_group_key="SG3", opening_segment_code="CTA", opening_qualifier="IC"),
                     ],
@@ -418,7 +464,9 @@ class TestNavigation:
                 ],
                 AhbLocation(
                     layers=[
-                        AhbLocationLayer(segment_group_key=None, opening_segment_code="UNH", opening_qualifier=None),
+                        AhbLocationLayer(
+                            segment_group_key=None, opening_segment_code="UNH", opening_qualifier="UTILMD"
+                        ),
                         # we entered the SG2 NAD+MS and SG3 CTA+IC, then left them again, that's why they are not part
                         # of this location anymore although we iterated over them.
                         AhbLocationLayer(segment_group_key="SG2", opening_segment_code="NAD", opening_qualifier="MR"),
@@ -483,7 +531,9 @@ class TestNavigation:
                 ],
                 AhbLocation(
                     layers=[
-                        AhbLocationLayer(segment_group_key=None, opening_segment_code="UNH", opening_qualifier=None),
+                        AhbLocationLayer(
+                            segment_group_key=None, opening_segment_code="UNH", opening_qualifier="UTILMD"
+                        ),
                         AhbLocationLayer(segment_group_key="SG4", opening_segment_code="IDE", opening_qualifier="24"),
                     ],
                     data_element_id="7495",
@@ -556,7 +606,9 @@ class TestNavigation:
                 ],
                 AhbLocation(
                     layers=[
-                        AhbLocationLayer(segment_group_key=None, opening_segment_code="UNH", opening_qualifier=None),
+                        AhbLocationLayer(
+                            segment_group_key=None, opening_segment_code="UNH", opening_qualifier="UTILMD"
+                        ),
                         AhbLocationLayer(segment_group_key="SG4", opening_segment_code="IDE", opening_qualifier="24"),
                         AhbLocationLayer(segment_group_key="SG5", opening_segment_code="LOC", opening_qualifier="172"),
                     ],

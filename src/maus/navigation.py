@@ -363,7 +363,7 @@ def _determine_hierarchy_change(
     if len(previous_locations) > 0:
         last_layer = last(last(previous_locations).layers)
         previous_sg_key = last_layer.segment_group_key
-        previous_opening_qualifier = last_layer.opening_qualifier # type:ignore[assignment]
+        previous_opening_qualifier = last_layer.opening_qualifier  # type:ignore[assignment]
         previous_opening_segment_code = last_layer.opening_segment_code
     if this_ahb_line.segment_group_key == previous_sg_key:  # No segment group change (key);
         if this_next_segment != previous_opening_segment_code:
@@ -403,6 +403,7 @@ def determine_locations(
         opening_segment_code=segment_group_hierarchy.opening_segment,
         opening_qualifier=None,
     )
+    opening_segment_code: str = segment_group_hierarchy.opening_segment
     layers: List[AhbLocationLayer] = [starting_layer]
     # the layers are the internal representation of the position.
     # layers[0] is always the SGH root.
@@ -427,6 +428,12 @@ def determine_locations(
             **zip_kwargs
         )
     ):
+        if last(layers).opening_qualifier is None and len(result) == 0:
+            layers[-1] = AhbLocationLayer(
+                segment_group_key=segment_group_hierarchy.segment_group,
+                opening_segment_code=segment_group_hierarchy.opening_segment,
+                opening_qualifier=this_next_qualifier,
+            )
         change = _determine_hierarchy_change(
             this_ahb_line, this_next_segment, this_next_qualifier, [x[1] for x in result], segment_group_hierarchy
         )
@@ -440,14 +447,14 @@ def determine_locations(
             # Switch to a neighbouring segment group (SGx->SGx) but with a different opening qualifier.
             # For e.g. UTILMD this happens at SG2 which first occurs for NAD+MS (with embedded SG3) and then as NAD+MR.
             # The parent stays the same (no pop to parent nor change of current sgh)
-            layers.pop()
-            layers.append(
-                AhbLocationLayer(
-                    segment_group_key=this_ahb_line.segment_group_key,
-                    opening_segment_code=this_next_segment,
-                    opening_qualifier=this_next_qualifier,
-                )
-            )
+            # layers.pop()
+            # layers.append(
+            #    AhbLocationLayer(
+            #        segment_group_key=this_ahb_line.segment_group_key,
+            #        opening_segment_code=opening_segment_code,
+            #        opening_qualifier=this_next_qualifier,
+            #    )
+            # )
             result.append(
                 (this_ahb_line, AhbLocation(layers=layers.copy(), data_element_id=this_ahb_line.data_element))
             )
@@ -462,6 +469,7 @@ def determine_locations(
                     opening_qualifier=this_next_qualifier,
                 )
             )
+            opening_segment_code = this_next_segment
             result.append(
                 (this_ahb_line, AhbLocation(layers=layers.copy(), data_element_id=this_ahb_line.data_element))
             )
@@ -478,6 +486,7 @@ def determine_locations(
                     opening_qualifier=this_next_qualifier,
                 )
             )
+            opening_segment_code = this_next_segment
             result.append(
                 (this_ahb_line, AhbLocation(layers=layers.copy(), data_element_id=this_ahb_line.data_element))
             )
