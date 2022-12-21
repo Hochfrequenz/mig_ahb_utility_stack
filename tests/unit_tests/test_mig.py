@@ -221,6 +221,7 @@ class TestMig:
                             ],
                         ),
                         SegmentGroupHierarchy(segment_group="SG12", opening_segment="NAD", sub_hierarchy=None),
+                        SegmentGroupHierarchy(segment_group=None, opening_segment="ASD", sub_hierarchy=None),
                     ],
                 ),
                 id="UTILMD SG4",
@@ -241,6 +242,10 @@ class TestMig:
             pytest.param("SG12", "SG9", False),
             pytest.param("SG777", "SG4", False),  # sg777 doesn't even exist
             pytest.param("SG4", "SG777", False),  # sg777 doesn't even exist
+            pytest.param(None, "SG4", True),
+            pytest.param(None, "SG12", False),
+            pytest.param("SG4", None, False),
+            pytest.param(None, None, False),
         ],
     )
     def test_sg_is_hierarchically_below(
