@@ -197,3 +197,59 @@ class TestMig:
     def test_is_hierarchically_below(self, sgh: SegmentGroupHierarchy, sg_key: Optional[str], expected_is_below: bool):
         actual = sgh.is_hierarchically_below(sg_key)
         assert actual == expected_is_below
+
+    @pytest.mark.parametrize(
+        "sgh",
+        [
+            pytest.param(
+                SegmentGroupHierarchy(
+                    segment_group="SG4",
+                    opening_segment="IDE",
+                    sub_hierarchy=[
+                        SegmentGroupHierarchy(
+                            segment_group="SG5",
+                            opening_segment="LOC",
+                            sub_hierarchy=None,
+                        ),
+                        SegmentGroupHierarchy(segment_group="SG6", opening_segment="RFF", sub_hierarchy=None),
+                        SegmentGroupHierarchy(
+                            segment_group="SG8",
+                            opening_segment="SEQ",
+                            sub_hierarchy=[
+                                SegmentGroupHierarchy(segment_group="SG9", opening_segment="QTY", sub_hierarchy=None),
+                                SegmentGroupHierarchy(segment_group="SG10", opening_segment="CCI", sub_hierarchy=None),
+                            ],
+                        ),
+                        SegmentGroupHierarchy(segment_group="SG12", opening_segment="NAD", sub_hierarchy=None),
+                        SegmentGroupHierarchy(segment_group=None, opening_segment="ASD", sub_hierarchy=None),
+                    ],
+                ),
+                id="UTILMD SG4",
+            )
+        ],
+    )
+    @pytest.mark.parametrize(
+        "sg_key_x, sg_key_y, expected_sg_is_below",
+        [
+            pytest.param("SG5", "SG5", False),
+            pytest.param("SG5", "SG4", True),
+            pytest.param("SG6", "SG4", True),
+            pytest.param("SG4", "SG5", False),
+            pytest.param("SG8", "SG5", False),
+            pytest.param("SG8", "SG4", True),
+            pytest.param("SG9", "SG4", True),
+            pytest.param("SG9", "SG8", True),
+            pytest.param("SG12", "SG9", False),
+            pytest.param("SG777", "SG4", False),  # sg777 doesn't even exist
+            pytest.param("SG4", "SG777", False),  # sg777 doesn't even exist
+            pytest.param(None, "SG4", True),
+            pytest.param(None, "SG12", False),
+            pytest.param("SG4", None, False),
+            pytest.param(None, None, False),
+        ],
+    )
+    def test_sg_is_hierarchically_below(
+        self, sgh: SegmentGroupHierarchy, sg_key_x: Optional[str], sg_key_y: Optional[str], expected_sg_is_below: bool
+    ):
+        actual = sgh.sg_is_hierarchically_below(sg_key_x, sg_key_y)
+        assert actual == expected_sg_is_below
