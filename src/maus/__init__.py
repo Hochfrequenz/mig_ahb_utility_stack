@@ -2,8 +2,9 @@
 MAUS is the MIG AHB Utility stack.
 This module contains methods to merge data from Message Implementation Guide and Anwendungshandbuch
 """
+import sys
 from itertools import groupby
-from typing import List, Optional, Sequence
+from typing import List, Optional, Sequence, Set
 
 from more_itertools import first, last
 
@@ -23,7 +24,7 @@ from maus.models.message_implementation_guide import SegmentGroupHierarchy
 from maus.navigation import AhbLocation, calculate_distance, determine_locations
 from maus.reader.mig_reader import MigReader
 
-_VERSION = "0.2.2"  #: written into the deep ahb meta information
+_VERSION = "0.3.0"  #: written into the deep ahb meta information
 
 
 def merge_lines_with_same_data_element(
@@ -91,6 +92,7 @@ def to_deep_ahb(
     result = DeepAnwendungshandbuch(meta=flat_ahb.meta, lines=[])
     result.meta.maus_version = _VERSION
     parent_group_lists: List[List[SegmentGroup]] = []
+    used_stacks: Set[str] = set()
     for position, layer_group in groupby(
         determine_locations(segment_group_hierarchy, flat_ahb.lines), key=lambda line_and_position: line_and_position[1]
     ):
@@ -125,6 +127,7 @@ def to_deep_ahb(
                     segment_groups=[],
                     ahb_line_index=first_line.index,
                 )
+                # todo: don't append the same sg twice
                 if "append_next_segments_here" in locals():
                     del append_next_segments_here
                 append_next_segments_here = segment_group.segments
@@ -139,7 +142,6 @@ def to_deep_ahb(
                         del append_next_sg_here
                     append_next_sg_here = segment_group.segment_groups
                 else:
-                    # todo: breakpoint here for sg.discriminator=="SG4" what if prvious location and this locaiton are neighbours                    append_here = last(parent_group_lists)
                     distance = calculate_distance(previous_position, position)
                     for _ in range(0, distance.layers_up):
                         append_next_sg_here = parent_group_lists.pop()
