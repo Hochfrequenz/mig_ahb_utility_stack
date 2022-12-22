@@ -150,6 +150,13 @@ class AhbMetaInformation:
 
     pruefidentifikator: str  #: identifies the message type (within a fixed format version) e.g. "11042" or "13012"
     # there's more to come  but for now we'll leave it as is, because we're just in a proof of concept phase
+    maus_version: Optional[str] = attrs.field(
+        validator=attrs.validators.optional(attrs.validators.optional(_check_that_string_is_not_whitespace_or_empty)),
+        default=None,
+    )
+    """
+    semantic version of maus used to create this document
+    """
 
 
 class AhbMetaInformationSchema(Schema):
@@ -158,6 +165,7 @@ class AhbMetaInformationSchema(Schema):
     """
 
     pruefidentifikator = fields.String(required=True)
+    maus_version = fields.String(required=False)
 
     # pylint:disable=unused-argument
     @post_load
