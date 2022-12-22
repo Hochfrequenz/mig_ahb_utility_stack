@@ -23,12 +23,8 @@ from maus.models.edifact_components import (
     ValuePoolEntry,
 )
 
-meta_x = AhbMetaInformation(
-    pruefidentifikator="11042",
-)
-meta_y = AhbMetaInformation(
-    pruefidentifikator="11043",
-)
+meta_x = AhbMetaInformation(pruefidentifikator="11042", maus_version="0.2.3")
+meta_y = AhbMetaInformation(pruefidentifikator="11043", maus_version="0.2.3")
 
 line_x = AhbLine(
     ahb_expression="Muss [1] O [2]",
@@ -59,12 +55,8 @@ class TestAhb:
         "ahb, expected_json_dict",
         [
             pytest.param(
-                AhbMetaInformation(
-                    pruefidentifikator="11042",
-                ),
-                {
-                    "pruefidentifikator": "11042",
-                },
+                AhbMetaInformation(pruefidentifikator="11042", maus_version="0.2.3"),
+                {"pruefidentifikator": "11042", "maus_version": "0.2.3"},
             ),
         ],
     )
@@ -246,7 +238,7 @@ class TestAhb:
         [
             pytest.param(
                 FlatAnwendungshandbuch(
-                    meta=AhbMetaInformation(pruefidentifikator="11042"),
+                    meta=AhbMetaInformation(pruefidentifikator="11042", maus_version="0.2.3"),
                     lines=[
                         AhbLine(
                             ahb_expression="Muss [1] O [2]",
@@ -261,7 +253,7 @@ class TestAhb:
                     ],
                 ),
                 {
-                    "meta": {"pruefidentifikator": "11042"},
+                    "meta": {"pruefidentifikator": "11042", "maus_version": "0.2.3"},
                     "lines": [
                         {
                             "ahb_expression": "Muss [1] O [2]",
@@ -331,7 +323,7 @@ class TestAhb:
         [
             pytest.param(
                 DeepAnwendungshandbuch(
-                    meta=AhbMetaInformation(pruefidentifikator="11042"),
+                    meta=AhbMetaInformation(pruefidentifikator="11042", maus_version="0.2.3"),
                     lines=[
                         SegmentGroup(
                             ahb_expression="expr A",
@@ -379,7 +371,7 @@ class TestAhb:
                     ],
                 ),
                 {
-                    "meta": {"pruefidentifikator": "11042"},
+                    "meta": {"pruefidentifikator": "11042", "maus_version": "0.2.3"},
                     "lines": [
                         {
                             "ahb_expression": "expr A",
