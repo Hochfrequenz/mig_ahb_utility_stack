@@ -23,6 +23,8 @@ from maus.models.message_implementation_guide import SegmentGroupHierarchy
 from maus.navigation import AhbLocation, calculate_distance, determine_locations
 from maus.reader.mig_reader import MigReader
 
+_VERSION = "0.2.2"  #: written into the deep ahb meta information
+
 
 def merge_lines_with_same_data_element(
     ahb_lines: Sequence[AhbLine], first_stack: Optional[EdifactStack]
@@ -140,6 +142,7 @@ def to_deep_ahb(
     Converts a flat ahb into a nested ahb using the provided segment hierarchy
     """
     result = DeepAnwendungshandbuch(meta=flat_ahb.meta, lines=[])
+    result.meta.maus_version = _VERSION
     parent_group_lists: List[List[SegmentGroup]] = []
     for position, layer_group in groupby(
         determine_locations(segment_group_hierarchy, flat_ahb.lines), key=lambda line_and_position: line_and_position[1]
