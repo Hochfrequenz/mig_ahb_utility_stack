@@ -8,8 +8,6 @@ from typing import List, Literal, Optional
 # pylint:disable=no-name-in-module
 from lxml.etree import Element  # type:ignore[import]
 
-from maus.reader.mig_ahb_name_helpers import are_similar_names
-
 
 def get_segment_group_key_or_none(element: Element) -> Optional[str]:
     """

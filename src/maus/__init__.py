@@ -82,59 +82,6 @@ def merge_lines_with_same_data_element(
     return result
 
 
-def group_lines_by_segment(segment_group_lines: List[AhbLine]) -> List[Segment]:
-    """
-    convert the given lines (which are assumed to be from the same segment group) into single segments
-    """
-    result: List[Segment] = []
-    for segment_key, segments in groupby(segment_group_lines, key=lambda line: line.segment_code):
-        if segment_key is None:
-            continue  # filter out segment group level
-        this_segment_lines: List[AhbLine] = list(segments)
-        if not this_segment_lines[0].ahb_expression:
-            # segments with an empty AHB expression shall not be included
-            # https://github.com/Hochfrequenz/mig_ahb_utility_stack/issues/38
-            continue
-        segment = Segment(
-            discriminator=segment_key,  # type:ignore[arg-type] # shall not be none after sanitizing
-            data_elements=[],
-            ahb_expression=this_segment_lines[0].ahb_expression,
-            section_name=this_segment_lines[0].section_name,
-            ahb_line_index=this_segment_lines[0].index,
-        )
-        for data_element_key, data_element_lines in groupby(this_segment_lines, key=lambda line: line.data_element):
-            if data_element_key is None:
-                continue
-            data_element = merge_lines_with_same_data_element(list(data_element_lines))
-            segment.data_elements.append(data_element)  # type:ignore[union-attr] # yes, it's not none
-        result.append(segment)
-    return result
-
-
-def group_lines_by_segment_group(
-    ahb_lines: List[AhbLine], segment_group_hierarchy: SegmentGroupHierarchy
-) -> List[SegmentGroup]:
-    """
-    Group the lines by their segment group and arrange the segment groups in a flat/not deep list
-    """
-    result: List[SegmentGroup] = []
-    for hierarchy_segment_group, _ in segment_group_hierarchy.flattened():  # flatten = ignore hierarchy, preserve order
-        # here we assume, that the ahb_lines are easily groupable
-        # (meaning, the ran through FlatAhb.sort_lines_by_segment_groups once)
-        for segment_group_key, sg_group in groupby(ahb_lines, key=lambda line: line.segment_group_key):
-            if hierarchy_segment_group == segment_group_key:
-                this_sg = list(sg_group)
-                sg_draft = SegmentGroup(
-                    discriminator=segment_group_key,  # type:ignore[arg-type] # might be None now, will be replace later
-                    ahb_expression=(this_sg[0].ahb_expression or "").strip() or None,
-                    segments=group_lines_by_segment(this_sg),
-                    segment_groups=[],
-                    ahb_line_index=this_sg[0].index,
-                )
-                result.append(sg_draft)
-    return result
-
-
 def to_deep_ahb(
     flat_ahb: FlatAnwendungshandbuch, segment_group_hierarchy: SegmentGroupHierarchy, mig_reader: MigReader
 ) -> DeepAnwendungshandbuch:
@@ -148,16 +95,14 @@ def to_deep_ahb(
         determine_locations(segment_group_hierarchy, flat_ahb.lines), key=lambda line_and_position: line_and_position[1]
     ):
         data_element_lines = [x[0] for x in layer_group]  # index 1 is the position
-        error: ValueError
-        try:
-            stack = mig_reader.get_edifact_stack(position)
-            raise_later = False
-        except ValueError as value_error:
-            stack = None
-            raise_later = True
-            error = value_error
         if not any((True for line in data_element_lines if line.segment_code is not None)):
             continue  # section heading only
+        stack: EdifactStack
+        try:
+            stack = mig_reader.get_edifact_stack(position)
+        except ValueError:
+            # if the AHB/MIG matching does not work as expected, set your breakpoints here
+            stack = None  # type:ignore[assignment]
         if any((True for line in data_element_lines if line.data_element is not None)):
             if not any((True for line in data_element_lines if line.ahb_expression is not None)):
                 # if none of the items is marked with an ahb expression it's probably not required in this AHB
@@ -171,8 +116,6 @@ def to_deep_ahb(
                 first_line.segment_group_key == last(position.layers).segment_group_key
                 and last(position.layers).opening_segment_code == last_line.segment_code
             ):
-                if raise_later:
-                    raise error
                 # a new segment group has been opened
                 segment_group = SegmentGroup(
                     discriminator=stack.to_json_path(),
@@ -217,8 +160,6 @@ def to_deep_ahb(
             # Section Heading
             # SGx Foo      <-- a line with only the segment code but no actual content; this is where we're right now
             # SGx Foo 1234 <-- the first interesting line
-            if raise_later:
-                raise error
             segment = Segment(
                 discriminator=stack.to_json_path(),
                 data_elements=[],

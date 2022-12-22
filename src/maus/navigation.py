@@ -5,7 +5,7 @@ a AhbLocationLayer) in order to arrive at a certain line of the AHB. This inform
 """
 import sys
 from enum import Enum
-from typing import Callable, List, Optional, Tuple, TypeVar
+from typing import Callable, List, Optional, Tuple, TypeVar, Union, overload
 
 import attrs
 from more_itertools import first_true, last
@@ -235,9 +235,41 @@ class AhbLocation:
         return other.is_sub_location_of(self)
 
 
+@attrs.define(kw_only=True, frozen=True, auto_attribs=True)
+class _PseudoAhbLocation(AhbLocation):
+    """
+    a separate class to distinguish _real_ ahb locations from fake/pseudo ahb locations.
+    The latter should never be used outside this module.
+    """
+
+
+@overload
+def find_common_ancestor(location_x: _PseudoAhbLocation, location_y: _PseudoAhbLocation) -> _PseudoAhbLocation:
+    ...
+
+
+@overload
 def find_common_ancestor(
-    location_x: AhbLocation, location_y: AhbLocation, ignore_opening_qualifier=False
-) -> AhbLocation:
+    location_x: _PseudoAhbLocation, location_y: Union[AhbLocation, _PseudoAhbLocation]
+) -> _PseudoAhbLocation:
+    ...
+
+
+@overload
+def find_common_ancestor(
+    location_x: Union[AhbLocation, _PseudoAhbLocation], location_y: _PseudoAhbLocation
+) -> _PseudoAhbLocation:
+    ...
+
+
+@overload
+def find_common_ancestor(location_x: AhbLocation, location_y: AhbLocation) -> AhbLocation:
+    ...
+
+
+def find_common_ancestor(
+    location_x: Union[AhbLocation, _PseudoAhbLocation], location_y: Union[AhbLocation, _PseudoAhbLocation]
+) -> Union[AhbLocation, _PseudoAhbLocation]:
     """
     Finds the last common ancestor of location_x and location_y.
     If the layers of location X are:  [A,B,C,F,G,H]
@@ -248,14 +280,17 @@ def find_common_ancestor(
     :return: the location that is the last common ancestor of x and y
     """
     result_layers: List[AhbLocationLayer] = []
+    only_consider_sg_key = isinstance(location_x, _PseudoAhbLocation) or isinstance(location_y, _PseudoAhbLocation)
     for layer_x, layer_y in zip(location_x.layers, location_y.layers):
         if layer_x == layer_y or (
-            ignore_opening_qualifier is True and layer_x.segment_group_key == layer_y.segment_group_key
+            only_consider_sg_key is True and layer_x.segment_group_key == layer_y.segment_group_key
         ):
             result_layers.append(layer_x)
         else:
             break
     try:
+        if only_consider_sg_key:
+            return _PseudoAhbLocation(layers=result_layers)
         return AhbLocation(layers=result_layers)
     except ValueError as value_error:
         # We raise an exception if len(result_layers) is 0 because this case shouldn't happen in locations that
@@ -267,7 +302,7 @@ def _construct_pseudo_location(
     sg_key: str,
     segment_group_hierarchy: SegmentGroupHierarchy,
     existing_layers: Optional[List[AhbLocationLayer]] = None,
-) -> Optional[AhbLocation]:
+) -> Optional[_PseudoAhbLocation]:
     """
     use the segment group hierarchy to _guess_ where the segment group with key sg_key is located
     :param sg_key:
@@ -286,7 +321,7 @@ def _construct_pseudo_location(
         layers = existing_layers.copy()
         layers.append(this_layer)
     if sg_key == segment_group_hierarchy.segment_group:
-        return AhbLocation(layers=layers)
+        return _PseudoAhbLocation(layers=layers)
     for sub_hierarchy in segment_group_hierarchy.sub_hierarchy or []:
         sub_result = _construct_pseudo_location(sg_key, sub_hierarchy, layers)
         if sub_result is not None:
@@ -296,7 +331,7 @@ def _construct_pseudo_location(
 
 def _find_common_ancestor_from_sgh(
     sg_key_x: str, sg_key_y: str, segment_group_hierarchy: SegmentGroupHierarchy
-) -> AhbLocation:
+) -> _PseudoAhbLocation:
     """
     Finds the last common ancestor of the segment groups x and y.
     The function uses the provided segment group hierarchy to construct pseudo AHBLocations.
@@ -306,14 +341,14 @@ def _find_common_ancestor_from_sgh(
     :param sg_key_y: key of the segment group at location y
     :return: A Pseudo-Location that is a placeholder for the last common ancestor of x and y
     """
-    location_x = _construct_pseudo_location(sg_key_x, segment_group_hierarchy)
+    location_x: Optional[_PseudoAhbLocation] = _construct_pseudo_location(sg_key_x, segment_group_hierarchy)
     if location_x is None:
         raise ValueError(f"Couldn't locate {sg_key_x} in the given hierarchy")
-    location_y = _construct_pseudo_location(sg_key_y, segment_group_hierarchy)
+    location_y: Optional[_PseudoAhbLocation] = _construct_pseudo_location(sg_key_y, segment_group_hierarchy)
     if location_x is None:
         raise ValueError(f"Couldn't locate {sg_key_y} in the given hierarchy")
     # note that the result is generally complete. just the number of layers has a meaning
-    return find_common_ancestor(location_x, location_y, ignore_opening_qualifier=True)
+    return find_common_ancestor(location_x, location_y)  # type:ignore[arg-type]
 
 
 @attrs.define(auto_attribs=True, frozen=True, kw_only=True)
@@ -345,9 +380,7 @@ class _AhbLocationDistance:
     """
 
 
-def calculate_distance(
-    location_x: AhbLocation, location_y: AhbLocation, ignore_opening_qualifier=False
-) -> _AhbLocationDistance:
+def calculate_distance(location_x: AhbLocation, location_y: AhbLocation) -> _AhbLocationDistance:
     """
     Calculate the "distance" between two locations.
     The distance is measured in how many layers you have to go up and how many down reach location_y from location_y.
@@ -356,7 +389,7 @@ def calculate_distance(
     :param location_y: the target location
     :return: the number of layers between location_x and location_y via their common ancestor.
     """
-    common_ancestor = find_common_ancestor(location_x, location_y, ignore_opening_qualifier=ignore_opening_qualifier)
+    common_ancestor = find_common_ancestor(location_x, location_y)
     return _AhbLocationDistance(
         layers_up=len(location_x.layers) - len(common_ancestor.layers),
         layers_down=len(location_y.layers) - len(common_ancestor.layers),
@@ -548,13 +581,11 @@ def determine_locations(
             common_ancestor = _find_common_ancestor_from_sgh(
                 last(last(result)[1].layers).segment_group_key, this_ahb_line.segment_group_key, segment_group_hierarchy
             )
-            distance_to_common_ancestor = calculate_distance(
-                last(result)[1], common_ancestor, ignore_opening_qualifier=True
-            )
+            distance_to_common_ancestor = calculate_distance(last(result)[1], common_ancestor)
             for _ in range(0, distance_to_common_ancestor.layers_up):
                 # actually: this should be a separate case in the differential change enum
-                layers.pop()  # this removes the old SG2
-                if last(layers).segment_group_key == this_ahb_line.segment_group_key:
+                layers.pop()
+                if last(layers).segment_group_key == this_ahb_line.segment_group_key:  # this removes the old SG2
                     layers.pop()
             layers.append(  # this adds the next SG2
                 AhbLocationLayer(

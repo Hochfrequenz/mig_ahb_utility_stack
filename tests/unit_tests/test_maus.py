@@ -3,7 +3,7 @@ from typing import List
 import pytest  # type:ignore[import]
 from unit_tests.serialization_test_helper import assert_serialization_roundtrip  # type:ignore[import]
 
-from maus import group_lines_by_segment_group, merge_lines_with_same_data_element, to_deep_ahb
+from maus import merge_lines_with_same_data_element, to_deep_ahb
 from maus.models.anwendungshandbuch import AhbLine, AhbMetaInformation, DeepAnwendungshandbuch, FlatAnwendungshandbuch
 from maus.models.edifact_components import (
     DataElement,
@@ -193,127 +193,6 @@ class TestMaus:
     def test_nest_segment_groups_into_each_other(self, ahb_lines: List[AhbLine], expected_data_element: DataElement):
         actual = merge_lines_with_same_data_element(ahb_lines)
         assert actual == expected_data_element
-
-    @pytest.mark.parametrize(
-        "ahb_lines, sgh, expected_result",
-        [
-            pytest.param(
-                [
-                    AhbLine(
-                        segment_group_key="SG4",
-                        segment_code="FOO",
-                        ahb_expression="X",
-                        data_element="0333",
-                        value_pool_entry="E01",
-                        name="Das Eine",
-                        guid=None,
-                    ),
-                    AhbLine(
-                        segment_group_key="SG4",
-                        segment_code="FOO",
-                        ahb_expression="X",
-                        data_element="0333",
-                        value_pool_entry="E02",
-                        name="Das Andere",
-                        guid=None,
-                    ),
-                ],
-                SegmentGroupHierarchy(segment_group="SG4", sub_hierarchy=None, opening_segment="FOO"),
-                [
-                    SegmentGroup(
-                        discriminator="SG4",
-                        ahb_expression="X",
-                        segments=[
-                            Segment(
-                                discriminator="FOO",
-                                ahb_expression="X",
-                                data_elements=[
-                                    DataElementValuePool(
-                                        discriminator="SG4->FOO->0333",
-                                        value_pool=[
-                                            ValuePoolEntry(
-                                                qualifier="E01",
-                                                meaning="Das Eine",
-                                                ahb_expression="X",
-                                            ),
-                                            ValuePoolEntry(
-                                                qualifier="E02",
-                                                meaning="Das Andere",
-                                                ahb_expression="X",
-                                            ),
-                                        ],
-                                        entered_input=None,
-                                        data_element_id="0333",
-                                    )
-                                ],
-                            )
-                        ],
-                        segment_groups=[],
-                    )
-                ],
-            ),
-            pytest.param(
-                [
-                    AhbLine(
-                        segment_group_key="SG4",
-                        segment_code="FOO",
-                        ahb_expression="X",
-                        data_element="0333",
-                        value_pool_entry="E01",
-                        name="Das Eine",
-                        guid=None,
-                    ),
-                    AhbLine(
-                        segment_group_key="SG4",
-                        segment_code="FOO",
-                        ahb_expression="X",
-                        data_element="0333",
-                        value_pool_entry="E02",
-                        name="Das Andere",
-                        guid=None,
-                    ),
-                ],
-                SegmentGroupHierarchy(segment_group="SG4", sub_hierarchy=None, opening_segment="FOO"),
-                [
-                    SegmentGroup(
-                        discriminator="SG4",
-                        ahb_expression="X",
-                        segments=[
-                            Segment(
-                                discriminator="FOO",
-                                ahb_expression="X",
-                                data_elements=[
-                                    DataElementValuePool(
-                                        discriminator="SG4->FOO->0333",
-                                        value_pool=[
-                                            ValuePoolEntry(
-                                                qualifier="E01",
-                                                meaning="Das Eine",
-                                                ahb_expression="X",
-                                            ),
-                                            ValuePoolEntry(
-                                                qualifier="E02",
-                                                meaning="Das Andere",
-                                                ahb_expression="X",
-                                            ),
-                                        ],
-                                        entered_input=None,
-                                        data_element_id="0333",
-                                    )
-                                ],
-                            )
-                        ],
-                        segment_groups=[],
-                    )
-                ],
-            ),
-        ],
-    )
-    def test_group_lines_by_segment_group(
-        self, ahb_lines: List[AhbLine], sgh: SegmentGroupHierarchy, expected_result: List[SegmentGroup]
-    ):
-        actual = group_lines_by_segment_group(ahb_lines, sgh)
-        assert actual == expected_result
 
     @pytest.mark.parametrize(
         "sgh, flat_ahb, expected_deep",

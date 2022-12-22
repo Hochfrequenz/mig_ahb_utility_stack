@@ -15,6 +15,7 @@ from maus.navigation import (
     _enhance_with_next_value_pool_entry,
     _find_common_ancestor_from_sgh,
     _is_opening_segment_line_border,
+    _PseudoAhbLocation,
     calculate_distance,
     determine_locations,
     find_common_ancestor,
@@ -901,7 +902,7 @@ class TestNavigation:
                 sgh_utilmd_fv2204,
                 "SG2",
                 "SG2",
-                AhbLocation(
+                _PseudoAhbLocation(
                     layers=[
                         AhbLocationLayer(segment_group_key=None, opening_segment_code="UNH", opening_qualifier=None),
                         AhbLocationLayer(segment_group_key="SG2", opening_segment_code="NAD", opening_qualifier=None),
@@ -913,7 +914,7 @@ class TestNavigation:
                 sgh_utilmd_fv2204,
                 "SG12",
                 "SG6",
-                AhbLocation(
+                _PseudoAhbLocation(
                     layers=[
                         AhbLocationLayer(segment_group_key=None, opening_segment_code="UNH", opening_qualifier=None),
                         AhbLocationLayer(segment_group_key="SG4", opening_segment_code="IDE", opening_qualifier=None),
@@ -925,7 +926,7 @@ class TestNavigation:
                 sgh_utilmd_fv2204,
                 "SG3",
                 "SG12",
-                AhbLocation(
+                _PseudoAhbLocation(
                     layers=[
                         AhbLocationLayer(segment_group_key=None, opening_segment_code="UNH", opening_qualifier=None),
                     ]
@@ -936,7 +937,7 @@ class TestNavigation:
                 sgh_utilmd_fv2204,
                 "SG9",
                 "SG6",
-                AhbLocation(
+                _PseudoAhbLocation(
                     layers=[
                         AhbLocationLayer(segment_group_key=None, opening_segment_code="UNH", opening_qualifier=None),
                         AhbLocationLayer(segment_group_key="SG4", opening_segment_code="IDE", opening_qualifier=None),
@@ -947,7 +948,7 @@ class TestNavigation:
         ],
     )
     def test_find_common_ancestor_from_sgh(
-        self, sg_x: str, sg_y: str, sgh: SegmentGroupHierarchy, expected: AhbLocation
+        self, sg_x: str, sg_y: str, sgh: SegmentGroupHierarchy, expected: _PseudoAhbLocation
     ):
         actual = _find_common_ancestor_from_sgh(sg_x, sg_y, sgh)
         assert actual == expected

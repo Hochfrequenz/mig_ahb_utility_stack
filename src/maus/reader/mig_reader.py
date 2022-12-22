@@ -160,6 +160,7 @@ class MigXmlReader(MigReader):
                 else:
                     raise ValueError(f"Couldn't find any candidate with opening_qualifier '{layer.opening_qualifier}'")
                 final_query_path = query_path + f"[{candidate_index + 1}]"  # xpath index starts at 1, not 0
+                candidates = [candidates[candidate_index]]  # list must only contain 1 remaining item at this point
                 continue
             final_query_path = query_path
         if ahb_location.segment_code is not None and ahb_location.segment_code != "UNH":
@@ -177,9 +178,10 @@ class MigXmlReader(MigReader):
                         final_query_path = query_path + f"[{candidate_index + 1}]"  # xpath index starts at 1, not 0
                         candidates = segment_candidates
                         break
-                else:
-                    pass
-                    # raise ValueError(f"Couldn't find any unique candidate for segment @ '{query_path}'")
+                # else:
+                # raise ValueError(f"Couldn't find any unique candidate for segment @ '{query_path}'")
+            else:
+                final_query_path = query_path
         if ahb_location.data_element_id is not None:
             # now inside the remaining segment group find the entry that has the correct data element id
             query_path = final_query_path + f"/field[@meta.id='{ahb_location.data_element_id}']"  # todo:virtual groups
@@ -202,7 +204,7 @@ class MigXmlReader(MigReader):
                     raise ValueError(
                         f"Couldn't find a unique candidate with data element id '{ahb_location.data_element_id}'"
                     )
-        return candidates[0]
+        return one(candidates)
 
     def get_edifact_stack(self, location: AhbLocation) -> Optional[EdifactStack]:
         """
