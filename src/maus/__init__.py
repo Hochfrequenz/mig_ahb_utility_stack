@@ -3,7 +3,7 @@ MAUS is the MIG AHB Utility stack.
 This module contains methods to merge data from Message Implementation Guide and Anwendungshandbuch
 """
 from itertools import groupby
-from typing import List, Sequence
+from typing import List, Sequence, Optional
 
 from more_itertools import first, last
 
@@ -24,7 +24,9 @@ from maus.navigation import AhbLocation, calculate_distance, determine_locations
 from maus.reader.mig_reader import MigReader
 
 
-def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine], first_stack_path: str) -> DataElement:
+def merge_lines_with_same_data_element(
+    ahb_lines: Sequence[AhbLine], first_stack: Optional[EdifactStack]
+) -> DataElement:
     """
     Merges lines that have the same data element into a single data element instance which is returned
     """
@@ -35,9 +37,12 @@ def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine], first_stack
             f"parameter ahb_lines contains: {', '.join([x or '' for x in distinct_data_element_keys])} "
         )
     result: DataElement
+    discriminator = None
+    if first_stack is not None:
+        discriminator = first_stack.to_json_path()
     if ahb_lines[0].value_pool_entry is not None:
         result = DataElementValuePool(
-            discriminator=first_stack_path,
+            discriminator=discriminator,
             value_pool=[],
             data_element_id=ahb_lines[0].data_element,  # type:ignore[arg-type]
             entered_input=None,
@@ -62,7 +67,7 @@ def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine], first_stack
         result = DataElementFreeText(
             entered_input=None,
             ahb_expression=ahb_lines[0].ahb_expression,
-            discriminator=first_stack_path,
+            discriminator=discriminator,
             data_element_id=first(
                 ahb_lines, lambda line: line.data_element is not None
             ).data_element,  # type:ignore[arg-type]
@@ -145,7 +150,7 @@ def to_deep_ahb(
             stack = mig_reader.get_edifact_stack(position)
             raise_later = False
         except ValueError as value_error:
-            stack = EdifactStack.from_json_path('$["Dokument"][0]["Nachricht"][0]["UNKNOWN"]')
+            stack = None
             raise_later = True
             error = value_error
         if not any((True for line in data_element_lines if line.segment_code is not None)):
@@ -154,7 +159,7 @@ def to_deep_ahb(
             if not any((True for line in data_element_lines if line.ahb_expression is not None)):
                 # if none of the items is marked with an ahb expression it's probably not required in this AHB
                 continue
-            data_element = merge_lines_with_same_data_element(data_element_lines, first_stack_path=stack.to_json_path())
+            data_element = merge_lines_with_same_data_element(data_element_lines, first_stack=stack)
             append_next_data_elements_here.append(data_element)
         else:
             first_line = first(data_element_lines)

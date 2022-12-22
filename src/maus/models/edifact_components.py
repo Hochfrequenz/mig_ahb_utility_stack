@@ -45,8 +45,13 @@ class DataElement(ABC):
     For example in UTILMD the data element that holds the 13 digit market partner ID is data element '3039'
     """
 
-    discriminator: str = attrs.field(validator=attrs.validators.instance_of(str))
-    """ The discriminator uniquely identifies the data element. This _might_ be its key """
+    discriminator: Optional[str] = attrs.field(
+        validator=attrs.validators.optional(_check_that_string_is_not_whitespace_or_empty)
+    )
+    """
+    The discriminator uniquely identifies the data element. 
+    The discriminator is None if the data element was not found in the MIG.
+    """
     # but could also be a reference or a name
     #: the ID of the data element (e.g. "0062") for the Nachrichten-Referenznummer
     data_element_id: str = attrs.field(validator=attrs.validators.matches_re(r"^\d{4}$"))
@@ -70,7 +75,7 @@ class DataElementSchema(Schema):
     A Schema to (de-)serialize DataElements
     """
 
-    discriminator = fields.String(required=True)
+    discriminator = fields.String(required=False, allow_none=True)
     data_element_id = fields.String(required=True)
     entered_input = fields.String(required=False, load_default=None)
     value_type = MarshmallowEnum(DataElementDataType, required=False)

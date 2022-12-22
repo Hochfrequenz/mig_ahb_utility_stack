@@ -122,6 +122,7 @@ class MigXmlReader(MigReader):
             # here we _always_ need to use the original root!
             leaf_element = self._original_root.xpath(iter_path)[0]  # type:ignore[attr-defined]
             level_name: str
+            # todo: maybe skip virtual groups
             is_groupable = leaf_element.tag == "class"
             attribute_keys_sorted_by_priority: List[str]
             if is_groupable:
@@ -162,16 +163,23 @@ class MigXmlReader(MigReader):
                 continue
             final_query_path = query_path
         if ahb_location.segment_code is not None and ahb_location.segment_code != "UNH":
+            # if there is a separate class for the segment, handle it here... is most cases it's not
             query_path = final_query_path + f"/class[@ref='{ahb_location.segment_code}']"
             segment_candidates = list(self._original_root.xpath(query_path))
             if len(segment_candidates) == 0:
                 pass
                 # raise ValueError(f"No element found for path {query_path}")
             elif len(segment_candidates) > 1:
-                raise ValueError(f"Couldn't find any unique candidate for '{query_path}'")
-            else:
-                candidates = segment_candidates
-                final_query_path = query_path
+                for candidate_index, key_set in enumerate(
+                    set(get_nested_qualifiers("key", candidate)) for candidate in segment_candidates
+                ):
+                    if layer.opening_qualifier in key_set:
+                        final_query_path = query_path + f"[{candidate_index + 1}]"  # xpath index starts at 1, not 0
+                        candidates = segment_candidates
+                        break
+                else:
+                    pass
+                    # raise ValueError(f"Couldn't find any unique candidate for segment @ '{query_path}'")
         if ahb_location.data_element_id is not None:
             # now inside the remaining segment group find the entry that has the correct data element id
             query_path = final_query_path + f"/field[@meta.id='{ahb_location.data_element_id}']"  # todo:virtual groups
