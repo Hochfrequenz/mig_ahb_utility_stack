@@ -117,17 +117,19 @@ def to_deep_ahb(
             if (
                 first_line.segment_group_key == last(position.layers).segment_group_key
                 and last(position.layers).opening_segment_code == last_line.segment_code
+                and stack.to_json_path() not in used_stacks
+                and first_line.ahb_expression is not None
             ):
                 # a new segment group has been opened
                 segment_group = SegmentGroup(
                     discriminator=stack.to_json_path(),
                     # type:ignore[arg-type] # might be None now, will be replaced later
-                    ahb_expression=(first_line.ahb_expression or "Dummy MUSS SG").strip() or None,
+                    ahb_expression=first_line.ahb_expression.strip(),
                     segments=[],
                     segment_groups=[],
                     ahb_line_index=first_line.index,
                 )
-                # todo: don't append the same sg twice
+                used_stacks.add(stack.to_json_path())
                 if "append_next_segments_here" in locals():
                     del append_next_segments_here
                 append_next_segments_here = segment_group.segments
@@ -162,16 +164,17 @@ def to_deep_ahb(
             # Section Heading
             # SGx Foo      <-- a line with only the segment code but no actual content; this is where we're right now
             # SGx Foo 1234 <-- the first interesting line
-            segment = Segment(
-                discriminator=stack.to_json_path(),
-                data_elements=[],
-                ahb_expression=first_line.ahb_expression or "Dummy Muss S",
-                section_name=first_line.section_name,
-                ahb_line_index=first_line.index,
-            )
-            if "append_next_data_elements_here" in locals():
-                del append_next_data_elements_here
-            append_next_data_elements_here = segment.data_elements
-            append_next_segments_here.append(segment)
+            if first_line.ahb_expression:
+                segment = Segment(
+                    discriminator=stack.to_json_path(),
+                    data_elements=[],
+                    ahb_expression=first_line.ahb_expression,
+                    section_name=first_line.section_name,
+                    ahb_line_index=first_line.index,
+                )
+                if "append_next_data_elements_here" in locals():
+                    del append_next_data_elements_here
+                append_next_data_elements_here = segment.data_elements
+                append_next_segments_here.append(segment)
         previous_position = position
     return result
