@@ -9,7 +9,6 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Dict, List, Literal, Optional, Sequence, Set, TextIO, Tuple, overload
 
-import maus
 from maus.models.anwendungshandbuch import AhbLine, AhbMetaInformation, FlatAnwendungshandbuch
 from maus.models.edifact_components import gabi_edifact_qualifier_pattern
 

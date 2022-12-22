@@ -49,7 +49,7 @@ class DataElement(ABC):
         validator=attrs.validators.optional(_check_that_string_is_not_whitespace_or_empty)
     )
     """
-    The discriminator uniquely identifies the data element. 
+    The discriminator uniquely identifies the data element.
     The discriminator is None if the data element was not found in the MIG.
     """
     # but could also be a reference or a name
