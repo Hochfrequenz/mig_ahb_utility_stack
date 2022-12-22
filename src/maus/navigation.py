@@ -187,8 +187,15 @@ class AhbLocation:
         )
     )
     """
-    the single layers that define the location
+    the single layers that define the segment groups involved in the location
     """
+    segment_code: Optional[str] = attrs.field(
+        validator=attrs.validators.optional(attrs.validators.matches_re(r"^[A-Z]{3}$")), default=None
+    )
+    """
+    The segment code of an element. None for groups only.
+    """
+
     data_element_id: Optional[str] = attrs.field(
         validator=attrs.validators.optional(attrs.validators.matches_re(r"^\d{4}$")), default=None
     )
@@ -228,7 +235,9 @@ class AhbLocation:
         return other.is_sub_location_of(self)
 
 
-def find_common_ancestor(location_x: AhbLocation, location_y: AhbLocation) -> AhbLocation:
+def find_common_ancestor(
+    location_x: AhbLocation, location_y: AhbLocation, ignore_opening_qualifier=False
+) -> AhbLocation:
     """
     Finds the last common ancestor of location_x and location_y.
     If the layers of location X are:  [A,B,C,F,G,H]
@@ -240,7 +249,9 @@ def find_common_ancestor(location_x: AhbLocation, location_y: AhbLocation) -> Ah
     """
     result_layers: List[AhbLocationLayer] = []
     for layer_x, layer_y in zip(location_x.layers, location_y.layers):
-        if layer_x == layer_y:
+        if layer_x == layer_y or (
+            ignore_opening_qualifier is True and layer_x.segment_group_key == layer_y.segment_group_key
+        ):
             result_layers.append(layer_x)
         else:
             break
@@ -250,6 +261,59 @@ def find_common_ancestor(location_x: AhbLocation, location_y: AhbLocation) -> Ah
         # We raise an exception if len(result_layers) is 0 because this case shouldn't happen in locations that
         # originate from the same AHB.
         raise ValueError("There is no common ancestor") from value_error
+
+
+def _construct_pseudo_location(
+    sg_key: str,
+    segment_group_hierarchy: SegmentGroupHierarchy,
+    existing_layers: Optional[List[AhbLocationLayer]] = None,
+) -> Optional[AhbLocation]:
+    """
+    use the segment group hierarchy to _guess_ where the segment group with key sg_key is located
+    :param sg_key:
+    :param segment_group_hierarchy:
+    :return:
+    """
+    this_layer = AhbLocationLayer(
+        segment_group_key=segment_group_hierarchy.segment_group,
+        opening_segment_code=segment_group_hierarchy.opening_segment,
+        opening_qualifier=None,
+    )
+    layers: List[AhbLocationLayer]
+    if existing_layers is None:
+        layers = [this_layer]
+    else:
+        layers = existing_layers.copy()
+        layers.append(this_layer)
+    if sg_key == segment_group_hierarchy.segment_group:
+        return AhbLocation(layers=layers)
+    for sub_hierarchy in segment_group_hierarchy.sub_hierarchy or []:
+        sub_result = _construct_pseudo_location(sg_key, sub_hierarchy, layers)
+        if sub_result is not None:
+            return sub_result
+    return None
+
+
+def _find_common_ancestor_from_sgh(
+    sg_key_x: str, sg_key_y: str, segment_group_hierarchy: SegmentGroupHierarchy
+) -> AhbLocation:
+    """
+    Finds the last common ancestor of the segment groups x and y.
+    The function uses the provided segment group hierarchy to construct pseudo AHBLocations.
+    These locations are then fed into the other overload of find_common_ancestor
+    :param segment_group_hierarchy: the SGH used to locate the SGs
+    :param sg_key_x: key of the segment group at location x
+    :param sg_key_y: key of the segment group at location y
+    :return: A Pseudo-Location that is a placeholder for the last common ancestor of x and y
+    """
+    location_x = _construct_pseudo_location(sg_key_x, segment_group_hierarchy)
+    if location_x is None:
+        raise ValueError(f"Couldn't locate {sg_key_x} in the given hierarchy")
+    location_y = _construct_pseudo_location(sg_key_y, segment_group_hierarchy)
+    if location_x is None:
+        raise ValueError(f"Couldn't locate {sg_key_y} in the given hierarchy")
+    # note that the result is generally complete. just the number of layers has a meaning
+    return find_common_ancestor(location_x, location_y, ignore_opening_qualifier=True)
 
 
 @attrs.define(auto_attribs=True, frozen=True, kw_only=True)
@@ -281,7 +345,9 @@ class _AhbLocationDistance:
     """
 
 
-def calculate_distance(location_x: AhbLocation, location_y: AhbLocation) -> _AhbLocationDistance:
+def calculate_distance(
+    location_x: AhbLocation, location_y: AhbLocation, ignore_opening_qualifier=False
+) -> _AhbLocationDistance:
     """
     Calculate the "distance" between two locations.
     The distance is measured in how many layers you have to go up and how many down reach location_y from location_y.
@@ -290,7 +356,7 @@ def calculate_distance(location_x: AhbLocation, location_y: AhbLocation) -> _Ahb
     :param location_y: the target location
     :return: the number of layers between location_x and location_y via their common ancestor.
     """
-    common_ancestor = find_common_ancestor(location_x, location_y)
+    common_ancestor = find_common_ancestor(location_x, location_y, ignore_opening_qualifier=ignore_opening_qualifier)
     return _AhbLocationDistance(
         layers_up=len(location_x.layers) - len(common_ancestor.layers),
         layers_down=len(location_y.layers) - len(common_ancestor.layers),
@@ -403,7 +469,6 @@ def determine_locations(
         opening_segment_code=segment_group_hierarchy.opening_segment,
         opening_qualifier=None,
     )
-    opening_segment_code: str = segment_group_hierarchy.opening_segment
     layers: List[AhbLocationLayer] = [starting_layer]
     # the layers are the internal representation of the position.
     # layers[0] is always the SGH root.
@@ -425,7 +490,7 @@ def determine_locations(
             ahb_lines,
             [x[1] for x in _enhance_with_next_segment(ahb_lines)],
             [x[1] for x in _enhance_with_next_value_pool_entry(ahb_lines)],
-            **zip_kwargs
+            **zip_kwargs,
         )
     ):
         if last(layers).opening_qualifier is None and len(result) == 0:
@@ -440,23 +505,22 @@ def determine_locations(
         if change == _DifferentialAhbLineHierarchyChange.STAY:
             # No segment group change; The layers represent the location already.
             result.append(
-                (this_ahb_line, AhbLocation(layers=layers.copy(), data_element_id=this_ahb_line.data_element))
+                (
+                    this_ahb_line,
+                    AhbLocation(
+                        layers=layers.copy(), data_element_id=this_ahb_line.data_element, segment_code=this_next_segment
+                    ),
+                )
             )
             continue
         if change == _DifferentialAhbLineHierarchyChange.MOVE_TO_NEIGHBOUR_SAME_KEY:
-            # Switch to a neighbouring segment group (SGx->SGx) but with a different opening qualifier.
-            # For e.g. UTILMD this happens at SG2 which first occurs for NAD+MS (with embedded SG3) and then as NAD+MR.
-            # The parent stays the same (no pop to parent nor change of current sgh)
-            # layers.pop()
-            # layers.append(
-            #    AhbLocationLayer(
-            #        segment_group_key=this_ahb_line.segment_group_key,
-            #        opening_segment_code=opening_segment_code,
-            #        opening_qualifier=this_next_qualifier,
-            #    )
-            # )
             result.append(
-                (this_ahb_line, AhbLocation(layers=layers.copy(), data_element_id=this_ahb_line.data_element))
+                (
+                    this_ahb_line,
+                    AhbLocation(
+                        layers=layers.copy(), data_element_id=this_ahb_line.data_element, segment_code=this_next_segment
+                    ),
+                )
             )
             continue
         # switch to a sublevel or to a neighbouring group with a different SG key (SGx->SGy)
@@ -469,16 +533,29 @@ def determine_locations(
                     opening_qualifier=this_next_qualifier,
                 )
             )
-            opening_segment_code = this_next_segment
             result.append(
-                (this_ahb_line, AhbLocation(layers=layers.copy(), data_element_id=this_ahb_line.data_element))
+                (
+                    this_ahb_line,
+                    AhbLocation(
+                        layers=layers.copy(), data_element_id=this_ahb_line.data_element, segment_code=this_next_segment
+                    ),
+                )
             )
             continue
         if change == _DifferentialAhbLineHierarchyChange.LEAVE_TO_PARENT_AND_DIVE_INTO_SUB_GROUP:
-            layers.pop()  # this e.g. leaves SG3
-            if this_ahb_line.segment_group_key == last(layers).segment_group_key:
+            # [SG2 (NAD+MS), SG3]->[SG2 (NAD+MR)] # one group up (leave SG3, then remove old SG2)
+            # [SG4, SG8, SG10]-> [SG4,SG12] # two groups up! (leave SG10, leave SG8, then enter sg12)
+            common_ancestor = _find_common_ancestor_from_sgh(
+                last(last(result)[1].layers).segment_group_key, this_ahb_line.segment_group_key, segment_group_hierarchy
+            )
+            distance_to_common_ancestor = calculate_distance(
+                last(result)[1], common_ancestor, ignore_opening_qualifier=True
+            )
+            for _ in range(0, distance_to_common_ancestor.layers_up):
                 # actually: this should be a separate case in the differential change enum
                 layers.pop()  # this removes the old SG2
+                if last(layers).segment_group_key == this_ahb_line.segment_group_key:
+                    layers.pop()
             layers.append(  # this adds the next SG2
                 AhbLocationLayer(
                     segment_group_key=this_ahb_line.segment_group_key,
@@ -486,9 +563,13 @@ def determine_locations(
                     opening_qualifier=this_next_qualifier,
                 )
             )
-            opening_segment_code = this_next_segment
             result.append(
-                (this_ahb_line, AhbLocation(layers=layers.copy(), data_element_id=this_ahb_line.data_element))
+                (
+                    this_ahb_line,
+                    AhbLocation(
+                        layers=layers.copy(), data_element_id=this_ahb_line.data_element, segment_code=this_next_segment
+                    ),
+                )
             )
             continue
         if change == _DifferentialAhbLineHierarchyChange.LEAVE_TO_PARENT:

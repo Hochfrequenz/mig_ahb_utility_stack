@@ -3,14 +3,7 @@ from typing import List, Literal, Optional
 import pytest  # type:ignore[import]
 from lxml import etree  # type:ignore[import]
 
-from maus.models.edifact_components import EdifactStackQuery
-from maus.reader.etree_element_helpers import (
-    filter_by_name,
-    filter_by_section_name,
-    get_ahb_name_or_none,
-    get_nested_qualifiers,
-    get_segment_group_key_or_none,
-)
+from maus.reader.etree_element_helpers import get_ahb_name_or_none, get_nested_qualifiers, get_segment_group_key_or_none
 
 
 def _string_to_element(xml_elem: str) -> etree.Element:
@@ -79,98 +72,3 @@ class TestEtreeSingleElementHelpers:
     def test_get_nested_qualifier(self, ref_or_key: Literal["ref", "key"], xml_string: str, expected: List[str]):
         element = _string_to_element(xml_string)
         assert get_nested_qualifiers(ref_or_key, element) == expected
-
-
-class TestMultipleElementsHelpers:
-    """
-    Tests the behaviour of static helper methods (for multiple elements)
-    """
-
-    @pytest.mark.parametrize(
-        "xml_string, query, expected_allowed_ids",
-        [
-            pytest.param(
-                '<bar name="foo" id="this"></bar><baz name="fuu" id="that"/>',
-                EdifactStackQuery(
-                    segment_group_key="SG1",
-                    segment_code="ASD",
-                    data_element_id="1234",
-                    name="foo",
-                    predecessor_qualifier=None,
-                ),
-                ["this"],
-            ),
-            pytest.param(
-                '<bar name="bar" id="this"></bar><baz name=" Foo-" id="that"/>',
-                EdifactStackQuery(
-                    segment_group_key="SG1",
-                    segment_code="ASD",
-                    data_element_id="1234",
-                    name="foo",
-                    predecessor_qualifier=None,
-                ),
-                ["that"],
-            ),
-            pytest.param(
-                '<bar name="bar" id="this"></bar><baz name="something" ahbName=" Foo-" id="that"/>',
-                EdifactStackQuery(
-                    segment_group_key="SG1",
-                    segment_code="ASD",
-                    data_element_id="1234",
-                    name="foo",
-                    predecessor_qualifier=None,
-                ),
-                ["that"],
-            ),
-        ],
-    )
-    def test_filter_by_name(self, xml_string: str, query: EdifactStackQuery, expected_allowed_ids: List[str]):
-        elements = _string_to_elements(xml_string)
-        actual = filter_by_name(elements, query)
-        assert [x.attrib["id"] for x in actual] == expected_allowed_ids
-
-    @pytest.mark.parametrize(
-        "xml_string, query, expected_allowed_ids",
-        [
-            pytest.param(
-                '<bar name="foo" id="this"></bar><baz name="fuu" id="that"/>',
-                EdifactStackQuery(
-                    segment_group_key="SG12",
-                    section_name="Foo",
-                    segment_code="ASD",
-                    data_element_id="1234",
-                    name="asd",
-                    predecessor_qualifier=None,
-                ),
-                ["this"],
-            ),
-            pytest.param(
-                '<bar name="hello" id="this"></bar><baz name=" Foo-" id="that"/>',
-                EdifactStackQuery(
-                    segment_group_key="Foo",
-                    section_name="Hello",
-                    segment_code="ASD",
-                    data_element_id="1234",
-                    name="asd",
-                    predecessor_qualifier=None,
-                ),
-                ["this"],
-            ),
-            pytest.param(
-                '<bar name="hello" id="this"></bar><baz name="HeLlO" id="that"/>',
-                EdifactStackQuery(
-                    segment_group_key="Foo",
-                    section_name="Hello",
-                    segment_code="ASD",
-                    data_element_id="1234",
-                    name="asd",
-                    predecessor_qualifier=None,
-                ),
-                ["this", "that"],
-            ),
-        ],
-    )
-    def test_filter_by_section_name(self, xml_string: str, query: EdifactStackQuery, expected_allowed_ids: List[str]):
-        elements = _string_to_elements(xml_string)
-        actual = filter_by_section_name(elements, query)
-        assert [x.attrib["id"] for x in actual] == expected_allowed_ids

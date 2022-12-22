@@ -596,35 +596,3 @@ class EdifactStack:
             elif level.is_groupable:
                 result += "[0]"
         return result
-
-
-@attrs.define(auto_attribs=True, kw_only=True)
-class EdifactStackQuery:
-    """
-    The EdifactStackQuery contains the data you need to provide to a MIG reader to return you the :class:`EdifactStack`
-    of an element
-    """
-
-    #: the key of the segment group, e.g. 'root' or 'SG5' or 'SG12'
-    segment_group_key: str = attrs.field(validator=attrs.validators.instance_of(str))
-    #: the segment code, e.g. 'NAD' or 'DTM'
-    segment_code: str = attrs.field(validator=attrs.validators.matches_re("^[A-Z]+$"))
-    #: the data element id, e.g. '0068'
-    data_element_id: str = attrs.field(validator=attrs.validators.matches_re(r"^\d{4}$"))
-    #: the name of the element, e.g. "MP-ID" or "Kundennummer" or "Identifikator"; Is None for Value Pools
-    name: Optional[str] = attrs.field(validator=attrs.validators.optional(attrs.validators.instance_of(str)))
-    predecessor_qualifier: Optional[str] = attrs.field(
-        default=None, validator=attrs.validators.optional(_check_is_edifact_qualifier)
-    )  # GABi-RLMEV wtf
-    """
-    Some names are not really unique. e.g. all date time fields carry more or less the same name in the AHB.
-    So to distinguish between them you may provide the predecissing qualifier.
-    In case of 'DTM+137++what_youre_looking_for' the predecessor qualifier is '137'
-    """
-    section_name: Optional[str] = attrs.field(
-        default=None, validator=attrs.validators.optional(attrs.validators.instance_of(str))
-    )
-    """
-    The section name (e.g. 'Nachrichten-Kopfsegment') might also be used for MIG<->AHB matching
-    if the name is too broad or not unique.
-    """

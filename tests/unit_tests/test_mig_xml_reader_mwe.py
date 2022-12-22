@@ -4,7 +4,7 @@ import pytest  # type:ignore[import]
 from lxml import etree  # type:ignore[import]
 from lxml.etree import Element  # type:ignore[import]
 
-from maus.models.edifact_components import EdifactStack, EdifactStackLevel, EdifactStackQuery
+from maus.models.edifact_components import EdifactStack, EdifactStackLevel
 from maus.navigation import AhbLocation, AhbLocationLayer
 from maus.reader.mig_reader import MigXmlReader
 
@@ -161,7 +161,7 @@ class TestMigXmlReaderMwe:
                 id="distinguish by sg key, then by data element",
             ),
             pytest.param(
-                '<?xml version="1.0"?><UTILMD><class ref="/"><class ref="SG4"><field name="Vertragsbeginn" ref="DTM:1:1[1:0=92]" meta.format="102" meta.id="2380" meta.type="date-time" ahbName="Beginn zum" /><field name="Vertragsende" ref="DTM:1:1[1:0=93]" meta.format="102" meta.id="2380" ahbName="Ende zum" meta.type="date-time" /></class></class></UTILMD>',
+                '<?xml version="1.0"?><UTILMD><class ref="/"><class ref="UNH"><class ref="SG4"><field name="Vertragsbeginn" ref="DTM:1:1[1:0=92]" meta.format="102" meta.id="2380" meta.type="date-time" ahbName="Beginn zum" /><field name="Vertragsende" ref="DTM:1:1[1:0=93]" meta.format="102" meta.id="2380" ahbName="Ende zum" meta.type="date-time" /></class></class></class</UTILMD>',
                 AhbLocation(
                     layers=[
                         AhbLocationLayer(segment_group_key=None, opening_segment_code="UNH", opening_qualifier=None),

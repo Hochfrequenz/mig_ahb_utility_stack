@@ -12,11 +12,12 @@ from maus.models.edifact_components import (
     DataElement,
     DataElementFreeText,
     DataElementValuePool,
+    EdifactStack,
     Segment,
     SegmentGroup,
     SegmentLevel,
     ValuePoolEntry,
-    derive_data_type_from_segment_code, EdifactStack,
+    derive_data_type_from_segment_code,
 )
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
 from maus.navigation import AhbLocation, calculate_distance, determine_locations
@@ -139,11 +140,14 @@ def to_deep_ahb(
         determine_locations(segment_group_hierarchy, flat_ahb.lines), key=lambda line_and_position: line_and_position[1]
     ):
         data_element_lines = [x[0] for x in layer_group]  # index 1 is the position
+        error: ValueError
         try:
             stack = mig_reader.get_edifact_stack(position)
+            raise_later = False
         except ValueError as value_error:
-            # there is a fundamental problem with our xml templates: they do not contain entries which are constant
             stack = EdifactStack.from_json_path('$["Dokument"][0]["Nachricht"][0]["UNKNOWN"]')
+            raise_later = True
+            error = value_error
         if not any((True for line in data_element_lines if line.segment_code is not None)):
             continue  # section heading only
         if any((True for line in data_element_lines if line.data_element is not None)):
@@ -159,6 +163,8 @@ def to_deep_ahb(
                 first_line.segment_group_key == last(position.layers).segment_group_key
                 and last(position.layers).opening_segment_code == last_line.segment_code
             ):
+                if raise_later:
+                    raise error
                 # a new segment group has been opened
                 segment_group = SegmentGroup(
                     discriminator=stack.to_json_path(),
@@ -203,6 +209,8 @@ def to_deep_ahb(
             # Section Heading
             # SGx Foo      <-- a line with only the segment code but no actual content; this is where we're right now
             # SGx Foo 1234 <-- the first interesting line
+            if raise_later:
+                raise error
             segment = Segment(
                 discriminator=stack.to_json_path(),
                 data_elements=[],

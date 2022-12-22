@@ -12,7 +12,7 @@ from more_itertools import one
 
 from maus import SegmentGroupHierarchy
 from maus.edifact import EdifactFormat
-from maus.models.edifact_components import EdifactStack, EdifactStackLevel, EdifactStackQuery
+from maus.models.edifact_components import EdifactStack, EdifactStackLevel
 from maus.navigation import AhbLocation
 from maus.reader.etree_element_helpers import get_nested_qualifiers
 from maus.reader.mig_ahb_name_helpers import make_tree_names_comparable
@@ -76,6 +76,7 @@ class MigXmlReader(MigReader):
             self._sanitized_root = etree.parse(str(init_param.absolute())).getroot()
         else:
             raise ValueError(f"The type of '{init_param}' is not valid")
+        # self._unpack_virtual_groups()
         # the original tree is the unmodified MIG XML Structure with all its quircks
         self._original_tree: etree.ElementTree = etree.ElementTree(self._original_root)
         # but turns out, it's much easier to handle a sanitized tree that is simplified in a sense that
@@ -83,6 +84,21 @@ class MigXmlReader(MigReader):
         # * has the same structure as the _original_tree so that absolute path expressions from the sanitized tree match
         self._sanitized_tree: etree.ElementTree = etree.ElementTree(self._sanitized_root)
         make_tree_names_comparable(self._sanitized_tree)
+
+    def _unpack_virtual_groups(self) -> None:
+        """
+        unpacks groups with @meta.virtual="true".
+        Any <root><group meta.virtual="true"><foo/><bar/></group></root> will be unpacked and modify the root to
+        <root><foo/><bar/></root>
+        :return:
+        """
+        elements_that_have_foo_groups = self._original_root.xpath('//class[@meta.virtual="true"]/parent::*')
+        for element_that_has_foo_groups in elements_that_have_foo_groups:
+            for foo_group in element_that_has_foo_groups.xpath('./class[@meta.virtual="true"]'):
+                foo_group_index = element_that_has_foo_groups.index(foo_group)
+                for foo_field in foo_group:
+                    element_that_has_foo_groups.insert(foo_group_index - 1, foo_field)
+                element_that_has_foo_groups.remove(foo_group)
 
     def get_format_name(self) -> str:
         """
@@ -128,9 +144,9 @@ class MigXmlReader(MigReader):
         Raises ValueErrors if it cannot find the group or the result would be ambiguous.
         """
         candidates: List[Element]
-        final_query_path = f"/{self.get_format_name()}"
+        final_query_path = f"/{self.get_format_name()}/class[@ref='/']"
         for layer in ahb_location.layers:
-            query_path = final_query_path + f"/class[@ref='/']/class[@ref='{layer.segment_group_key or 'UNH'}']"
+            query_path = final_query_path + f"/class[@ref='{layer.segment_group_key or 'UNH'}']"
             candidates = list(self._original_root.xpath(query_path))
             if len(candidates) == 0:
                 raise ValueError(f"No element found for path {query_path}")
@@ -145,9 +161,20 @@ class MigXmlReader(MigReader):
                 final_query_path = query_path + f"[{candidate_index + 1}]"  # xpath index starts at 1, not 0
                 continue
             final_query_path = query_path
+        if ahb_location.segment_code is not None and ahb_location.segment_code != "UNH":
+            query_path = final_query_path + f"/class[@ref='{ahb_location.segment_code}']"
+            segment_candidates = list(self._original_root.xpath(query_path))
+            if len(segment_candidates) == 0:
+                pass
+                # raise ValueError(f"No element found for path {query_path}")
+            elif len(segment_candidates) > 1:
+                raise ValueError(f"Couldn't find any unique candidate for '{query_path}'")
+            else:
+                candidates = segment_candidates
+                final_query_path = query_path
         if ahb_location.data_element_id is not None:
             # now inside the remaining segment group find the entry that has the correct data element id
-            query_path = final_query_path + f"/field[@meta.id='{ahb_location.data_element_id}']"
+            query_path = final_query_path + f"/field[@meta.id='{ahb_location.data_element_id}']"  # todo:virtual groups
             candidates = list(self._original_root.xpath(query_path))
             if len(candidates) == 0:
                 raise ValueError(f"No element found for path {query_path}")
