@@ -46,7 +46,9 @@ class TestMausProvider:
         maus_root_dir.mkdir("FV2104")
         maus_root_dir.mkdir("FV2104/UTILMD")
         # a minimal maus that is serializable and deserializable
-        example_maus = DeepAnwendungshandbuch(meta=AhbMetaInformation(pruefidentifikator="11001"), lines=[])
+        example_maus = DeepAnwendungshandbuch(
+            meta=AhbMetaInformation(pruefidentifikator="11001", maus_version="0.2.3"), lines=[]
+        )
         with open(maus_root_dir / "FV2104/UTILMD/11001_maus.json", "w+") as maus_test_outfile:
             deep_ahb_dict = DeepAnwendungshandbuchSchema().dump(example_maus)  # create a dictionary
             json.dump(deep_ahb_dict, maus_test_outfile)  # dump the dictionary to the file

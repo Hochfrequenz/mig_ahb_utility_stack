@@ -413,7 +413,7 @@ class TestMaus:
                     ],
                 ),
                 DeepAnwendungshandbuch(
-                    meta=AhbMetaInformation(pruefidentifikator="12345"),
+                    meta=AhbMetaInformation(pruefidentifikator="12345", maus_version="0.2.3"),
                     lines=[
                         SegmentGroup(
                             discriminator="root",

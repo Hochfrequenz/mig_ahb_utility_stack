@@ -17,6 +17,8 @@ from maus.models.edifact_components import (
 )
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
 
+_VERSION = "0.2.3"  #: version to be writen into the deep ahb
+
 
 def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElement:
     """
@@ -151,6 +153,7 @@ def to_deep_ahb(
     Converts a flat ahb into a nested ahb using the provided segment hierarchy
     """
     result = DeepAnwendungshandbuch(meta=flat_ahb.meta, lines=[])
+    result.meta.maus_version = _VERSION
     flat_ahb.sort_lines_by_segment_groups()
     flat_groups = group_lines_by_segment_group(flat_ahb.lines, segment_group_hierarchy)
     # in a first step we group the lines by their segment groups but ignore the actual hierarchy except for the order
