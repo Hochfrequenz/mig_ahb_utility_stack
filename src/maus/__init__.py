@@ -96,6 +96,7 @@ def to_deep_ahb(
     for position, layer_group in groupby(
         determine_locations(segment_group_hierarchy, flat_ahb.lines), key=lambda line_and_position: line_and_position[1]
     ):
+        # todo: the opening qualifiers returned by determine_locations are wrong for semgnets 1-n for every sg
         data_element_lines = [x[0] for x in layer_group]  # index 1 is the position
         if not any((True for line in data_element_lines if line.segment_code is not None)):
             continue  # section heading only

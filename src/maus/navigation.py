@@ -458,7 +458,7 @@ def _determine_hierarchy_change(
     """
     previous_sg_key: Optional[str] = None
     previous_opening_qualifier: str = None  # type:ignore[assignment]
-    previous_opening_segment_code: str = None  # type:ignore[assignment]
+    previous_opening_segment_code: str = "UNH"
     if len(previous_locations) > 0:
         last_layer = last(last(previous_locations).layers)
         previous_sg_key = last_layer.segment_group_key
@@ -467,11 +467,19 @@ def _determine_hierarchy_change(
     if this_ahb_line.segment_group_key == previous_sg_key:  # No segment group change (key);
         if this_next_segment != previous_opening_segment_code:
             return _DifferentialAhbLineHierarchyChange.STAY
+        if len(previous_locations) == 0:
+            return _DifferentialAhbLineHierarchyChange.STAY
         # next segment opens a new group with the same key
-        if this_next_qualifier == previous_opening_qualifier:
+        if this_next_qualifier == previous_opening_qualifier or (
+            # as long as we're in UNH, we stay in UNH
+            previous_opening_segment_code == "UNH"
+            and this_next_segment == "UNH"
+        ):
+            return _DifferentialAhbLineHierarchyChange.STAY
+        if this_next_qualifier is None:
             return _DifferentialAhbLineHierarchyChange.STAY
         return _DifferentialAhbLineHierarchyChange.MOVE_TO_NEIGHBOUR_SAME_KEY
-    # An SG change happened. Now we have to distinguish. Did we switch...
+    # An SG (key) change happened. Now we have to distinguish. Did we switch...
     # * ...to a sub group nested inside (add layers)
     # * ...back to a parent group (remove layers)
     # * ...even both: move to parent (remove layer) and then dive into another subgroup (add layer) at the same time
@@ -533,7 +541,11 @@ def determine_locations(
                 opening_qualifier=this_next_qualifier,
             )
         change = _determine_hierarchy_change(
-            this_ahb_line, this_next_segment, this_next_qualifier, [x[1] for x in result], segment_group_hierarchy
+            this_ahb_line,
+            this_next_segment,
+            this_next_qualifier,
+            [x[1] for x in result],
+            segment_group_hierarchy,
         )
         if change == _DifferentialAhbLineHierarchyChange.STAY:
             # No segment group change; The layers represent the location already.
@@ -547,6 +559,14 @@ def determine_locations(
             )
             continue
         if change == _DifferentialAhbLineHierarchyChange.MOVE_TO_NEIGHBOUR_SAME_KEY:
+            layers.pop()
+            layers.append(
+                AhbLocationLayer(
+                    segment_group_key=this_ahb_line.segment_group_key,
+                    opening_segment_code=this_next_segment,
+                    opening_qualifier=this_next_qualifier,
+                )
+            )
             result.append(
                 (
                     this_ahb_line,

@@ -159,6 +159,20 @@ class TestAhbCsvReader:
                 "Codeliste Gas Nr. G_0009",
                 id="EBD G",
             ),
+            pytest.param(
+                "MP-ID",
+                None,
+                None,
+                "MP-ID",
+                id="SG2 MP-ID",
+            ),
+            pytest.param(
+                "MS",
+                "Dokumenten-/Nachrichtenausstellerbzw. -absender",
+                "MS",
+                "Dokumenten-/Nachrichtenausstellerbzw. -absender",
+                id="SG2 NAD+MS",
+            ),
         ],
     )
     def test_code_description_separation(
