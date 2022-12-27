@@ -61,25 +61,3 @@ class TestBeginnMsbMaus:
             '$["Dokument"][0]["Nachricht"][0]["Vorgang"][0]["Korrespondenzanschrift des Kunden des Messstellenbetreibers"][0]["Postleitzahl"]'
             in nad_de_discriminators
         )
-
-    @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2c.template")
-    @pytest.mark.datafiles("./edifact-templates/ahbs/FV2110/UTILMD/11043.csv")
-    @pytest.mark.datafiles("../unit_tests/migs/FV2204/segment_group_hierarchies/sgh_utilmd.json")
-    def test_maus_creation_11043(self, datafiles):
-        create_maus_and_assert(
-            csv_path=Path(datafiles) / "11043.csv",
-            sgh_path=Path(datafiles) / "sgh_utilmd.json",
-            template_path=Path(datafiles) / Path("UTILMD5.2c.template"),
-            maus_path=Path("edifact-templates/maus/FV2110/UTILMD/11043_maus.json"),
-        )
-
-    @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2c.template")
-    @pytest.mark.datafiles("./edifact-templates/ahbs/FV2110/UTILMD/11044.csv")
-    @pytest.mark.datafiles("../unit_tests/migs/FV2204/segment_group_hierarchies/sgh_utilmd.json")
-    def test_maus_creation_11044(self, datafiles):
-        create_maus_and_assert(
-            csv_path=Path(datafiles) / "11044.csv",
-            sgh_path=Path(datafiles) / "sgh_utilmd.json",
-            template_path=Path(datafiles) / Path("UTILMD5.2c.template"),
-            maus_path=Path("edifact-templates/maus/FV2110/UTILMD/11044_maus.json"),
-        )
