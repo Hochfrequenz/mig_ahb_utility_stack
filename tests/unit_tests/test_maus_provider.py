@@ -6,10 +6,9 @@ from pathlib import Path
 
 import pytest  # type:ignore[import]
 
-from maus import DeepAnwendungshandbuch
 from maus.edifact import EdifactFormat, EdifactFormatVersion
 from maus.maus_provider import FileBasedMausProvider, MausProvider
-from maus.models.anwendungshandbuch import AhbMetaInformation, DeepAnwendungshandbuchSchema
+from maus.models.anwendungshandbuch import AhbMetaInformation, DeepAnwendungshandbuch, DeepAnwendungshandbuchSchema
 
 
 class MyFooBarMausProvider(FileBasedMausProvider):

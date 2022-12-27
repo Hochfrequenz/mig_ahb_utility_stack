@@ -1,21 +1,17 @@
 from typing import List
-from unittest.mock import Mock
 
 import pytest  # type:ignore[import]
 from unit_tests.serialization_test_helper import assert_serialization_roundtrip  # type:ignore[import]
 
-from maus import MigReader, merge_lines_with_same_data_element, to_deep_ahb
-from maus.models.anwendungshandbuch import AhbLine, AhbMetaInformation, DeepAnwendungshandbuch, FlatAnwendungshandbuch
+from maus.mig_ahb_matching import merge_lines_with_same_data_element
+from maus.models.anwendungshandbuch import AhbLine
 from maus.models.edifact_components import (
     DataElement,
     DataElementFreeText,
     DataElementValuePool,
     EdifactStack,
-    Segment,
-    SegmentGroup,
     ValuePoolEntry,
 )
-from maus.models.message_implementation_guide import SegmentGroupHierarchy
 
 
 class TestMaus:

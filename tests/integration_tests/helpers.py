@@ -4,9 +4,9 @@ from sys import gettrace
 
 import attrs
 
-from maus import DeepAnwendungshandbuch, SegmentGroupHierarchy, to_deep_ahb
-from maus.models.anwendungshandbuch import DeepAnwendungshandbuchSchema, FlatAnwendungshandbuch
-from maus.models.message_implementation_guide import SegmentGroupHierarchySchema
+from maus.mig_ahb_matching import to_deep_ahb
+from maus.models.anwendungshandbuch import DeepAnwendungshandbuch, DeepAnwendungshandbuchSchema, FlatAnwendungshandbuch
+from maus.models.message_implementation_guide import SegmentGroupHierarchy, SegmentGroupHierarchySchema
 from maus.reader.flat_ahb_reader import FlatAhbCsvReader
 from maus.reader.mig_reader import MigXmlReader
 

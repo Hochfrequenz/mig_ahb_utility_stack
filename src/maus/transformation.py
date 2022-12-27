@@ -24,7 +24,8 @@ and the application domain ("non-edifact").
 import asyncio
 from typing import Any, Awaitable, Dict, List, Mapping, Optional, Protocol, TypeVar
 
-from maus import DataElementValuePool, DeepAnwendungshandbuch, ValuePoolEntry
+from maus.models.anwendungshandbuch import DataElementValuePool, DeepAnwendungshandbuch
+from maus.models.edifact_components import ValuePoolEntry
 
 EdifactData = TypeVar("EdifactData")
 """

@@ -10,7 +10,8 @@ from typing import Callable, List, Optional, Tuple, TypeVar, Union, overload
 import attrs
 from more_itertools import first_true, last
 
-from maus import AhbLine, SegmentGroupHierarchy
+from maus.models.anwendungshandbuch import AhbLine
+from maus.models.message_implementation_guide import SegmentGroupHierarchy
 
 T = TypeVar("T")
 

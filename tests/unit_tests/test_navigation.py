@@ -5,8 +5,8 @@ import pytest  # type:ignore[import]
 from jsonpath_ng.ext import parse  # type:ignore[import] #  jsonpath is just installed in the tests
 from more_itertools import last
 
-from maus import SegmentGroupHierarchy
 from maus.models.anwendungshandbuch import AhbLine
+from maus.models.message_implementation_guide import SegmentGroupHierarchy
 from maus.navigation import (
     AhbLocation,
     AhbLocationLayer,

@@ -10,9 +10,9 @@ from xml.etree.ElementTree import Element
 from lxml import etree  # type:ignore[import]
 from more_itertools import one
 
-from maus import SegmentGroupHierarchy
 from maus.edifact import EdifactFormat
 from maus.models.edifact_components import EdifactStack, EdifactStackLevel
+from maus.models.message_implementation_guide import SegmentGroupHierarchy
 from maus.navigation import AhbLocation
 from maus.reader.etree_element_helpers import get_nested_qualifiers
 from maus.reader.mig_ahb_name_helpers import make_tree_names_comparable

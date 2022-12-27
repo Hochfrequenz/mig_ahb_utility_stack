@@ -3,8 +3,7 @@ from typing import Any, Optional
 import pytest  # type:ignore[import]
 from jsonpath_ng.ext import parse  # type:ignore[import] #  jsonpath is just installed in the tests
 
-from maus import DeepAnwendungshandbuch
-from maus.models.anwendungshandbuch import AhbMetaInformation
+from maus.models.anwendungshandbuch import AhbMetaInformation, DeepAnwendungshandbuch
 from maus.models.edifact_components import (
     DataElementFreeText,
     DataElementValuePool,

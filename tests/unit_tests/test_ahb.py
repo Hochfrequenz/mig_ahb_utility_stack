@@ -1,10 +1,9 @@
 import uuid
-from typing import Any, List, Optional, Set
+from typing import List, Optional, Set
 
 import pytest  # type:ignore[import]
 from unit_tests.serialization_test_helper import assert_serialization_roundtrip  # type:ignore[import]
 
-from maus import AhbLocation
 from maus.models.anwendungshandbuch import (
     AhbLine,
     AhbLineSchema,
