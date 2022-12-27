@@ -391,7 +391,8 @@ class DeepAnwendungshandbuch:
         :return: a list of all value pools
         """
         result: List[DataElementValuePool] = []
-        added_discriminators: Set[str] = set()  # checks like "str in set" are way faster than "value pool in list"
+        added_discriminators: Set[Optional[str]] = set()
+        # checks like "str in set" are way faster than "value pool in list"
 
         def add_to_result(value_pool: DataElementValuePool):
             if value_pool.discriminator in added_discriminators:
