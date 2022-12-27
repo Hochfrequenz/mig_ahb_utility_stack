@@ -450,6 +450,7 @@ def _determine_hierarchy_change(
     this_next_segment: str,
     this_next_qualifier: str,
     previous_locations: List[AhbLocation],
+    is_ready_for_sg_change: bool,
     segment_group_hierarchy: SegmentGroupHierarchy,
 ) -> _DifferentialAhbLineHierarchyChange:
     """
@@ -476,9 +477,10 @@ def _determine_hierarchy_change(
             and this_next_segment == "UNH"
         ):
             return _DifferentialAhbLineHierarchyChange.STAY
-        if this_next_qualifier is None:
-            return _DifferentialAhbLineHierarchyChange.STAY
-        return _DifferentialAhbLineHierarchyChange.MOVE_TO_NEIGHBOUR_SAME_KEY
+        if is_ready_for_sg_change:
+            return _DifferentialAhbLineHierarchyChange.MOVE_TO_NEIGHBOUR_SAME_KEY
+        return _DifferentialAhbLineHierarchyChange.STAY
+
     # An SG (key) change happened. Now we have to distinguish. Did we switch...
     # * ...to a sub group nested inside (add layers)
     # * ...back to a parent group (remove layers)
@@ -523,6 +525,7 @@ def determine_locations(
     # Using these helper functions saves us from looking ahead in our iteration.
     # We only need to look at one item at a time
     result: List[Tuple[AhbLine, AhbLocation]] = []
+    segment_code_was_none: bool = False
     zip_kwargs = {}
     if sys.version_info.minor >= 10:  # we implicitly assume python 3 here
         zip_kwargs = {"strict": True}  # strict=True has been introduced in 3.10
@@ -540,13 +543,18 @@ def determine_locations(
                 opening_segment_code=segment_group_hierarchy.opening_segment,
                 opening_qualifier=this_next_qualifier,
             )
+        if this_ahb_line.segment_code is None:
+            segment_code_was_none = True
         change = _determine_hierarchy_change(
             this_ahb_line,
             this_next_segment,
             this_next_qualifier,
             [x[1] for x in result],
+            segment_code_was_none,
             segment_group_hierarchy,
         )
+        if this_ahb_line.segment_code is not None:
+            segment_code_was_none = False
         if change == _DifferentialAhbLineHierarchyChange.STAY:
             # No segment group change; The layers represent the location already.
             result.append(

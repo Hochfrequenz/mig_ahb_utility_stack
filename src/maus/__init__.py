@@ -112,6 +112,8 @@ def to_deep_ahb(
                 continue
             data_element = merge_lines_with_same_data_element(data_element_lines, first_stack=stack)
             append_next_data_elements_here.append(data_element)
+        elif stack is None:
+            continue
         else:
             first_line = first(data_element_lines)
             last_line = last(data_element_lines)

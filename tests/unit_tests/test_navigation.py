@@ -836,6 +836,17 @@ class TestNavigation:
                     AhbLine(
                         guid=UUID("4646cd0b-af10-4656-a4aa-c3940d5dd7db"),
                         segment_group_key="SG6",
+                        segment_code=None,
+                        data_element=None,
+                        value_pool_entry="Z18",
+                        name="foo",
+                        ahb_expression="Muss",
+                        section_name="Referenz auf die ID der Marktlokation für Termine der Marktlokation",
+                        index=89,
+                    ),
+                    AhbLine(
+                        guid=UUID("4646cd0b-af10-4656-a4aa-c3940d5dd7db"),
+                        segment_group_key="SG6",
                         segment_code="RFF",
                         data_element="1153",
                         value_pool_entry="Z18",

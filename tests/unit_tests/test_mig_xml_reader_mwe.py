@@ -1,4 +1,4 @@
-from typing import List, Optional, Tuple
+from typing import Tuple
 
 import pytest  # type:ignore[import]
 from lxml import etree  # type:ignore[import]
@@ -124,18 +124,18 @@ class TestMigXmlReaderMwe:
         "xml_string,ahb_location,expected_result_xpath",
         [
             pytest.param(
-                '<?xml version="1.0"?><MSCONS><class ref="/"><class ref="SG1"><foo/></class></class></MSCONS>',
+                '<?xml version="1.0"?><MSCONS><class ref="/"><class ref="UNH"><class ref="SG1"><foo/></class></class></class></MSCONS>',
                 AhbLocation(
                     layers=[
                         AhbLocationLayer(segment_group_key=None, opening_segment_code="UNH", opening_qualifier=None),
                         AhbLocationLayer(segment_group_key="SG1", opening_segment_code="FOO", opening_qualifier="BAR"),
                     ]
                 ),
-                "/MSCONS/class/class",
+                "/MSCONS/class/class/class",
                 id="simple unique result",
             ),
             pytest.param(
-                '<?xml version="1.0"?><UTILMD><class ref="/"><class ref="SG4"><class name="Netznutzungsabrechnungsdaten der Marktlokation" ref="SG8" key="SEQ:1:0[SEQ:1:0=Z45]"><foo/></class><class name="Weitere Abrechnungsdaten der Marktlokation" ref="SG8" key="SEQ:1:0[SEQ:1:0=Z46]"><field name="ID" ref="PIA:2:0[PIA:1:0=Z02]" meta.id="7140" /></class></class></class></UTILMD>',
+                '<?xml version="1.0"?><UTILMD><class ref="/"><class ref="UNH"><class ref="SG4" key="IDE:2:0"><class name="Netznutzungsabrechnungsdaten der Marktlokation" ref="SG8" key="SEQ:1:0[SEQ:1:0=Z45]"><foo/></class><class name="Weitere Abrechnungsdaten der Marktlokation" ref="SG8" key="SEQ:1:0[SEQ:1:0=Z46]"><field name="ID" ref="PIA:2:0[PIA:1:0=Z02]" meta.id="7140" /></class></class></class></class></UTILMD>',
                 AhbLocation(
                     layers=[
                         AhbLocationLayer(segment_group_key=None, opening_segment_code="UNH", opening_qualifier=None),
@@ -144,24 +144,11 @@ class TestMigXmlReaderMwe:
                     ],
                     data_element_id="7140",
                 ),
-                "/UTILMD/class/class/class[2]/field",
+                "/UTILMD/class/class/class/class[2]/field",
                 id="distinguish by sg key, then by data element",
             ),
             pytest.param(
-                '<?xml version="1.0"?><UTILMD><class ref="/"><class ref="SG4"><class name="Netznutzungsabrechnungsdaten der Marktlokation" ref="SG8" key="SEQ:1:0[SEQ:1:0=Z45]"><foo/></class><class name="Weitere Abrechnungsdaten der Marktlokation" ref="SG8" key="SEQ:1:0[SEQ:1:0=Z46]"><field name="ID" ref="PIA:2:0[PIA:1:0=Z02]" meta.id="7140" /></class></class></class></UTILMD>',
-                AhbLocation(
-                    layers=[
-                        AhbLocationLayer(segment_group_key=None, opening_segment_code="UNH", opening_qualifier=None),
-                        AhbLocationLayer(segment_group_key="SG4", opening_segment_code="IDE", opening_qualifier="24"),
-                        AhbLocationLayer(segment_group_key="SG8", opening_segment_code="SEQ", opening_qualifier="Z46"),
-                    ],
-                    data_element_id="7140",
-                ),
-                "/UTILMD/class/class/class[2]/field",
-                id="distinguish by sg key, then by data element",
-            ),
-            pytest.param(
-                '<?xml version="1.0"?><UTILMD><class ref="/"><class ref="UNH"><class ref="SG4"><field name="Vertragsbeginn" ref="DTM:1:1[1:0=92]" meta.format="102" meta.id="2380" meta.type="date-time" ahbName="Beginn zum" /><field name="Vertragsende" ref="DTM:1:1[1:0=93]" meta.format="102" meta.id="2380" ahbName="Ende zum" meta.type="date-time" /></class></class></class</UTILMD>',
+                '<?xml version="1.0"?><UTILMD><class ref="/"><class ref="UNH"><class ref="SG4" key="IDE:2:0"><field name="Vertragsbeginn" ref="DTM:1:1[1:0=92]" meta.format="102" meta.id="2380" meta.type="date-time" ahbName="Beginn zum" /><field name="Vertragsende" ref="DTM:1:1[1:0=93]" meta.format="102" meta.id="2380" ahbName="Ende zum" meta.type="date-time" /></class></class></class></UTILMD>',
                 AhbLocation(
                     layers=[
                         AhbLocationLayer(segment_group_key=None, opening_segment_code="UNH", opening_qualifier=None),
@@ -170,7 +157,7 @@ class TestMigXmlReaderMwe:
                     data_element_id="2380",
                     qualifier="93",
                 ),
-                "/UTILMD/class/class/field[2]",
+                "/UTILMD/class/class/class/field[2]",
                 id="DTM92 and DTM93",
             ),
         ],
