@@ -17,7 +17,7 @@ from maus.models.edifact_components import (
 )
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
 
-_VERSION = "0.2.3"  #: version to be writen into the deep ahb
+_VERSION = "0.2.4"  #: version to be writen into the deep ahb
 
 
 def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElement:
