@@ -231,7 +231,6 @@ def _check_that_line_has_either_none_az_segment_code(instance, attribute, value:
         raise ValueError(f"The segment_code '{value.segment_code}' does not match {_segment_code_pattern}")
 
 
-
 @attrs.define(auto_attribs=True, kw_only=True)
 class FlatAnwendungshandbuch:
     """
