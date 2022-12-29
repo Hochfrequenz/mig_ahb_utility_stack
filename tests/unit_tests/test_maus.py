@@ -393,7 +393,7 @@ class TestMaus:
                         ),
                         AhbLine(
                             segment_group_key="SG6",
-                            segment_code="irgendwas",
+                            segment_code="IRG",
                             ahb_expression="X",
                             data_element="7889",
                             name="Die sechste Gruppe",
@@ -485,7 +485,7 @@ class TestMaus:
                                                     ahb_expression="X",
                                                     segments=[
                                                         Segment(
-                                                            discriminator="irgendwas",
+                                                            discriminator="IRG",
                                                             ahb_expression="X",
                                                             data_elements=[
                                                                 DataElementFreeText(
