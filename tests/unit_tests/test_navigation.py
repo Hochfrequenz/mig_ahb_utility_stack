@@ -1310,7 +1310,7 @@ class TestNavigation:
         location_and_changes = [
             (line, loc, change)
             for line, loc, change in zip(
-                example_flat_ahb_11042.lines, expected_locations_11042, actual_changes, strict=True
+                example_flat_ahb_11042.lines, expected_locations_11042, actual_changes
             )
         ]
         assert location_and_changes is not None  # you may use this to update the 10k lines of equality assertions
