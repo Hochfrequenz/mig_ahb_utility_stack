@@ -6,7 +6,7 @@ structure.
 2. the "nested" AHB which contains structural information (e.g. that a segment group is contained in
 another segment group)
 """
-
+import re
 from typing import Callable, List, Optional, Sequence, Set
 from uuid import UUID
 
@@ -190,6 +190,47 @@ def _check_that_nearly_all_lines_have_a_segment_group(instance, attribute, value
         raise ValueError(f"There is a None segment group in line {last(switches_from_no_sg_to_sg[1])}")
 
 
+_data_element_pattern = re.compile(r"^\d{4}$")
+# pylint:disable=unused-argument
+def _check_that_line_has_either_none_or_d4_data_element(instance, attribute, value: AhbLine):
+    """
+    checks that the given line has either a None data element or a data element that matches \\d{4}
+    """
+    if value.data_element is None:
+        return
+    match = _data_element_pattern.match(value.data_element)
+    if match is None:
+        raise ValueError(f"The data_element '{value.data_element}' does not match {_data_element_pattern}")
+
+
+_segment_group_key_pattern = re.compile(r"^SG\d+$")
+# pylint:disable=unused-argument
+def _check_that_line_has_either_none_or_matching_sg(instance, attribute, value: AhbLine):
+    """
+    checks that the given line has a segment group key that is either None (for root) or matches SG\\d+
+    """
+    if value.segment_group_key is None:
+        return
+    match = _segment_group_key_pattern.match(value.segment_group_key)
+    if match is None:
+        raise ValueError(
+            f"The segment_group_key '{value.segment_group_key}' does not match {_segment_group_key_pattern}"
+        )
+
+
+_segment_code_pattern = re.compile(r"^[A-Z]+$")
+# pylint:disable=unused-argument
+def _check_that_line_has_either_none_az_segment_code(instance, attribute, value: AhbLine):
+    """
+    checks that the given line has either a None segment code or a segment code that consists of all upper letters
+    """
+    if value.segment_code is None:
+        return
+    match = _segment_code_pattern.match(value.segment_code)
+    if match is None:
+        raise ValueError(f"The segment_code '{value.segment_code}' does not match {_segment_code_pattern}")
+
+
 @attrs.define(auto_attribs=True, kw_only=True)
 class FlatAnwendungshandbuch:
     """
@@ -203,9 +244,18 @@ class FlatAnwendungshandbuch:
 
     lines: List[AhbLine] = attrs.field(
         validator=attrs.validators.deep_iterable(
-            member_validator=attrs.validators.instance_of(AhbLine),
+            member_validator=attrs.validators.and_(
+                attrs.validators.instance_of(AhbLine),
+                # The following checks are not baked into the AhbLine class itself, because they might be initialized
+                # with raw data that do not yet obey these strict validations. But as soon as we bundle them in a
+                # FlatAnwendungshandbuch, the sanitizations shall be applied.
+                _check_that_line_has_either_none_or_d4_data_element,
+                _check_that_line_has_either_none_or_matching_sg,
+                _check_that_line_has_either_none_az_segment_code,
+            ),
             iterable_validator=attrs.validators.and_(
-                attrs.validators.instance_of(list), _check_that_nearly_all_lines_have_a_segment_group
+                attrs.validators.instance_of(list),
+                _check_that_nearly_all_lines_have_a_segment_group,
             ),
         )
     )  #: ordered list lines as they occur in the AHB
