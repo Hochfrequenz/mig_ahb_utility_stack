@@ -452,9 +452,6 @@ def _this_line_is_hierarchically_below_the_previous_sg_key(
     return segment_group_hierarchy.sg_is_hierarchically_below(this_line.segment_group_key, previous_segment_group_key)
 
 
-from uuid import UUID
-
-
 def _determine_hierarchy_change(
     this_ahb_line: AhbLine,
     previous_ahb_line: Optional[AhbLine],
@@ -470,8 +467,6 @@ def _determine_hierarchy_change(
     :return: see `_DifferentialAhbLineHierarchyChange`
     """
     previous_sg_key: Optional[str] = None
-    # if this_ahb_line.guid == UUID("f7c26003-13da-4bbf-a774-91deaa03f976"):
-    #    breakpoint()
     if previous_ahb_line is not None:
         previous_sg_key = previous_ahb_line.segment_group_key
     # if len(previous_locations) > 0:
@@ -585,17 +580,10 @@ def determine_locations(
     # Using these helper functions saves us from looking ahead in our iteration.
     # We only need to look at one item at a time
     result: List[Tuple[AhbLine, AhbLocation]] = []
-    segment_code_was_none: bool = False
-    zip_kwargs = {}
-    if sys.version_info.minor >= 10:  # we implicitly assume python 3 here
-        zip_kwargs = {"strict": True}  # strict=True has been introduced in 3.10
-    for this_ahb_line, this_next_segment, this_next_qualifier in list(
-        zip(
-            ahb_lines,
-            [x[1] for x in _enhance_with_next_segment(ahb_lines)],
-            [x[1] for x in _enhance_with_next_value_pool_entry(ahb_lines)],
-            **zip_kwargs,
-        )
+    for (this_ahb_line, change), this_next_segment, this_next_qualifier in zip(
+        determine_hierarchy_changes(ahb_lines, segment_group_hierarchy),
+        [x[1] for x in _enhance_with_next_segment(ahb_lines)],
+        [x[1] for x in _enhance_with_next_value_pool_entry(ahb_lines)],
     ):
         if last(layers).opening_qualifier is None and len(result) == 0:
             layers[-1] = AhbLocationLayer(
@@ -603,18 +591,6 @@ def determine_locations(
                 opening_segment_code=segment_group_hierarchy.opening_segment,
                 opening_qualifier=this_next_qualifier,
             )
-        if this_ahb_line.segment_code is None:
-            segment_code_was_none = True
-        change = _determine_hierarchy_change(
-            this_ahb_line,
-            this_next_segment,
-            this_next_qualifier,
-            [x[1] for x in result],
-            segment_code_was_none,
-            segment_group_hierarchy,
-        )
-        if this_ahb_line.segment_code is not None:
-            segment_code_was_none = False
         if change == _DifferentialAhbLineHierarchyChange.STAY:
             # No segment group change; The layers represent the location already.
             result.append(

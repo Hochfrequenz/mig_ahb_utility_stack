@@ -7,7 +7,6 @@ from maus.models.anwendungshandbuch import AhbLine, AhbMetaInformation, FlatAnwe
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
 from maus.navigation import AhbLocation, AhbLocationLayer, _DifferentialAhbLineHierarchyChange
 
-
 example_sgh_11042 = SegmentGroupHierarchy(
     segment_group=None,
     opening_segment="UNH",
