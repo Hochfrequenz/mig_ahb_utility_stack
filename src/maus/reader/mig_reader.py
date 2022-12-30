@@ -13,7 +13,7 @@ from more_itertools import one
 from maus.edifact import EdifactFormat
 from maus.models.edifact_components import EdifactStack, EdifactStackLevel
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
-from maus.navigation import AhbLocation
+from maus.navigation import AhbLocation, AhbLocationLayer
 from maus.reader.etree_element_helpers import get_nested_qualifiers
 from maus.reader.mig_ahb_name_helpers import make_tree_names_comparable
 
@@ -139,6 +139,14 @@ class MigXmlReader(MigReader):
             stack.levels.append(EdifactStackLevel(name=level_name, is_groupable=is_groupable))
         return stack
 
+    def _get_candidate_index_from_key(self, layer: AhbLocationLayer, candidates: List[Element]) -> int:
+        for candidate_index, key_set in enumerate(
+            set(get_nested_qualifiers("key", candidate)) for candidate in candidates
+        ):
+            if layer.opening_qualifier in key_set:
+                return candidate_index
+        raise ValueError(f"Couldn't find any candidate with opening_qualifier '{layer.opening_qualifier}'")
+
     def get_element(self, ahb_location: AhbLocation) -> Element:
         """
         Finds and returns the segment group for the specified location.
@@ -152,13 +160,7 @@ class MigXmlReader(MigReader):
             if len(candidates) == 0:
                 raise ValueError(f"No element found for path {query_path}")
             if len(candidates) > 1:
-                for candidate_index, key_set in enumerate(
-                    set(get_nested_qualifiers("key", candidate)) for candidate in candidates
-                ):
-                    if layer.opening_qualifier in key_set:
-                        break
-                else:
-                    raise ValueError(f"Couldn't find any candidate with opening_qualifier '{layer.opening_qualifier}'")
+                candidate_index = self._get_candidate_index_from_key(layer, candidates)
                 final_query_path = query_path + f"[{candidate_index + 1}]"  # xpath index starts at 1, not 0
                 candidates = [candidates[candidate_index]]  # list must only contain 1 remaining item at this point
                 continue
@@ -167,20 +169,22 @@ class MigXmlReader(MigReader):
             # if there is a separate class for the segment, handle it here... is most cases it's not
             query_path = final_query_path + f"/class[@ref='{ahb_location.segment_code}']"
             segment_candidates = list(self._original_root.xpath(query_path))
-            if len(segment_candidates) == 0:
-                pass
-                # raise ValueError(f"No element found for path {query_path}")
-            elif len(segment_candidates) > 1:
+            # if len(segment_candidates) == 0:
+            #    pass
+            #    # raise ValueError(f"No element found for path {query_path}")
+            #  el
+            if len(segment_candidates) > 1:
                 for candidate_index, key_set in enumerate(
                     set(get_nested_qualifiers("key", candidate)) for candidate in segment_candidates
                 ):
-                    if layer.opening_qualifier in key_set:
+                    # if layer is undefined here, we got other problems; it's ok to crash
+                    if layer.opening_qualifier in key_set:  # pylint:disable=undefined-loop-variable
                         final_query_path = query_path + f"[{candidate_index + 1}]"  # xpath index starts at 1, not 0
                         candidates = segment_candidates
                         break
                 # else:
                 # raise ValueError(f"Couldn't find any unique candidate for segment @ '{query_path}'")
-            else:
+            elif len(candidates) == 1:
                 final_query_path = query_path
         if ahb_location.data_element_id is not None:
             # now inside the remaining segment group find the entry that has the correct data element id
