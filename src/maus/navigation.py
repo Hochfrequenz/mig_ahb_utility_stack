@@ -300,7 +300,7 @@ def find_common_ancestor(
 
 
 def _construct_pseudo_location(
-    sg_key: str,
+    sg_key: Optional[str],
     segment_group_hierarchy: SegmentGroupHierarchy,
     existing_layers: Optional[List[AhbLocationLayer]] = None,
 ) -> Optional[_PseudoAhbLocation]:
@@ -331,7 +331,7 @@ def _construct_pseudo_location(
 
 
 def _find_common_ancestor_from_sgh(
-    sg_key_x: str, sg_key_y: str, segment_group_hierarchy: SegmentGroupHierarchy
+    sg_key_x: Optional[str], sg_key_y: Optional[str], segment_group_hierarchy: SegmentGroupHierarchy
 ) -> _PseudoAhbLocation:
     """
     Finds the last common ancestor of the segment groups x and y.
@@ -508,7 +508,7 @@ def determine_hierarchy_changes(
     """
     result: List[Tuple[AhbLine, _DifferentialAhbLineHierarchyChange]] = []
     segment_code_was_none = True
-    previous_line: Optional[List[AhbLine]] = None
+    previous_line: Optional[AhbLine] = None
     last_opening_qualifier: str = "UNH"
     last_opening_segment: Optional[str] = None
     zip_kwargs = {}
