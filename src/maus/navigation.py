@@ -452,6 +452,7 @@ def _this_line_is_hierarchically_below_the_previous_sg_key(
     return segment_group_hierarchy.sg_is_hierarchically_below(this_line.segment_group_key, previous_segment_group_key)
 
 
+# pylint:disable=too-many-arguments
 def _determine_hierarchy_change(
     this_ahb_line: AhbLine,
     previous_ahb_line: Optional[AhbLine],
@@ -469,16 +470,9 @@ def _determine_hierarchy_change(
     previous_sg_key: Optional[str] = None
     if previous_ahb_line is not None:
         previous_sg_key = previous_ahb_line.segment_group_key
-    # if len(previous_locations) > 0:
-    #    last_layer = last(last(previous_locations).layers)
-    #    previous_sg_key = last_layer.segment_group_key
-    #    previous_opening_qualifier = last_layer.opening_qualifier  # type:ignore[assignment]
-    #    previous_opening_segment_code = last_layer.opening_segment_code
     if this_ahb_line.segment_group_key == previous_sg_key:  # No segment group change (key);
         if this_next_segment != last_opening_segment:
             return _DifferentialAhbLineHierarchyChange.STAY
-        # if len(previous_locations) == 0:
-        #    return _DifferentialAhbLineHierarchyChange.STAY
         # next segment opens a new group with the same key
         if this_next_qualifier == last_opening_qualifier or (
             # as long as we're in UNH, we stay in UNH
