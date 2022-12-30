@@ -2,6 +2,7 @@ from typing import List, Optional, Tuple
 from uuid import UUID
 
 import pytest  # type:ignore[import]
+from example_data_11042 import example_flat_ahb_11042, example_sgh_11042
 from jsonpath_ng.ext import parse  # type:ignore[import] #  jsonpath is just installed in the tests
 from more_itertools import last
 
@@ -1276,3 +1277,9 @@ class TestNavigation:
     def test_calculate_distance(self, location_x: AhbLocation, location_y: AhbLocation, expected: _AhbLocationDistance):
         actual = calculate_distance(location_x, location_y)
         assert actual == expected
+
+    def test_differential_navigation(self):
+        actual_locations = [
+            x[1] for x in determine_locations(example_sgh_11042, ahb_lines=example_flat_ahb_11042.lines)
+        ]
+        assert actual_locations is not None
