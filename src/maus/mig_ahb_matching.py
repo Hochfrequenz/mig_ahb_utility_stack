@@ -131,8 +131,6 @@ def to_deep_ahb(
                     ahb_line_index=first_line.index,
                 )
                 used_stacks.add(stack.to_json_path())
-                if "append_next_segments_here" in locals():
-                    del append_next_segments_here
                 append_next_segments_here = segment_group.segments
                 if segment_group.discriminator == '$["Dokument"][0]["Nachricht"][0]':
                     result.lines.append(segment_group)
@@ -141,8 +139,6 @@ def to_deep_ahb(
                 elif position.is_sub_location_of(previous_position):
                     append_next_sg_here.append(segment_group)
                     parent_group_lists.append(append_next_sg_here)
-                    if "append_next_sg_here" in locals():
-                        del append_next_sg_here
                     append_next_sg_here = segment_group.segment_groups
                 else:
                     distance = calculate_distance(previous_position, position)
@@ -153,8 +149,6 @@ def to_deep_ahb(
                         append_next_sg_here = last(append_next_sg_here).segment_groups
                     append_next_sg_here.append(segment_group)
                     parent_group_lists.append(append_next_sg_here)
-                    if "append_next_sg_here" in locals():
-                        del append_next_sg_here
                     append_next_sg_here = segment_group.segment_groups
 
                     # append_here.append(segment_group)
@@ -173,8 +167,6 @@ def to_deep_ahb(
                     section_name=first_line.section_name,
                     ahb_line_index=first_line.index,
                 )
-                if "append_next_data_elements_here" in locals():
-                    del append_next_data_elements_here
                 append_next_data_elements_here = segment.data_elements
                 append_next_segments_here.append(segment)
         previous_position = position
