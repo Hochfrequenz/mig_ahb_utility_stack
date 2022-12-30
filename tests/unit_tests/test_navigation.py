@@ -2,7 +2,7 @@ from typing import Dict, List, Optional, Tuple
 from uuid import UUID
 
 import pytest  # type:ignore[import]
-from example_data_11042 import (
+from example_data_11042 import (  # type:ignore[import]
     example_flat_ahb_11042,
     example_sgh_11042,
     expected_changes_11042,
@@ -1295,7 +1295,7 @@ class TestNavigation:
                 if layer.segment_group_key in sg_opening_segments:
                     if layer.segment_group_key is not None:
                         assert layer.opening_segment_code == sg_opening_segments[layer.segment_group_key]
-                else:
+                elif layer.segment_group_key is not None:
                     sg_opening_segments[layer.segment_group_key] = layer.opening_segment_code
 
     def test_determine_locations(self):
