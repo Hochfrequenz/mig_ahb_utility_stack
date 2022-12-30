@@ -427,6 +427,12 @@ class _DifferentialAhbLineHierarchyChange(Enum):
     often when leaving one sub group we directly dive into the next one.
     """
 
+    def is_segment_group_change(self) -> bool:
+        """
+        returns true iff this item is denotes any segment groups change
+        """
+        return self != _DifferentialAhbLineHierarchyChange.STAY
+
 
 def _this_line_is_hierarchically_below_the_previous_sg_key(
     this_line: AhbLine, previous_segment_group_key, segment_group_hierarchy: SegmentGroupHierarchy
@@ -446,11 +452,16 @@ def _this_line_is_hierarchically_below_the_previous_sg_key(
     return segment_group_hierarchy.sg_is_hierarchically_below(this_line.segment_group_key, previous_segment_group_key)
 
 
+from uuid import UUID
+
+
 def _determine_hierarchy_change(
     this_ahb_line: AhbLine,
+    previous_ahb_line: Optional[AhbLine],
     this_next_segment: str,
     this_next_qualifier: str,
-    previous_locations: Optional[List[AhbLocation]],
+    last_opening_segment: Optional[str],
+    last_opening_qualifier: Optional[str],
     is_ready_for_sg_change: bool,
     segment_group_hierarchy: SegmentGroupHierarchy,
 ) -> _DifferentialAhbLineHierarchyChange:
@@ -459,22 +470,24 @@ def _determine_hierarchy_change(
     :return: see `_DifferentialAhbLineHierarchyChange`
     """
     previous_sg_key: Optional[str] = None
-    previous_opening_qualifier: str = None  # type:ignore[assignment]
-    previous_opening_segment_code: str = "UNH"
-    if len(previous_locations) > 0:
-        last_layer = last(last(previous_locations).layers)
-        previous_sg_key = last_layer.segment_group_key
-        previous_opening_qualifier = last_layer.opening_qualifier  # type:ignore[assignment]
-        previous_opening_segment_code = last_layer.opening_segment_code
+    # if this_ahb_line.guid == UUID("f7c26003-13da-4bbf-a774-91deaa03f976"):
+    #    breakpoint()
+    if previous_ahb_line is not None:
+        previous_sg_key = previous_ahb_line.segment_group_key
+    # if len(previous_locations) > 0:
+    #    last_layer = last(last(previous_locations).layers)
+    #    previous_sg_key = last_layer.segment_group_key
+    #    previous_opening_qualifier = last_layer.opening_qualifier  # type:ignore[assignment]
+    #    previous_opening_segment_code = last_layer.opening_segment_code
     if this_ahb_line.segment_group_key == previous_sg_key:  # No segment group change (key);
-        if this_next_segment != previous_opening_segment_code:
+        if this_next_segment != last_opening_segment:
             return _DifferentialAhbLineHierarchyChange.STAY
-        if len(previous_locations) == 0:
-            return _DifferentialAhbLineHierarchyChange.STAY
+        # if len(previous_locations) == 0:
+        #    return _DifferentialAhbLineHierarchyChange.STAY
         # next segment opens a new group with the same key
-        if this_next_qualifier == previous_opening_qualifier or (
+        if this_next_qualifier == last_opening_qualifier or (
             # as long as we're in UNH, we stay in UNH
-            previous_opening_segment_code == "UNH"
+            last_opening_segment is None
             and this_next_segment == "UNH"
         ):
             return _DifferentialAhbLineHierarchyChange.STAY
@@ -506,6 +519,9 @@ def determine_hierarchy_changes(
     """
     result: List[Tuple[AhbLine, _DifferentialAhbLineHierarchyChange]] = []
     segment_code_was_none = True
+    previous_line: Optional[List[AhbLine]] = None
+    last_opening_qualifier: str = "UNH"
+    last_opening_segment: Optional[str] = None
     zip_kwargs = {}
     if sys.version_info.minor >= 10:  # we implicitly assume python 3 here
         zip_kwargs = {"strict": True}  # strict=True has been introduced in 3.10
@@ -517,19 +533,26 @@ def determine_hierarchy_changes(
             **zip_kwargs,
         )
     ):
+
         if this_ahb_line.segment_code is None:
             segment_code_was_none = True
         change = _determine_hierarchy_change(
-            this_ahb_line,
-            this_next_segment,
-            this_next_qualifier,
-            [],
-            segment_code_was_none,
-            segment_group_hierarchy,
+            this_ahb_line=this_ahb_line,
+            previous_ahb_line=previous_line,
+            this_next_segment=this_next_segment,
+            this_next_qualifier=this_next_qualifier,
+            last_opening_qualifier=last_opening_qualifier,
+            last_opening_segment=last_opening_segment,
+            is_ready_for_sg_change=segment_code_was_none,
+            segment_group_hierarchy=segment_group_hierarchy,
         )
+        if change.is_segment_group_change():
+            last_opening_qualifier = this_next_qualifier
+            last_opening_segment = this_next_segment
         if this_ahb_line.segment_code is not None:
             segment_code_was_none = False
         result.append((this_ahb_line, change))
+        previous_line = this_ahb_line
     return result
 
 

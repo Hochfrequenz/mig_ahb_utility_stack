@@ -2,7 +2,12 @@ from typing import Dict, List, Optional, Tuple
 from uuid import UUID
 
 import pytest  # type:ignore[import]
-from example_data_11042 import example_flat_ahb_11042, example_sgh_11042, locations_11042
+from example_data_11042 import (
+    example_flat_ahb_11042,
+    example_sgh_11042,
+    expected_locations_11042,
+    expected_changes_11042,
+)
 from jsonpath_ng.ext import parse  # type:ignore[import] #  jsonpath is just installed in the tests
 from more_itertools import last
 
@@ -1298,9 +1303,18 @@ class TestNavigation:
             x[1] for x in determine_locations(example_sgh_11042, ahb_lines=example_flat_ahb_11042.lines)
         ]
         self._assert_consistency(actual_locations)
-        assert actual_locations == locations_11042
+        assert actual_locations == expected_locations_11042
 
     def test_determine_differential_changes(self):
-        changes = [x[1] for x in determine_hierarchy_changes(example_flat_ahb_11042.lines, example_sgh_11042)]
-        differential_changes = [(loc, change) for loc, change in zip(locations_11042, changes)]
-        assert differential_changes is not None
+        actual_changes = [x[1] for x in determine_hierarchy_changes(example_flat_ahb_11042.lines, example_sgh_11042)]
+        location_and_changes = [
+            (line, loc, change)
+            for line, loc, change in zip(
+                example_flat_ahb_11042.lines, expected_locations_11042, actual_changes, strict=True
+            )
+        ]
+        assert location_and_changes is not None  # you may use this to update the 10k lines of equality assertions
+        if actual_changes != expected_changes_11042:
+            for n, (actual, expected) in enumerate(zip(actual_changes, expected_changes_11042, strict=True)):
+                assert actual == expected, f"Error at line {n}: {example_flat_ahb_11042.lines[n]}"
+        assert actual_changes == expected_changes_11042
