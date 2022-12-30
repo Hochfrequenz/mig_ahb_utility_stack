@@ -450,7 +450,7 @@ def _determine_hierarchy_change(
     this_ahb_line: AhbLine,
     this_next_segment: str,
     this_next_qualifier: str,
-    previous_locations: List[AhbLocation],
+    previous_locations: Optional[List[AhbLocation]],
     is_ready_for_sg_change: bool,
     segment_group_hierarchy: SegmentGroupHierarchy,
 ) -> _DifferentialAhbLineHierarchyChange:
@@ -495,6 +495,42 @@ def _determine_hierarchy_change(
         # todo: does the case leave to parent really happen? maybe for unh only?
         pass
     return _DifferentialAhbLineHierarchyChange.LEAVE_TO_PARENT_AND_DIVE_INTO_SUB_GROUP  # sibling A->B->C to A-B->D
+
+
+def determine_hierarchy_changes(
+    ahb_lines: List[AhbLine], segment_group_hierarchy: SegmentGroupHierarchy
+) -> List[Tuple[AhbLine, _DifferentialAhbLineHierarchyChange]]:
+    """
+    Determine the differential hierarchy changes between neighbouring ahb lines.
+    The returned tuple at index n is the line n itself + the change in hierarchy necessary to get from line n-1 to n.
+    """
+    result: List[Tuple[AhbLine, _DifferentialAhbLineHierarchyChange]] = []
+    segment_code_was_none = True
+    zip_kwargs = {}
+    if sys.version_info.minor >= 10:  # we implicitly assume python 3 here
+        zip_kwargs = {"strict": True}  # strict=True has been introduced in 3.10
+    for this_ahb_line, this_next_segment, this_next_qualifier in list(
+        zip(
+            ahb_lines,
+            [x[1] for x in _enhance_with_next_segment(ahb_lines)],
+            [x[1] for x in _enhance_with_next_value_pool_entry(ahb_lines)],
+            **zip_kwargs,
+        )
+    ):
+        if this_ahb_line.segment_code is None:
+            segment_code_was_none = True
+        change = _determine_hierarchy_change(
+            this_ahb_line,
+            this_next_segment,
+            this_next_qualifier,
+            [],
+            segment_code_was_none,
+            segment_group_hierarchy,
+        )
+        if this_ahb_line.segment_code is not None:
+            segment_code_was_none = False
+        result.append((this_ahb_line, change))
+    return result
 
 
 def determine_locations(

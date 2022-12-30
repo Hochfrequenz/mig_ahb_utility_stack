@@ -75,7 +75,6 @@ class TestStammdatenaenderungMaus:
             maus_path=Path("edifact-templates/maus/FV2210/UTILMD/11116_maus.json"),
         )
 
-
     @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2e.template")
     @pytest.mark.datafiles("./edifact-templates/ahbs/FV2210/UTILMD/11120.csv")
     @pytest.mark.datafiles("../unit_tests/migs/FV2210/segment_group_hierarchies/sgh_utilmd.json")

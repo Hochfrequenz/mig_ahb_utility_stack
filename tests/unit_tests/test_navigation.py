@@ -1,8 +1,8 @@
-from typing import List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 from uuid import UUID
 
 import pytest  # type:ignore[import]
-from example_data_11042 import example_flat_ahb_11042, example_sgh_11042
+from example_data_11042 import example_flat_ahb_11042, example_sgh_11042, locations_11042
 from jsonpath_ng.ext import parse  # type:ignore[import] #  jsonpath is just installed in the tests
 from more_itertools import last
 
@@ -18,6 +18,7 @@ from maus.navigation import (
     _is_opening_segment_line_border,
     _PseudoAhbLocation,
     calculate_distance,
+    determine_hierarchy_changes,
     determine_locations,
     find_common_ancestor,
 )
@@ -1278,8 +1279,28 @@ class TestNavigation:
         actual = calculate_distance(location_x, location_y)
         assert actual == expected
 
-    def test_differential_navigation(self):
+    def _assert_consistency(self, locations: List[AhbLocation]) -> None:
+        """
+        assert that the locations are self-consistent in that regard, that the same segment group is always opened
+        with the same segment code (which is derived from the SegmentGroupHierarchy)
+        """
+        sg_opening_segments: Dict[str, str] = {}  # maps SG-keys to their respective opening segments, e.g. "SG6":"RFF"
+        for location in locations:
+            for layer in location.layers:
+                if layer.segment_group_key in sg_opening_segments:
+                    if layer.segment_group_key is not None:
+                        assert layer.opening_segment_code == sg_opening_segments[layer.segment_group_key]
+                else:
+                    sg_opening_segments[layer.segment_group_key] = layer.opening_segment_code
+
+    def test_determine_locations(self):
         actual_locations = [
             x[1] for x in determine_locations(example_sgh_11042, ahb_lines=example_flat_ahb_11042.lines)
         ]
-        assert actual_locations is not None
+        self._assert_consistency(actual_locations)
+        assert actual_locations == locations_11042
+
+    def test_determine_differential_changes(self):
+        changes = [x[1] for x in determine_hierarchy_changes(example_flat_ahb_11042.lines, example_sgh_11042)]
+        differential_changes = [(loc, change) for loc, change in zip(locations_11042, changes)]
+        assert differential_changes is not None
