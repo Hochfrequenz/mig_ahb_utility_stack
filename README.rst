@@ -46,13 +46,9 @@ Code Quality / Production Readiness
 
 Installation
 ------------
-For the bare maus data model and matching logic it's sufficient to install:
-.. code:: bash
-    pip install maus
+For the bare maus data model and matching logic it's sufficient to install :code:`pip install maus`.
+Only if the MIG you're using is based on XML (namely the Hochfrequenz XML based MIG representation), you need to install :code:`pip install maus[xml]`.
 
-Only if the MIG you're using is based on XML (namely the Hochfrequenz XML based MIG representation), you need to install
-.. code:: bash
-    pip install maus[xml]
 
 Development
 -----------
