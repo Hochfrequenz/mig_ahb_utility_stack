@@ -122,7 +122,7 @@ class DataElementFreeTextSchema(DataElementSchema):
 _simple_edifact_qualifier_pattern = re.compile(r"^([A-Z\d]+)|(\d+\.\d+[a-z])$")
 
 #: a pattern that matches the GABi qualifiers: They contain with "-" and lower case "i"/"o"/"n"
-gabi_edifact_qualifier_pattern = re.compile(r"^(GABi)?[A-Z\d\-]+(RLM(o|m)T)?$")
+gabi_edifact_qualifier_pattern = re.compile(r"^(?!MP-ID)(GABi)?[A-Z\d\-]+(RLM(o|m)T)?$")
 
 
 def _check_is_edifact_qualifier(instance, attribute, value):

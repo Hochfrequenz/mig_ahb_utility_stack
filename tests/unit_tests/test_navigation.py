@@ -1,20 +1,29 @@
-from typing import List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 from uuid import UUID
 
 import pytest  # type:ignore[import]
+from example_data_11042 import (  # type:ignore[import]
+    example_flat_ahb_11042,
+    example_sgh_11042,
+    expected_changes_11042,
+    expected_locations_11042,
+)
 from jsonpath_ng.ext import parse  # type:ignore[import] #  jsonpath is just installed in the tests
 from more_itertools import last
 
-from maus import SegmentGroupHierarchy
 from maus.models.anwendungshandbuch import AhbLine
+from maus.models.message_implementation_guide import SegmentGroupHierarchy
 from maus.navigation import (
     AhbLocation,
     AhbLocationLayer,
     _AhbLocationDistance,
     _enhance_with_next_segment,
     _enhance_with_next_value_pool_entry,
+    _find_common_ancestor_from_sgh,
     _is_opening_segment_line_border,
+    _PseudoAhbLocation,
     calculate_distance,
+    determine_hierarchy_changes,
     determine_locations,
     find_common_ancestor,
 )
@@ -289,11 +298,55 @@ class TestNavigation:
                 ],
                 AhbLocation(
                     layers=[
-                        AhbLocationLayer(opening_qualifier=None, segment_group_key=None, opening_segment_code="UNH")
+                        AhbLocationLayer(opening_qualifier="UTILMD", segment_group_key=None, opening_segment_code="UNH")
                     ],
                     data_element_id="0065",
+                    segment_code="UNH",
                 ),
                 id="first segment on root level = stay",
+            ),
+            pytest.param(
+                sgh_utilmd_fv2204,
+                [
+                    AhbLine(
+                        guid=UUID("0e774e0c-7714-4853-82c8-742e65362eae"),
+                        segment_group_key=None,
+                        segment_code="UNH",
+                        data_element="0062",
+                        value_pool_entry=None,
+                        name="Nachrichtenreferenznummer",
+                        section_name="Nachrichten-Kopfsegment",
+                        ahb_expression="X",
+                    ),
+                    AhbLine(
+                        guid=UUID("21a6dacb-479f-48f7-9cda-41a01f0d6f0a"),
+                        segment_group_key=None,
+                        segment_code="UNH",
+                        data_element="0065",
+                        value_pool_entry="UTILMD",
+                        name=None,
+                        section_name="Nachrichten-Kopfsegment",
+                        ahb_expression="X",
+                    ),
+                    AhbLine(
+                        guid=UUID("807efb26-5003-4ba0-b98a-602f9eb1f7e5"),
+                        segment_group_key=None,
+                        segment_code="UNH",
+                        data_element="0052",
+                        value_pool_entry="D",
+                        name="Entwurfsversion",
+                        section_name="Nachrichten-Kopfsegment",
+                        ahb_expression="X",
+                    ),
+                ],
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(opening_qualifier="UTILMD", segment_group_key=None, opening_segment_code="UNH")
+                    ],
+                    data_element_id="0052",
+                    segment_code="UNH",
+                ),
+                id="first segment on root level = stay don't move to non-existent neighbour",
             ),
             pytest.param(
                 sgh_utilmd_fv2204,
@@ -321,12 +374,61 @@ class TestNavigation:
                 ],
                 AhbLocation(
                     layers=[
-                        AhbLocationLayer(segment_group_key=None, opening_segment_code="UNH", opening_qualifier=None),
+                        AhbLocationLayer(
+                            segment_group_key=None, opening_segment_code="UNH", opening_qualifier="UTILMD"
+                        ),
                         AhbLocationLayer(segment_group_key="SG2", opening_segment_code="NAD", opening_qualifier="MS"),
                     ],
                     data_element_id="3035",
+                    segment_code="NAD",
                 ),
                 id="switch from UNH into SG2",
+            ),
+            pytest.param(
+                sgh_utilmd_fv2204,
+                [
+                    AhbLine(
+                        guid=UUID("98f29214-5ec2-4635-8fcd-67e26804c2fe"),
+                        segment_group_key=None,
+                        segment_code="UNH",
+                        data_element="0065",
+                        value_pool_entry="UTILMD",
+                        section_name="Netzanschluss-Stammdaten",
+                        name="Nachrichten-Kopfsegment",
+                        ahb_expression="X",
+                    ),
+                    AhbLine(
+                        guid=UUID("f621ef9e-64a5-4c6a-ba8c-9b71db214e84"),
+                        segment_group_key="SG2",
+                        segment_code="NAD",
+                        data_element="3035",
+                        value_pool_entry="MS",
+                        section_name="MP-ID Absender",
+                        name="Nachrichtenaussteller bzw. -absender",
+                        ahb_expression="X",
+                    ),
+                    AhbLine(
+                        guid=UUID("7e7b82f2-094c-4100-8736-bcfafb22ff3b"),
+                        segment_group_key="SG2",
+                        segment_code="NAD",
+                        data_element="3035",
+                        value_pool_entry=None,
+                        section_name="MP-ID Absender",
+                        name="MP-ID",
+                        ahb_expression="X",
+                    ),
+                ],
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(
+                            segment_group_key=None, opening_segment_code="UNH", opening_qualifier="UTILMD"
+                        ),
+                        AhbLocationLayer(segment_group_key="SG2", opening_segment_code="NAD", opening_qualifier="MS"),
+                    ],
+                    data_element_id="3035",
+                    segment_code="NAD",
+                ),
+                id="switch from UNH into SG2 to first qualifier",
             ),
             pytest.param(
                 sgh_utilmd_fv2204,
@@ -364,11 +466,14 @@ class TestNavigation:
                 ],
                 AhbLocation(
                     layers=[
-                        AhbLocationLayer(segment_group_key=None, opening_segment_code="UNH", opening_qualifier=None),
+                        AhbLocationLayer(
+                            segment_group_key=None, opening_segment_code="UNH", opening_qualifier="UTILMD"
+                        ),
                         AhbLocationLayer(segment_group_key="SG2", opening_segment_code="NAD", opening_qualifier="MS"),
                         AhbLocationLayer(segment_group_key="SG3", opening_segment_code="CTA", opening_qualifier="IC"),
                     ],
                     data_element_id="3139",
+                    segment_code="CTA",
                 ),
                 id="UNH to SG2 to SG3",
             ),
@@ -418,12 +523,15 @@ class TestNavigation:
                 ],
                 AhbLocation(
                     layers=[
-                        AhbLocationLayer(segment_group_key=None, opening_segment_code="UNH", opening_qualifier=None),
+                        AhbLocationLayer(
+                            segment_group_key=None, opening_segment_code="UNH", opening_qualifier="UTILMD"
+                        ),
                         # we entered the SG2 NAD+MS and SG3 CTA+IC, then left them again, that's why they are not part
-                        # of this location anymore although we iterated over them.
+                        # of this location anymore, although we iterated over them.
                         AhbLocationLayer(segment_group_key="SG2", opening_segment_code="NAD", opening_qualifier="MR"),
                     ],
                     data_element_id="3035",
+                    segment_code="NAD",
                 ),
                 id="UNH to SG2 NAD MS to SG3 back to next SG2 NAD MR",
             ),
@@ -483,12 +591,422 @@ class TestNavigation:
                 ],
                 AhbLocation(
                     layers=[
-                        AhbLocationLayer(segment_group_key=None, opening_segment_code="UNH", opening_qualifier=None),
+                        AhbLocationLayer(
+                            segment_group_key=None, opening_segment_code="UNH", opening_qualifier="UTILMD"
+                        ),
                         AhbLocationLayer(segment_group_key="SG4", opening_segment_code="IDE", opening_qualifier="24"),
                     ],
                     data_element_id="7495",
+                    segment_code="IDE",
                 ),
                 id="UNH to SG4",
+            ),
+            pytest.param(
+                sgh_utilmd_fv2204,
+                [
+                    AhbLine(
+                        guid=UUID("98f29214-5ec2-4635-8fcd-67e26804c2fe"),
+                        segment_group_key=None,
+                        segment_code="UNH",
+                        data_element="0065",
+                        value_pool_entry="UTILMD",
+                        section_name="Netzanschluss-Stammdaten",
+                        name="Nachrichten-Kopfsegment",
+                        ahb_expression="X",
+                    ),
+                    AhbLine(
+                        guid=UUID("f621ef9e-64a5-4c6a-ba8c-9b71db214e84"),
+                        segment_group_key="SG2",
+                        segment_code="NAD",
+                        data_element="3035",
+                        value_pool_entry="MS",
+                        section_name="MP-ID Absender",
+                        name="Nachrichtenaussteller bzw. -absender",
+                        ahb_expression="X",
+                    ),
+                    AhbLine(
+                        guid=UUID("ad9eb5e0-2cd8-42af-9135-ef2dfa94d2fa"),
+                        segment_group_key="SG3",
+                        segment_code="CTA",
+                        data_element="3139",
+                        value_pool_entry="IC",
+                        section_name="Ansprechpartner",
+                        name="Informationskontakt",
+                        ahb_expression="X",
+                    ),
+                    AhbLine(
+                        guid=UUID("895d49d9-de4d-4af8-9180-06cb6719b537"),
+                        segment_group_key="SG2",
+                        segment_code="NAD",
+                        data_element="3035",
+                        value_pool_entry="MR",
+                        section_name="MP-ID Empfänger",
+                        name="Nachrichtenaussteller bzw. -absender",
+                        ahb_expression="X",
+                    ),
+                    AhbLine(
+                        guid=UUID("f74151b7-071a-48ce-9d8c-3bf66497d9ca"),
+                        segment_group_key="SG4",
+                        segment_code="IDE",
+                        data_element="7495",
+                        value_pool_entry="24",
+                        section_name="Vorgang",
+                        name="Transaktion",
+                        ahb_expression="X",
+                    ),
+                    AhbLine(
+                        guid=UUID("f74151b7-071a-48ce-9d8c-3bf66497d9ca"),
+                        segment_group_key="SG5",
+                        segment_code="LOC",
+                        data_element="3227",
+                        value_pool_entry="172",
+                        section_name="Meldepunkt",
+                        name="Meldepunkt",
+                        ahb_expression="X",
+                    ),
+                ],
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(
+                            segment_group_key=None, opening_segment_code="UNH", opening_qualifier="UTILMD"
+                        ),
+                        AhbLocationLayer(segment_group_key="SG4", opening_segment_code="IDE", opening_qualifier="24"),
+                        AhbLocationLayer(segment_group_key="SG5", opening_segment_code="LOC", opening_qualifier="172"),
+                    ],
+                    data_element_id="3227",
+                    segment_code="LOC",
+                ),
+                id="UNH to SG5",
+            ),
+            pytest.param(
+                sgh_utilmd_fv2204,
+                [
+                    AhbLine(
+                        guid=UUID("98f29214-5ec2-4635-8fcd-67e26804c2fe"),
+                        segment_group_key=None,
+                        segment_code="UNH",
+                        data_element="0065",
+                        value_pool_entry="UTILMD",
+                        section_name="Netzanschluss-Stammdaten",
+                        name="Nachrichten-Kopfsegment",
+                        ahb_expression="X",
+                    ),
+                    AhbLine(
+                        guid=UUID("f621ef9e-64a5-4c6a-ba8c-9b71db214e84"),
+                        segment_group_key="SG2",
+                        segment_code="NAD",
+                        data_element="3035",
+                        value_pool_entry="MS",
+                        section_name="MP-ID Absender",
+                        name="Nachrichtenaussteller bzw. -absender",
+                        ahb_expression="X",
+                    ),
+                    AhbLine(
+                        guid=UUID("ad9eb5e0-2cd8-42af-9135-ef2dfa94d2fa"),
+                        segment_group_key="SG3",
+                        segment_code="CTA",
+                        data_element="3139",
+                        value_pool_entry="IC",
+                        section_name="Ansprechpartner",
+                        name="Informationskontakt",
+                        ahb_expression="X",
+                    ),
+                    AhbLine(
+                        guid=UUID("895d49d9-de4d-4af8-9180-06cb6719b537"),
+                        segment_group_key="SG2",
+                        segment_code="NAD",
+                        data_element="3035",
+                        value_pool_entry="MR",
+                        section_name="MP-ID Empfänger",
+                        name="Nachrichtenaussteller bzw. -absender",
+                        ahb_expression="X",
+                    ),
+                    AhbLine(
+                        guid=UUID("f74151b7-071a-48ce-9d8c-3bf66497d9ca"),
+                        segment_group_key="SG4",
+                        segment_code="IDE",
+                        data_element="7495",
+                        value_pool_entry="24",
+                        section_name="Vorgang",
+                        name="Transaktion",
+                        ahb_expression="X",
+                    ),
+                    AhbLine(
+                        guid=UUID("f74151b7-071a-48ce-9d8c-3bf66497d9ca"),
+                        segment_group_key="SG5",
+                        segment_code="LOC",
+                        data_element="3227",
+                        value_pool_entry="172",
+                        section_name="Meldepunkt",
+                        name="Meldepunkt",
+                        ahb_expression="X",
+                    ),
+                    AhbLine(
+                        guid=UUID("4646cd0b-af10-4656-a4aa-c3940d5dd7db"),
+                        segment_group_key="SG6",
+                        segment_code="RFF",
+                        data_element="1153",
+                        value_pool_entry="Z13",
+                        name=None,
+                        ahb_expression="Muss",
+                        section_name="Prüfidentifikator",
+                        index=89,
+                    ),
+                ],
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(
+                            segment_group_key=None, opening_segment_code="UNH", opening_qualifier="UTILMD"
+                        ),
+                        AhbLocationLayer(segment_group_key="SG4", opening_segment_code="IDE", opening_qualifier="24"),
+                        AhbLocationLayer(segment_group_key="SG6", opening_segment_code="RFF", opening_qualifier="Z13"),
+                    ],
+                    data_element_id="1153",
+                    segment_code="RFF",
+                ),
+                id="UNH to SG6 Prüfi",
+            ),
+            pytest.param(
+                sgh_utilmd_fv2204,
+                [
+                    AhbLine(
+                        guid=UUID("98f29214-5ec2-4635-8fcd-67e26804c2fe"),
+                        segment_group_key=None,
+                        segment_code="UNH",
+                        data_element="0065",
+                        value_pool_entry="UTILMD",
+                        section_name="Netzanschluss-Stammdaten",
+                        name="Nachrichten-Kopfsegment",
+                        ahb_expression="X",
+                    ),
+                    AhbLine(
+                        guid=UUID("f621ef9e-64a5-4c6a-ba8c-9b71db214e84"),
+                        segment_group_key="SG2",
+                        segment_code="NAD",
+                        data_element="3035",
+                        value_pool_entry="MS",
+                        section_name="MP-ID Absender",
+                        name="Nachrichtenaussteller bzw. -absender",
+                        ahb_expression="X",
+                    ),
+                    AhbLine(
+                        guid=UUID("ad9eb5e0-2cd8-42af-9135-ef2dfa94d2fa"),
+                        segment_group_key="SG3",
+                        segment_code="CTA",
+                        data_element="3139",
+                        value_pool_entry="IC",
+                        section_name="Ansprechpartner",
+                        name="Informationskontakt",
+                        ahb_expression="X",
+                    ),
+                    AhbLine(
+                        guid=UUID("895d49d9-de4d-4af8-9180-06cb6719b537"),
+                        segment_group_key="SG2",
+                        segment_code="NAD",
+                        data_element="3035",
+                        value_pool_entry="MR",
+                        section_name="MP-ID Empfänger",
+                        name="Nachrichtenaussteller bzw. -absender",
+                        ahb_expression="X",
+                    ),
+                    AhbLine(
+                        guid=UUID("f74151b7-071a-48ce-9d8c-3bf66497d9ca"),
+                        segment_group_key="SG4",
+                        segment_code="IDE",
+                        data_element="7495",
+                        value_pool_entry="24",
+                        section_name="Vorgang",
+                        name="Transaktion",
+                        ahb_expression="X",
+                    ),
+                    AhbLine(
+                        guid=UUID("f74151b7-071a-48ce-9d8c-3bf66497d9ca"),
+                        segment_group_key="SG5",
+                        segment_code="LOC",
+                        data_element="3227",
+                        value_pool_entry="172",
+                        section_name="Meldepunkt",
+                        name="Meldepunkt",
+                        ahb_expression="X",
+                    ),
+                    AhbLine(
+                        guid=UUID("4646cd0b-af10-4656-a4aa-c3940d5dd7db"),
+                        segment_group_key="SG6",
+                        segment_code="RFF",
+                        data_element="1153",
+                        value_pool_entry="Z13",
+                        name=None,
+                        ahb_expression="Muss",
+                        section_name="Prüfidentifikator",
+                        index=89,
+                    ),
+                    AhbLine(
+                        guid=UUID("4646cd0b-af10-4656-a4aa-c3940d5dd7db"),
+                        segment_group_key="SG6",
+                        segment_code=None,
+                        data_element=None,
+                        value_pool_entry="Z18",
+                        name="foo",
+                        ahb_expression="Muss",
+                        section_name="Referenz auf die ID der Marktlokation für Termine der Marktlokation",
+                        index=89,
+                    ),
+                    AhbLine(
+                        guid=UUID("4646cd0b-af10-4656-a4aa-c3940d5dd7db"),
+                        segment_group_key="SG6",
+                        segment_code="RFF",
+                        data_element="1153",
+                        value_pool_entry="Z18",
+                        name=None,
+                        ahb_expression="Muss",
+                        section_name="Referenz auf die ID der Marktlokation für Termine der Marktlokation",
+                        index=89,
+                    ),
+                ],
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(
+                            segment_group_key=None, opening_segment_code="UNH", opening_qualifier="UTILMD"
+                        ),
+                        AhbLocationLayer(segment_group_key="SG4", opening_segment_code="IDE", opening_qualifier="24"),
+                        AhbLocationLayer(segment_group_key="SG6", opening_segment_code="RFF", opening_qualifier="Z18"),
+                    ],
+                    data_element_id="1153",
+                    segment_code="RFF",
+                ),
+                id="UNH to 2nd SG6",
+            ),
+            pytest.param(
+                sgh_utilmd_fv2204,
+                [
+                    AhbLine(
+                        guid=UUID("98f29214-5ec2-4635-8fcd-67e26804c2fe"),
+                        segment_group_key=None,
+                        segment_code="UNH",
+                        data_element="0065",
+                        value_pool_entry="UTILMD",
+                        section_name="Netzanschluss-Stammdaten",
+                        name="Nachrichten-Kopfsegment",
+                        ahb_expression="X",
+                    ),
+                    AhbLine(
+                        guid=UUID("f621ef9e-64a5-4c6a-ba8c-9b71db214e84"),
+                        segment_group_key="SG2",
+                        segment_code="NAD",
+                        data_element="3035",
+                        value_pool_entry="MS",
+                        section_name="MP-ID Absender",
+                        name="Nachrichtenaussteller bzw. -absender",
+                        ahb_expression="X",
+                    ),
+                    AhbLine(
+                        guid=UUID("ad9eb5e0-2cd8-42af-9135-ef2dfa94d2fa"),
+                        segment_group_key="SG3",
+                        segment_code="CTA",
+                        data_element="3139",
+                        value_pool_entry="IC",
+                        section_name="Ansprechpartner",
+                        name="Informationskontakt",
+                        ahb_expression="X",
+                    ),
+                    AhbLine(
+                        guid=UUID("895d49d9-de4d-4af8-9180-06cb6719b537"),
+                        segment_group_key="SG2",
+                        segment_code="NAD",
+                        data_element="3035",
+                        value_pool_entry="MR",
+                        section_name="MP-ID Empfänger",
+                        name="Nachrichtenaussteller bzw. -absender",
+                        ahb_expression="X",
+                    ),
+                    AhbLine(
+                        guid=UUID("f74151b7-071a-48ce-9d8c-3bf66497d9ca"),
+                        segment_group_key="SG4",
+                        segment_code="IDE",
+                        data_element="7495",
+                        value_pool_entry="24",
+                        section_name="Vorgang",
+                        name="Transaktion",
+                        ahb_expression="X",
+                    ),
+                    AhbLine(
+                        guid=UUID("f74151b7-071a-48ce-9d8c-3bf66497d9ca"),
+                        segment_group_key="SG5",
+                        segment_code="LOC",
+                        data_element="3227",
+                        value_pool_entry="172",
+                        section_name="Meldepunkt",
+                        name="Meldepunkt",
+                        ahb_expression="X",
+                    ),
+                    AhbLine(
+                        guid=UUID("4646cd0b-af10-4656-a4aa-c3940d5dd7db"),
+                        segment_group_key="SG6",
+                        segment_code="RFF",
+                        data_element=None,
+                        value_pool_entry=None,
+                        name=None,
+                        ahb_expression="Muss",
+                        section_name="Prüfidentifikator",
+                        index=89,
+                    ),
+                    AhbLine(
+                        guid=UUID("4fb51482-e658-4b5a-b5d0-d9449fd211ca"),
+                        segment_group_key="SG8",
+                        segment_code="SEQ",
+                        data_element=None,
+                        value_pool_entry=None,
+                        name=None,
+                        ahb_expression=None,
+                        section_name="Daten der Marktlokation",
+                        index=144,
+                    ),
+                    AhbLine(
+                        guid=UUID("5ff7bc48-0e68-4846-9734-88c3a6149632"),
+                        segment_group_key="SG9",
+                        segment_code="QTY",
+                        data_element="6060",
+                        value_pool_entry=None,
+                        name="Menge",
+                        ahb_expression=None,
+                        section_name="Arbeit / Leistung für tagesparameterabhängige Marktlokation",
+                        index=156,
+                    ),
+                    AhbLine(
+                        guid=UUID("2daf31c2-51a6-4d38-b368-1eaad545e968"),
+                        segment_group_key="SG10",
+                        segment_code="CCI",
+                        data_element=None,
+                        value_pool_entry=None,
+                        name=None,
+                        ahb_expression=None,
+                        section_name="Lieferrichtung",
+                        index=168,
+                    ),
+                    AhbLine(
+                        guid=UUID("3d611e09-64e7-4eea-9cee-2f9a2851cfd3"),
+                        segment_group_key="SG12",
+                        segment_code="NAD",
+                        data_element=None,
+                        value_pool_entry=None,
+                        name=None,
+                        ahb_expression=None,
+                        section_name="Kunde des Lieferanten",
+                        index=936,
+                    ),
+                ],
+                AhbLocation(
+                    layers=[
+                        AhbLocationLayer(
+                            segment_group_key=None, opening_segment_code="UNH", opening_qualifier="UTILMD"
+                        ),
+                        AhbLocationLayer(segment_group_key="SG4", opening_segment_code="IDE", opening_qualifier="24"),
+                        AhbLocationLayer(segment_group_key="SG12", opening_segment_code="NAD", opening_qualifier=None),
+                    ],
+                    data_element_id=None,
+                    segment_code="NAD",
+                ),
+                id="UNH to SG12",
             ),
         ],
     )
@@ -629,6 +1147,64 @@ class TestNavigation:
         assert actual == expected
 
     @pytest.mark.parametrize(
+        "sgh, sg_x, sg_y, expected",
+        [
+            pytest.param(
+                sgh_utilmd_fv2204,
+                "SG2",
+                "SG2",
+                _PseudoAhbLocation(
+                    layers=[
+                        AhbLocationLayer(segment_group_key=None, opening_segment_code="UNH", opening_qualifier=None),
+                        AhbLocationLayer(segment_group_key="SG2", opening_segment_code="NAD", opening_qualifier=None),
+                    ]
+                ),
+                id="x and y are siblings (S2, UNH)",
+            ),
+            pytest.param(
+                sgh_utilmd_fv2204,
+                "SG12",
+                "SG6",
+                _PseudoAhbLocation(
+                    layers=[
+                        AhbLocationLayer(segment_group_key=None, opening_segment_code="UNH", opening_qualifier=None),
+                        AhbLocationLayer(segment_group_key="SG4", opening_segment_code="IDE", opening_qualifier=None),
+                    ]
+                ),
+                id="x and y are siblings (S6.12)",
+            ),
+            pytest.param(
+                sgh_utilmd_fv2204,
+                "SG3",
+                "SG12",
+                _PseudoAhbLocation(
+                    layers=[
+                        AhbLocationLayer(segment_group_key=None, opening_segment_code="UNH", opening_qualifier=None),
+                    ]
+                ),
+                id="deep nested",
+            ),
+            pytest.param(
+                sgh_utilmd_fv2204,
+                "SG9",
+                "SG6",
+                _PseudoAhbLocation(
+                    layers=[
+                        AhbLocationLayer(segment_group_key=None, opening_segment_code="UNH", opening_qualifier=None),
+                        AhbLocationLayer(segment_group_key="SG4", opening_segment_code="IDE", opening_qualifier=None),
+                    ]
+                ),
+                id="deep nested 2",
+            ),
+        ],
+    )
+    def test_find_common_ancestor_from_sgh(
+        self, sg_x: str, sg_y: str, sgh: SegmentGroupHierarchy, expected: _PseudoAhbLocation
+    ):
+        actual = _find_common_ancestor_from_sgh(sg_x, sg_y, sgh)
+        assert actual == expected
+
+    @pytest.mark.parametrize(
         "location_x, location_y",
         [
             pytest.param(
@@ -707,3 +1283,36 @@ class TestNavigation:
     def test_calculate_distance(self, location_x: AhbLocation, location_y: AhbLocation, expected: _AhbLocationDistance):
         actual = calculate_distance(location_x, location_y)
         assert actual == expected
+
+    def _assert_consistency(self, locations: List[AhbLocation]) -> None:
+        """
+        assert that the locations are self-consistent in that regard, that the same segment group is always opened
+        with the same segment code (which is derived from the SegmentGroupHierarchy)
+        """
+        sg_opening_segments: Dict[str, str] = {}  # maps SG-keys to their respective opening segments, e.g. "SG6":"RFF"
+        for location in locations:
+            for layer in location.layers:
+                if layer.segment_group_key in sg_opening_segments:
+                    if layer.segment_group_key is not None:
+                        assert layer.opening_segment_code == sg_opening_segments[layer.segment_group_key]
+                elif layer.segment_group_key is not None:
+                    sg_opening_segments[layer.segment_group_key] = layer.opening_segment_code
+
+    def test_determine_locations(self):
+        actual_locations = [
+            x[1] for x in determine_locations(example_sgh_11042, ahb_lines=example_flat_ahb_11042.lines)
+        ]
+        self._assert_consistency(actual_locations)
+        assert actual_locations == expected_locations_11042
+
+    def test_determine_differential_changes(self):
+        actual_changes = [x[1] for x in determine_hierarchy_changes(example_flat_ahb_11042.lines, example_sgh_11042)]
+        location_and_changes = [
+            (line, loc, change)
+            for line, loc, change in zip(example_flat_ahb_11042.lines, expected_locations_11042, actual_changes)
+        ]
+        assert location_and_changes is not None  # you may use this to update the 10k lines of equality assertions
+        if actual_changes != expected_changes_11042:
+            for n, (actual, expected) in enumerate(zip(actual_changes, expected_changes_11042, strict=True)):
+                assert actual == expected, f"Error at line {n}: {example_flat_ahb_11042.lines[n]}"
+        assert actual_changes == expected_changes_11042

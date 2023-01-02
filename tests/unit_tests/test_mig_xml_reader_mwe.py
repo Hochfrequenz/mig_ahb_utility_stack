@@ -7,7 +7,7 @@ from lxml.etree import Element  # type:ignore[import]
 from maus.models._internal import MigFilterResult
 from maus.models.edifact_components import EdifactStack, EdifactStackLevel, EdifactStackQuery
 from maus.reader.etree_element_helpers import list_to_mig_filter_result
-from maus.reader.mig_reader import MigXmlReader
+from maus.reader.mig_xml_reader import MigXmlReader
 
 
 class TestMigXmlReaderMwe:
