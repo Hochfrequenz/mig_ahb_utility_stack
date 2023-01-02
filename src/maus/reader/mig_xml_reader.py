@@ -17,12 +17,10 @@ except ImportError as import_error:
     # lxml is only an optional dependency of maus but in this module, it is required
     raise
 
-from maus.models.message_implementation_guide import SegmentGroupHierarchy
 from maus.edifact import EdifactFormat
 from maus.models.edifact_components import EdifactStack, EdifactStackLevel
-from maus.reader.etree_element_helpers import (
-    get_nested_qualifiers,
-)
+from maus.models.message_implementation_guide import SegmentGroupHierarchy
+from maus.reader.etree_element_helpers import get_nested_qualifiers
 from maus.reader.mig_ahb_name_helpers import make_tree_names_comparable
 from maus.reader.mig_reader import MigReader
 
