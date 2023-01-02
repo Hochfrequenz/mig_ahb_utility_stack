@@ -5,7 +5,7 @@ from lxml import etree  # type:ignore[import]
 from lxml.etree import Element  # type:ignore[import]
 
 from maus.models.edifact_components import EdifactStackQuery
-from maus.reader.mig_reader import MigXmlReader, check_file_can_be_parsed_as_mig_xml
+from maus.reader.mig_xml_reader import MigXmlReader, check_file_can_be_parsed_as_mig_xml
 
 ALL_MIG_XML_FILES = pytest.mark.datafiles(
     "./migs/FV2204/template_xmls/utilmd_1131.xml",

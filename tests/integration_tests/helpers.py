@@ -9,7 +9,7 @@ from maus.deep_ahb_mig_joiner import replace_discriminators_with_edifact_stack
 from maus.models.anwendungshandbuch import DeepAnwendungshandbuchSchema, FlatAnwendungshandbuch
 from maus.models.message_implementation_guide import SegmentGroupHierarchySchema
 from maus.reader.flat_ahb_reader import FlatAhbCsvReader
-from maus.reader.mig_reader import MigXmlReader
+from maus.reader.mig_xml_reader import MigXmlReader
 
 
 def is_in_debug_mode() -> bool:
