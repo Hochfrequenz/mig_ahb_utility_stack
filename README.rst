@@ -44,6 +44,16 @@ Code Quality / Production Readiness
 -  The code is `MIT licensed <LICENSE>`__. ✔️
 -  There are only `few dependencies <requirements.in>`__. ✔️
 
+Installation
+------------
+For the bare maus data model and matching logic it's sufficient to install:
+.. code:: bash
+    pip install maus
+
+Only if the MIG you're using is based on XML (namely the Hochfrequenz XML based MIG representation), you need to install
+.. code:: bash
+    pip install maus[xml]
+
 Development
 -----------
 
