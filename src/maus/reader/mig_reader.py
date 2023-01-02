@@ -4,8 +4,6 @@ Classes that allow to read XML files that contain structural information (Messag
 from abc import ABC, abstractmethod
 from typing import Optional, TypeVar
 
-from lxml import etree  # type:ignore[import]
-
 from maus import SegmentGroupHierarchy
 from maus.models.edifact_components import EdifactStack, EdifactStackQuery
 
