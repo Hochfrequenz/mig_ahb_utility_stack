@@ -168,7 +168,7 @@ class MigXmlReader(MigReader):
                         break
                 # else:
                 # raise ValueError(f"Couldn't find any unique candidate for segment @ '{query_path}'")
-            elif len(candidates) == 1:
+            elif len(segment_candidates) == 1:
                 final_query_path = query_path
         if ahb_location.data_element_id is not None:
             # now inside the remaining segment group find the entry that has the correct data element id
