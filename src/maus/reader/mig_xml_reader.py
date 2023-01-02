@@ -6,10 +6,6 @@ from pathlib import Path
 from typing import List, Optional, TypeVar, Union
 from xml.etree.ElementTree import Element
 
-from more_itertools import one
-
-from maus.navigation import AhbLocation, AhbLocationLayer
-
 try:
     from lxml import etree  # type:ignore[import]
 except ImportError as import_error:
@@ -17,9 +13,12 @@ except ImportError as import_error:
     # lxml is only an optional dependency of maus but in this module, it is required
     raise
 
+from more_itertools import one
+
 from maus.edifact import EdifactFormat
 from maus.models.edifact_components import EdifactStack, EdifactStackLevel
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
+from maus.navigation import AhbLocation, AhbLocationLayer
 from maus.reader.etree_element_helpers import get_nested_qualifiers
 from maus.reader.mig_ahb_name_helpers import make_tree_names_comparable
 from maus.reader.mig_reader import MigReader
