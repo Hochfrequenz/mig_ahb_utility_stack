@@ -8,7 +8,7 @@ from maus.mig_ahb_matching import to_deep_ahb
 from maus.models.anwendungshandbuch import DeepAnwendungshandbuch, DeepAnwendungshandbuchSchema, FlatAnwendungshandbuch
 from maus.models.message_implementation_guide import SegmentGroupHierarchy, SegmentGroupHierarchySchema
 from maus.reader.flat_ahb_reader import FlatAhbCsvReader
-from maus.reader.mig_reader import MigXmlReader
+from maus.reader.mig_xml_reader import MigXmlReader
 
 
 def is_in_debug_mode() -> bool:

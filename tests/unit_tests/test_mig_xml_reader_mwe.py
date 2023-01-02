@@ -6,7 +6,7 @@ from lxml.etree import Element  # type:ignore[import]
 
 from maus.models.edifact_components import EdifactStack, EdifactStackLevel
 from maus.navigation import AhbLocation, AhbLocationLayer
-from maus.reader.mig_reader import MigXmlReader
+from maus.reader.mig_xml_reader import MigXmlReader
 
 
 class TestMigXmlReaderMwe:
