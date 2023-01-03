@@ -5,7 +5,7 @@ This module contains methods to merge data from Message Implementation Guide and
 from itertools import groupby
 from typing import List, Optional, Sequence, Set
 
-from more_itertools import first, last
+from more_itertools import first, first_true, last
 
 from maus.models.anwendungshandbuch import AhbLine, DeepAnwendungshandbuch, FlatAnwendungshandbuch
 from maus.models.edifact_components import (
@@ -119,14 +119,13 @@ def to_deep_ahb(
             append_next_data_elements_here.append(data_element)  # pylint:disable=used-before-assignment
             # except UnboundLocalError as unbound_local_error:
             #    raise ValueError(f"No segment has been created for {stack}") from unbound_local_error
-        elif stack is None:
-            continue
         else:
             first_line = first(data_element_lines)
             last_line = last(data_element_lines)
             if (
                 first_line.segment_group_key == last(position.layers).segment_group_key
                 and last(position.layers).opening_segment_code == last_line.segment_code
+                and stack is not None
                 and stack.to_json_path() not in used_stacks
                 and first_line.ahb_expression is not None
             ):
@@ -168,16 +167,26 @@ def to_deep_ahb(
             # this assertion is because we assume that the lines always come like this:
             # Section Heading
             # SGx Foo      <-- a line with only the segment code but no actual content; this is where we're right now
-            # SGx Foo 1234 <-- the first interesting line
-            if first_line.ahb_expression:
-                segment = Segment(
-                    discriminator=stack.to_json_path(),
-                    data_elements=[],
-                    ahb_expression=first_line.ahb_expression,
-                    section_name=first_line.section_name,
-                    ahb_line_index=first_line.index,
-                )
-                append_next_data_elements_here = segment.data_elements
-                append_next_segments_here.append(segment)
+            # if first_line.ahb_expression:
+            first_expression_line: Optional[AhbLine] = first_true(
+                data_element_lines, default=None, pred=lambda l: l is not None and l.ahb_expression
+            )
+            if first_expression_line is None:
+                continue
+            first_expression:str = first_expression_line.ahb_expression # type:ignore[assignment]
+            discriminator: str
+            if stack is None:
+                discriminator = str(position)
+            else:
+                discriminator = stack.to_json_path()
+            segment = Segment(
+                discriminator=discriminator,
+                data_elements=[],
+                ahb_expression=first_expression,
+                section_name=first_line.section_name,
+                ahb_line_index=first_line.index,
+            )
+            append_next_data_elements_here = segment.data_elements
+            append_next_segments_here.append(segment)
         previous_position = position
     return result
