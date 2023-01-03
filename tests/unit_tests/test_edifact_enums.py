@@ -9,7 +9,7 @@ from maus.edifact import (
     get_current_edifact_format_version,
     get_edifact_format_version,
     is_edifact_boilerplate,
-    pruefidentifikator_to_format,
+    get_format_of_pruefidentifikator,
 )
 
 
@@ -31,7 +31,7 @@ class TestEdifact:
         """
         Tests that the prüfis can be mapped to an EDIFACT format
         """
-        assert pruefidentifikator_to_format(expectation_tuple[0]) == expectation_tuple[1]
+        assert get_format_of_pruefidentifikator(expectation_tuple[0]) == expectation_tuple[1]
 
     @pytest.mark.parametrize(
         "key_date,expected_result",
@@ -68,7 +68,7 @@ class TestEdifact:
         :return:
         """
         with pytest.raises(ValueError):
-            pruefidentifikator_to_format(illegal_pruefi)  # type:ignore[arg-type] # ok, because this raises an error
+            get_format_of_pruefidentifikator(illegal_pruefi)  # type:ignore[arg-type] # ok, because this raises an error
 
     @pytest.mark.parametrize(
         "segment_code,expected_is_boilerplate",

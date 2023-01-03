@@ -104,7 +104,7 @@ def is_edifact_boilerplate(segment_code: Optional[str]) -> bool:
     return segment_code.strip() in {"UNT", "UNZ"}
 
 
-def pruefidentifikator_to_format(pruefidentifikator: str) -> Optional[EdifactFormat]:
+def get_format_of_pruefidentifikator(pruefidentifikator: str) -> Optional[EdifactFormat]:
     """
     returns the format corresponding to a given pruefi
     """
