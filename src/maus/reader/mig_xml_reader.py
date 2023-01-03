@@ -3,7 +3,7 @@ contains the MigXmlReader - a MIG Reader that is based on XML MIGs (and therefor
 """
 import re
 from pathlib import Path
-from typing import List, Optional, TypeVar, Union
+from typing import List, TypeVar, Union, Set
 from xml.etree.ElementTree import Element
 
 try:
@@ -123,13 +123,16 @@ class MigXmlReader(MigReader):
         return stack
 
     def _get_candidate_index_from_key(self, layer: AhbLocationLayer, candidates: List[Element]) -> int:
+        key_set: Set[str]
         for candidate_index, key_set in enumerate(
-            set(get_nested_qualifiers("key", candidate)) for candidate in candidates
+            set(get_nested_qualifiers("key", candidate) or []) for candidate in candidates
         ):
             if layer.opening_qualifier in key_set:
                 return candidate_index
         raise ValueError(f"Couldn't find any candidate with opening_qualifier '{layer.opening_qualifier}'")
 
+    # First make it work, then split it up
+    # pylint:disable=too-many-branches
     def get_element(self, ahb_location: AhbLocation) -> Element:
         """
         Finds and returns the segment group for the specified location.
@@ -152,21 +155,15 @@ class MigXmlReader(MigReader):
             # if there is a separate class for the segment, handle it here... is most cases it's not
             query_path = final_query_path + f"/class[@ref='{ahb_location.segment_code}']"
             segment_candidates = list(self._original_root.xpath(query_path))
-            # if len(segment_candidates) == 0:
-            #    pass
-            #    # raise ValueError(f"No element found for path {query_path}")
-            #  el
             if len(segment_candidates) > 1:
                 for candidate_index, key_set in enumerate(
-                    set(get_nested_qualifiers("key", candidate)) for candidate in segment_candidates
+                    set(get_nested_qualifiers("key", candidate) or []) for candidate in segment_candidates
                 ):
                     # if layer is undefined here, we got other problems; it's ok to crash
                     if layer.opening_qualifier in key_set:  # pylint:disable=undefined-loop-variable
                         final_query_path = query_path + f"[{candidate_index + 1}]"  # xpath index starts at 1, not 0
                         candidates = segment_candidates
                         break
-                # else:
-                # raise ValueError(f"Couldn't find any unique candidate for segment @ '{query_path}'")
             elif len(segment_candidates) == 1:
                 final_query_path = query_path
         if ahb_location.data_element_id is not None:
@@ -181,7 +178,7 @@ class MigXmlReader(MigReader):
                         (
                             n
                             for n, c in enumerate(candidates)
-                            if ahb_location.qualifier in set(get_nested_qualifiers("ref", c))
+                            if ahb_location.qualifier in set(get_nested_qualifiers("ref", c) or [])
                         ),
                         too_short=ValueError(f"Couldn't find any candidate with ref '{ahb_location.qualifier}'"),
                     )
@@ -193,7 +190,7 @@ class MigXmlReader(MigReader):
                     )
         return one(candidates)
 
-    def get_edifact_stack(self, location: AhbLocation) -> Optional[EdifactStack]:
+    def get_edifact_stack(self, location: AhbLocation) -> EdifactStack:
         """
         get the edifact stack for the given segment_group, segment... combination or None if there is no match
         """

@@ -140,6 +140,8 @@ class AhbLocationLayer:
     """
     The AhbLocation consists of multiple layers of information about the nesting of a line in the SegmentGroupHierarchy.
     one _AhbLocationLayer models exactly one of these nesting layers. It is used only internally in the AhbLocation.
+
+    The AhbLocationLayer relates to the AhbLocation just as the EdifactStackLevel relates to the EdifactStack.
     """
 
     segment_group_key: Optional[str] = attrs.field(
@@ -179,6 +181,8 @@ class AhbLocation:
     * "Vorgang" (SG4, IDE, 24)
     * "OBIS-Daten der Marktlokation" (SG8, SEQ, Z02)
     * "Wertegranularität" (SG10, CCI, ZE4)
+
+    The AhbLocation relates to the AHB just as the EdifactStack relates to the MIG.
     """
 
     layers: List[AhbLocationLayer] = attrs.field(

@@ -19,7 +19,7 @@ from maus.models.edifact_components import (
     derive_data_type_from_segment_code,
 )
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
-from maus.navigation import calculate_distance, determine_locations
+from maus.navigation import calculate_distance, determine_locations, AhbLocation
 from maus.reader.mig_reader import MigReader
 
 _VERSION = "0.3.0"  #: written into the deep ahb meta information
@@ -67,9 +67,9 @@ def merge_lines_with_same_data_element(
     else:
         result = DataElementFreeText(
             entered_input=None,
-            ahb_expression=ahb_lines[0].ahb_expression,
+            ahb_expression=ahb_lines[0].ahb_expression,  # type:ignore[arg-type]
             discriminator=discriminator,
-            data_element_id=first(
+            data_element_id=first(  # type:ignore[union-attr]
                 ahb_lines, lambda line: line.data_element is not None
             ).data_element,  # type:ignore[arg-type]
         )
@@ -81,6 +81,9 @@ def merge_lines_with_same_data_element(
     return result
 
 
+# I'm aware the function is too long; Let's first make it work, then split up into separate functions.
+# pylint:disable=too-many-locals, too-many-branches, too-many-statements
+# https://github.com/Hochfrequenz/mig_ahb_utility_stack/issues/205
 def to_deep_ahb(
     flat_ahb: FlatAnwendungshandbuch, segment_group_hierarchy: SegmentGroupHierarchy, mig_reader: MigReader
 ) -> DeepAnwendungshandbuch:
@@ -91,10 +94,13 @@ def to_deep_ahb(
     result.meta.maus_version = _VERSION
     parent_group_lists: List[List[SegmentGroup]] = []
     used_stacks: Set[str] = set()
+    append_next_data_elements_here: List[DataElement]
+    append_next_sg_here: List[SegmentGroup]
+    append_next_segments_here: List[Segment]
+    previous_position: AhbLocation
     for position, layer_group in groupby(
         determine_locations(segment_group_hierarchy, flat_ahb.lines), key=lambda line_and_position: line_and_position[1]
     ):
-        # todo: the opening qualifiers returned by determine_locations are wrong for semgnets 1-n for every sg
         data_element_lines = [x[0] for x in layer_group]  # index 1 is the position
         if not any((True for line in data_element_lines if line.segment_code is not None)):
             continue  # section heading only
@@ -109,7 +115,7 @@ def to_deep_ahb(
                 # if none of the items is marked with an ahb expression it's probably not required in this AHB
                 continue
             data_element = merge_lines_with_same_data_element(data_element_lines, first_stack=stack)
-            append_next_data_elements_here.append(data_element)
+            append_next_data_elements_here.append(data_element) # pylint:disable=used-before-assignment
         elif stack is None:
             continue
         else:
@@ -131,28 +137,26 @@ def to_deep_ahb(
                     ahb_line_index=first_line.index,
                 )
                 used_stacks.add(stack.to_json_path())
-                append_next_segments_here = segment_group.segments
+                append_next_segments_here = segment_group.segments  # type:ignore[assignment]
                 if segment_group.discriminator == '$["Dokument"][0]["Nachricht"][0]':
                     result.lines.append(segment_group)
-                    append_next_sg_here = segment_group.segment_groups
+                    append_next_sg_here = segment_group.segment_groups  # type:ignore[assignment]
                     parent_group_lists.append(result.lines)
-                elif position.is_sub_location_of(previous_position):
+                elif position.is_sub_location_of(previous_position):# pylint:disable=used-before-assignment
                     append_next_sg_here.append(segment_group)
                     parent_group_lists.append(append_next_sg_here)
-                    append_next_sg_here = segment_group.segment_groups
+                    append_next_sg_here = segment_group.segment_groups  # type:ignore[assignment]
                 else:
                     distance = calculate_distance(previous_position, position)
                     for _ in range(0, distance.layers_up):
                         append_next_sg_here = parent_group_lists.pop()
                     for _ in range(0, distance.layers_down - 1):
                         parent_group_lists.append(append_next_sg_here)
-                        append_next_sg_here = last(append_next_sg_here).segment_groups
+                        append_next_sg_here = last(append_next_sg_here).segment_groups  # type:ignore[assignment]
                     append_next_sg_here.append(segment_group)
                     parent_group_lists.append(append_next_sg_here)
-                    append_next_sg_here = segment_group.segment_groups
+                    append_next_sg_here = segment_group.segment_groups  # type:ignore[assignment]
 
-                    # append_here.append(segment_group)
-                    # append_next_sg_here.append(segment_group)
             assert last_line.data_element is None
             assert last_line.segment_code is not None
             # this assertion is because we assume that the lines always come like this:
