@@ -45,7 +45,7 @@ class TestKuendigungMaus:
             len(
                 result.maus.find_segments(
                     segment_predicate=lambda seg: seg.section_name == "Datum des bereits bestaetigten Vertragsendes",
-                )  # the "ae" instead of "ä" is somehow important, we don't wan't an 'ä' for reasons
+                )  # the "ae" instead of "ä" is somehow important, we don't want an 'ä' ... for reasons
             )
             > 0
         )  # https://github.com/Hochfrequenz/edifact-templates/pull/163 / ED4FTR-24952
