@@ -179,8 +179,9 @@ def to_deep_ahb(
                 discriminator = str(position)
             else:
                 discriminator = stack.to_json_path()
+                # mig_reader.get_edifact_stack(position)
             segment = Segment(
-                discriminator=discriminator,
+                discriminator=discriminator,  # todo: sometimes the discriminator is not as sharp as it could have been
                 data_elements=[],
                 ahb_expression=first_expression,
                 section_name=first_line.section_name,
