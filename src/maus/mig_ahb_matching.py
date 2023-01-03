@@ -173,7 +173,7 @@ def to_deep_ahb(
             )
             if first_expression_line is None:
                 continue
-            first_expression:str = first_expression_line.ahb_expression # type:ignore[assignment]
+            first_expression: str = first_expression_line.ahb_expression  # type:ignore[assignment]
             discriminator: str
             if stack is None:
                 discriminator = str(position)
