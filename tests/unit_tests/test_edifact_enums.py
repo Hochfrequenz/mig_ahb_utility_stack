@@ -8,8 +8,8 @@ from maus.edifact import (
     EdifactFormatVersion,
     get_current_edifact_format_version,
     get_edifact_format_version,
-    is_edifact_boilerplate,
     get_format_of_pruefidentifikator,
+    is_edifact_boilerplate,
 )
 
 
