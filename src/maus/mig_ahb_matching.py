@@ -153,9 +153,9 @@ def to_deep_ahb(
                     distance = calculate_distance(previous_position, position)
                     for _ in range(0, distance.layers_up):
                         try:
-                            except_next_sg_here = parent_group_lists.pop()
+                            append_next_sg_here = parent_group_lists.pop()
                         except IndexError as index_error:
-                            raise ValueError(f"couldn't move {distance} starting from {previous_position} to {position}")
+                            raise ValueError(f"Couldn't move from {previous_position} to {position}")
                     for _ in range(0, distance.layers_down - 1):
                         parent_group_lists.append(append_next_sg_here)
                         append_next_sg_here = last(append_next_sg_here).segment_groups  # type:ignore[assignment]
