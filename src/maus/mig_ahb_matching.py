@@ -19,7 +19,7 @@ from maus.models.edifact_components import (
     derive_data_type_from_segment_code,
 )
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
-from maus.navigation import calculate_distance, determine_locations, AhbLocation
+from maus.navigation import AhbLocation, calculate_distance, determine_locations
 from maus.reader.mig_reader import MigReader
 
 _VERSION = "0.3.0"  #: written into the deep ahb meta information

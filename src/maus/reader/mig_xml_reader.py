@@ -3,7 +3,7 @@ contains the MigXmlReader - a MIG Reader that is based on XML MIGs (and therefor
 """
 import re
 from pathlib import Path
-from typing import List, TypeVar, Union, Set
+from typing import List, Set, TypeVar, Union
 from xml.etree.ElementTree import Element
 
 try:
