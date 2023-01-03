@@ -9,17 +9,6 @@ class TestStammdatenaenderungMaus:
     A unit test that ensures that the 111xx MAUS.json are created.
     """
 
-    @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2c.template")
-    @pytest.mark.datafiles("./edifact-templates/ahbs/FV2110/UTILMD/11109.csv")
-    @pytest.mark.datafiles("../unit_tests/migs/FV2204/segment_group_hierarchies/sgh_utilmd.json")
-    def test_maus_creation_11109(self, datafiles):
-        create_maus_and_assert(
-            csv_path=Path(datafiles) / "11109.csv",
-            sgh_path=Path(datafiles) / "sgh_utilmd.json",
-            template_path=Path(datafiles) / Path("UTILMD5.2c.template"),
-            maus_path=Path("edifact-templates/maus/FV2110/UTILMD/11109_maus.json"),
-        )
-
     @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2e.template")
     @pytest.mark.datafiles("./edifact-templates/ahbs/FV2210/UTILMD/11109.csv")
     @pytest.mark.datafiles("../unit_tests/migs/FV2210/segment_group_hierarchies/sgh_utilmd.json")
@@ -31,17 +20,6 @@ class TestStammdatenaenderungMaus:
             maus_path=Path("edifact-templates/maus/FV2210/UTILMD/11109_maus.json"),
         )
 
-    @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2c.template")
-    @pytest.mark.datafiles("./edifact-templates/ahbs/FV2110/UTILMD/11115.csv")
-    @pytest.mark.datafiles("../unit_tests/migs/FV2204/segment_group_hierarchies/sgh_utilmd.json")
-    def test_maus_creation_11115(self, datafiles):
-        create_maus_and_assert(
-            csv_path=Path(datafiles) / "11115.csv",
-            sgh_path=Path(datafiles) / "sgh_utilmd.json",
-            template_path=Path(datafiles) / Path("UTILMD5.2c.template"),
-            maus_path=Path("edifact-templates/maus/FV2110/UTILMD/11115_maus.json"),
-        )
-
     @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2e.template")
     @pytest.mark.datafiles("./edifact-templates/ahbs/FV2210/UTILMD/11115.csv")
     @pytest.mark.datafiles("../unit_tests/migs/FV2210/segment_group_hierarchies/sgh_utilmd.json")
@@ -51,17 +29,6 @@ class TestStammdatenaenderungMaus:
             sgh_path=Path(datafiles) / "sgh_utilmd.json",
             template_path=Path(datafiles) / Path("UTILMD5.2e.template"),
             maus_path=Path("edifact-templates/maus/FV2210/UTILMD/11115_maus.json"),
-        )
-
-    @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2c.template")
-    @pytest.mark.datafiles("./edifact-templates/ahbs/FV2110/UTILMD/11116.csv")
-    @pytest.mark.datafiles("../unit_tests/migs/FV2204/segment_group_hierarchies/sgh_utilmd.json")
-    def test_maus_creation_11116(self, datafiles):
-        create_maus_and_assert(
-            csv_path=Path(datafiles) / "11116.csv",
-            sgh_path=Path(datafiles) / "sgh_utilmd.json",
-            template_path=Path(datafiles) / Path("UTILMD5.2c.template"),
-            maus_path=Path("edifact-templates/maus/FV2110/UTILMD/11116_maus.json"),
         )
 
     @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2e.template")
