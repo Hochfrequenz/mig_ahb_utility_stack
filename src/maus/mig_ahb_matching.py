@@ -115,7 +115,7 @@ def to_deep_ahb(
                 # if none of the items is marked with an ahb expression it's probably not required in this AHB
                 continue
             data_element = merge_lines_with_same_data_element(data_element_lines, first_stack=stack)
-            append_next_data_elements_here.append(data_element) # pylint:disable=used-before-assignment
+            append_next_data_elements_here.append(data_element)  # pylint:disable=used-before-assignment
         elif stack is None:
             continue
         else:
@@ -142,7 +142,7 @@ def to_deep_ahb(
                     result.lines.append(segment_group)
                     append_next_sg_here = segment_group.segment_groups  # type:ignore[assignment]
                     parent_group_lists.append(result.lines)
-                elif position.is_sub_location_of(previous_position):# pylint:disable=used-before-assignment
+                elif position.is_sub_location_of(previous_position):  # pylint:disable=used-before-assignment
                     append_next_sg_here.append(segment_group)
                     parent_group_lists.append(append_next_sg_here)
                     append_next_sg_here = segment_group.segment_groups  # type:ignore[assignment]
