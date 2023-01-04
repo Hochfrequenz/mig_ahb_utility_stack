@@ -5,11 +5,11 @@ from unit_tests.serialization_test_helper import assert_serialization_roundtrip 
 
 from maus import group_lines_by_segment_group, merge_lines_with_same_data_element, to_deep_ahb
 from maus.models.anwendungshandbuch import (
+    _VERSION,
     AhbLine,
     AhbMetaInformation,
     DeepAnwendungshandbuch,
     FlatAnwendungshandbuch,
-    _VERSION,
 )
 from maus.models.edifact_components import (
     DataElement,

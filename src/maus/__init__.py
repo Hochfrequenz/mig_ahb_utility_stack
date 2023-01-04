@@ -5,7 +5,7 @@ This module contains methods to merge data from Message Implementation Guide and
 from itertools import groupby
 from typing import List, Sequence
 
-from maus.models.anwendungshandbuch import AhbLine, DeepAnwendungshandbuch, FlatAnwendungshandbuch, _VERSION
+from maus.models.anwendungshandbuch import _VERSION, AhbLine, DeepAnwendungshandbuch, FlatAnwendungshandbuch
 from maus.models.edifact_components import (
     DataElement,
     DataElementFreeText,
