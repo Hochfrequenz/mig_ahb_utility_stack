@@ -54,15 +54,7 @@ class AhbLine:
     )
     """ the data element ID, e.g. '3224' """
 
-    # regex: https://regex101.com/r/lHkPTB/1
-    value_pool_entry: Optional[str] = attrs.field(
-        validator=attrs.validators.optional(
-            validator=attrs.validators.and_(
-                attrs.validators.matches_re(r"^(?!((?:MP-ID))|(?:[A-Z][a-z]+))[A-Z\.\da-z_]+$"),
-                attrs.validators.instance_of(str),
-            )
-        )
-    )
+    value_pool_entry: Optional[str] = attrs.field(validator=attrs.validators.instance_of(str))
     """ one of (possible multiple) allowed values, e.g. 'E01' or '293' """
 
     name: Optional[str] = attrs.field(validator=attrs.validators.optional(validator=attrs.validators.instance_of(str)))
