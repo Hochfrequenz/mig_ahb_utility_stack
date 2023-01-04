@@ -5,7 +5,7 @@ This module contains methods to merge data from Message Implementation Guide and
 from itertools import groupby
 from typing import List, Optional, Sequence, Set
 
-from more_itertools import first, first_true, last
+from more_itertools import first, first_true, last, one
 
 from maus.models.anwendungshandbuch import AhbLine, DeepAnwendungshandbuch, FlatAnwendungshandbuch
 from maus.models.edifact_components import (
@@ -81,6 +81,20 @@ def merge_lines_with_same_data_element(
     return result
 
 
+def _remove_qualifier(location: AhbLocation) -> AhbLocation:
+    """
+    returns a copy of location but with an empty qualifier
+    """
+    result: AhbLocation
+    result = AhbLocation(
+        qualifier=None,
+        layers=location.layers,
+        data_element_id=location.data_element_id,
+        segment_code=location.segment_code,
+    )
+    return result
+
+
 # I'm aware the function is too long; Let's first make it work, then split up into separate functions.
 # pylint:disable=too-many-locals, too-many-branches, too-many-statements
 # https://github.com/Hochfrequenz/mig_ahb_utility_stack/issues/205
@@ -99,17 +113,28 @@ def to_deep_ahb(
     append_next_segments_here: List[Segment]
     previous_position: AhbLocation
     for position, layer_group in groupby(
-        determine_locations(segment_group_hierarchy, flat_ahb.lines), key=lambda line_and_position: line_and_position[1]
+        determine_locations(segment_group_hierarchy, flat_ahb.lines),
+        key=lambda line_and_position: _remove_qualifier(line_and_position[1]),
     ):
+        layer_group = list(layer_group)
         data_element_lines = [x[0] for x in layer_group]  # index 1 is the position
         if not any((True for line in data_element_lines if line.segment_code is not None)):
             continue  # section heading only
         stack: EdifactStack
         try:
+            if len(data_element_lines) == 1:
+                position = layer_group[0][1]
             stack = mig_reader.get_edifact_stack(position)
         except ValueError:
             # if the AHB/MIG matching does not work as expected, set your breakpoints here
             stack = None  # type:ignore[assignment]
+            if len(data_element_lines) > 1:
+                for _position in (x[1] for x in layer_group):
+                    try:
+                        stack = mig_reader.get_edifact_stack(layer_group[0][1])
+                        break
+                    except:
+                        pass
         if any((True for line in data_element_lines if line.data_element is not None)):
             if not any((True for line in data_element_lines if line.ahb_expression is not None)):
                 # if none of the items is marked with an ahb expression it's probably not required in this AHB

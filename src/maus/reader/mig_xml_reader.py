@@ -171,6 +171,7 @@ class MigXmlReader(MigReader):
             query_path = final_query_path + f"/field[@meta.id='{ahb_location.data_element_id}']"  # todo:virtual groups
             candidates = list(self._original_root.xpath(query_path))
             if len(candidates) == 0:
+                # todo: go a level up
                 raise ValueError(f"No element found for path {query_path}")
             if len(candidates) > 1:
                 if ahb_location.qualifier is not None:

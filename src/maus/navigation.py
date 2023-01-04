@@ -595,7 +595,10 @@ def determine_locations(
                 (
                     this_ahb_line,
                     AhbLocation(
-                        layers=layers.copy(), data_element_id=this_ahb_line.data_element, segment_code=this_next_segment
+                        layers=layers.copy(),
+                        data_element_id=this_ahb_line.data_element,
+                        segment_code=this_next_segment,
+                        qualifier=this_ahb_line.value_pool_entry,
                     ),
                 )
             )
@@ -613,7 +616,10 @@ def determine_locations(
                 (
                     this_ahb_line,
                     AhbLocation(
-                        layers=layers.copy(), data_element_id=this_ahb_line.data_element, segment_code=this_next_segment
+                        layers=layers.copy(),
+                        data_element_id=this_ahb_line.data_element,
+                        segment_code=this_next_segment,
+                        qualifier=this_ahb_line.value_pool_entry,
                     ),
                 )
             )
@@ -632,7 +638,10 @@ def determine_locations(
                 (
                     this_ahb_line,
                     AhbLocation(
-                        layers=layers.copy(), data_element_id=this_ahb_line.data_element, segment_code=this_next_segment
+                        layers=layers.copy(),
+                        data_element_id=this_ahb_line.data_element,
+                        segment_code=this_next_segment,
+                        qualifier=this_ahb_line.value_pool_entry,
                     ),
                 )
             )
@@ -660,7 +669,10 @@ def determine_locations(
                 (
                     this_ahb_line,
                     AhbLocation(
-                        layers=layers.copy(), data_element_id=this_ahb_line.data_element, segment_code=this_next_segment
+                        layers=layers.copy(),
+                        data_element_id=this_ahb_line.data_element,
+                        segment_code=this_next_segment,
+                        qualifier=this_ahb_line.value_pool_entry,
                     ),
                 )
             )
