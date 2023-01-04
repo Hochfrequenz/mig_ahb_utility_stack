@@ -1,3 +1,6 @@
 [submodule "tests/integration_tests/edifact-templates"]
 	path = tests/integration_tests/edifact-templates
 	url = https://github.com/Hochfrequenz/edifact-templates
+[submodule "machine-readable_anwendungshandbuecher"]
+	path = machine-readable_anwendungshandbuecher
+	url = https://github.com/Hochfrequenz/machine-readable_anwendungshandbuecher
