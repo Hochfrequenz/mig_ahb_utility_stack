@@ -162,5 +162,11 @@ async def transform_all_value_pools(
         value_pool.replace_value_pool(replacement)
 
     for value_pool in deep_ahb.get_all_value_pools():
-        replacement_tasks.append(transform_value_pool(value_pool))
+        # ignore Absender and Empfänger and all paths that are no json paths
+        if (
+            value_pool.discriminator.startswith("$")
+            and "Absender" not in value_pool.discriminator
+            and "Empfänger" not in value_pool.discriminator
+        ):
+            replacement_tasks.append(transform_value_pool(value_pool))
     await asyncio.gather(*replacement_tasks)

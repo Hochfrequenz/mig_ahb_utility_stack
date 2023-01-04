@@ -9,7 +9,7 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Dict, List, Literal, Optional, Sequence, Set, TextIO, Tuple, overload
 
-from maus.models.anwendungshandbuch import AhbLine, AhbMetaInformation, FlatAnwendungshandbuch
+from maus.models.anwendungshandbuch import _VERSION, AhbLine, AhbMetaInformation, FlatAnwendungshandbuch
 from maus.models.edifact_components import gabi_edifact_qualifier_pattern
 
 _pruefi_pattern = re.compile(r"^\d{5}$")  #: five digits
@@ -266,6 +266,7 @@ class FlatAhbCsvReader(FlatAhbReader):
         return FlatAnwendungshandbuch(
             meta=AhbMetaInformation(
                 pruefidentifikator=self.pruefidentifikator,  # type:ignore[arg-type]
+                maus_version=_VERSION,
             ),
             lines=[row for row in self.rows if row.holds_any_information()],
         )
