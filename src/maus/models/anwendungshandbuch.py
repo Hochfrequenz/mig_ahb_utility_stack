@@ -24,6 +24,8 @@ from maus.models.edifact_components import (
     SegmentGroupSchema,
 )
 
+_VERSION = "0.3.0"  #: version to be written into the deep ahb
+
 
 # pylint:disable=too-many-instance-attributes
 @attrs.define(auto_attribs=True, kw_only=True)
@@ -52,8 +54,14 @@ class AhbLine:
     )
     """ the data element ID, e.g. '3224' """
 
+    # regex: https://regex101.com/r/lHkPTB/1
     value_pool_entry: Optional[str] = attrs.field(
-        validator=attrs.validators.optional(validator=attrs.validators.instance_of(str))
+        validator=attrs.validators.optional(
+            validator=attrs.validators.and_(
+                attrs.validators.matches_re(r"^(?!((?:MP-ID))|(?:[A-Z][a-z]+))[A-Z\.\da-z_]+$"),
+                attrs.validators.instance_of(str),
+            )
+        )
     )
     """ one of (possible multiple) allowed values, e.g. 'E01' or '293' """
 
@@ -152,7 +160,7 @@ class AhbMetaInformation:
     # there's more to come  but for now we'll leave it as is, because we're just in a proof of concept phase
     maus_version: Optional[str] = attrs.field(
         validator=attrs.validators.optional(attrs.validators.optional(_check_that_string_is_not_whitespace_or_empty)),
-        default=None,
+        default=_VERSION,
     )
     """
     semantic version of maus used to create this document
@@ -165,7 +173,7 @@ class AhbMetaInformationSchema(Schema):
     """
 
     pruefidentifikator = fields.String(required=True)
-    maus_version = fields.String(required=False)
+    maus_version = fields.String(required=False, allow_none=True, default=_VERSION)
 
     # pylint:disable=unused-argument
     @post_load
