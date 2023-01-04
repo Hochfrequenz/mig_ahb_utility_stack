@@ -5,7 +5,7 @@ This module contains methods to merge data from Message Implementation Guide and
 from itertools import groupby
 from typing import List, Sequence
 
-from maus.models.anwendungshandbuch import AhbLine, DeepAnwendungshandbuch, FlatAnwendungshandbuch
+from maus.models.anwendungshandbuch import _VERSION, AhbLine, DeepAnwendungshandbuch, FlatAnwendungshandbuch
 from maus.models.edifact_components import (
     DataElement,
     DataElementFreeText,
@@ -16,8 +16,6 @@ from maus.models.edifact_components import (
     derive_data_type_from_segment_code,
 )
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
-
-_VERSION = "0.2.4"  #: version to be writen into the deep ahb
 
 
 def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElement:

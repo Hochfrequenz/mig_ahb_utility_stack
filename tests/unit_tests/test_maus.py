@@ -4,7 +4,13 @@ import pytest  # type:ignore[import]
 from unit_tests.serialization_test_helper import assert_serialization_roundtrip  # type:ignore[import]
 
 from maus import group_lines_by_segment_group, merge_lines_with_same_data_element, to_deep_ahb
-from maus.models.anwendungshandbuch import AhbLine, AhbMetaInformation, DeepAnwendungshandbuch, FlatAnwendungshandbuch
+from maus.models.anwendungshandbuch import (
+    _VERSION,
+    AhbLine,
+    AhbMetaInformation,
+    DeepAnwendungshandbuch,
+    FlatAnwendungshandbuch,
+)
 from maus.models.edifact_components import (
     DataElement,
     DataElementFreeText,
@@ -413,7 +419,7 @@ class TestMaus:
                     ],
                 ),
                 DeepAnwendungshandbuch(
-                    meta=AhbMetaInformation(pruefidentifikator="12345", maus_version="0.2.4"),
+                    meta=AhbMetaInformation(pruefidentifikator="12345", maus_version=_VERSION),
                     lines=[
                         SegmentGroup(
                             discriminator="root",

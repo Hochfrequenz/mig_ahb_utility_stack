@@ -29063,6 +29063,6 @@ _ = [
 ]
 
 example_flat_ahb_11042 = FlatAnwendungshandbuch(
-    meta=AhbMetaInformation(pruefidentifikator="11042", maus_version=None),
+    meta=AhbMetaInformation(pruefidentifikator="11042"),
     lines=[x[0] for x in lines_locations_changes_11042],
 )
