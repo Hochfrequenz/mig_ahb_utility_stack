@@ -17,6 +17,7 @@ from maus.models.edifact_components import (
 )
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
 
+
 def merge_lines_with_same_data_element(ahb_lines: Sequence[AhbLine]) -> DataElement:
     """
     Merges lines that have the same data element into a single data element instance which is returned
