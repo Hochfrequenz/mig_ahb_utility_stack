@@ -5,9 +5,9 @@ This module contains methods to merge data from Message Implementation Guide and
 from itertools import groupby
 from typing import List, Optional, Sequence, Set
 
-from more_itertools import first, first_true, last, one
+from more_itertools import first, first_true, last
 
-from maus.models.anwendungshandbuch import AhbLine, DeepAnwendungshandbuch, FlatAnwendungshandbuch
+from maus.models.anwendungshandbuch import _VERSION, AhbLine, DeepAnwendungshandbuch, FlatAnwendungshandbuch
 from maus.models.edifact_components import (
     DataElement,
     DataElementFreeText,
@@ -21,8 +21,6 @@ from maus.models.edifact_components import (
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
 from maus.navigation import AhbLocation, calculate_distance, determine_locations
 from maus.reader.mig_reader import MigReader
-
-_VERSION = "0.3.0"  #: written into the deep ahb meta information
 
 
 def merge_lines_with_same_data_element(
