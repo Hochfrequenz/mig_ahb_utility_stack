@@ -7,6 +7,8 @@ structure.
 another segment group)
 """
 import re
+import uuid
+from itertools import groupby
 from typing import Callable, List, Optional, Sequence, Set
 from uuid import UUID
 
@@ -189,6 +191,21 @@ def _check_that_nearly_all_lines_have_a_segment_group(instance, attribute, value
         raise ValueError(f"There is a None segment group in line {last(switches_from_no_sg_to_sg[1])}")
 
 
+def _check_that_value_pool_entries_are_not_duplicated(instance, attribute, value: List[AhbLine]):
+    """
+    Loops over all provided ahb lines and checks that there are no two adjacent value_pool_entries with the same values.
+    """
+    # we artificially choose a random string to not get groups with len>1 for empty value pool entries
+    for value_pool_entry, adjacent_lines_with_same_vpe in groupby(
+        value, lambda line: line.value_pool_entry or str(uuid.uuid4())
+    ):
+        candidates = list(adjacent_lines_with_same_vpe)
+        if len(candidates) > 1:
+            raise ValueError(
+                f"There are lines with adjacent and identical value pool entry '{value_pool_entry}': {candidates}"
+            )
+
+
 _data_element_pattern = re.compile(r"^\d{4}$")
 # pylint:disable=unused-argument
 def _check_that_line_has_either_none_or_d4_data_element(instance, attribute, value: AhbLine):
@@ -255,6 +272,7 @@ class FlatAnwendungshandbuch:
             iterable_validator=attrs.validators.and_(
                 attrs.validators.instance_of(list),
                 _check_that_nearly_all_lines_have_a_segment_group,
+                _check_that_value_pool_entries_are_not_duplicated,
             ),
         )
     )  #: ordered list lines as they occur in the AHB
