@@ -54,7 +54,9 @@ class AhbLine:
     )
     """ the data element ID, e.g. '3224' """
 
-    value_pool_entry: Optional[str] = attrs.field(validator=attrs.validators.instance_of(str))
+    value_pool_entry: Optional[str] = attrs.field(
+        validator=attrs.validators.optional(attrs.validators.instance_of(str))
+    )
     """ one of (possible multiple) allowed values, e.g. 'E01' or '293' """
 
     name: Optional[str] = attrs.field(validator=attrs.validators.optional(validator=attrs.validators.instance_of(str)))

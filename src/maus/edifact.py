@@ -6,7 +6,10 @@ import re
 from enum import Enum
 from typing import Dict, Optional
 
-pruefidentifikator_pattern = re.compile(r"^[1-9]\d{4}$")
+import attrs
+
+_PRUEFI_REGEX = r"^[1-9]\d{4}$"
+pruefidentifikator_pattern = re.compile(_PRUEFI_REGEX)
 
 
 # pylint: disable=too-few-public-methods
@@ -116,3 +119,43 @@ def get_format_of_pruefidentifikator(pruefidentifikator: str) -> Optional[Edifac
         return _edifact_mapping[pruefidentifikator[:2]]
     except KeyError:
         return None
+
+
+# pylint:disable=unused-argument
+def _check_that_pruefi_and_format_are_consistent(instance: "EdiMetaData", attribute, value: str):
+    """
+    The value is the pruefidentifikator, the instance is the EdiMetaData instance.
+    This validator raises an ValueError if the pruefidentifikator is not consistent with the instance.edifact_format.
+    """
+    actual_format = instance.edifact_format
+    expected_format = get_format_of_pruefidentifikator(value)
+    if actual_format != expected_format:
+        raise ValueError(f"'{value}' is incompatible with '{actual_format}'; expected '{expected_format}' instead")
+
+
+@attrs.define(kw_only=True, frozen=True, auto_attribs=True)
+class EdiMetaData:
+    """
+    a container that contains edifact-related metadata
+    """
+
+    pruefidentifikator: str = attrs.field(
+        validator=attrs.validators.and_(
+            attrs.validators.instance_of(str),
+            attrs.validators.matches_re(_PRUEFI_REGEX),
+            _check_that_pruefi_and_format_are_consistent,
+        )
+    )
+    """
+    The pruefidentifikator, e.g. '11042'
+    """
+    edifact_format: EdifactFormat = attrs.field(validator=attrs.validators.instance_of(EdifactFormat))
+    """
+    The Edifact Format, e.g. 'UTILMD'
+    """
+    edifact_format_version: EdifactFormatVersion = attrs.field(
+        validator=attrs.validators.instance_of(EdifactFormatVersion)
+    )
+    """
+    The Edifact Format Version, e.g. 'FV2210'
+    """
