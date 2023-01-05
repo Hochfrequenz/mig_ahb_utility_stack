@@ -25,7 +25,6 @@ class TestEdifact:
             ("11042", EdifactFormat.UTILMD),
             ("13002", EdifactFormat.MSCONS),
             ("25001", EdifactFormat.UTILTS),
-            ("10000", None),
         ],
     )
     def test_pruefi_to_format(self, expectation_tuple: Tuple[str, EdifactFormat]):
@@ -90,6 +89,16 @@ class TestEdifact:
             f"{13002}' is incompatible with '{EdifactFormat.UTILMD}'; expected '{EdifactFormat.MSCONS}' instead"
             in str(value_error)
         )
+
+    @pytest.mark.parametrize("pruefi", [pytest.param("10000")])
+    def test_pruefi_to_format_not_mapped_exception(self, pruefi: str):
+        """
+        Test that pruefis that are not mapped to an edifact format are not accepted
+        """
+        with pytest.raises(ValueError) as excinfo:
+            _ = get_format_of_pruefidentifikator(pruefi)
+
+        assert "No Edifact format was found for pruefidentifikator" in excinfo.value.args[0]
 
     @pytest.mark.parametrize(
         "segment_code,expected_is_boilerplate",
