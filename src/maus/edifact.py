@@ -153,6 +153,11 @@ class EdiMetaData:
     """
     The Edifact Format, e.g. 'UTILMD'
     """
+
+    @edifact_format.default
+    def _get_format_from_pruefidentifikator(self):
+        return get_format_of_pruefidentifikator(self.pruefidentifikator)
+
     edifact_format_version: EdifactFormatVersion = attrs.field(
         validator=attrs.validators.instance_of(EdifactFormatVersion)
     )
