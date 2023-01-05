@@ -104,7 +104,7 @@ def is_edifact_boilerplate(segment_code: Optional[str]) -> bool:
     return segment_code.strip() in {"UNT", "UNZ"}
 
 
-def get_format_of_pruefidentifikator(pruefidentifikator: str) -> Optional[EdifactFormat]:
+def get_format_of_pruefidentifikator(pruefidentifikator: str) -> EdifactFormat:
     """
     returns the format corresponding to a given pruefi
     """
@@ -114,5 +114,5 @@ def get_format_of_pruefidentifikator(pruefidentifikator: str) -> Optional[Edifac
         raise ValueError(f"The pruefidentifikator '{pruefidentifikator}' is invalid.")
     try:
         return _edifact_mapping[pruefidentifikator[:2]]
-    except KeyError:
-        return None
+    except KeyError as key_error:
+        raise ValueError(f"No Edifact format was found for pruefidentifikator '{pruefidentifikator}'.") from key_error
