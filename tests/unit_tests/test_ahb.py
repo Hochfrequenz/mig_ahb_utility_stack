@@ -56,7 +56,13 @@ class TestAhb:
         [
             pytest.param(
                 AhbMetaInformation(pruefidentifikator="11042", maus_version="0.2.3"),
-                {"pruefidentifikator": "11042", "maus_version": "0.2.3"},
+                {"pruefidentifikator": "11042", "maus_version": "0.2.3", "description": None, "direction": None},
+            ),
+            pytest.param(
+                AhbMetaInformation(
+                    pruefidentifikator="11042", maus_version="0.2.3", description="Foo", direction="bar"
+                ),
+                {"pruefidentifikator": "11042", "maus_version": "0.2.3", "description": "Foo", "direction": "bar"},
             ),
         ],
     )

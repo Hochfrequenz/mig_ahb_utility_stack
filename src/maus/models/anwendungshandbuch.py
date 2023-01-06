@@ -178,7 +178,7 @@ class AhbMetaInformation:
         default=None,
     )
     """
-    a stringly typed description of the roles of sender and receiver of the message 
+    a stringly typed description of the roles of sender and receiver of the message
     (the row name in the AHB is 'Kommunikation von');
     e.g. 'MSB an NB' for 11042
     """
