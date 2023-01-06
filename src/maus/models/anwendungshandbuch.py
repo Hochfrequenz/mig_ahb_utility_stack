@@ -156,6 +156,30 @@ class AhbMetaInformation:
     """
     semantic version of maus used to create this document
     """
+    description: Optional[str] = attrs.field(
+        validator=attrs.validators.optional(
+            validator=attrs.validators.and_(
+                attrs.validators.instance_of(str),
+                _check_that_string_is_not_whitespace_or_empty,
+            )
+        )
+    )
+    """
+    an optional description of the purpose of the pruefidentifikator; e.g. 'Anmeldung MSB' for 11042
+    """
+    direction: Optional[str] = attrs.field(
+        validator=attrs.validators.optional(
+            validator=attrs.validators.and_(
+                attrs.validators.instance_of(str),
+                _check_that_string_is_not_whitespace_or_empty,
+            )
+        )
+    )
+    """
+    a stringly typed description of the roles of sender and receiver of the message 
+    (the row name in the AHB is 'Kommunikation von');
+    e.g. 'MSB an NB' for 11042
+    """
 
 
 class AhbMetaInformationSchema(Schema):
@@ -165,6 +189,8 @@ class AhbMetaInformationSchema(Schema):
 
     pruefidentifikator = fields.String(required=True)
     maus_version = fields.String(required=False, allow_none=True, default=_VERSION)
+    description = fields.String(required=False, allow_none=True, default=None)
+    direction = fields.String(required=False, allow_none=True, default=None)
 
     # pylint:disable=unused-argument
     @post_load
