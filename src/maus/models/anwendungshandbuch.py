@@ -161,8 +161,9 @@ class AhbMetaInformation:
             validator=attrs.validators.and_(
                 attrs.validators.instance_of(str),
                 _check_that_string_is_not_whitespace_or_empty,
-            )
-        )
+            ),
+        ),
+        default=None,
     )
     """
     an optional description of the purpose of the pruefidentifikator; e.g. 'Anmeldung MSB' for 11042
@@ -173,7 +174,8 @@ class AhbMetaInformation:
                 attrs.validators.instance_of(str),
                 _check_that_string_is_not_whitespace_or_empty,
             )
-        )
+        ),
+        default=None,
     )
     """
     a stringly typed description of the roles of sender and receiver of the message 

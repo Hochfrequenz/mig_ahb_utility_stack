@@ -253,7 +253,12 @@ class TestAhb:
                     ],
                 ),
                 {
-                    "meta": {"pruefidentifikator": "11042", "maus_version": "0.2.3"},
+                    "meta": {
+                        "pruefidentifikator": "11042",
+                        "maus_version": "0.2.3",
+                        "description": None,
+                        "direction": None,
+                    },
                     "lines": [
                         {
                             "ahb_expression": "Muss [1] O [2]",
@@ -371,7 +376,12 @@ class TestAhb:
                     ],
                 ),
                 {
-                    "meta": {"pruefidentifikator": "11042", "maus_version": "0.2.3"},
+                    "meta": {
+                        "pruefidentifikator": "11042",
+                        "maus_version": "0.2.3",
+                        "description": None,
+                        "direction": None,
+                    },
                     "lines": [
                         {
                             "ahb_expression": "expr A",
