@@ -78,6 +78,14 @@ class TestEdifact:
         )
         assert isinstance(actual, EdiMetaData) is True
 
+    def test_edi_meta_data_instantiation_with_default_format(self):
+        actual = EdiMetaData(
+            pruefidentifikator="11042",
+            edifact_format_version=EdifactFormatVersion.FV2210,
+        )
+        assert isinstance(actual, EdiMetaData) is True
+        assert actual.edifact_format == EdifactFormat.UTILMD
+
     def test_edi_meta_data_instantiation_with_error(self):
         with pytest.raises(ValueError) as value_error:
             _ = EdiMetaData(
