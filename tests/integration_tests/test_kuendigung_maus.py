@@ -10,33 +10,33 @@ class TestKuendigungMaus:
     """
 
     @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2e.template")
-    @pytest.mark.datafiles("./edifact-templates/ahbs/FV2210/UTILMD/11016.csv")
+    @pytest.mark.datafiles("../../machine-readable_anwendungshandbuecher/FV2210/UTILMD/flatahb/11016.json")
     @pytest.mark.datafiles("../unit_tests/migs/FV2210/segment_group_hierarchies/sgh_utilmd.json")
     def test_maus_creation_11016_52e(self, datafiles):
         create_maus_and_assert(
-            csv_path=Path(datafiles) / "11016.csv",
+            flat_ahb_path=Path(datafiles) / "11016.json",
             sgh_path=Path(datafiles) / "sgh_utilmd.json",
             template_path=Path(datafiles) / Path("UTILMD5.2e.template"),
             maus_path=Path("edifact-templates/maus/FV2210/UTILMD/11016_maus.json"),
         )
 
     @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2e.template")
-    @pytest.mark.datafiles("./edifact-templates/ahbs/FV2210/UTILMD/11017.csv")
+    @pytest.mark.datafiles("../../machine-readable_anwendungshandbuecher/FV2210/UTILMD/flatahb/11017.json")
     @pytest.mark.datafiles("../unit_tests/migs/FV2210/segment_group_hierarchies/sgh_utilmd.json")
     def test_maus_creation_11017_52e(self, datafiles):
         create_maus_and_assert(
-            csv_path=Path(datafiles) / "11017.csv",
+            flat_ahb_path=Path(datafiles) / "11017.json",
             sgh_path=Path(datafiles) / "sgh_utilmd.json",
             template_path=Path(datafiles) / Path("UTILMD5.2e.template"),
             maus_path=Path("edifact-templates/maus/FV2210/UTILMD/11017_maus.json"),
         )
 
     @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2e.template")
-    @pytest.mark.datafiles("./edifact-templates/ahbs/FV2210/UTILMD/11018.csv")
+    @pytest.mark.datafiles("../../machine-readable_anwendungshandbuecher/FV2210/UTILMD/flatahb/11018.json")
     @pytest.mark.datafiles("../unit_tests/migs/FV2210/segment_group_hierarchies/sgh_utilmd.json")
     def test_maus_creation_11018_52e(self, datafiles):
         result = create_maus_and_assert(
-            csv_path=Path(datafiles) / "11018.csv",
+            flat_ahb_path=Path(datafiles) / "11018.json",
             sgh_path=Path(datafiles) / "sgh_utilmd.json",
             template_path=Path(datafiles) / Path("UTILMD5.2e.template"),
             maus_path=Path("edifact-templates/maus/FV2210/UTILMD/11018_maus.json"),

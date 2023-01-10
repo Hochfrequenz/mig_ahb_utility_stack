@@ -70,21 +70,14 @@ class IntegrationTestResult:
 
 
 def create_maus_and_assert(
-    csv_path: Optional[Path], sgh_path: Path, template_path: Path, maus_path: Path, flat_ahb_path: Optional[Path] = None
+    sgh_path: Path, template_path: Path, maus_path: Path, flat_ahb_path: Optional[Path] = None
 ) -> IntegrationTestResult:
     """
     The repetitive part of every integration test so far:
     read the CSV into a FlatAhb, read the SGH from the file, read the template, join both AHB and MIG into a MAUS
     """
-    flat_ahb: FlatAnwendungshandbuch
-    if csv_path is not None:
-        reader = FlatAhbCsvReader(file_path=csv_path)
-        flat_ahb = reader.to_flat_ahb()
-    elif flat_ahb_path is not None:
-        with open(flat_ahb_path, "r", encoding="utf-8") as flat_ahb_file:
-            flat_ahb = FlatAnwendungshandbuchSchema().load(json.load(flat_ahb_file))
-    else:
-        raise ValueError("Either flat_ahb_path or csv_path has to be filled")
+    with open(flat_ahb_path, "r", encoding="utf-8") as flat_ahb_file:
+        flat_ahb = FlatAnwendungshandbuchSchema().load(json.load(flat_ahb_file))
     with open(sgh_path, "r", encoding="utf-8") as sgh_file:
         sgh = SegmentGroupHierarchySchema().loads(sgh_file.read())
     mig_reader = MigXmlReader(template_path)

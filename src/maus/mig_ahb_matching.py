@@ -3,7 +3,7 @@ MAUS is the MIG AHB Utility stack.
 This module contains methods to merge data from Message Implementation Guide and Anwendungshandbuch
 """
 from itertools import groupby
-from typing import List, Optional, Sequence, Set
+from typing import List, Optional, Sequence, Set, Tuple
 
 from more_itertools import first, first_true, last
 
@@ -114,14 +114,14 @@ def to_deep_ahb(
         determine_locations(segment_group_hierarchy, flat_ahb.lines),
         key=lambda line_and_position: _remove_qualifier(line_and_position[1]),
     ):
-        layer_group = list(layer_group)
+        layer_group: List[Tuple[AhbLine, AhbLocation]] = list(layer_group)  # type:ignore[no-redef]
         data_element_lines = [x[0] for x in layer_group]  # index 1 is the position
         if not any((True for line in data_element_lines if line.segment_code is not None)):
             continue  # section heading only
         stack: EdifactStack
         try:
             if len(data_element_lines) == 1:
-                position = layer_group[0][1]
+                position = layer_group[0][1]  # type:ignore[index]
             stack = mig_reader.get_edifact_stack(position)
         except ValueError:
             # if the AHB/MIG matching does not work as expected, set your breakpoints here
@@ -129,9 +129,9 @@ def to_deep_ahb(
             if len(data_element_lines) > 1:
                 for _position in (x[1] for x in layer_group):
                     try:
-                        stack = mig_reader.get_edifact_stack(layer_group[0][1])
+                        stack = mig_reader.get_edifact_stack(layer_group[0][1])  # type:ignore[index]
                         break
-                    except:
+                    except ValueError:
                         pass
         if any((True for line in data_element_lines if line.data_element is not None)):
             if not any((True for line in data_element_lines if line.ahb_expression is not None)):
