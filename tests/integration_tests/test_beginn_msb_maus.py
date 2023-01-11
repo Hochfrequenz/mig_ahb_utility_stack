@@ -23,7 +23,7 @@ class TestBeginnMsbMaus:
     @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2e.template")
     @pytest.mark.datafiles("../../machine-readable_anwendungshandbuecher/FV2210/UTILMD/flatahb/11043.json")
     @pytest.mark.datafiles("../unit_tests/migs/FV2210/segment_group_hierarchies/sgh_utilmd.json")
-    def test_maus_creation_11042_52e(self, datafiles):
+    def test_maus_creation_11043_52e(self, datafiles):
         create_maus_and_assert(
             flat_ahb_path=Path(datafiles) / "11043.json",
             sgh_path=Path(datafiles) / "sgh_utilmd.json",
