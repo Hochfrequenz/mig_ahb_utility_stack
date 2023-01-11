@@ -555,10 +555,13 @@ class TestNavigation:
         assert actual_locations == expected_locations_11042
 
     def test_determine_differential_changes(self):
+        actual_locations = [
+            x[1] for x in determine_locations(example_sgh_11042, ahb_lines=example_flat_ahb_11042.lines)
+        ]
         actual_changes = [x[1] for x in determine_hierarchy_changes(example_flat_ahb_11042.lines, example_sgh_11042)]
         location_and_changes = [
             (line, loc, change)
-            for line, loc, change in zip(example_flat_ahb_11042.lines, expected_locations_11042, actual_changes)
+            for line, loc, change in zip(example_flat_ahb_11042.lines, actual_locations, actual_changes)
         ]
         assert location_and_changes is not None  # you may use this to update the 10k lines of equality assertions
         if actual_changes != expected_changes_11042:
