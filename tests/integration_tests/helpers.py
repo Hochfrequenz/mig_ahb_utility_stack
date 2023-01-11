@@ -70,7 +70,7 @@ class IntegrationTestResult:
 
 
 def create_maus_and_assert(
-    sgh_path: Path, template_path: Path, maus_path: Path, flat_ahb_path: Optional[Path] = None
+    sgh_path: Path, template_path: Path, maus_path: Path, flat_ahb_path: Path
 ) -> IntegrationTestResult:
     """
     The repetitive part of every integration test so far:
@@ -88,4 +88,19 @@ def create_maus_and_assert(
     assert actual_maus_json is not None
     write_to_file_or_assert_equality(maus, maus_path)
     result = IntegrationTestResult(flat_ahb=flat_ahb, segment_group_hierarchy=sgh, deep_ahb=actual_deep_ahb, maus=maus)
+    assert (
+        len(
+            list(
+                x
+                for x in list(result.deep_ahb.get_all_value_pools())
+                if len(list(y for y in x.value_pool if y.ahb_expression is None)) > 0
+            )
+        )
+        == 0
+    )
+    assert len(list(seg for seg in list(result.deep_ahb.find_segments()) if seg.ahb_expression is None)) == 0
+    assert (
+        len(list(sg for sg in list(result.deep_ahb.find_segment_groups(lambda _: True)) if sg.ahb_expression is None))
+        == 0
+    )
     return result
