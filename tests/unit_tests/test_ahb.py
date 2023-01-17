@@ -720,6 +720,19 @@ class TestAhb:
                                                     discriminator="abc",
                                                     data_element_id="4567",
                                                 ),
+                                                DataElementValuePool(
+                                                    value_pool=[
+                                                        ValuePoolEntry(
+                                                            qualifier="Hallo Ente", meaning="world", ahb_expression="X"
+                                                        ),
+                                                        ValuePoolEntry(
+                                                            qualifier="MAUS", meaning="rocks", ahb_expression="X"
+                                                        ),
+                                                    ],
+                                                    entered_input="Hello Ente",
+                                                    discriminator="ente",
+                                                    data_element_id="4567",
+                                                ),
                                                 DataElementFreeText(
                                                     ahb_expression="Muss [1]",
                                                     entered_input="this should stay untouched",
@@ -778,6 +791,19 @@ class TestAhb:
                                                     discriminator="abc",
                                                     data_element_id="4567",
                                                 ),
+                                                DataElementValuePool(
+                                                    value_pool=[
+                                                        ValuePoolEntry(
+                                                            qualifier="Hallo Ente", meaning="world", ahb_expression="X"
+                                                        ),
+                                                        ValuePoolEntry(
+                                                            qualifier="MAUS", meaning="rocks", ahb_expression="X"
+                                                        ),
+                                                    ],
+                                                    entered_input="quack",
+                                                    discriminator="ente",
+                                                    data_element_id="4567",
+                                                ),
                                                 DataElementFreeText(
                                                     ahb_expression="Muss [1]",
                                                     entered_input="this should stay untouched",
@@ -810,6 +836,8 @@ class TestAhb:
                 return DeepAhbInputReplacement(replacement_found=True, input_replacement="bar")
             if discriminator == "abc":
                 return DeepAhbInputReplacement(replacement_found=True, input_replacement="xyz")
+            if discriminator == "ente":
+                return DeepAhbInputReplacement(replacement_found=True, input_replacement="quack")
             if discriminator == "replace_with_none_here":
                 return DeepAhbInputReplacement(replacement_found=True, input_replacement=None)
             return DeepAhbInputReplacement(replacement_found=False, input_replacement=None)
