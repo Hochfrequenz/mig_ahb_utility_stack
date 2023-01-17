@@ -83,8 +83,7 @@ def _remove_qualifier(location: AhbLocation) -> AhbLocation:
     """
     returns a copy of location but with an empty qualifier
     """
-    result: AhbLocation
-    result = AhbLocation(
+    result: AhbLocation = AhbLocation(
         qualifier=None,
         layers=location.layers,
         data_element_id=location.data_element_id,
