@@ -189,10 +189,15 @@ class AhbMetaInformationSchema(Schema):
     A schema to (de-)serialize :class:`.AhbMetaInformation`
     """
 
-    pruefidentifikator = fields.String(required=True)
-    maus_version = fields.String(required=False, allow_none=True, default=_VERSION)
-    description = fields.String(required=False, allow_none=True, default=None)
-    direction = fields.String(required=False, allow_none=True, default=None)
+    pruefidentifikator = fields.
+    
+    
+    
+    
+                                                                                                                                                                                                                                                                                                                S                                                                                                                                                                                                                                                                                         tring(required=True)
+    maus_version = fields.String(required=False, allow_none=True, dump_default=_VERSION)
+    description = fields.String(required=False, allow_none=True, dump_default=None)
+    direction = fields.String(required=False, allow_none=True, dump_default=None)
 
     # pylint:disable=unused-argument
     @post_load
