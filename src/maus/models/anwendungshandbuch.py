@@ -189,7 +189,7 @@ class AhbMetaInformationSchema(Schema):
     A schema to (de-)serialize :class:`.AhbMetaInformation`
     """
 
-    pruefidentifikator = fields.                                                                                                                                                                                                                                                                                                       S                                                                                                                                                                                                                                                                                         tring(required=True)
+    pruefidentifikator = fields.String(required=True)
     maus_version = fields.String(required=False, allow_none=True, dump_default=_VERSION)
     description = fields.String(required=False, allow_none=True, dump_default=None)
     direction = fields.String(required=False, allow_none=True, dump_default=None)
