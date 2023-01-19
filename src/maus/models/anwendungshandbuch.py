@@ -522,9 +522,10 @@ def _replace_inputs_based_on_discriminator(
             continue
         for segment in segment_group.segments:
             for data_element in segment.data_elements:
-                replacement_result = replacement_func(data_element.discriminator)
-                if replacement_result.replacement_found is True:
-                    data_element.entered_input = replacement_result.input_replacement
+                if data_element.discriminator is not None:
+                    replacement_result = replacement_func(data_element.discriminator)
+                    if replacement_result.replacement_found is True:
+                        data_element.entered_input = replacement_result.input_replacement
 
 
 class DeepAnwendungshandbuchSchema(Schema):
