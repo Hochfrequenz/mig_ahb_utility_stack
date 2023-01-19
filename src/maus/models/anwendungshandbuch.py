@@ -153,7 +153,9 @@ class AhbMetaInformation:
     pruefidentifikator: str  #: identifies the message type (within a fixed format version) e.g. "11042" or "13012"
     # there's more to come  but for now we'll leave it as is, because we're just in a proof of concept phase
     maus_version: Optional[str] = attrs.field(
-        validator=attrs.validators.optional(attrs.validators.instance_of(str)), default=_VERSION
+        validator=attrs.validators.optional(attrs.validators.instance_of(str)),  # type:ignore[arg-type]
+        # https://github.com/Hochfrequenz/mig_ahb_utility_stack/issues/221
+        default=_VERSION,
     )
     """
     semantic version of maus used to create this document
