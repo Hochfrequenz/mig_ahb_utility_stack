@@ -192,10 +192,12 @@ def to_deep_ahb(
             first_expression: str = first_expression_line.ahb_expression  # type:ignore[assignment]
             discriminator: str
             if stack is None:
+                # this is a pretty ugly hack. when we cannot find a position in the MIG, then we just stringify the
+                # position and by doing so hope, that the reader of the maus can use it somehow
                 discriminator = str(position)
             else:
+                # this should be the default path
                 discriminator = stack.to_json_path()
-                # mig_reader.get_edifact_stack(position)
             segment = Segment(
                 discriminator=discriminator,  # todo: sometimes the discriminator is not as sharp as it could have been
                 data_elements=[],
