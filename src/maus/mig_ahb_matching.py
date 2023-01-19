@@ -100,9 +100,20 @@ def to_deep_ahb(
     result.meta.maus_version = _VERSION
     parent_group_lists: List[List[SegmentGroup]] = []
     used_stacks: Set[str] = set()
-    append_next_data_elements_here: List[DataElement]
-    append_next_sg_here: List[SegmentGroup]
-    append_next_segments_here: List[Segment]
+    # The following lists are _not_ a view into the lines that are going to follow (hence no name starting with "next")
+    # Instead the lists are a reference to the respective attribute _inside_ the upper hierarchy element.
+    # So whenever we e.g. run into a data element, we can "remember" to where the data element shall be appended.
+    # The lists are our "reference" so that each element deeper into the hierarchy (e.g. data elements) knows to which
+    # parent (e.g. segment) it belongs.
+    # Note that the lists are never assigned to anything.
+    # + they're always instantiated empty
+    # + then we store a reference to the list in `append_next_foo_here`
+    # + when ever we find a foo downstream we append it to this list (and thereby assign it to its parent)
+    # + when ever we find a new parent element, this variable that holds the reference to the old (now previous) parent
+    # is replaced with a reference to the new parent to all the downstream elements to come.
+    append_next_segments_here: List[Segment]  #: is instantiated/replaced whenever a new segment group is created
+    append_next_sg_here: List[SegmentGroup]  #: is instantiated/replaced whenever a new segment group is created
+    append_next_data_elements_here: List[DataElement]  #: is instantiated/replaced whenever a new segment is created
     previous_position: AhbLocation
     for position, layer_group in groupby(
         determine_locations(segment_group_hierarchy, flat_ahb.lines),
