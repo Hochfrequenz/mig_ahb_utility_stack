@@ -132,10 +132,10 @@ def to_deep_ahb(
                 # if none of the items is marked with an ahb expression it's probably not required in this AHB
                 continue
             data_element = merge_lines_with_same_data_element(data_element_lines, first_stack=stack)
-            # try:
-            append_next_data_elements_here.append(data_element)  # pylint:disable=used-before-assignment
-            # except UnboundLocalError as unbound_local_error:
-            #    raise ValueError(f"No segment has been created for {stack}") from unbound_local_error
+            try:
+                append_next_data_elements_here.append(data_element)  # pylint:disable=used-before-assignment
+            except UnboundLocalError as unbound_local_error:
+                raise ValueError(f"No segment has been created for {stack}") from unbound_local_error
         else:
             first_line = first(data_element_lines)
             last_line = last(data_element_lines)
