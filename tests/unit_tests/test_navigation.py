@@ -2,12 +2,6 @@ from typing import Dict, List, Optional, Tuple
 from uuid import UUID
 
 import pytest  # type:ignore[import]
-from example_data_11042 import (  # type:ignore[import]
-    example_flat_ahb_11042,
-    example_sgh_11042,
-    expected_changes_11042,
-    expected_locations_11042,
-)
 from jsonpath_ng.ext import parse  # type:ignore[import] #  jsonpath is just installed in the tests
 from more_itertools import last
 
@@ -26,6 +20,13 @@ from maus.navigation import (
     determine_hierarchy_changes,
     determine_locations,
     find_common_ancestor,
+)
+
+from .example_data_11042 import (  # type:ignore[import]
+    example_flat_ahb_11042,
+    example_sgh_11042,
+    expected_changes_11042,
+    expected_locations_11042,
 )
 
 sgh_utilmd_fv2204 = SegmentGroupHierarchy(
