@@ -7,7 +7,6 @@ from typing import List, Optional, Set, Tuple
 import attrs
 from marshmallow import Schema, fields, post_load
 
-# pylint:disable=fixme
 # TODO: the SegmentGroupHierarchy shall not be hardcoded but instead loaded from .tree files
 # .tree files are a complete representation of an EDIFACT format including all segments and allowed data element values.
 # A LARK grammar to parse them is work in progress at the moment and will be added later.
