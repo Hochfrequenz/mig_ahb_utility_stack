@@ -59,7 +59,7 @@ class MigXmlReader(MigReader):
             self._sanitized_root = etree.parse(str(init_param.absolute())).getroot()
         else:
             raise ValueError(f"The type of '{init_param}' is not valid")
-        # self._unpack_virtual_groups()
+        # self._unpack_virtual_groups() # check if this is needed at some point in the future; I don't know yet
         # the original tree is the unmodified MIG XML Structure with all its quircks
         self._original_tree: etree.ElementTree = etree.ElementTree(self._original_root)
         # but turns out, it's much easier to handle a sanitized tree that is simplified in a sense that
