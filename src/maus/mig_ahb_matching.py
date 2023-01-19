@@ -181,10 +181,9 @@ def to_deep_ahb(
 
             assert last_line.data_element is None
             assert last_line.segment_code is not None
-            # this assertion is because we assume that the lines always come like this:
+            # these assertion are because we assume that the lines always come like this:
             # Section Heading
             # SGx Foo      <-- a line with only the segment code but no actual content; this is where we're right now
-            # if first_line.ahb_expression:
             first_expression_line: Optional[AhbLine] = first_true(
                 data_element_lines, default=None, pred=lambda l: l is not None and l.ahb_expression
             )
