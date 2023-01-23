@@ -2,10 +2,10 @@
 Classes that allow to read XML files that contain structural information (Message Implementation Guide information)
 """
 from abc import ABC, abstractmethod
-from typing import Optional, TypeVar
 
-from maus import SegmentGroupHierarchy
-from maus.models.edifact_components import EdifactStack, EdifactStackQuery
+from maus.models.edifact_components import EdifactStack
+from maus.models.message_implementation_guide import SegmentGroupHierarchy
+from maus.navigation import AhbLocation
 
 
 class MigReader(ABC):
@@ -23,11 +23,8 @@ class MigReader(ABC):
 
     # pylint:disable=too-many-arguments
     @abstractmethod
-    def get_edifact_stack(self, query: EdifactStackQuery) -> Optional[EdifactStack]:
+    def get_edifact_stack(self, location: AhbLocation) -> EdifactStack:
         """
         Returns the edifact stack for the given combination of segment group, key, data element and name
         """
         raise NotImplementedError("The inheriting class has to implement this method")
-
-
-Result = TypeVar("Result")  #: is a type var to indicate an "arbitrary but same" type in a generic function

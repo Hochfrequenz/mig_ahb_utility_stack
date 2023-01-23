@@ -24,7 +24,7 @@ from maus.models.edifact_components import (
     SegmentGroupSchema,
 )
 
-_VERSION = "0.2.8"  #: version to be written into the deep ahb
+_VERSION = "0.3.0"  #: version to be written into the deep ahb
 
 
 # pylint:disable=too-many-instance-attributes
@@ -152,7 +152,11 @@ class AhbMetaInformation:
 
     pruefidentifikator: str  #: identifies the message type (within a fixed format version) e.g. "11042" or "13012"
     # there's more to come  but for now we'll leave it as is, because we're just in a proof of concept phase
-    maus_version: Optional[str] = attrs.field(validator=attrs.validators.instance_of(str), default=_VERSION)
+    maus_version: Optional[str] = attrs.field(
+        validator=attrs.validators.optional(attrs.validators.instance_of(str)),  # type:ignore[arg-type]
+        # https://github.com/Hochfrequenz/mig_ahb_utility_stack/issues/221
+        default=_VERSION,
+    )
     """
     semantic version of maus used to create this document
     """
@@ -468,7 +472,8 @@ class DeepAnwendungshandbuch:
         :return: a list of all value pools
         """
         result: List[DataElementValuePool] = []
-        added_discriminators: Set[str] = set()  # checks like "str in set" are way faster than "value pool in list"
+        added_discriminators: Set[Optional[str]] = set()
+        # checks like "str in set" are way faster than "value pool in list"
 
         def add_to_result(value_pool: DataElementValuePool):
             if value_pool.discriminator in added_discriminators:
@@ -521,9 +526,10 @@ def _replace_inputs_based_on_discriminator(
             continue
         for segment in segment_group.segments:
             for data_element in segment.data_elements:
-                replacement_result = replacement_func(data_element.discriminator)
-                if replacement_result.replacement_found is True:
-                    data_element.entered_input = replacement_result.input_replacement
+                if data_element.discriminator is not None:
+                    replacement_result = replacement_func(data_element.discriminator)
+                    if replacement_result.replacement_found is True:
+                        data_element.entered_input = replacement_result.input_replacement
 
 
 class DeepAnwendungshandbuchSchema(Schema):

@@ -24,7 +24,8 @@ and the application domain ("non-edifact").
 import asyncio
 from typing import Any, Awaitable, Dict, List, Mapping, Optional, Protocol, TypeVar
 
-from maus import DataElementValuePool, DeepAnwendungshandbuch, ValuePoolEntry
+from maus.models.anwendungshandbuch import DataElementValuePool, DeepAnwendungshandbuch
+from maus.models.edifact_components import ValuePoolEntry
 
 EdifactData = TypeVar("EdifactData")
 """
@@ -163,7 +164,8 @@ async def transform_all_value_pools(
     for value_pool in deep_ahb.get_all_value_pools():
         # ignore Absender and Empfänger and all paths that are no json paths
         if (
-            value_pool.discriminator.startswith("$")
+            value_pool.discriminator is not None
+            and value_pool.discriminator.startswith("$")
             and "Absender" not in value_pool.discriminator
             and "Empfänger" not in value_pool.discriminator
         ):

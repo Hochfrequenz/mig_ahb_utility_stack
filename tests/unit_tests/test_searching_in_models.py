@@ -2,15 +2,15 @@ from typing import Callable, List
 
 import pytest  # type:ignore[import]
 
-from maus import (
+from maus.models.anwendungshandbuch import (
+    AhbMetaInformation,
     DataElementFreeText,
     DataElementValuePool,
     DeepAnwendungshandbuch,
     Segment,
     SegmentGroup,
-    ValuePoolEntry,
 )
-from maus.models.anwendungshandbuch import AhbMetaInformation
+from maus.models.edifact_components import ValuePoolEntry
 
 
 class TestSearchingInModels:

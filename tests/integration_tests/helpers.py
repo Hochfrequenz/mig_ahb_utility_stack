@@ -1,13 +1,18 @@
 import json
 from pathlib import Path
 from sys import gettrace
+from typing import Optional
 
 import attrs
 
-from maus import DeepAnwendungshandbuch, SegmentGroupHierarchy, to_deep_ahb
-from maus.deep_ahb_mig_joiner import replace_discriminators_with_edifact_stack
-from maus.models.anwendungshandbuch import DeepAnwendungshandbuchSchema, FlatAnwendungshandbuch
-from maus.models.message_implementation_guide import SegmentGroupHierarchySchema
+from maus.mig_ahb_matching import to_deep_ahb
+from maus.models.anwendungshandbuch import (
+    DeepAnwendungshandbuch,
+    DeepAnwendungshandbuchSchema,
+    FlatAnwendungshandbuch,
+    FlatAnwendungshandbuchSchema,
+)
+from maus.models.message_implementation_guide import SegmentGroupHierarchy, SegmentGroupHierarchySchema
 from maus.reader.flat_ahb_reader import FlatAhbCsvReader
 from maus.reader.mig_xml_reader import MigXmlReader
 
@@ -65,24 +70,37 @@ class IntegrationTestResult:
 
 
 def create_maus_and_assert(
-    csv_path: Path, sgh_path: Path, template_path: Path, maus_path: Path
+    sgh_path: Path, template_path: Path, maus_path: Path, flat_ahb_path: Path
 ) -> IntegrationTestResult:
     """
     The repetitive part of every integration test so far:
     read the CSV into a FlatAhb, read the SGH from the file, read the template, join both AHB and MIG into a MAUS
     """
-    reader = FlatAhbCsvReader(file_path=csv_path)
-    flat_ahb = reader.to_flat_ahb()
+    with open(flat_ahb_path, "r", encoding="utf-8") as flat_ahb_file:
+        flat_ahb = FlatAnwendungshandbuchSchema().load(json.load(flat_ahb_file))
     with open(sgh_path, "r", encoding="utf-8") as sgh_file:
         sgh = SegmentGroupHierarchySchema().loads(sgh_file.read())
-    actual_deep_ahb = to_deep_ahb(flat_ahb, sgh)
-    actual_json = DeepAnwendungshandbuchSchema().dumps(actual_deep_ahb, ensure_ascii=True, sort_keys=True)
     mig_reader = MigXmlReader(template_path)
+    actual_deep_ahb = to_deep_ahb(flat_ahb, sgh, mig_reader)
+    actual_json = DeepAnwendungshandbuchSchema().dumps(actual_deep_ahb, ensure_ascii=True, sort_keys=True)
     maus = DeepAnwendungshandbuchSchema().loads(actual_json)  # maus is a copy of the (unchanged) actual_deep_ahb
-    assert mig_reader is not None
-    replace_discriminators_with_edifact_stack(maus, mig_reader, ignore_errors=False)
     actual_maus_json = DeepAnwendungshandbuchSchema().dumps(maus, ensure_ascii=True, sort_keys=True, indent=True)
     assert actual_maus_json is not None
     write_to_file_or_assert_equality(maus, maus_path)
     result = IntegrationTestResult(flat_ahb=flat_ahb, segment_group_hierarchy=sgh, deep_ahb=actual_deep_ahb, maus=maus)
+    assert (
+        len(
+            list(
+                x
+                for x in list(result.deep_ahb.get_all_value_pools())
+                if len(list(y for y in x.value_pool if y.ahb_expression is None)) > 0
+            )
+        )
+        == 0
+    )
+    assert len(list(seg for seg in list(result.deep_ahb.find_segments()) if seg.ahb_expression is None)) == 0
+    assert (
+        len(list(sg for sg in list(result.deep_ahb.find_segment_groups(lambda _: True)) if sg.ahb_expression is None))
+        == 0
+    )
     return result

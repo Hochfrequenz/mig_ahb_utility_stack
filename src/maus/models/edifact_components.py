@@ -45,8 +45,13 @@ class DataElement(ABC):
     For example in UTILMD the data element that holds the 13 digit market partner ID is data element '3039'
     """
 
-    discriminator: str = attrs.field(validator=attrs.validators.instance_of(str))
-    """ The discriminator uniquely identifies the data element. This _might_ be its key """
+    discriminator: Optional[str] = attrs.field(
+        validator=attrs.validators.optional(_check_that_string_is_not_whitespace_or_empty)
+    )
+    """
+    The discriminator uniquely identifies the data element.
+    The discriminator is None if the data element was not found in the MIG.
+    """
     # but could also be a reference or a name
     #: the ID of the data element (e.g. "0062") for the Nachrichten-Referenznummer
     data_element_id: str = attrs.field(validator=attrs.validators.matches_re(r"^\d{4}$"))
@@ -70,7 +75,7 @@ class DataElementSchema(Schema):
     A Schema to (de-)serialize DataElements
     """
 
-    discriminator = fields.String(required=True)
+    discriminator = fields.String(required=False, allow_none=True)
     data_element_id = fields.String(required=True)
     entered_input = fields.String(required=False, load_default=None)
     value_type = MarshmallowEnum(DataElementDataType, required=False)
@@ -94,9 +99,9 @@ class DataElementFreeText(DataElement):
         validator=attrs.validators.optional(attrs.validators.instance_of(DataElementDataType)),  # type:ignore[arg-type]
         default=DataElementDataType.TEXT,
     )
-    ahb_expression: Optional[str] = attrs.field(
-        validator=attrs.validators.optional(
-            attrs.validators.and_(attrs.validators.instance_of(str), _check_that_string_is_not_whitespace_or_empty)
+    ahb_expression: str = attrs.field(
+        validator=attrs.validators.and_(
+            attrs.validators.instance_of(str), _check_that_string_is_not_whitespace_or_empty
         )
     )
     """any freetext data element has an ahb expression attached. Could be 'X' but also 'M [13]'"""
@@ -360,9 +365,9 @@ class SegmentLevel(ABC):
     """
 
     discriminator: str  # no validator here, because it might be None on initialization and will be set later (trust me)
-    ahb_expression: Optional[str] = attrs.field(
-        validator=attrs.validators.optional(
-            attrs.validators.and_(attrs.validators.instance_of(str), _check_that_string_is_not_whitespace_or_empty)
+    ahb_expression: str = attrs.field(
+        validator=attrs.validators.and_(
+            attrs.validators.instance_of(str), _check_that_string_is_not_whitespace_or_empty
         )
     )
     ahb_line_index: Optional[int] = attrs.field(
@@ -596,35 +601,3 @@ class EdifactStack:
             elif level.is_groupable:
                 result += "[0]"
         return result
-
-
-@attrs.define(auto_attribs=True, kw_only=True)
-class EdifactStackQuery:
-    """
-    The EdifactStackQuery contains the data you need to provide to a MIG reader to return you the :class:`EdifactStack`
-    of an element
-    """
-
-    #: the key of the segment group, e.g. 'root' or 'SG5' or 'SG12'
-    segment_group_key: str = attrs.field(validator=attrs.validators.instance_of(str))
-    #: the segment code, e.g. 'NAD' or 'DTM'
-    segment_code: str = attrs.field(validator=attrs.validators.matches_re("^[A-Z]+$"))
-    #: the data element id, e.g. '0068'
-    data_element_id: str = attrs.field(validator=attrs.validators.matches_re(r"^\d{4}$"))
-    #: the name of the element, e.g. "MP-ID" or "Kundennummer" or "Identifikator"; Is None for Value Pools
-    name: Optional[str] = attrs.field(validator=attrs.validators.optional(attrs.validators.instance_of(str)))
-    predecessor_qualifier: Optional[str] = attrs.field(
-        default=None, validator=attrs.validators.optional(_check_is_edifact_qualifier)
-    )  # GABi-RLMEV wtf
-    """
-    Some names are not really unique. e.g. all date time fields carry more or less the same name in the AHB.
-    So to distinguish between them you may provide the predecissing qualifier.
-    In case of 'DTM+137++what_youre_looking_for' the predecessor qualifier is '137'
-    """
-    section_name: Optional[str] = attrs.field(
-        default=None, validator=attrs.validators.optional(attrs.validators.instance_of(str))
-    )
-    """
-    The section name (e.g. 'Nachrichten-Kopfsegment') might also be used for MIG<->AHB matching
-    if the name is too broad or not unique.
-    """

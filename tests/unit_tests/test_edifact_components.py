@@ -366,7 +366,7 @@ class TestEdifactComponents:
         """
         sg = SegmentGroup(
             discriminator="Foo",
-            ahb_expression=None,
+            ahb_expression="Muss [1]",
         )  # must not throw an exception
         assert sg is not None
         assert sg.segment_groups is None
