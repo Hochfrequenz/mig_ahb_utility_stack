@@ -211,19 +211,9 @@ def _remove_grouped_ahb_lines_containing_section_name(
     grouped_ahb_lines: List[List[AhbLine]], section_name: str
 ) -> List[List[AhbLine]]:
     """
-    Removes all groups of ahb lines that contain a line with the given section name.
+    Removes all groups of ahb lines that contain a line with the given section name and returns a new list instance.
     """
-    indexes_of_group_to_remove: List[int] = []
-
-    for group_of_ahb_lines in grouped_ahb_lines:
-        for ahb_line in group_of_ahb_lines:
-            if ahb_line.section_name == section_name:
-                indexes_of_group_to_remove.append(grouped_ahb_lines.index(group_of_ahb_lines))
-
-    for index in sorted(indexes_of_group_to_remove, reverse=True):
-        grouped_ahb_lines.pop(index)
-
-    return grouped_ahb_lines
+    return [goal for goal in grouped_ahb_lines if any([ahbl.section_name==section_name for ahbl in goal])]
 
 
 # pylint:disable=unused-argument
