@@ -213,7 +213,7 @@ def _remove_grouped_ahb_lines_containing_section_name(
     """
     Removes all groups of ahb lines that contain a line with the given section name and returns a new list instance.
     """
-    return [goal for goal in grouped_ahb_lines if any([ahbl.section_name==section_name for ahbl in goal])]
+    return [goal for goal in grouped_ahb_lines if any(ahbl.section_name == section_name for ahbl in goal)]
 
 
 # pylint:disable=unused-argument
