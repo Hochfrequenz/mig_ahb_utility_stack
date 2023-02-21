@@ -222,6 +222,8 @@ def _check_that_nearly_all_lines_have_a_segment_group(instance, attribute, value
 
 
 _data_element_pattern = re.compile(r"^\d{4}$")
+
+
 # pylint:disable=unused-argument
 def _check_that_line_has_either_none_or_d4_data_element(instance, attribute, value: AhbLine):
     """
@@ -235,6 +237,8 @@ def _check_that_line_has_either_none_or_d4_data_element(instance, attribute, val
 
 
 _segment_group_key_pattern = re.compile(r"^SG\d+$")
+
+
 # pylint:disable=unused-argument
 def _check_that_line_has_either_none_or_matching_sg(instance, attribute, value: AhbLine):
     """
@@ -250,6 +254,8 @@ def _check_that_line_has_either_none_or_matching_sg(instance, attribute, value: 
 
 
 _segment_code_pattern = re.compile(r"^[A-Z]+$")
+
+
 # pylint:disable=unused-argument
 def _check_that_line_has_either_none_az_segment_code(instance, attribute, value: AhbLine):
     """
