@@ -5,7 +5,7 @@ import pytest  # type:ignore[import]
 from jsonpath_ng.ext import parse  # type:ignore[import] #  jsonpath is just installed in the tests
 from more_itertools import last
 
-from maus.models.anwendungshandbuch import AhbLine
+from maus.models.anwendungshandbuch import AhbLine, _remove_grouped_ahb_lines_containing_section_name
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
 from maus.navigation import (
     AhbLocation,
@@ -569,3 +569,45 @@ class TestNavigation:
             for n, (actual, expected) in enumerate(zip(actual_changes, expected_changes_11042, strict=True)):
                 assert actual == expected, f"Error at line {n}: {example_flat_ahb_11042.lines[n]}"
         assert actual_changes == expected_changes_11042
+
+    def test_remove_grouped_ahb_lines_containing_section_name(self):
+        ahb_lines = [
+            [
+                AhbLine(
+                    guid=UUID("b1538d12-9bf4-47a8-b34e-b9c012cc1000"),
+                    segment_group_key="SG10",
+                    segment_code="CCI",
+                    data_element="7037",
+                    value_pool_entry="Z07",
+                    name="Verbrauch",
+                    ahb_expression=None,
+                    section_name="Lieferrichtung",
+                ),
+                AhbLine(
+                    guid=UUID("505273ea-2287-49dd-abdc-56320026dde6"),
+                    segment_group_key="SG10",
+                    segment_code=None,
+                    data_element=None,
+                    value_pool_entry=None,
+                    name=None,
+                    ahb_expression=None,
+                    section_name="Abschnitts-Kontrollsegment",
+                ),
+            ],
+            [
+                AhbLine(
+                    guid=UUID("b1538d12-9bf4-47a8-b34e-b9c012cc1000"),
+                    segment_group_key="SG10",
+                    segment_code="CCI",
+                    data_element="7037",
+                    value_pool_entry="Z07",
+                    name="Verbrauch",
+                    ahb_expression=None,
+                    section_name="Lieferrichtung",
+                )
+            ],
+        ]
+
+        ahb_lines = _remove_grouped_ahb_lines_containing_section_name(ahb_lines, "Abschnitts-Kontrollsegment")
+
+        assert len(ahb_lines) == 1
