@@ -84,6 +84,7 @@ class Accessor(Protocol[DataModel_contra]):
 EdifactAccessor = Accessor[EdifactData]  #: a class that allows to access (read/write) in the edifact data model
 ApplicationAccessor = Accessor[ApplicationData]  #: a class that allows to access (read/write) in the application data
 
+
 # I feel like there's no way to boil this down to fewer arguments (6/5) without tradeoffs in readability.
 # pylint:disable=too-many-arguments
 async def generate_value_pool_replacement(
@@ -118,6 +119,7 @@ async def generate_value_pool_replacement(
         break
     else:
         raise ValueError(f"No mapping found for '{data_element.discriminator}'")
+
     # now loop over the other values
     async def _get_value_pool_mapping(value_pool_entry: ValuePoolEntry):
         # modified_edifact_data = initial_edifact_data.copy() #only works on dicts

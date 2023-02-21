@@ -526,7 +526,6 @@ def determine_hierarchy_changes(
             **zip_kwargs,
         )
     ):
-
         if this_ahb_line.segment_code is None:
             segment_code_was_none = True
         change = _determine_hierarchy_change(
