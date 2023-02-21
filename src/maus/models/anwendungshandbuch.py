@@ -207,6 +207,15 @@ class AhbMetaInformationSchema(Schema):
         return AhbMetaInformation(**data)
 
 
+def _remove_grouped_ahb_lines_containing_section_name(
+    grouped_ahb_lines: List[List[AhbLine]], section_name: str
+) -> List[List[AhbLine]]:
+    """
+    Removes all groups of ahb lines that contain a line with the given section name and returns a new list instance.
+    """
+    return [goal for goal in grouped_ahb_lines if any(ahbl.section_name == section_name for ahbl in goal)]
+
+
 # pylint:disable=unused-argument
 def _check_that_nearly_all_lines_have_a_segment_group(instance, attribute, value: List[AhbLine]):
     """
@@ -216,6 +225,9 @@ def _check_that_nearly_all_lines_have_a_segment_group(instance, attribute, value
     """
     switches_from_no_sg_to_sg = list(
         split_when(value, lambda x, y: x.segment_group_key is None and y.segment_group_key is not None)
+    )
+    switches_from_no_sg_to_sg = _remove_grouped_ahb_lines_containing_section_name(
+        grouped_ahb_lines=switches_from_no_sg_to_sg, section_name="Abschnitts-Kontrollsegment"
     )
     if len(switches_from_no_sg_to_sg) > 2:
         raise ValueError(f"There is a None segment group in line {last(switches_from_no_sg_to_sg[1])}")
