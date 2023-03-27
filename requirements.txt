@@ -10,7 +10,7 @@ lxml==4.9.2
     # via -r requirements.in
 marshmallow==3.19.0
     # via -r requirements.in
-more-itertools==9.0.0
+more-itertools==9.1.0
     # via -r requirements.in
 packaging==21.3
     # via marshmallow
