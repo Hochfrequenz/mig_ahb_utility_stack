@@ -1,0 +1,5 @@
+# specific requirements for the tox test_packaging environment
+setuptools
+setuptools-scm
+wheel
+twine

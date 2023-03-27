@@ -1,0 +1,3 @@
+# specific requirements for the tox integration_tests env
+pytest
+pytest-datafiles
