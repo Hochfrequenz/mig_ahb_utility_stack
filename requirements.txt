@@ -12,7 +12,7 @@ marshmallow==3.19.0
     # via -r requirements.in
 more-itertools==9.1.0
     # via -r requirements.in
-packaging==21.3
+packaging==23.0
     # via marshmallow
 pyparsing==3.0.7
     # via packaging
