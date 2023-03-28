@@ -102,7 +102,7 @@ def _xml_dict_to_location(xml_dict: dict) -> AhbLocation:
 
 
 # pylint:disable=c-extension-no-member
-def from_xml_element(xml: Union[str | _Element]) -> AhbLocation:
+def from_xml_element(xml: Union[str, _Element]) -> AhbLocation:
     """
     deserializes an AhbLocation from an etree element or str
     :param xml:
@@ -116,7 +116,7 @@ def from_xml_element(xml: Union[str | _Element]) -> AhbLocation:
     return _xml_dict_to_location(xml_dict)
 
 
-def from_xml_elements(xml: Union[str | _Element]) -> List[AhbLocation]:
+def from_xml_elements(xml: Union[str, _Element]) -> List[AhbLocation]:
     """
     deserializes multiple ahb locations
     """
