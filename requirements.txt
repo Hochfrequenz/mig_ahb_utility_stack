@@ -14,5 +14,5 @@ more-itertools==9.1.0
     # via -r requirements.in
 packaging==23.0
     # via marshmallow
-pyparsing==3.0.7
-    # via packaging
+xmltodict==0.13.0
+    # via -r requirements.in
