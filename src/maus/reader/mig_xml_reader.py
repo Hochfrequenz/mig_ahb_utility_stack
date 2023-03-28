@@ -13,7 +13,7 @@ except ImportError as import_error:
     # lxml is only an optional dependency of maus but in this module, it is required
     raise
 
-from more_itertools import one
+from more_itertools import first, one
 
 from maus.edifact import EdifactFormat
 from maus.models.edifact_components import EdifactStack, EdifactStackLevel
@@ -124,12 +124,16 @@ class MigXmlReader(MigReader):
 
     def _get_candidate_index_from_key(self, layer: AhbLocationLayer, candidates: List[Element]) -> int:
         key_set: Set[str]
+        possible_results: List[int] = []
         for candidate_index, key_set in enumerate(
             set(get_nested_qualifiers("key", candidate) or []) for candidate in candidates
         ):
             if layer.opening_qualifier in key_set:
-                return candidate_index
-        raise ValueError(f"Couldn't find any candidate with opening_qualifier '{layer.opening_qualifier}'")
+                possible_results.append(candidate_index)
+        if len(possible_results) == 0:
+            raise ValueError(f"Couldn't find any candidate with opening_qualifier '{layer.opening_qualifier}'")
+        # todo: what if there are >1 matches. using the first one just hides data problems. we should use one instead
+        return first(possible_results)
 
     # First make it work, then split it up
     # pylint:disable=too-many-branches
