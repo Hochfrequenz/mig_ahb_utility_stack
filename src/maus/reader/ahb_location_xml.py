@@ -19,7 +19,7 @@ except ImportError as import_error:
     raise
 
 
-_AHB_LOCATION_LIST_XML_TAG_NAME = "ahbLocationLayers"
+_AHB_LOCATION_LIST_XML_TAG_NAME = "ahbLocations"
 _AHB_LOCATION_XML_TAG_NAME = "ahbLocation"
 _AHB_LOCATION_LAYER_XML_TAG_NAME = "ahbLocationLayer"
 
