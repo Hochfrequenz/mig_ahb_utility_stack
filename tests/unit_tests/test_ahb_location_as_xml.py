@@ -1,6 +1,7 @@
 from typing import List
 
 import pytest  # type:ignore[import]
+from lxml import etree  # type:ignore[import]
 
 from maus.navigation import AhbLocation, AhbLocationLayer
 from maus.reader.ahb_location_xml import from_xml_element, from_xml_elements, to_xml_element, to_xml_elements
@@ -80,3 +81,66 @@ class TestAhbLocationAsXml:
         xml_elements = to_xml_elements(locations)
         deserialized_instances = from_xml_elements(xml_elements)
         assert locations == deserialized_instances
+
+    @pytest.mark.parametrize(
+        "xml_str,expected",
+        [
+            pytest.param(
+                """
+<ahbLocations>
+    <ahbLocation>
+        <layers>
+            <ahbLocationLayer>
+                <segment_group_key
+                        xmlns:ns0="xsi" ns0:nil="true"/>
+                <opening_segment_code>
+                    UNH
+                </opening_segment_code>
+                <opening_qualifier>UTILMD</opening_qualifier>
+            </ahbLocationLayer>
+            <ahbLocationLayer>
+                <segment_group_key>SG4</segment_group_key>
+                <opening_segment_code>IDE</opening_segment_code>
+                <opening_qualifier>
+                    24
+                </opening_qualifier>
+            </ahbLocationLayer>
+            <ahbLocationLayer>
+                <segment_group_key>SG6</segment_group_key>
+                <opening_segment_code>RFF</opening_segment_code>
+                <opening_qualifier>
+                    Z18
+                </opening_qualifier>
+            </ahbLocationLayer>
+        </layers>
+        <segment_code>DTM</segment_code>
+        <data_element_id>2380</data_element_id>
+        <qualifier xmlns:ns0="xsi" ns0:nil="true"/>
+    </ahbLocation>
+</ahbLocations>
+""",
+                [
+                    AhbLocation(
+                        layers=[
+                            AhbLocationLayer(
+                                segment_group_key=None, opening_segment_code="UNH", opening_qualifier="UTILMD"
+                            ),
+                            AhbLocationLayer(
+                                segment_group_key="SG4", opening_segment_code="IDE", opening_qualifier="24"
+                            ),
+                            AhbLocationLayer(
+                                segment_group_key="SG6", opening_segment_code="RFF", opening_qualifier="Z18"
+                            ),
+                        ],
+                        segment_code="DTM",
+                        data_element_id="2380",
+                        qualifier=None,
+                    ),
+                ],
+            )
+        ],
+    )
+    def test_element_to_locations(self, xml_str: str, expected: List[AhbLocation]):
+        element = etree.fromstring(xml_str)
+        actual = from_xml_elements(element)
+        assert actual == expected
