@@ -124,5 +124,14 @@ def from_xml_elements(xml: Union[str, _Element]) -> List[AhbLocation]:
         xml_str = etree.tostring(xml)
     else:
         xml_str = xml
-    xml_list = xmltodict.parse(xml_str)[_AHB_LOCATION_LIST_XML_TAG_NAME][_AHB_LOCATION_XML_TAG_NAME]
-    return [_xml_dict_to_location(xml_dict) for xml_dict in xml_list]
+    xml_list = xmltodict.parse(xml_str)[_AHB_LOCATION_LIST_XML_TAG_NAME]
+    result = []
+    element = xml_list[_AHB_LOCATION_XML_TAG_NAME]
+    if isinstance(element, list):
+        for item in element:
+            sub_result = _xml_dict_to_location(item)
+            result.append(sub_result)
+        return result
+    if isinstance(element, dict):
+        return [_xml_dict_to_location(element)]
+    raise ValueError("unexpected input")
