@@ -1,0 +1,31 @@
+<ahbLocations>
+    <ahbLocation>
+        <layers>
+            <ahbLocationLayer>
+                <segment_group_key
+                        xmlns:ns0="xsi" ns0:nil="true"/>
+                <opening_segment_code>
+                    UNH
+                </opening_segment_code>
+                <opening_qualifier>UTILMD</opening_qualifier>
+            </ahbLocationLayer>
+            <ahbLocationLayer>
+                <segment_group_key>SG4</segment_group_key>
+                <opening_segment_code>IDE</opening_segment_code>
+                <opening_qualifier>
+                    24
+                </opening_qualifier>
+            </ahbLocationLayer>
+            <ahbLocationLayer>
+                <segment_group_key>SG6</segment_group_key>
+                <opening_segment_code>RFF</opening_segment_code>
+                <opening_qualifier>
+                    Z18
+                </opening_qualifier>
+            </ahbLocationLayer>
+        </layers>
+        <segment_code>DTM</segment_code>
+        <data_element_id>2380</data_element_id>
+        <qualifier xmlns:ns0="xsi" ns0:nil="true"/>
+    </ahbLocation>
+</ahbLocations>

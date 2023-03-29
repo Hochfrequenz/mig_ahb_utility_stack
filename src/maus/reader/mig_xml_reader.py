@@ -137,7 +137,7 @@ class MigXmlReader(MigReader):
         # todo: what if there are >1 matches. using the first one just hides data problems. we should use one instead
         return first(possible_results)
 
-    def _get_candidate_from_full_location(self, ahb_location:AhbLocation)->Optional[Element]:
+    def _get_candidate_from_full_location(self, ahb_location: AhbLocation) -> Optional[Element]:
         path_for_all_elements_with_an_ahb_location = "//field[ahbLocations]"
         ahb_locations_xml_string = etree.tostring(to_xml_elements([ahb_location]), pretty_print=True).decode("utf-8")
         candidates = self._original_root.xpath(path_for_all_elements_with_an_ahb_location)
