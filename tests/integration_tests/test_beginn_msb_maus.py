@@ -12,7 +12,7 @@ class TestBeginnMsbMaus:
 
     @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2e.template")
     @pytest.mark.datafiles("../../machine-readable_anwendungshandbuecher/FV2210/UTILMD/flatahb/11042.json")
-    @pytest.mark.datafiles("/edifact-templates/edifact-templates/segment_group_hierarchies/FV2210/UTILMD.sgh.json")
+    @pytest.mark.datafiles("./edifact-templates/segment_group_hierarchies/FV2210/UTILMD.sgh.json")
     def test_maus_creation_11042_52e(self, datafiles):
         create_maus_and_assert(
             flat_ahb_path=Path(datafiles) / "11042.json",
@@ -23,7 +23,7 @@ class TestBeginnMsbMaus:
 
     @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2e.template")
     @pytest.mark.datafiles("../../machine-readable_anwendungshandbuecher/FV2210/UTILMD/flatahb/11043.json")
-    @pytest.mark.datafiles("/edifact-templates/edifact-templates/segment_group_hierarchies/FV2210/UTILMD.sgh.json")
+    @pytest.mark.datafiles("./edifact-templates/segment_group_hierarchies/FV2210/UTILMD.sgh.json")
     def test_maus_creation_11043_52e(self, datafiles):
         create_maus_and_assert(
             flat_ahb_path=Path(datafiles) / "11043.json",
@@ -34,7 +34,7 @@ class TestBeginnMsbMaus:
 
     @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2e.template")
     @pytest.mark.datafiles("../../machine-readable_anwendungshandbuecher/FV2210/UTILMD/flatahb/11044.json")
-    @pytest.mark.datafiles("/edifact-templates/edifact-templates/segment_group_hierarchies/FV2210/UTILMD.sgh.json")
+    @pytest.mark.datafiles("./edifact-templates/segment_group_hierarchies/FV2210/UTILMD.sgh.json")
     def test_maus_creation_11044_52e(self, datafiles):
         create_maus_and_assert(
             flat_ahb_path=Path(datafiles) / "11044.json",
