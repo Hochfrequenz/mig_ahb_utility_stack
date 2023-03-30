@@ -49,6 +49,7 @@ Installation
 For the bare maus data model and matching logic it's sufficient to install :code:`pip install maus`.
 Only if the MIG you're using is based on XML (namely the Hochfrequenz XML based MIG representation), you need to install :code:`pip install maus[xml]`.
 
+Once installed you can either use the package and its data model in your own Python code or use the mapping logic (of only the Hochfrequenz EDIFACT XML templates as of now) via CLI: :code:`maus --flat_ahb_path flat_ahb_by_kohlrahbi.ahb.json --sgh_path path_to_segment_group_hierarchy.sgh.json --template_path UTILMD5.2e.template --output_path file_to_be_created.maus.json`. The CLI tool is not only available via pip but also as standalone executable in the respective release assets.
 
 Development
 -----------
