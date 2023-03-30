@@ -51,7 +51,6 @@ jobs:
         run: |
           tox -e test_packaging
       - name: Publish distribution 📦 to PyPI
-        if: startsWith(github.ref, 'refs/tags/v')
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: __token__
@@ -73,7 +72,13 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Build Executable
+        run: |
+          pip install tox
+          tox -e build_executable
+
       - name: Generate release notes
+        id: create_release_notes
         uses: release-drafter/release-drafter@v5
         with:
           config-name: release-drafter.yml
@@ -81,17 +86,9 @@ jobs:
           publish: true
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build Executable
-        run: |
-          pip install tox
-          tox -e build_executable
-
-      - name: Upload Executable to Release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Release and Upload Executable
+        uses: softprops/action-gh-release@v1
         with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./dist/maus_cli${{ runner.os == 'Windows' && '.exe' || '' }}
-          asset_name: maus_cli${{ runner.os == 'Windows' && '.exe' || '' }}
-          asset_content_type: application/octet-stream
+          body: ${{ steps.create_release_notes.outputs.body }}
+          files: |
+            ./dist/maus_cli${{ runner.os == 'Windows' && '.exe' || '' }}
