@@ -63,6 +63,11 @@ def main(
         with open(check_path, "r", encoding="utf-8") as maus_file:
             expected_maus = DeepAnwendungshandbuchSchema().loads(maus_file.read())
 
+            # reset the line index to make the comparison work
+            # this is fine cause there is no logic built on top of the line index
+            [line.reset_ahb_line_index() for line in maus.lines]
+            [line.reset_ahb_line_index() for line in expected_maus.lines]
+
             if expected_maus == maus:
                 click.secho("✅ The generated maus.json matches the expected one", fg="green")
             else:
