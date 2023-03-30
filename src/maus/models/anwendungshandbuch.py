@@ -425,6 +425,14 @@ class DeepAnwendungshandbuch:
         )
     )  #: the nested data
 
+    def reset_ahb_line_index(self) -> None:
+        """
+        reset the ahb line index for all lines in the DeepAnwendungshandbuch
+        :return: nothing; modifies the instance
+        """
+        for line in self.lines:
+            line.reset_ahb_line_index()
+
     @staticmethod
     def _query_segment_group(
         segment_group: SegmentGroup, predicate: Callable[[SegmentGroup], bool]

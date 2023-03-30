@@ -28,6 +28,7 @@ dependencies = [
     "marshmallow>=3.18.0",
     "more_itertools",
     "xmltodict",
+    "click"
     # add everything you add in requirements.in here
 ]
 dynamic = ["readme", "version"]
@@ -41,8 +42,8 @@ Homepage = "https://github.com/Hochfrequenz/mig_ahb_utility_stack"
 Documentation = "https://maus.readthedocs.io/en/latest/"
 
 # wird das tool als CLI script verwendet, dann muss hier der Name des Scripts angegeben werden
-# [project.scripts]
-# kohlrahbi = "kohlrahbi:main"
+[project.scripts]
+maus = "maus:main"
 
 [tool.hatch.metadata.hooks.fancy-pypi-readme]
 content-type = "text/x-rst"
