@@ -50,7 +50,7 @@ fragments = [{ path = "README.rst" }]
 source = "vcs"
 
 [tool.hatch.build.hooks.vcs]
-version-file = "src/_powercloud2lynqtech_version.py"
+version-file = "src/_maus_version.py"
 template = '''
 version = "{version}"
 '''
