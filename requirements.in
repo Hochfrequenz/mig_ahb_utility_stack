@@ -3,4 +3,5 @@ marshmallow
 lxml>=4.9.2
 more_itertools
 xmltodict
+click
 # whenever adding something here, don't forget to also add it to pyproject.toml dependencies
