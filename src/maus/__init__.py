@@ -28,13 +28,13 @@ from maus.reader.mig_xml_reader import MigXmlReader
     help="Path to the output file",
 )
 @click.option("-v", "--verbose", is_flag=True, help="Print additional information")
+# pylint:disable=no-value-for-parameter
 def main(
     flat_ahb_path: Path,
     sgh_path: Path,
     template_path: Path,
     check_path: Path,
     output_path: Path,
-    verbose: bool,
 ):
     """
     The main entry point for the maus command line interface
