@@ -28,6 +28,7 @@ dependencies = [
     "marshmallow>=3.18.0",
     "more_itertools",
     "xmltodict",
+    "click"
     # add everything you add in requirements.in here
 ]
 dynamic = ["readme", "version"]
