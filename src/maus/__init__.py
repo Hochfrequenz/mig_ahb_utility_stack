@@ -31,7 +31,6 @@ from maus.reader.mig_xml_reader import MigXmlReader
     type=click.Path(dir_okay=False, file_okay=True, path_type=Path),
     help="Path to the output file",
 )
-@click.option("-v", "--verbose", is_flag=True, help="Print additional information")
 # pylint:disable=no-value-for-parameter
 def main(
     flat_ahb_path: Path,
