@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import List, Set, TypeVar, Union, Optional
 from xml.etree.ElementTree import Element
 
-from maus.reader.ahb_location_xml import from_xml_elements, to_xml_elements
+from maus.reader.ahb_location_xml import from_xml_elements
 
 try:
     from lxml import etree  # type:ignore[import]
@@ -137,14 +137,14 @@ class MigXmlReader(MigReader):
         # todo: what if there are >1 matches. using the first one just hides data problems. we should use one instead
         return first(possible_results)
 
-    def _get_candidate_from_full_location(self, ahb_location: AhbLocation) -> Optional[Element]:
-        path_for_all_elements_with_an_ahb_location = "//field[ahbLocations]"
-        ahb_locations_xml_string = etree.tostring(to_xml_elements([ahb_location]), pretty_print=True).decode("utf-8")
+    def _get_class_candidate_from_full_location(self, ahb_location: AhbLocation) -> Optional[Element]:
+        path_for_all_elements_with_an_ahb_location = "//class[ahbLocations]"
+         # ahb_locations_xml_string = etree.tostring(to_xml_elements([ahb_location]), pretty_print=True).decode("utf-8")
         candidates = self._original_root.xpath(path_for_all_elements_with_an_ahb_location)
         for candidate in candidates:
-            # todo: don't do this every time, just once on startup
+            # todo: don't do this on every iteration but just once on startup; the information is static
             ahb_locations = candidate.xpath("./ahbLocations")[0]
-            locations = set(from_xml_elements(ahb_locations))
+            locations = from_xml_elements(ahb_locations)
             if ahb_location in locations:
                 return candidate
         return None
@@ -158,7 +158,7 @@ class MigXmlReader(MigReader):
         """
         candidates: List[Element]
         # first and foremost: check if there is any field that has the specified ahb location hardcoded
-        self._get_candidate_from_full_location(ahb_location)
+        perfect_match = self._get_class_candidate_from_full_location(ahb_location)
         final_query_path = f"/{self.get_format_name()}/class[@ref='/']"
         for layer in ahb_location.layers:
             query_path = final_query_path + f"/class[@ref='{layer.segment_group_key or 'UNH'}']"

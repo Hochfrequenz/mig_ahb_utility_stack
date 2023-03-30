@@ -14,12 +14,15 @@ class TestBeginnMsbMaus:
     @pytest.mark.datafiles("../../machine-readable_anwendungshandbuecher/FV2210/UTILMD/flatahb/11042.json")
     @pytest.mark.datafiles("../unit_tests/migs/FV2210/segment_group_hierarchies/sgh_utilmd.json")
     def test_maus_creation_11042_52e(self, datafiles):
-        create_maus_and_assert(
+        result = create_maus_and_assert(
             flat_ahb_path=Path(datafiles) / "11042.json",
             sgh_path=Path(datafiles) / "sgh_utilmd.json",
             template_path=Path(datafiles) / Path("UTILMD5.2e.template"),
             maus_path=Path("edifact-templates/maus/FV2210/UTILMD/11042_maus.json"),
         )
+        assert not any(result.deep_ahb.get_all_value_pools(), lambda vp: any(lambda vpe: vpe.ahb_expression is None))
+        assert not any(result.deep_ahb.find_segments(), lambda seg: seg.ahb_expression is None)
+        assert not any(result.deep_ahb.find_segment_groups(), lambda sg: sg.ahb_expression is None)
 
     @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2e.template")
     @pytest.mark.datafiles("../../machine-readable_anwendungshandbuecher/FV2210/UTILMD/flatahb/11043.json")
