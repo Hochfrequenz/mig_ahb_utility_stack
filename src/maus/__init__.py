@@ -56,7 +56,7 @@ def main(
 
     if output_path is not None and check_path is not None:
         click.secho("❌ You can only specify one of the output_path and maus_to_check_path parameters", fg="red")
-        click.Abort()
+        click.Abort()  # pylint:disable=pointless-exception-statement
 
     if output_path is not None:
         maus_dict = DeepAnwendungshandbuchSchema().dump(maus)
