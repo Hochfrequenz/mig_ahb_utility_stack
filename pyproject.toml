@@ -7,8 +7,8 @@ name = "maus"
 description = "Python Library that consolidates Anwendungshandbücher (AHB) and Message Implementation Guides (MIG)"
 # ERROR    `long_description` has syntax errors in markup and would not be rendered on PyPI.
 #         line 51: Error: Unexpected indentation.
-# long_description = "file: README.rst"
-# long_description_content_type = "text/x-rst; charset=UTF-8"
+long_description = "file: README.rst"
+long_description_content_type = "text/x-rst; charset=UTF-8"
 url = "https://github.com/Hochfrequenz/mig_ahb_utility_stack"
 license = { text = "MIT" }
 requires-python = ">=3.8"
