@@ -132,3 +132,7 @@ dmypy.json
 
 # vscode settings
 .vscode/
+
+# version number for maus; gets auto-generated during the command
+# python -m build
+_maus_version.py

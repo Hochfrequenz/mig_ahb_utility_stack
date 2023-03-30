@@ -1,6 +1,68 @@
 [build-system]
-requires = ["setuptools>=41.0", "wheel", "setuptools_scm[toml]>=3.4"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling>=1.8.0", "hatch-vcs", "hatch-fancy-pypi-readme"]
+build-backend = "hatchling.build"
+
+[project]
+name = "maus"
+description = "Python Library that consolidates Anwendungshandbücher (AHB) and Message Implementation Guides (MIG)"
+long_description = "file: README.rst"
+long_description_content_type = "text/x-rst; charset=UTF-8"
+license = { text = "MIT" }
+requires-python = ">=3.8"
+authors = [
+    { name = "Hochfrequenz Unternehmensberatung GmbH", email = "info@hochfrequenz.de" },
+]
+keywords = ["MIG", "AHB", "maus", "edi@energy"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+]
+dependencies = [
+    "attrs>=21.4.0",
+    "marshmallow>=3.18.0",
+    "more_itertools",
+    "xmltodict",
+    # add everything you add in requirements.in here
+]
+dynamic = ["readme", "version"]
+
+[project.optional-dependencies]
+xml = ["lxml>=4.9.2", "xmltodict"]
+
+[project.urls]
+Changelog = "https://github.com/Hochfrequenz/mig_ahb_utility_stack/releases"
+Homepage = "https://github.com/Hochfrequenz/mig_ahb_utility_stack"
+Documentation = "https://maus.readthedocs.io/en/latest/"
+
+# wird das tool als CLI script verwendet, dann muss hier der Name des Scripts angegeben werden
+# [project.scripts]
+# kohlrahbi = "kohlrahbi:main"
+
+[tool.hatch.metadata.hooks.fancy-pypi-readme]
+content-type = "text/x-rst"
+fragments = [{ path = "README.rst" }]
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/_maus_version.py"
+template = '''
+version = "{version}"
+'''
+
+[tool.hatch.build.targets.sdist]
+exclude = ["/tests"]
+
+[tool.hatch.build.targets.wheel]
+only-include = ["src"]
+sources = ["src"]
 
 [tool.setuptools_scm]
 
