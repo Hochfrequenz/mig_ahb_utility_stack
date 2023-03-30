@@ -7,7 +7,11 @@ from pathlib import Path
 import click
 
 from maus.mig_ahb_matching import to_deep_ahb
-from maus.models.anwendungshandbuch import DeepAnwendungshandbuchSchema, FlatAnwendungshandbuchSchema
+from maus.models.anwendungshandbuch import (
+    DeepAnwendungshandbuch,
+    DeepAnwendungshandbuchSchema,
+    FlatAnwendungshandbuchSchema,
+)
 from maus.models.message_implementation_guide import SegmentGroupHierarchySchema
 from maus.reader.mig_xml_reader import MigXmlReader
 
@@ -51,7 +55,8 @@ def main(
     maus = to_deep_ahb(flat_ahb, sgh, mig_reader)
 
     if output_path is not None and check_path is not None:
-        raise Exception("You can only specify one of the output_path and maus_to_check_path parameters")
+        click.secho("❌ You can only specify one of the output_path and maus_to_check_path parameters", fg="red")
+        click.Abort()
 
     if output_path is not None:
         maus_dict = DeepAnwendungshandbuchSchema().dump(maus)
@@ -61,12 +66,12 @@ def main(
 
     if check_path is not None:
         with open(check_path, "r", encoding="utf-8") as maus_file:
-            expected_maus = DeepAnwendungshandbuchSchema().loads(maus_file.read())
+            expected_maus: DeepAnwendungshandbuch = DeepAnwendungshandbuchSchema().loads(maus_file.read())
 
             # reset the line index to make the comparison work
             # this is fine cause there is no logic built on top of the line index
-            [line.reset_ahb_line_index() for line in maus.lines]
-            [line.reset_ahb_line_index() for line in expected_maus.lines]
+            maus.reset_ahb_line_index()
+            expected_maus.reset_ahb_line_index()
 
             if expected_maus == maus:
                 click.secho("✅ The generated maus.json matches the expected one", fg="green")
