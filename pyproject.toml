@@ -7,13 +7,13 @@ name = "maus"
 description = "Python Library that consolidates Anwendungshandbücher (AHB) and Message Implementation Guides (MIG)"
 # ERROR    `long_description` has syntax errors in markup and would not be rendered on PyPI.
 #         line 51: Error: Unexpected indentation.
-# long_description = "file: README.rst"
-# long_description_content_type = "text/x-rst; charset=UTF-8"
+long_description = "file: README.rst"
+long_description_content_type = "text/x-rst; charset=UTF-8"
 url = "https://github.com/Hochfrequenz/mig_ahb_utility_stack"
 license = { text = "MIT" }
 requires-python = ">=3.8"
 authors = [
-    { name = "Hochfrequenz Unternehmensberatung GmbH", email = "info@hochfrequenz.de" }
+    { name = "Hochfrequenz Unternehmensberatung GmbH", email = "info@hochfrequenz.de" },
 ]
 keywords = ["MIG", "AHB", "maus", "edi@energy"]
 classifiers = [
@@ -30,41 +30,22 @@ dependencies = [
     "attrs>=21.4.0",
     "marshmallow>=3.18.0",
     "more_itertools",
-    "xmltodict"
+    "xmltodict",
     # add everything you add in requirements.in here
 ]
 dynamic = ["readme", "version"]
 
-[options]
-package_dir = ""
-packages = [
-    { name = ".", path = "src" },
-]
-zip_safe = false
-include_package_data = true
-python_requires = ">=3.8"
-install_requires = [
-    "attrs>=21.4.0",
-    "marshmallow>=3.18.0",
-    "more_itertools",
-]
-
-[options.extras]
-xml = [
-    "lxml>=4.9.2",
-    "xmltodict",
-]
-[package]
-include = ["py.typed"]
-
-# wird das tool als CLI script verwendet, dann muss hier der Name des Scripts angegeben werden
-# [project.scripts]
-# kohlrahbi = "kohlrahbi:main"
+[project.optional-dependencies]
+xml = ["lxml>=4.9.2", "xmltodict"]
 
 [project.urls]
 Changelog = "https://github.com/Hochfrequenz/mig_ahb_utility_stack/releases"
 Homepage = "https://github.com/Hochfrequenz/mig_ahb_utility_stack"
 Documentation = "https://maus.readthedocs.io/en/latest/"
+
+# wird das tool als CLI script verwendet, dann muss hier der Name des Scripts angegeben werden
+# [project.scripts]
+# kohlrahbi = "kohlrahbi:main"
 
 [tool.hatch.metadata.hooks.fancy-pypi-readme]
 content-type = "text/x-rst"
@@ -104,4 +85,3 @@ disable = "fixme"
 # even if they have no @pytest.mark.asyncio marker.
 # https://github.com/pytest-dev/pytest-asyncio#auto-mode
 asyncio_mode = "auto"
-
