@@ -16,7 +16,7 @@ class TestAbmeldungMaus:
     def test_maus_creation_11007_52e(self, datafiles):
         create_maus_and_assert(
             flat_ahb_path=Path(datafiles) / "11007.json",
-            sgh_path=Path(datafiles) / "sgh_utilmd.json",
+            sgh_path=Path(datafiles) / "UTILMD.sgh.json",
             template_path=Path(datafiles) / Path("UTILMD5.2e.template"),
             maus_path=Path("edifact-templates/maus/FV2210/UTILMD/11007_maus.json"),
         )
@@ -27,7 +27,7 @@ class TestAbmeldungMaus:
     def test_maus_creation_11008_52e(self, datafiles):
         create_maus_and_assert(
             flat_ahb_path=Path(datafiles) / "11008.json",
-            sgh_path=Path(datafiles) / "sgh_utilmd.json",
+            sgh_path=Path(datafiles) / "UTILMD.sgh.json",
             template_path=Path(datafiles) / Path("UTILMD5.2e.template"),
             maus_path=Path("edifact-templates/maus/FV2210/UTILMD/11008_maus.json"),
         )
@@ -38,7 +38,7 @@ class TestAbmeldungMaus:
     def test_maus_creation_11009_52e(self, datafiles):
         create_maus_and_assert(
             flat_ahb_path=Path(datafiles) / "11009.json",
-            sgh_path=Path(datafiles) / "sgh_utilmd.json",
+            sgh_path=Path(datafiles) / "UTILMD.sgh.json",
             template_path=Path(datafiles) / Path("UTILMD5.2e.template"),
             maus_path=Path("edifact-templates/maus/FV2210/UTILMD/11009_maus.json"),
         )

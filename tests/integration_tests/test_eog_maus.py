@@ -16,7 +16,7 @@ class TestEogMaus:
     def test_maus_creation_11013_52e(self, datafiles):
         create_maus_and_assert(
             flat_ahb_path=Path(datafiles) / "11013.json",
-            sgh_path=Path(datafiles) / "sgh_utilmd.json",
+            sgh_path=Path(datafiles) / "UTILMD.sgh.json",
             template_path=Path(datafiles) / Path("UTILMD5.2e.template"),
             maus_path=Path("edifact-templates/maus/FV2210/UTILMD/11013_maus.json"),
         )
@@ -27,7 +27,7 @@ class TestEogMaus:
     def test_maus_creation_11014_52e(self, datafiles):
         create_maus_and_assert(
             flat_ahb_path=Path(datafiles) / "11014.json",
-            sgh_path=Path(datafiles) / "sgh_utilmd.json",
+            sgh_path=Path(datafiles) / "UTILMD.sgh.json",
             template_path=Path(datafiles) / Path("UTILMD5.2e.template"),
             maus_path=Path("edifact-templates/maus/FV2210/UTILMD/11014_maus.json"),
         )
@@ -38,7 +38,7 @@ class TestEogMaus:
     def test_maus_creation_11015_52e(self, datafiles):
         create_maus_and_assert(
             flat_ahb_path=Path(datafiles) / "11015.json",
-            sgh_path=Path(datafiles) / "sgh_utilmd.json",
+            sgh_path=Path(datafiles) / "UTILMD.sgh.json",
             template_path=Path(datafiles) / Path("UTILMD5.2e.template"),
             maus_path=Path("edifact-templates/maus/FV2210/UTILMD/11015_maus.json"),
         )
