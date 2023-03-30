@@ -1,21 +1,19 @@
-# This workflows will upload a Python Package using Twine when a release is created
-# For more information see: https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions#publishing-to-package-registries
-
-name: Upload Python Package
+name: Release
 
 on:
-  release:
-    branches: main
-    types: [created, edited]
+  push:
+    branches:
+      - main
+    tags:
+      - v*.*.*
 
 jobs:
   tests:
-    if: startsWith(github.ref, 'refs/tags/v')
-    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        python-version: [3.9]
+        python-version: [3.11]
         os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -58,3 +56,40 @@ jobs:
         with:
           user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}
+
+  release:
+    needs: build-n-publish
+    strategy:
+      matrix:
+        python-version: ["3.11"]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Generate release notes
+        uses: release-drafter/release-drafter@v5
+        with:
+          version: ${{ github.ref }}
+          publish: true
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Executable
+        run: |
+          pyinstaller --onefile --name maus_cli src/maus/__init__.py
+
+      - name: Upload Executable to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./dist/maus_cli${{ runner.os == 'Windows' && '.exe' || '' }}
+          asset_name: maus_cli${{ runner.os == 'Windows' && '.exe' || '' }}
+          asset_content_type: application/octet-stream
