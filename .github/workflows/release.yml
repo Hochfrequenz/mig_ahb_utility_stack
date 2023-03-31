@@ -33,7 +33,11 @@ jobs:
 
   build-n-publish:
     name: Build and publish Python 🐍 distributions 📦 to PyPI and TestPyPI
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.11]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
     needs: tests
     steps:
       - uses: actions/checkout@v3
