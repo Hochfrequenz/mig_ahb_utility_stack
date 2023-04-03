@@ -42,7 +42,7 @@ SEGMENT_GROUP_KEY: "SG" INT|"UNH"|"UNB" // e.g. "SG12"
 _parser = Lark(GRAMMAR)
 
 
-def read_tree(tree: Union[str | Path]) -> Tree:
+def read_tree(tree: Union[str, Path]) -> Tree:
     """
     tries to parse the given tree using our .tree grammar.
     :param tree: string with the .tree content or the path to the tree file
