@@ -28,13 +28,15 @@ dependencies = [
     "marshmallow>=3.18.0",
     "more_itertools",
     "xmltodict",
-    "click"
+    "click",
+    "lark>=1.1.5"
     # add everything you add in requirements.in here
 ]
 dynamic = ["readme", "version"]
 
 [project.optional-dependencies]
-xml = ["lxml>=4.9.2", "xmltodict"]
+xml = ["lxml>=4.9.2", "xmltodict"] # for parsing the Hochfrequenz MIG templates
+tree = ["lark>=1.1.5"] # for parsing the Hochfrequenz .tree files
 
 [project.urls]
 Changelog = "https://github.com/Hochfrequenz/mig_ahb_utility_stack/releases"
