@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest  # type:ignore[import]
 
-from maus.reader.tree_to_sgh import read_tree, check_file_can_be_parsed_as_tree
+from maus.reader.tree_to_sgh import check_file_can_be_parsed_as_tree, read_tree
 
 
 class TestTreeToSgh:
