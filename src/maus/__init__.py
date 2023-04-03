@@ -40,9 +40,17 @@ def main(
     output_path: Path,
 ):
     """
-    The main entry point for the maus command line interface
+    🐭 MAUS CLI is a standalone executable that generates .maus.json files from given input data
     """
-
+    if (
+        check_path is None
+        and flat_ahb_path is None
+        and output_path is None
+        and sgh_path is None
+        and template_path is None
+    ):
+        click.secho("Seems like you provided no arguments at all. Please use --help to see possible options")
+        raise click.Abort()
     with open(flat_ahb_path, "r", encoding="utf-8") as flat_ahb_file:
         flat_ahb = FlatAnwendungshandbuchSchema().load(json.load(flat_ahb_file))
     with open(sgh_path, "r", encoding="utf-8") as sgh_file:
@@ -55,7 +63,7 @@ def main(
 
     if output_path is not None and check_path is not None:
         click.secho("❌ You can only specify one of the output_path and maus_to_check_path parameters", fg="red")
-        click.Abort()  # pylint:disable=pointless-exception-statement
+        raise click.Abort()
 
     if output_path is not None:
         maus_dict = DeepAnwendungshandbuchSchema().dump(maus)
