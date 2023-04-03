@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest  # type:ignore[import]
 
-from maus.reader.tree_to_sgh import read_tree
+from maus.reader.tree_to_sgh import read_tree, check_file_can_be_parsed_as_tree
 
 
 class TestTreeToSgh:
@@ -12,6 +12,16 @@ class TestTreeToSgh:
 
     @pytest.mark.datafiles("./migs/FV2210/segment_group_hierarchies/UTILTS1.1a.tree")
     @pytest.mark.parametrize("filename", ["UTILTS1.1a.tree"])
-    def test_get_edifact_format(self, datafiles, filename: str):
+    def test_read_tree(self, datafiles, filename: str):
         tree = read_tree(Path(datafiles / Path(filename)))
         assert tree is not None
+
+    @pytest.mark.datafiles("./migs/FV2210/segment_group_hierarchies/UTILTS1.1a.tree")
+    @pytest.mark.parametrize("filename", ["UTILTS1.1a.tree"])
+    def test_check_file_can_be_parsed_as_tree(self, datafiles, filename: str):
+        check_file_can_be_parsed_as_tree(Path(datafiles / Path(filename)))
+
+    def test_get_edifact_format_error(self):
+        something_which_is_not_a_str = 17
+        with pytest.raises(ValueError):
+            _ = read_tree(something_which_is_not_a_str)  # type:ignore[arg-type]
