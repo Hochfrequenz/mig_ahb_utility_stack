@@ -4,6 +4,8 @@ A module to parse Hochfrequenz .tree files and return them as Segment Group Hier
 from pathlib import Path
 from typing import Union
 
+from more_itertools import first
+
 try:
     from lark import Lark, Tree
 except ImportError as import_error:
@@ -67,3 +69,20 @@ def check_file_can_be_parsed_as_tree(file_path: Path) -> None:
     In case of error an exception is raised.
     """
     _ = read_tree(file_path)
+
+
+def check_youngest_tree_is_parseable(dir_path: Path) -> None:
+    """
+    applies check_file_can_be_parsed_as_tree to the latest .tree file in the given directory
+    :param dir_path:
+    :return: nothing
+    """
+    if not dir_path.exists():
+        return
+    if not dir_path.is_dir():
+        raise ValueError(f"You must only provide a directory path to this function but '{dir_path}' is not")
+    tree_files_in_directory = sorted(dir_path.glob("*.tree"), reverse=True)
+    if len(tree_files_in_directory) == 0:
+        return
+    relevant_file_to_check = first(tree_files_in_directory)
+    check_file_can_be_parsed_as_tree(relevant_file_to_check)
