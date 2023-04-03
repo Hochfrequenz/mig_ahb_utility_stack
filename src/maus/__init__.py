@@ -20,11 +20,32 @@ from maus.reader.mig_xml_reader import MigXmlReader
 @click.command()
 @click.version_option()
 @click.option(
-    "-fap", "--flat_ahb_path", type=click.Path(exists=True, path_type=Path), help="Path to the flat ahb json file"
+    "-fap",
+    "--flat_ahb_path",
+    type=click.Path(exists=True, path_type=Path),
+    help="Path to the flat ahb json file",
+    required=True,
 )
-@click.option("-sghp", "--sgh_path", type=click.Path(exists=True, path_type=Path), help="Path to the sgh json file")
-@click.option("-tp", "--template_path", type=click.Path(exists=True, path_type=Path), help="Path to the template file")
-@click.option("-cp", "--check_path", type=click.Path(exists=True, path_type=Path), help="Path to the maus json file")
+@click.option(
+    "-sghp",
+    "--sgh_path",
+    type=click.Path(exists=True, path_type=Path),
+    help="Path to the sgh json file",
+    required=True,
+)
+@click.option(
+    "-tp",
+    "--template_path",
+    type=click.Path(exists=True, path_type=Path),
+    help="Path to the template file",
+    required=True,
+)
+@click.option(
+    "-cp",
+    "--check_path",
+    type=click.Path(exists=True, path_type=Path),
+    help="Path to the maus json file",
+)
 @click.option(
     "-o",
     "--output_path",
@@ -42,15 +63,14 @@ def main(
     """
     🐭 MAUS CLI is a standalone executable that generates .maus.json files from given input data
     """
-    if (
-        check_path is None
-        and flat_ahb_path is None
-        and output_path is None
-        and sgh_path is None
-        and template_path is None
-    ):
-        click.secho("Seems like you provided no arguments at all. Please use --help to see possible options")
+
+    if check_path is None and output_path is None:
+        click.secho(
+            "❌ You need to specify either the `output_path` or the `check_path` parameter. Please use --help to see more information.",
+            fg="red",
+        )
         raise click.Abort()
+
     with open(flat_ahb_path, "r", encoding="utf-8") as flat_ahb_file:
         flat_ahb = FlatAnwendungshandbuchSchema().load(json.load(flat_ahb_file))
     with open(sgh_path, "r", encoding="utf-8") as sgh_file:
