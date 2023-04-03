@@ -65,6 +65,7 @@ def main(
     """
 
     if check_path is None and output_path is None:
+        # pylint:disable=line-too-long
         click.secho(
             "❌ You need to specify either the `output_path` or the `check_path` parameter. Please use --help to see more information.",
             fg="red",
