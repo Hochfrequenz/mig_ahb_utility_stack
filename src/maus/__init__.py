@@ -64,7 +64,7 @@ def main(
     🐭 MAUS CLI is a standalone executable that generates .maus.json files from given input data
     """
 
-    if check_path is None and output_path is None:
+    if check_path is None and output_path is None or check_path is not None and output_path is not None:
         # pylint:disable=line-too-long
         click.secho(
             "❌ You need to specify either the `output_path` or the `check_path` parameter. Please use --help to see more information.",
