@@ -12,5 +12,5 @@ class TestTreeToSgh:
     @pytest.mark.datafiles("./migs/FV2210/segment_group_hierarchies/UTILTS1.1a.tree")
     @pytest.mark.parametrize("filename", ["UTILTS1.1a.tree"])
     def test_get_edifact_format(self, datafiles, filename: str):
-        tree = read_tree(datafiles / Path(filename))
+        tree = read_tree(Path(datafiles / Path(filename)))
         assert tree is not None

@@ -5,7 +5,6 @@ from pathlib import Path
 from typing import Union
 
 from more_itertools import first
-from py._path.local import LocalPath  # pylint:disable=import-error
 
 try:
     from lark import Lark, Tree
@@ -50,7 +49,7 @@ def read_tree(tree: Union[str | Path]) -> Tree:
     :return: a parsed tree
     """
     tree_str: str
-    if isinstance(tree, Path | LocalPath):
+    if isinstance(tree, Path):
         with open(tree, "r", encoding="utf-8") as tree_file:
             tree_str = tree_file.read()
     elif isinstance(tree, str):
