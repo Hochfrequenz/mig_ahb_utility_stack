@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pytest  # type:ignore[import]
+
 from maus.reader.tree_to_sgh import read_tree
 
 
