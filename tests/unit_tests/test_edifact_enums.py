@@ -25,6 +25,8 @@ class TestEdifact:
             ("11042", EdifactFormat.UTILMD),
             ("13002", EdifactFormat.MSCONS),
             ("25001", EdifactFormat.UTILTS),
+            ("44001", EdifactFormat.UTILMD),
+            ("55001", EdifactFormat.UTILMD),
         ],
     )
     def test_pruefi_to_format(self, expectation_tuple: Tuple[str, EdifactFormat]):
