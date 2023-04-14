@@ -16,7 +16,7 @@ pluggy==1.0.0
     # via pytest
 ply==3.11
     # via jsonpath-ng
-pytest==7.3.0
+pytest==7.3.1
     # via
     #   -r dev_requirements/requirements-unit_tests.in
     #   pytest-asyncio
