@@ -2,4 +2,7 @@ attrs
 marshmallow
 lxml>=4.9.2
 more_itertools
-# whenever adding something here, don't forget to also add it to setup.cfg
+xmltodict
+click
+lark
+# whenever adding something here, don't forget to also add it to pyproject.toml dependencies
