@@ -77,7 +77,7 @@ jobs:
       - name: Build Executable
         run: |
           pip install tox
-          tox -e build_executable
+          tox -e build_executable -- --name maus_cli_${{ runner.os == 'Windows' && 'win' || runner.os == 'macOS' && 'macos' || 'linux' }}
 
       - name: Generate release notes
         id: create_release_notes
@@ -93,4 +93,4 @@ jobs:
         with:
           body: ${{ steps.create_release_notes.outputs.body }}
           files: |
-            ./dist/maus_cli${{ runner.os == 'Windows' && '.exe' || '' }}${{ runner.os == 'macOS' && '_macos.app' || '' }}
+            ./dist/maus_cli_${{ runner.os == 'Windows' && 'win' || runner.os == 'macOS' && 'macos' || 'linux' }}${{ runner.os == 'Windows' && '.exe' || '' }}
