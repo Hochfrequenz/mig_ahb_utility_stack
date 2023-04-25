@@ -78,11 +78,25 @@ jobs:
           p12-file-base64: ${{ secrets.DEVELOPER_CERT_BASE64 }}
           p12-password: ${{ secrets.DEVELOPER_CERT_PW }}
         if: matrix.os == 'macos-latest'
+      - name: Set up gon
+        run: |
+          brew tap mitchellh/gon
+          brew install mitchellh/gon/gon
       - name: Build Executable
         run: |
           pip install tox
           tox -e build_executable -- --name maus_cli_${{ runner.os == 'Windows' && 'win' || runner.os == 'macOS' && 'macos' || 'linux' }} --codesign-identity BC9D64D82416AF9EB2A9487FDBFAB05ED6B39CA3
-
+      - name: Notarize app
+        run: |
+          gon gon.json
+        env:
+          AC_PASSWORD: ${{ secrets.NOTARIZE_PASSWORD }}          
+        if: matrix.os == 'macos-latest'
+      - name: Staple app
+        run: |
+          xcrun stapler staple dist/maus_cli_macos
+          xcrun stapler validate dist/maus_cli_macos
+        if: matrix.os == 'macos-latest'
       - name: Generate release notes
         id: create_release_notes
         uses: release-drafter/release-drafter@v5
