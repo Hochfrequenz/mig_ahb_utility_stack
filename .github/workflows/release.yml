@@ -77,6 +77,7 @@ jobs:
         with:
           p12-file-base64: ${{ secrets.DEVELOPER_CERT_BASE64 }}
           p12-password: ${{ secrets.DEVELOPER_CERT_PW }}
+        if: matrix.os == 'macos-latest'
       - name: Build Executable
         run: |
           pip install tox
