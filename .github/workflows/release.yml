@@ -73,11 +73,14 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-
+      - uses: apple-actions/import-codesign-certs@v1
+        with:
+          p12-file-base64: ${{ secrets.DEVELOPER_CERT_BASE64 }}
+          p12-password: ${{ secrets.DEVELOPER_CERT_PW }}
       - name: Build Executable
         run: |
           pip install tox
-          tox -e build_executable -- --name maus_cli_${{ runner.os == 'Windows' && 'win' || runner.os == 'macOS' && 'macos' || 'linux' }}
+          tox -e build_executable -- --name maus_cli_${{ runner.os == 'Windows' && 'win' || runner.os == 'macOS' && 'macos' || 'linux' }} ----codesign-identity BC9D64D82416AF9EB2A9487FDBFAB05ED6B39CA3
 
       - name: Generate release notes
         id: create_release_notes
