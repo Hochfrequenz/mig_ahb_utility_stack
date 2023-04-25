@@ -81,7 +81,7 @@ jobs:
       - name: Build Executable
         run: |
           pip install tox
-          tox -e build_executable -- --name maus_cli_${{ runner.os == 'Windows' && 'win' || runner.os == 'macOS' && 'macos' || 'linux' }} ----codesign-identity BC9D64D82416AF9EB2A9487FDBFAB05ED6B39CA3
+          tox -e build_executable -- --name maus_cli_${{ runner.os == 'Windows' && 'win' || runner.os == 'macOS' && 'macos' || 'linux' }} --codesign-identity BC9D64D82416AF9EB2A9487FDBFAB05ED6B39CA3
 
       - name: Generate release notes
         id: create_release_notes
