@@ -82,6 +82,7 @@ jobs:
         run: |
           brew tap mitchellh/gon
           brew install mitchellh/gon/gon
+        if: matrix.os == 'macos-latest'
       - name: Build Executable
         run: |
           pip install tox
