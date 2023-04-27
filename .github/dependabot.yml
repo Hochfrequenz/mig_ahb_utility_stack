@@ -11,12 +11,6 @@ updates:
       interval: "daily"
     reviewers:
       - "@Hochfrequenz/python-developers-review-team"
-  - package-ecosystem: "pip" # See documentation for possible values
-    directory: "/dev_requirements" # Location of package manifests
-    schedule:
-      interval: "weekly"
-    reviewers:
-      - "@Hochfrequenz/python-developers-review-team"
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
