@@ -9,7 +9,7 @@ decorator==5.1.1
 iniconfig==2.0.0
     # via pytest
 jsonpath-ng==1.5.3
-    # via -r dev_requirements/requirements-unit_tests.in
+    # via -r requirements-unit_tests.in
 packaging==23.0
     # via pytest
 pluggy==1.0.0
@@ -18,12 +18,12 @@ ply==3.11
     # via jsonpath-ng
 pytest==7.3.1
     # via
-    #   -r dev_requirements/requirements-unit_tests.in
+    #   -r requirements-unit_tests.in
     #   pytest-asyncio
     #   pytest-datafiles
 pytest-asyncio==0.21.0
-    # via -r dev_requirements/requirements-unit_tests.in
+    # via -r requirements-unit_tests.in
 pytest-datafiles==3.0.0
-    # via -r dev_requirements/requirements-unit_tests.in
+    # via -r requirements-unit_tests.in
 six==1.16.0
     # via jsonpath-ng
