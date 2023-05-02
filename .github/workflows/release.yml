@@ -103,6 +103,10 @@ jobs:
           xcrun stapler staple dist/maus_cli_macos.app
           xcrun stapler validate dist/maus_cli_macos.app
         if: matrix.os == 'macos-latest'
+      - name: Repackage stapled app
+        run: |
+          rm -rf dist/maus_cli_macos.zip
+          ditto -c -k --keepParent "dist/maus_cli_macos.app" dist/maus_cli_macos.zip
       - name: Generate release notes
         id: create_release_notes
         uses: release-drafter/release-drafter@v5
@@ -117,4 +121,4 @@ jobs:
         with:
           body: ${{ steps.create_release_notes.outputs.body }}
           files: |
-            ./dist/maus_cli*
+            ./dist/maus_cli_${{ runner.os == 'Windows' && 'win' || runner.os == 'macOS' && 'macos' || 'linux' }}${{ runner.os == 'Windows' && '.exe' || runner.os == 'macOS' && '.zip' || '' }}
