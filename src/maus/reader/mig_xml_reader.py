@@ -3,7 +3,7 @@ contains the MigXmlReader - a MIG Reader that is based on XML MIGs (and therefor
 """
 import re
 from pathlib import Path
-from typing import List, Optional, Set, TypeVar, Union
+from typing import List, Set, TypeVar, Union
 from xml.etree.ElementTree import Element
 
 
@@ -52,22 +52,13 @@ class MigXmlReader(MigReader):
 
     def __init__(self, init_param: Union[str, Path]):
         self._original_root: etree._Element
-        xslt_path: Path
         if isinstance(init_param, str):
             self._original_root = etree.fromstring(init_param)
             self._sanitized_root = etree.fromstring(init_param)
-            xslt_path = Path(init_param.replace(".template", ".template.xslt"))
         elif isinstance(init_param, Path):
             self._original_root = etree.parse(str(init_param.absolute())).getroot()
-            self._sanitized_root = etree.parse(str(init_param.absolute())).getroot()
-            xslt_path = init_param.with_suffix(".template.xslt")
         else:
             raise ValueError(f"The type of '{init_param}' is not valid")
-        if xslt_path.exists():
-            xslt_doc = etree.parse(xslt_path)
-            xslt_transformation = etree.XSLT(xslt_doc)
-            self._original_root = etree.fromstring(str(xslt_transformation(self._original_root)))
-            self._sanitized_root = etree.fromstring(str(xslt_transformation(self._sanitized_root)))
         # self._unpack_virtual_groups() # check if this is needed at some point in the future; I don't know yet
         # the original tree is the unmodified MIG XML Structure with all its quircks
         self._original_tree: etree.ElementTree = etree.ElementTree(self._original_root)
