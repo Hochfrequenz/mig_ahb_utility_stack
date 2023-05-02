@@ -86,7 +86,10 @@ jobs:
       - name: Build Executable
         run: |
           pip install tox
-          tox -e build_executable -- --name maus_cli_${{ runner.os == 'Windows' && 'win' || runner.os == 'macOS' && 'macos' || 'linux' }} --codesign-identity BC9D64D82416AF9EB2A9487FDBFAB05ED6B39CA3
+          tox -e build_executable -- --name maus_cli_${{ runner.os == 'Windows' && 'win' || runner.os == 'macOS' && 'macos.app' || 'linux' }} --codesign-identity BC9D64D82416AF9EB2A9487FDBFAB05ED6B39CA3 --windowed
+      - name: Package app
+        run: |
+          ditto -c -k --keepParent "maus_cli_macos.app" maus_cli_macos.zip
       - name: Notarize app
         run: |
           gon gon.json
@@ -95,8 +98,8 @@ jobs:
         if: matrix.os == 'macos-latest'
       - name: Staple app
         run: |
-          xcrun stapler staple dist/maus_cli_macos
-          xcrun stapler validate dist/maus_cli_macos
+          xcrun stapler staple maus_cli_macos.app
+          xcrun stapler validate maus_cli_macos.app
         if: matrix.os == 'macos-latest'
       - name: Generate release notes
         id: create_release_notes
