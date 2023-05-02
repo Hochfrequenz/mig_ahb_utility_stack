@@ -107,6 +107,7 @@ jobs:
         run: |
           rm -rf dist/maus_cli_macos.zip
           ditto -c -k --keepParent "dist/maus_cli_macos.app" dist/maus_cli_macos.zip
+        if: matrix.os == 'macos-latest'
       - name: Generate release notes
         id: create_release_notes
         uses: release-drafter/release-drafter@v5
