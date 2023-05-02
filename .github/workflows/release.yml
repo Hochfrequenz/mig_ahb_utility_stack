@@ -72,6 +72,7 @@ jobs:
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
+          architecture: x64
           python-version: ${{ matrix.python-version }}
       - uses: apple-actions/import-codesign-certs@v1
         with:
