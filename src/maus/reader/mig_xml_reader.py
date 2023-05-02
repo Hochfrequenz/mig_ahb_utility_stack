@@ -6,7 +6,6 @@ from pathlib import Path
 from typing import List, Optional, Set, TypeVar, Union
 from xml.etree.ElementTree import Element
 
-from lxml.etree import XSLT
 
 try:
     from lxml import etree  # type:ignore[import]

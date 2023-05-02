@@ -22,7 +22,6 @@ class TestAnmeldungMaus:
         )
 
     @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2e.template")
-    @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2e.template.xslt")
     @pytest.mark.datafiles("../../machine-readable_anwendungshandbuecher/FV2210/UTILMD/flatahb/11002.json")
     @pytest.mark.datafiles("./edifact-templates/segment_group_hierarchies/FV2210/UTILMD.sgh.json")
     def test_maus_creation_11002_52e(self, datafiles):
