@@ -100,10 +100,10 @@ jobs:
         if: matrix.os == 'macos-latest'
       - name: Staple app
         run: |
-          ls dist/* -lisa
+          ls dist/*
           xcrun stapler staple dist/maus_cli_macos.app
           xcrun stapler validate dist/maus_cli_macos.app
-          ls dist/* -lisa
+          ls dist/*
         if: matrix.os == 'macos-latest'
       - name: Repackage stapled app
         run: |
