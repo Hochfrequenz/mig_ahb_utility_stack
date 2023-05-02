@@ -117,4 +117,4 @@ jobs:
         with:
           body: ${{ steps.create_release_notes.outputs.body }}
           files: |
-            ./dist/maus_cli_${{ runner.os == 'Windows' && 'win' || runner.os == 'macOS' && 'macos' || 'linux' }}${{ runner.os == 'Windows' && '.exe' || '' }}
+            ./dist/maus_cli_${{ runner.os == 'Windows' && 'win' || runner.os == 'macOS' && 'macos.app' || 'linux' }}${{ runner.os == 'Windows' && '.exe' || '' }}
