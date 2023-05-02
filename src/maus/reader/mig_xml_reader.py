@@ -144,10 +144,16 @@ class MigXmlReader(MigReader):
         :return: None if no perfect match was found; the perfect match otherwise
         """
         all_explicit_locations = self._original_tree.xpath(f"//ahbLocations")
+        location_layers_only = AhbLocation(
+            layers=ahb_location.layers, data_element_id=None, qualifier=None
+        )
         for explicit_locations in all_explicit_locations:
             locations_from_mig_xml = from_xml_elements(explicit_locations)
             for location_from_mig_xml in locations_from_mig_xml:
-                if ahb_location==location_from_mig_xml:
+                location_layers_from_mig_xml = AhbLocation(
+                    layers=location_from_mig_xml.layers, data_element_id=None, qualifier=None
+                )
+                if ahb_location==location_from_mig_xml or (location_layers_only==location_layers_from_mig_xml and ahb_location.data_element_id is None):
                     result = explicit_locations.getparent()
                     if ahb_location.data_element_id is None:
                         while result.tag!="class":
