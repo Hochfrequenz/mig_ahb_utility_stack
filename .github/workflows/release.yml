@@ -63,7 +63,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.11"]
-        os: [ubuntu-latest, windows-latest, [self-hosted, macos-latest]]
+        os: [ubuntu-latest, windows-latest, [macos-latest]]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout code
@@ -87,7 +87,7 @@ jobs:
       - name: Build Executable
         run: |
           pip install tox
-          tox -e build_executable -- --name maus_cli_${{ runner.os == 'Windows' && 'win' || runner.os == 'macOS' && 'macos.app' || 'linux' }} --codesign-identity BC9D64D82416AF9EB2A9487FDBFAB05ED6B39CA3 --windowed
+          tox -e build_executable -- --name maus_cli_${{ runner.os == 'Windows' && 'win' || runner.os == 'macOS' && 'macos' || 'linux' }} --codesign-identity BC9D64D82416AF9EB2A9487FDBFAB05ED6B39CA3 --windowed
       - name: Package app
         run: |
           ditto -c -k --keepParent "dist/maus_cli_macos.app" dist/maus_cli_macos.zip
