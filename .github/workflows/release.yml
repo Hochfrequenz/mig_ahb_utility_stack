@@ -90,6 +90,7 @@ jobs:
       - name: Package app
         run: |
           ditto -c -k --keepParent "maus_cli_macos.app" maus_cli_macos.zip
+        if: matrix.os == 'macos-latest'
       - name: Notarize app
         run: |
           gon gon.json
