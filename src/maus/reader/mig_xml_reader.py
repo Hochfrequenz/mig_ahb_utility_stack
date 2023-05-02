@@ -3,9 +3,10 @@ contains the MigXmlReader - a MIG Reader that is based on XML MIGs (and therefor
 """
 import re
 from pathlib import Path
-from typing import List, Set, TypeVar, Union
+from typing import List, Set, TypeVar, Union, Optional
 from xml.etree.ElementTree import Element
 
+from maus.reader.ahb_location_xml import from_xml_elements
 
 try:
     from lxml import etree  # type:ignore[import]
@@ -57,6 +58,7 @@ class MigXmlReader(MigReader):
             self._sanitized_root = etree.fromstring(init_param)
         elif isinstance(init_param, Path):
             self._original_root = etree.parse(str(init_param.absolute())).getroot()
+            self._sanitized_root = etree.parse(str(init_param.absolute())).getroot()
         else:
             raise ValueError(f"The type of '{init_param}' is not valid")
         # self._unpack_virtual_groups() # check if this is needed at some point in the future; I don't know yet
@@ -135,6 +137,25 @@ class MigXmlReader(MigReader):
         # todo: what if there are >1 matches. using the first one just hides data problems. we should use one instead
         return first(possible_results)
 
+    def _find_element_using_explicit_location(self, ahb_location: AhbLocation) -> Optional[Element]:
+        """
+        find the perfect match, if it exists
+        :param ahb_location:
+        :return: None if no perfect match was found; the perfect match otherwise
+        """
+        all_explicit_locations = self._original_tree.xpath(f"//ahbLocations")
+        for explicit_locations in all_explicit_locations:
+            locations_from_mig_xml = from_xml_elements(explicit_locations)
+            for location_from_mig_xml in locations_from_mig_xml:
+                if ahb_location==location_from_mig_xml:
+                    result = explicit_locations.getparent()
+                    if ahb_location.data_element_id is None:
+                        while result.tag!="class":
+                            result = result.getparent()
+                    return result
+        return None
+
+
     # First make it work, then split it up
     # pylint:disable=too-many-branches
     def get_element(self, ahb_location: AhbLocation) -> Element:
@@ -143,6 +164,8 @@ class MigXmlReader(MigReader):
         Raises ValueErrors if it cannot find the group or the result would be ambiguous.
         """
         candidates: List[Element]
+        if (perfect_match := self._find_element_using_explicit_location(ahb_location)) is not None:
+            return perfect_match
         final_query_path = f"/{self.get_format_name()}/class[@ref='/']"
         for layer in ahb_location.layers:
             query_path = final_query_path + f"/class[@ref='{layer.segment_group_key or 'UNH'}']"
