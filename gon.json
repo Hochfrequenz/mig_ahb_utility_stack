@@ -1,7 +1,7 @@
 {
 	"notarize": [
 		{
-			"path": "maus_cli_macos.zip",
+			"path": "dist/maus_cli_macos.zip",
 			"bundle_id": "de.hochfrequenz.maus",
 			"staple": false
 		}
