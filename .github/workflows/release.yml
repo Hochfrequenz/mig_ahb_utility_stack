@@ -87,7 +87,7 @@ jobs:
       - name: Build Executable
         run: |
           pip install tox
-          tox -e build_executable -- --name maus_cli_${{ runner.os == 'Windows' && 'win' || runner.os == 'macOS' && 'macos' || 'linux' }} --codesign-identity BC9D64D82416AF9EB2A9487FDBFAB05ED6B39CA3 --windowed
+          tox -e build_executable -- --name maus_cli_${{ runner.os == 'Windows' && 'win' || runner.os == 'macOS' && 'macos' || 'linux' }} --codesign-identity BC9D64D82416AF9EB2A9487FDBFAB05ED6B39CA3 --windowed --target-arch universal2 --osx-bundle-identifier de.hochfrequenz.maus
       - name: Package app
         run: |
           ditto -c -k --keepParent "dist/maus_cli_macos.app" dist/maus_cli_macos.zip
