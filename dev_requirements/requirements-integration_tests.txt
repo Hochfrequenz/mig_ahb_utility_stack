@@ -10,9 +10,9 @@ packaging==23.0
     # via pytest
 pluggy==1.0.0
     # via pytest
-pytest==7.3.0
+pytest==7.3.1
     # via
-    #   -r dev_requirements/requirements-integration_tests.in
+    #   -r requirements-integration_tests.in
     #   pytest-datafiles
 pytest-datafiles==3.0.0
-    # via -r dev_requirements/requirements-integration_tests.in
+    # via -r requirements-integration_tests.in
