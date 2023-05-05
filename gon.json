@@ -1,0 +1,13 @@
+{
+  "notarize": [
+    {
+      "path": "dist/maus_cli_macos.zip",
+      "bundle_id": "de.hochfrequenz.maus",
+      "staple": false
+    }
+  ],
+
+  "apple_id": {
+    "username": "joscha.metze@hochfrequenz.de"
+  }
+}
