@@ -72,13 +72,44 @@ jobs:
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
+          architecture: x64
           python-version: ${{ matrix.python-version }}
-
+      - uses: apple-actions/import-codesign-certs@v1
+        with:
+          p12-file-base64: ${{ secrets.DEVELOPER_CERT_BASE64 }}
+          p12-password: ${{ secrets.DEVELOPER_CERT_PW }}
+        if: matrix.os == 'macos-latest'
+      - name: Set up gon
+        run: |
+          brew tap mitchellh/gon
+          brew install mitchellh/gon/gon
+        if: matrix.os == 'macos-latest'
       - name: Build Executable
         run: |
           pip install tox
-          tox -e build_executable -- --name maus_cli_${{ runner.os == 'Windows' && 'win' || runner.os == 'macOS' && 'macos' || 'linux' }}
-
+          tox -e build_executable -- -w --name maus_cli_${{ runner.os == 'Windows' && 'win' || runner.os == 'macOS' && 'macos' || 'linux' }} --codesign-identity BC9D64D82416AF9EB2A9487FDBFAB05ED6B39CA3 --target-arch universal2 --osx-bundle-identifier de.hochfrequenz.maus
+      - name: Package app
+        run: |
+          ditto -c -k --keepParent "dist/maus_cli_macos.app" dist/maus_cli_macos.zip
+        if: matrix.os == 'macos-latest'
+      - name: Notarize app
+        run: |
+          gon gon.json
+        env:
+          AC_PASSWORD: ${{ secrets.NOTARIZE_PASSWORD }}
+        if: matrix.os == 'macos-latest'
+      - name: Staple app
+        run: |
+          ls dist/*
+          xcrun stapler staple dist/maus_cli_macos.app
+          xcrun stapler validate dist/maus_cli_macos.app
+          ls dist/*
+        if: matrix.os == 'macos-latest'
+      - name: Repackage stapled app
+        run: |
+          rm -rf dist/maus_cli_macos.zip
+          ditto -c -k --keepParent "dist/maus_cli_macos.app" dist/maus_cli_macos.zip
+        if: matrix.os == 'macos-latest'
       - name: Generate release notes
         id: create_release_notes
         uses: release-drafter/release-drafter@v5
@@ -93,4 +124,4 @@ jobs:
         with:
           body: ${{ steps.create_release_notes.outputs.body }}
           files: |
-            ./dist/maus_cli_${{ runner.os == 'Windows' && 'win' || runner.os == 'macOS' && 'macos' || 'linux' }}${{ runner.os == 'Windows' && '.exe' || '' }}
+            ./dist/maus_cli_${{ runner.os == 'Windows' && 'win' || runner.os == 'macOS' && 'macos' || 'linux' }}${{ runner.os == 'Windows' && '.exe' || runner.os == 'macOS' && '' || '' }}
