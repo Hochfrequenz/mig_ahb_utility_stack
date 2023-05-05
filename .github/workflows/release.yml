@@ -96,7 +96,7 @@ jobs:
         run: |
           gon gon.json
         env:
-          AC_PASSWORD: ${{ secrets.NOTARIZE_PASSWORD }}          
+          AC_PASSWORD: ${{ secrets.NOTARIZE_PASSWORD }}
         if: matrix.os == 'macos-latest'
       - name: Staple app
         run: |
