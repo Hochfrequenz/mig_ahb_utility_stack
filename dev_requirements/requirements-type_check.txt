@@ -4,11 +4,11 @@
 #
 #    pip-compile dev_requirements/requirements-type_check.in
 #
-mypy==1.2.0
+mypy==1.3.0
     # via -r dev_requirements/requirements-type_check.in
 mypy-extensions==1.0.0
     # via mypy
 types-xmltodict==0.13.0.2
-    # via -r requirements-type_check.in
+    # via -r dev_requirements/requirements-type_check.in
 typing-extensions==4.5.0
     # via mypy
