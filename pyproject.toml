@@ -43,7 +43,7 @@ Documentation = "https://maus.readthedocs.io/en/latest/"
 
 # wird das tool als CLI script verwendet, dann muss hier der Name des Scripts angegeben werden
 [project.scripts]
-maus = "maus:main"
+maus = "maus.cli:main"
 
 [tool.hatch.metadata.hooks.fancy-pypi-readme]
 content-type = "text/x-rst"
