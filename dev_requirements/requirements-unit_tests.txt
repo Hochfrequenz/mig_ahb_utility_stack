@@ -21,7 +21,7 @@ pytest==7.4.0
     #   -r dev_requirements/requirements-unit_tests.in
     #   pytest-asyncio
     #   pytest-datafiles
-pytest-asyncio==0.21.0
+pytest-asyncio==0.21.1
     # via -r dev_requirements/requirements-unit_tests.in
 pytest-datafiles==3.0.0
     # via -r dev_requirements/requirements-unit_tests.in
