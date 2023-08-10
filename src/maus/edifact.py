@@ -91,7 +91,7 @@ def get_edifact_format_version(key_date: datetime.datetime) -> EdifactFormatVers
         return EdifactFormatVersion.FV2110
     if key_date < datetime.datetime(2023, 3, 31, 22, 0, 0, 0, tzinfo=datetime.timezone.utc):
         return EdifactFormatVersion.FV2210
-    if key_date < datetime.datetime(2023, 9, 31, 22, 0, 0, 0, tzinfo=datetime.timezone.utc):
+    if key_date < datetime.datetime(2023, 9, 30, 22, 0, 0, 0, tzinfo=datetime.timezone.utc):
         return EdifactFormatVersion.FV2304
     if key_date < datetime.datetime(2024, 3, 31, 22, 0, 0, 0, tzinfo=datetime.timezone.utc):
         return EdifactFormatVersion.FV2310
