@@ -1,4 +1,4 @@
-attrs
+attrs>=22.1.0
 marshmallow
 lxml>=4.9.2
 more_itertools
