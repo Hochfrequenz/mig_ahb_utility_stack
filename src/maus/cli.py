@@ -4,7 +4,12 @@ the maus cli tool
 import json
 from pathlib import Path
 
-import click
+try:
+    import click
+except ImportError as import_error:
+    import_error.msg += "; Did you install maus[cli]?"
+    # click is only an optional dependency when maus is used as CLI tool
+    raise
 
 from maus.mig_ahb_matching import to_deep_ahb
 from maus.models.anwendungshandbuch import (
