@@ -10,5 +10,5 @@ mypy-extensions==1.0.0
     # via mypy
 types-xmltodict==0.13.0.3
     # via -r dev_requirements/requirements-type_check.in
-typing-extensions==4.5.0
+typing-extensions==4.7.1
     # via mypy
