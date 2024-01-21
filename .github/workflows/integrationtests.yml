@@ -15,7 +15,7 @@ jobs:
           token: ${{secrets.edifact_templates_pat}} # expires 2024-04-15
           submodules: "recursive"
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install Dependencies
