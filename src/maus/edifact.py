@@ -75,6 +75,9 @@ class EdifactFormatVersion(str, Enum):
     FV2304 = "FV2304"  #: valid from 2023-04-01 onwards
     FV2310 = "FV2310"  #: valid from 2023-10-01 onwards
     FV2404 = "FV2404"  #: valid from 2024-04-01 onwards
+    FV2410 = "FV2410"  #: valid from 2024-10-01 onwards
+    FV2504 = "FV2504"  #: valid from 2025-01-01 onwards
+    FV2510 = "FV2510"  #: valid from 2025-10-01 onwards
     # whenever you add another value here, please also make sure to add its key date to get_edifact_format_version below
 
     def __str__(self):
@@ -95,7 +98,13 @@ def get_edifact_format_version(key_date: datetime.datetime) -> EdifactFormatVers
         return EdifactFormatVersion.FV2304
     if key_date < datetime.datetime(2024, 3, 31, 22, 0, 0, 0, tzinfo=datetime.timezone.utc):
         return EdifactFormatVersion.FV2310
-    return EdifactFormatVersion.FV2404
+    if key_date < datetime.datetime(2024, 9, 30, 22, 0, 0, 0, tzinfo=datetime.timezone.utc):
+        return EdifactFormatVersion.FV2404
+    if key_date < datetime.datetime(2025, 3, 31, 22, 0, 0, 0, tzinfo=datetime.timezone.utc):
+        return EdifactFormatVersion.FV2410
+    if key_date < datetime.datetime(2025, 9, 30, 22, 0, 0, 0, tzinfo=datetime.timezone.utc):
+        return EdifactFormatVersion.FV2504
+    return EdifactFormatVersion.FV2510
 
 
 def get_current_edifact_format_version() -> EdifactFormatVersion:
