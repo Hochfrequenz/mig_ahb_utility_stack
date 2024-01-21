@@ -6,7 +6,7 @@
 #
 iniconfig==2.0.0
     # via pytest
-jsonpath-ng==1.6.0
+jsonpath-ng==1.6.1
     # via -r dev_requirements/requirements-unit_tests.in
 packaging==23.0
     # via pytest
