@@ -4,17 +4,17 @@
 #
 #    pip-compile requirements.in
 #
-attrs==23.1.0
+attrs==23.2.0
     # via -r requirements.in
 click==8.1.7
     # via -r requirements.in
 lark==1.1.8
     # via -r requirements.in
-lxml==4.9.3
+lxml==5.1.0
     # via -r requirements.in
-marshmallow==3.20.1
+marshmallow==3.20.2
     # via -r requirements.in
-more-itertools==10.1.0
+more-itertools==10.2.0
     # via -r requirements.in
 packaging==23.0
     # via marshmallow

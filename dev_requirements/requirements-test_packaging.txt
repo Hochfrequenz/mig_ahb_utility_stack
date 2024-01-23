@@ -7,14 +7,14 @@
 bleach==6.0.0
     # via readme-renderer
 build==1.0.3
-    # via -r requirements-test_packaging.in
+    # via -r dev_requirements/requirements-test_packaging.in
 certifi==2023.7.22
     # via requests
 cffi==1.15.1
     # via cryptography
 charset-normalizer==3.1.0
     # via requests
-cryptography==41.0.4
+cryptography==41.0.6
     # via secretstorage
 docutils==0.19
     # via readme-renderer
@@ -36,7 +36,7 @@ markdown-it-py==2.2.0
     # via rich
 mdurl==0.1.2
     # via markdown-it-py
-more-itertools==10.1.0
+more-itertools==10.2.0
     # via jaraco-classes
 packaging==23.0
     # via build
@@ -67,8 +67,8 @@ secretstorage==3.3.3
 six==1.16.0
     # via bleach
 twine==4.0.2
-    # via -r requirements-test_packaging.in
-urllib3==1.26.17
+    # via -r dev_requirements/requirements-test_packaging.in
+urllib3==1.26.18
     # via
     #   requests
     #   twine
