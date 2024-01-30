@@ -101,7 +101,7 @@ def get_edifact_format_version(key_date: datetime.datetime) -> EdifactFormatVers
         (datetime.datetime(2022, 9, 30, 22, 0, 0, 0, tzinfo=datetime.timezone.utc), EdifactFormatVersion.FV2110),
         (datetime.datetime(2023, 3, 31, 22, 0, 0, 0, tzinfo=datetime.timezone.utc), EdifactFormatVersion.FV2210),
         (datetime.datetime(2023, 9, 30, 22, 0, 0, 0, tzinfo=datetime.timezone.utc), EdifactFormatVersion.FV2304),
-        (datetime.datetime(2024, 3, 31, 22, 0, 0, 0, tzinfo=datetime.timezone.utc), EdifactFormatVersion.FV2310),
+        (datetime.datetime(2024, 4, 2, 22, 0, 0, 0, tzinfo=datetime.timezone.utc), EdifactFormatVersion.FV2310),
         (datetime.datetime(2024, 9, 30, 22, 0, 0, 0, tzinfo=datetime.timezone.utc), EdifactFormatVersion.FV2404),
         (datetime.datetime(2025, 3, 31, 22, 0, 0, 0, tzinfo=datetime.timezone.utc), EdifactFormatVersion.FV2410),
         (datetime.datetime(2025, 9, 30, 22, 0, 0, 0, tzinfo=datetime.timezone.utc), EdifactFormatVersion.FV2504),
