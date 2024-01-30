@@ -2,6 +2,7 @@
 This module contains (static) functions that process single lxml.etree Elements.
 Each function is separately unit tested.
 """
+
 import re
 from typing import List, Literal, Optional
 

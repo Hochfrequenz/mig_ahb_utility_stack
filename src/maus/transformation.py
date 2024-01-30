@@ -21,6 +21,7 @@ BDEW and edi@energy every 6 months. However, this comes with the price of having
 This module contains methods that are relevant when transforming data between your edi-similar structure ("EdiSeed")
 and the application domain ("non-edifact").
 """
+
 import asyncio
 from typing import Any, Awaitable, Dict, List, Mapping, Optional, Protocol, TypeVar
 

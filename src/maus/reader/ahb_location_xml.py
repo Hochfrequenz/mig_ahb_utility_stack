@@ -1,6 +1,7 @@
 """
 module that (de)serializes AhbLocations to/from XML
 """
+
 from typing import List, Union
 
 import attrs

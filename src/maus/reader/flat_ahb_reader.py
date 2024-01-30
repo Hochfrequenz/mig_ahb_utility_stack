@@ -1,6 +1,7 @@
 """
 A module that reads AHBs from a given CSV file
 """
+
 import csv
 import logging
 import re
@@ -273,13 +274,11 @@ class FlatAhbCsvReader(FlatAhbReader):
 
 
 @overload
-def _replace_hardcoded_section_names(section_name: str) -> str:
-    ...
+def _replace_hardcoded_section_names(section_name: str) -> str: ...
 
 
 @overload
-def _replace_hardcoded_section_names(section_name: Literal[None]) -> Literal[None]:
-    ...
+def _replace_hardcoded_section_names(section_name: Literal[None]) -> Literal[None]: ...
 
 
 def _replace_hardcoded_section_names(section_name: Optional[str]) -> Optional[str]:

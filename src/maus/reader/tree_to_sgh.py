@@ -1,6 +1,7 @@
 """
 A module to parse Hochfrequenz .tree files and return them as Segment Group Hierarchy
 """
+
 from pathlib import Path
 from typing import Union
 

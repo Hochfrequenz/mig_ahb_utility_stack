@@ -1,6 +1,7 @@
 """
 division helper is a module that allow to distinguish electricity ("Strom") and gas ("Gas")
 """
+
 from enum import Enum
 from typing import Optional
 
