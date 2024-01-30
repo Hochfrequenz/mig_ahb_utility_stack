@@ -1,6 +1,7 @@
 """
 Test the maus provider as a concept and the file based maus provider as an implementation.
 """
+
 import json
 from pathlib import Path
 

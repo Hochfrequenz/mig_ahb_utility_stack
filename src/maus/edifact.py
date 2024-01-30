@@ -1,6 +1,7 @@
 """
 This module manages EDIFACT related stuff. It's basically a helper module to avoid stringly typed parameters.
 """
+
 import datetime
 import re
 from enum import Enum
