@@ -1,6 +1,7 @@
 """
 example AHB data for 11042 as of 2021-10-01
 """
+
 from uuid import UUID
 
 from maus.models.anwendungshandbuch import AhbLine, AhbMetaInformation, FlatAnwendungshandbuch
