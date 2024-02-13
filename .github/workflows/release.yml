@@ -112,7 +112,7 @@ jobs:
         if: matrix.os == 'macos-latest'
       - name: Generate release notes
         id: create_release_notes
-        uses: release-drafter/release-drafter@v5
+        uses: release-drafter/release-drafter@v6
         with:
           config-name: release-drafter.yml
           version: ${{ github.ref }}
