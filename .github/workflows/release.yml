@@ -74,7 +74,7 @@ jobs:
         with:
           architecture: x64
           python-version: ${{ matrix.python-version }}
-      - uses: apple-actions/import-codesign-certs@v2
+      - uses: apple-actions/import-codesign-certs@v3
         with:
           p12-file-base64: ${{ secrets.DEVELOPER_CERT_BASE64 }}
           p12-password: ${{ secrets.DEVELOPER_CERT_PW }}
@@ -120,7 +120,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create Release and Upload Executable
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           body: ${{ steps.create_release_notes.outputs.body }}
           files: |
