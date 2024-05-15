@@ -1,19 +1,18 @@
 """
 This module contains helper methods that compare strings, especially names from AHB and MIG.
 """
+
 from typing import Literal, Optional, overload
 
 from lxml import etree  # type:ignore[import]
 
 
 @overload
-def make_name_comparable(orig_str: str) -> str:
-    ...
+def make_name_comparable(orig_str: str) -> str: ...
 
 
 @overload
-def make_name_comparable(orig_str: Literal[None]) -> Literal[None]:
-    ...
+def make_name_comparable(orig_str: Literal[None]) -> Literal[None]: ...
 
 
 def make_name_comparable(orig_str: Optional[str]) -> Optional[str]:

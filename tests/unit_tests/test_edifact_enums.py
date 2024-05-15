@@ -50,7 +50,10 @@ class TestEdifact:
             pytest.param(datetime(2022, 10, 1, 0, 0, 0, tzinfo=timezone.utc), EdifactFormatVersion.FV2210),
             pytest.param(datetime(2023, 12, 1, 0, 0, 0, tzinfo=timezone.utc), EdifactFormatVersion.FV2310),
             pytest.param(datetime(2024, 1, 1, 0, 0, 0, tzinfo=timezone.utc), EdifactFormatVersion.FV2310),
-            pytest.param(datetime(2024, 4, 1, 0, 0, 0, tzinfo=timezone.utc), EdifactFormatVersion.FV2404),
+            pytest.param(
+                datetime(2024, 4, 1, 0, 0, 0, tzinfo=timezone.utc), EdifactFormatVersion.FV2310
+            ),  # 2404 is valid form 2024-04-03 onwards
+            pytest.param(datetime(2024, 4, 2, 22, 0, 0, tzinfo=timezone.utc), EdifactFormatVersion.FV2404),
             pytest.param(datetime(2024, 9, 30, 21, 59, 59, tzinfo=timezone.utc), EdifactFormatVersion.FV2404),
             pytest.param(datetime(2024, 9, 30, 22, 0, 0, 0, tzinfo=timezone.utc), EdifactFormatVersion.FV2410),
             pytest.param(datetime(2025, 3, 31, 22, 0, 0, tzinfo=timezone.utc), EdifactFormatVersion.FV2504),

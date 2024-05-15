@@ -2,6 +2,7 @@
 MAUS is the MIG AHB Utility stack.
 This module contains methods to merge data from Message Implementation Guide and Anwendungshandbuch
 """
+
 from itertools import groupby
 from typing import List, Optional, Sequence, Set, Tuple
 

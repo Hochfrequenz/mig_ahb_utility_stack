@@ -3,6 +3,7 @@ the navigation module is contains models and code that allow to "navigate" throu
 I.e. it allows to loop over an Anwendungshandbuch and "remember" which turns we took in the MIG structure (each turn is
 a AhbLocationLayer) in order to arrive at a certain line of the AHB. This information is stored in an AhbLocation.
 """
+
 import sys
 from enum import Enum
 from typing import Callable, List, Optional, Tuple, TypeVar, Union, overload
@@ -249,27 +250,23 @@ class _PseudoAhbLocation(AhbLocation):
 
 
 @overload
-def find_common_ancestor(location_x: _PseudoAhbLocation, location_y: _PseudoAhbLocation) -> _PseudoAhbLocation:
-    ...
+def find_common_ancestor(location_x: _PseudoAhbLocation, location_y: _PseudoAhbLocation) -> _PseudoAhbLocation: ...
 
 
 @overload
 def find_common_ancestor(
     location_x: _PseudoAhbLocation, location_y: Union[AhbLocation, _PseudoAhbLocation]
-) -> _PseudoAhbLocation:
-    ...
+) -> _PseudoAhbLocation: ...
 
 
 @overload
 def find_common_ancestor(
     location_x: Union[AhbLocation, _PseudoAhbLocation], location_y: _PseudoAhbLocation
-) -> _PseudoAhbLocation:
-    ...
+) -> _PseudoAhbLocation: ...
 
 
 @overload
-def find_common_ancestor(location_x: AhbLocation, location_y: AhbLocation) -> AhbLocation:
-    ...
+def find_common_ancestor(location_x: AhbLocation, location_y: AhbLocation) -> AhbLocation: ...
 
 
 def find_common_ancestor(

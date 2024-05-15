@@ -1,6 +1,7 @@
 """
 contains the MigXmlReader - a MIG Reader that is based on XML MIGs (and therefore requires lxml)
 """
+
 import re
 from pathlib import Path
 from typing import List, Set, TypeVar, Union

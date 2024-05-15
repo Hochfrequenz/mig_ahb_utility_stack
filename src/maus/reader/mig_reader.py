@@ -1,6 +1,7 @@
 """
 Classes that allow to read XML files that contain structural information (Message Implementation Guide information)
 """
+
 from abc import ABC, abstractmethod
 
 from maus.models.edifact_components import EdifactStack
