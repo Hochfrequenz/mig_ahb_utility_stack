@@ -136,6 +136,7 @@ class TestEdifactComponents:
                     discriminator="foo",
                 ),
                 {
+                    "segment_id": None,
                     "ahb_expression": "X",
                     "section_name": "foo",
                     "data_elements": [
@@ -251,6 +252,7 @@ class TestEdifactComponents:
                     "discriminator": "disc A",
                     "segments": [
                         {
+                            "segment_id": None,
                             "section_name": "bar",
                             "ahb_expression": "expr B",
                             "discriminator": "disc B",
@@ -281,6 +283,7 @@ class TestEdifactComponents:
                             "discriminator": "disc C",
                             "segments": [
                                 {
+                                    "segment_id": None,
                                     "section_name": "foo",
                                     "ahb_expression": "expr Y",
                                     "discriminator": "disc Y",

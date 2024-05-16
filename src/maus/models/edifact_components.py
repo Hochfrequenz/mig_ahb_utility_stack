@@ -411,6 +411,13 @@ class Segment(SegmentLevel):
     This might be necessary to e.g. distinguish gas and electricity fields which look the same otherwise.
     See e.g. UTILMD 'Geplante Turnusablesung des MSB (Strom)' vs. 'Geplante Turnusablesung des NB (Gas)'
     """
+    segment_id: Optional[str] = attrs.field(
+        validator=attrs.validators.optional(attrs.validators.matches_re(r"^\d{5}$")), default=None
+    )
+    """
+    The 5 digit segment id, e.g. '00522' for UTILMD Strom SG12, NAD "Korrespondenzanschrift des
+    Kunden des Lieferanten"
+    """
 
     def get_all_value_pools(self) -> List[DataElementValuePool]:
         """
@@ -427,6 +434,7 @@ class SegmentSchema(SegmentLevelSchema):
 
     data_elements = fields.List(fields.Nested(_FreeTextOrValuePoolSchema))
     section_name = fields.String(required=False)
+    segment_id = fields.String(required=False, allow_none=True)
 
     # pylint:disable=unused-argument
     @post_load
