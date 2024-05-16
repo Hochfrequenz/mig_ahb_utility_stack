@@ -412,7 +412,7 @@ class Segment(SegmentLevel):
     See e.g. UTILMD 'Geplante Turnusablesung des MSB (Strom)' vs. 'Geplante Turnusablesung des NB (Gas)'
     """
     segment_id: Optional[str] = attrs.field(
-        validator=attrs.validators.optional(attrs.validators.matches_re("^\d{5}$")), default=None
+        validator=attrs.validators.optional(attrs.validators.matches_re(r"^\d{5}$")), default=None
     )
     """
     The 5 digit segment id, e.g. '00522' for UTILMD Strom SG12, NAD "Korrespondenzanschrift des
