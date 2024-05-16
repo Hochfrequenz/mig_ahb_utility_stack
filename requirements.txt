@@ -16,7 +16,7 @@ marshmallow==3.21.2
     # via -r requirements.in
 more-itertools==10.2.0
     # via -r requirements.in
-packaging==23.0
+packaging==24.0
     # via marshmallow
 xmltodict==0.13.0
     # via -r requirements.in
