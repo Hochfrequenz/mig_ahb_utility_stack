@@ -646,8 +646,10 @@ def determine_locations(
             # [SG2 (NAD+MS), SG3]->[SG2 (NAD+MR)] # one group up (leave SG3, then remove old SG2)
             # [SG4, SG8, SG10]-> [SG4,SG12] # two groups up! (leave SG10, leave SG8, then enter sg12)
             common_ancestor = _find_common_ancestor_from_sgh(
+                # pylint:disable=unsubscriptable-object
                 last(last(result)[1].layers).segment_group_key, this_ahb_line.segment_group_key, segment_group_hierarchy
             )
+            # pylint:disable=unsubscriptable-object
             distance_to_common_ancestor = calculate_distance(last(result)[1], common_ancestor)
             for _ in range(0, distance_to_common_ancestor.layers_up):
                 # actually: this should be a separate case in the differential change enum
