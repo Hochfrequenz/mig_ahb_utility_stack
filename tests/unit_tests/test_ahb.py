@@ -88,6 +88,7 @@ class TestAhb:
                     ahb_expression="Muss [1] O [2]",
                     segment_group_key="SG2",
                     segment_code="NAD",
+                    segment_id="01234",
                     data_element="3039",
                     value_pool_entry="E01",
                     name="MP-ID",
@@ -98,6 +99,7 @@ class TestAhb:
                     "ahb_expression": "Muss [1] O [2]",
                     "segment_group_key": "SG2",
                     "segment_code": "NAD",
+                    "segment_id": "01234",
                     "data_element": "3039",
                     "value_pool_entry": "E01",
                     "name": "MP-ID",
@@ -111,6 +113,7 @@ class TestAhb:
                     ahb_expression="Muss [1] O [2]",
                     segment_group_key="SG2",
                     segment_code="NAD",
+                    segment_id=None,
                     data_element="3039",
                     value_pool_entry="E01",
                     name="MP-ID",
@@ -122,6 +125,7 @@ class TestAhb:
                     "ahb_expression": "Muss [1] O [2]",
                     "segment_group_key": "SG2",
                     "segment_code": "NAD",
+                    "segment_id": None,
                     "data_element": "3039",
                     "value_pool_entry": "E01",
                     "name": "MP-ID",
@@ -272,6 +276,7 @@ class TestAhb:
                             "segment_code": "NAD",
                             "data_element": "3039",
                             "value_pool_entry": "E01",
+                            "segment_id": None,
                             "name": "MP-ID",
                             "guid": "12b1a98a-edf5-4177-89e5-a6d8a92c5fdc",
                             "section_name": "MP-ID Absender",
@@ -395,6 +400,7 @@ class TestAhb:
                             "segments": [
                                 {
                                     "section_name": "foo",
+                                    "segment_id": None,
                                     "ahb_expression": "expr B",
                                     "discriminator": "disc B",
                                     "data_elements": [
@@ -424,6 +430,7 @@ class TestAhb:
                                     "discriminator": "disc C",
                                     "segments": [
                                         {
+                                            "segment_id": None,
                                             "section_name": "bar",
                                             "ahb_expression": "expr Y",
                                             "discriminator": "disc Y",

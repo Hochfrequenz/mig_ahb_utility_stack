@@ -136,7 +136,7 @@ async def generate_value_pool_replacement(
         _get_value_pool_mapping(value_pool_entry) for value_pool_entry in data_element.value_pool
     ]
     for result in await asyncio.gather(*value_pool_mapping_tasks):
-        edi_to_non_edi_value_mapping.update(result)
+        edi_to_non_edi_value_mapping.update(result)  # type:ignore[arg-type]
     return edi_to_non_edi_value_mapping
 
 

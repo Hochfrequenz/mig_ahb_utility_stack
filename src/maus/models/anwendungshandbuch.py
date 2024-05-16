@@ -54,6 +54,14 @@ class AhbLine:
     )
     """ the data element ID, e.g. '3224' """
 
+    segment_id: Optional[str] = attrs.field(
+        validator=attrs.validators.optional(validator=attrs.validators.instance_of(str)), default=None
+    )
+    """
+    the 5 digit segment id, e.g. '00003' for Nachrichten Kopfsegment
+    This is available since FV2410.
+    """
+
     value_pool_entry: Optional[str] = attrs.field(
         validator=attrs.validators.optional(attrs.validators.instance_of(str))
     )
@@ -128,6 +136,7 @@ class AhbLineSchema(Schema):
     guid = fields.UUID(required=False, load_default=None)
     segment_group_key = fields.String(required=False, load_default=None)
     segment_code = fields.String(required=False, load_default=None)
+    segment_id = fields.String(required=False, load_default=None)
     data_element = fields.String(required=False, load_default=None)
     value_pool_entry = fields.String(required=False, load_default=None)
     name = fields.String(required=False, load_default=None)
