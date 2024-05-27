@@ -1,6 +1,9 @@
 MIG AHB Utility Stack (MAUS) 🐭
 ===============================
 
+ℹ If you're looking for a wrapper around the new (2024) BDEW XMLs for MIG and AHB, checkout our `fundamend <https://github.com/Hochfrequenz/xml-fundamend-python>`__ repository.
+This maus package uses a different data format, because it's older than 2024.
+
 | |Unittests status badge| |Coverage status badge| |Linting status badge| |Black status badge| |pypy status badge| |read the docs|
 
 .. image:: https://raw.githubusercontent.com/Hochfrequenz/mig_ahb_utility_stack/main/docs/_static/maus-logo.png
