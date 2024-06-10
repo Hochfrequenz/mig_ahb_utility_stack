@@ -5,17 +5,15 @@
 #
 #    pip-compile-multi
 #
-colorama==0.4.6
-    # via pytest
 iniconfig==2.0.0
     # via pytest
 packaging==24.0
     # via pytest
 pluggy==1.5.0
     # via pytest
-pytest==8.2.0
+pytest==8.2.2
     # via
-    #   -r dev_requirements\requirements-integration_tests.in
+    #   -r dev_requirements/requirements-integration_tests.in
     #   pytest-datafiles
 pytest-datafiles==3.0.0
-    # via -r dev_requirements\requirements-integration_tests.in
+    # via -r dev_requirements/requirements-integration_tests.in
