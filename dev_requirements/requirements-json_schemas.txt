@@ -5,9 +5,9 @@
 #
 #    pip-compile-multi
 #
-marshmallow==3.21.2
+marshmallow==3.21.3
     # via marshmallow-jsonschema
 marshmallow-jsonschema==0.13.0
-    # via -r dev_requirements\requirements-json_schemas.in
+    # via -r dev_requirements/requirements-json_schemas.in
 packaging==24.0
     # via marshmallow
