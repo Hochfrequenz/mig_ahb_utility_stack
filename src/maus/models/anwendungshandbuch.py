@@ -83,7 +83,13 @@ class AhbLine:
     )
     """a requirement indicator + an optional condition ("ahb expression"), e.g. 'Muss [123] O [456]' """
     # note: to parse expressions from AHBs consider using AHBicht: https://github.com/Hochfrequenz/ahbicht/
-
+    conditions: Optional[str] = attrs.field(
+        validator=attrs.validators.optional(validator=attrs.validators.instance_of(str)), default=None
+    )
+    """
+    The condition text describes the text to the optional condition of the ahb expression.
+    E.g. '[492] This is a condition text. [999] And this is another one.'
+    """
     section_name: Optional[str] = attrs.field(
         validator=attrs.validators.optional(validator=attrs.validators.instance_of(str)), default=None
     )
@@ -141,6 +147,7 @@ class AhbLineSchema(Schema):
     value_pool_entry = fields.String(required=False, load_default=None)
     name = fields.String(required=False, load_default=None)
     ahb_expression = fields.String(required=False, load_default=None)
+    conditions = fields.String(required=False, load_default=None)
     section_name = fields.String(required=False, load_default=None)
     index = fields.Int(required=False, load_default=None, dump_default=None)
 
