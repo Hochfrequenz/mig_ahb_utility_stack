@@ -83,7 +83,13 @@ class AhbLine:
     )
     """a requirement indicator + an optional condition ("ahb expression"), e.g. 'Muss [123] O [456]' """
     # note: to parse expressions from AHBs consider using AHBicht: https://github.com/Hochfrequenz/ahbicht/
-
+    conditions: Optional[str] = attrs.field(
+        validator=attrs.validators.optional(validator=attrs.validators.instance_of(str)), default=None
+    )
+    """
+    The condition text describes the text to the optional condition of the ahb expression.
+    E.g. '[492] This is a condition text. [999] And this is another one.'
+    """
     section_name: Optional[str] = attrs.field(
         validator=attrs.validators.optional(validator=attrs.validators.instance_of(str)), default=None
     )
