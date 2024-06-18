@@ -147,6 +147,7 @@ class AhbLineSchema(Schema):
     value_pool_entry = fields.String(required=False, load_default=None)
     name = fields.String(required=False, load_default=None)
     ahb_expression = fields.String(required=False, load_default=None)
+    conditions = fields.String(required=False, load_default=None)
     section_name = fields.String(required=False, load_default=None)
     index = fields.Int(required=False, load_default=None, dump_default=None)
 
