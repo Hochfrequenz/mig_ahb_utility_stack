@@ -8,14 +8,12 @@
 altgraph==0.17.4
     # via pyinstaller
 packaging==24.0
-    # via pyinstaller
-pefile==2023.2.7
-    # via pyinstaller
-pyinstaller==6.6.0
-    # via -r dev_requirements\requirements-build_executable.in
+    # via
+    #   pyinstaller
+    #   pyinstaller-hooks-contrib
+pyinstaller==6.8.0
+    # via -r dev_requirements/requirements-build_executable.in
 pyinstaller-hooks-contrib==2024.6
-    # via pyinstaller
-pywin32-ctypes==0.2.2
     # via pyinstaller
 
 # The following packages are considered to be unsafe in a requirements file:
