@@ -5,24 +5,22 @@
 #
 #    pip-compile-multi
 #
-colorama==0.4.6
-    # via pytest
 iniconfig==2.0.0
     # via pytest
 jsonpath-ng==1.6.1
-    # via -r dev_requirements\requirements-unit_tests.in
+    # via -r dev_requirements/requirements-unit_tests.in
 packaging==24.0
     # via pytest
 pluggy==1.5.0
     # via pytest
 ply==3.11
     # via jsonpath-ng
-pytest==8.2.0
+pytest==8.2.2
     # via
-    #   -r dev_requirements\requirements-unit_tests.in
+    #   -r dev_requirements/requirements-unit_tests.in
     #   pytest-asyncio
     #   pytest-datafiles
 pytest-asyncio==0.23.6
-    # via -r dev_requirements\requirements-unit_tests.in
+    # via -r dev_requirements/requirements-unit_tests.in
 pytest-datafiles==3.0.0
-    # via -r dev_requirements\requirements-unit_tests.in
+    # via -r dev_requirements/requirements-unit_tests.in
