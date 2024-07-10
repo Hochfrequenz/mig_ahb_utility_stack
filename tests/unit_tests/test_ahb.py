@@ -28,6 +28,7 @@ meta_y = AhbMetaInformation(pruefidentifikator="11043", maus_version="0.2.3")
 
 line_x = AhbLine(
     ahb_expression="Muss [1] O [2]",
+    conditions="[1] Test\n[2] Test",
     segment_group_key="SG2",
     segment_code="NAD",
     data_element="3039",
@@ -37,6 +38,7 @@ line_x = AhbLine(
 )
 line_y = AhbLine(
     ahb_expression="Muss [3] O [4]",
+    conditions="[3] Test\n[4] Test",
     segment_group_key="SG2",
     segment_code="NAD",
     data_element="3039",
@@ -86,6 +88,7 @@ class TestAhb:
             pytest.param(
                 AhbLine(
                     ahb_expression="Muss [1] O [2]",
+                    conditions="[1] Test\n[2] Test",
                     segment_group_key="SG2",
                     segment_code="NAD",
                     segment_id="01234",
@@ -105,12 +108,14 @@ class TestAhb:
                     "name": "MP-ID",
                     "guid": "12b1a98a-edf5-4177-89e5-a6d8a92c5fdc",
                     "section_name": "Foo",
+                    "conditions": "[1] Test\n[2] Test",
                     "index": None,
                 },
             ),
             pytest.param(
                 AhbLine(
                     ahb_expression="Muss [1] O [2]",
+                    conditions="[1] Test\n[2] Test",
                     segment_group_key="SG2",
                     segment_code="NAD",
                     segment_id=None,
@@ -131,6 +136,7 @@ class TestAhb:
                     "name": "MP-ID",
                     "guid": "12b1a98a-edf5-4177-89e5-a6d8a92c5fdc",
                     "section_name": "Foo",
+                    "conditions": "[1] Test\n[2] Test",
                     "index": 42,
                 },
             ),
@@ -156,6 +162,7 @@ class TestAhb:
             pytest.param(
                 AhbLine(
                     ahb_expression="Muss [1] O [2]",
+                    conditions="[1] Test\n[2] Test",
                     segment_group_key="SG2",
                     segment_code="NAD",
                     data_element="3039",
@@ -201,6 +208,7 @@ class TestAhb:
             pytest.param(
                 AhbLine(
                     ahb_expression="Muss [1] O [2]",
+                    conditions="[1] Test\n[2] Test",
                     segment_group_key="SG2",
                     segment_code="NAD",
                     data_element="3039",
@@ -214,6 +222,7 @@ class TestAhb:
             pytest.param(
                 AhbLine(
                     ahb_expression="Muss [1] O [2]",
+                    conditions="[1] Test\n[2] Test",
                     segment_group_key="SG2",
                     segment_code="NAD",
                     data_element="3039",
@@ -227,6 +236,7 @@ class TestAhb:
             pytest.param(
                 AhbLine(
                     ahb_expression="Muss [1] O [2]",
+                    conditions="[1] Test\n[2] Test",
                     segment_group_key=None,
                     segment_code="UNH",
                     data_element="0062",
@@ -252,6 +262,7 @@ class TestAhb:
                     lines=[
                         AhbLine(
                             ahb_expression="Muss [1] O [2]",
+                            conditions="[1] Test\n[2] Test",
                             segment_group_key="SG2",
                             segment_code="NAD",
                             data_element="3039",
@@ -280,6 +291,7 @@ class TestAhb:
                             "name": "MP-ID",
                             "guid": "12b1a98a-edf5-4177-89e5-a6d8a92c5fdc",
                             "section_name": "MP-ID Absender",
+                            "conditions": "[1] Test\n[2] Test",
                             "index": None,
                         }
                     ],
