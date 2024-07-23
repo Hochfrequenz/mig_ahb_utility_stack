@@ -196,6 +196,8 @@ def to_deep_ahb(
             # these assertion are because we assume that the lines always come like this:
             # Section Heading
             # SGx Foo      <-- a line with only the segment code but no actual content; this is where we're right now
+            # note that this won't work with AHBs scraped by kohlrahbi > 1.1.3
+            # https://github.com/Hochfrequenz/kohlrahbi/issues/339#issuecomment-2222465660
             first_expression_line: Optional[AhbLine] = first_true(
                 data_element_lines, default=None, pred=lambda l: l is not None and l.ahb_expression
             )
