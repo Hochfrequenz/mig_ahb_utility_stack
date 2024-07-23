@@ -35,6 +35,9 @@ class EdifactFormat(str, Enum):
     REQOTE = "REQOTE"  #: request quote
     PARTIN = "PARTIN"  #: market partner data
     UTILMD = "UTILMD"  #: utilities master data
+    UTILMDG = "UTILMDG"  #: utilities master data for 'Gas'
+    UTILMDS = "UTILMDS"  #: utilities master data for 'Strom'
+    UTILMDW = "UTILMDW"  #: utilities master data 'Wasser'
     UTILTS = "UTILTS"  #: formula
 
     def __str__(self):
