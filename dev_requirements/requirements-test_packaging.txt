@@ -6,8 +6,8 @@
 #    pip-compile-multi
 #
 build==1.2.1
-    # via -r dev_requirements/requirements-test_packaging.in
-certifi==2024.2.2
+    # via -r requirements-test_packaging.in
+certifi==2024.7.4
     # via requests
 cffi==1.16.0
     # via cryptography
