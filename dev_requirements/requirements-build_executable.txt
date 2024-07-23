@@ -11,9 +11,9 @@ packaging==24.0
     # via
     #   pyinstaller
     #   pyinstaller-hooks-contrib
-pyinstaller==6.8.0
+pyinstaller==6.9.0
     # via -r dev_requirements/requirements-build_executable.in
-pyinstaller-hooks-contrib==2024.6
+pyinstaller-hooks-contrib==2024.7
     # via pyinstaller
 
 # The following packages are considered to be unsafe in a requirements file:
