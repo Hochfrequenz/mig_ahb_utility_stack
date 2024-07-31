@@ -6,7 +6,7 @@ import re
 from typing import Optional
 
 import attrs
-from efoli import get_format_of_pruefidentifikator, EdifactFormat, EdifactFormatVersion
+from efoli import EdifactFormat, EdifactFormatVersion, get_format_of_pruefidentifikator
 
 _PRUEFI_REGEX = r"^[1-9]\d{4}$"
 pruefidentifikator_pattern = re.compile(_PRUEFI_REGEX)
@@ -19,6 +19,7 @@ def is_edifact_boilerplate(segment_code: Optional[str]) -> bool:
     if not segment_code:
         return True
     return segment_code.strip() in {"UNT", "UNZ"}
+
 
 # pylint:disable=unused-argument
 def _check_that_pruefi_and_format_are_consistent(instance: "EdiMetaData", attribute, value: str):

@@ -3,16 +3,14 @@ from typing import Optional
 import pytest  # type:ignore[import]
 from efoli import EdifactFormat, EdifactFormatVersion
 
-from maus.edifact import (
-    EdiMetaData,
-    is_edifact_boilerplate,
-)
+from maus.edifact import EdiMetaData, is_edifact_boilerplate
 
 
 class TestEdifact:
     """
     Tests the edifact module
     """
+
     def test_edi_meta_data_instantiation(self):
         actual = EdiMetaData(
             pruefidentifikator="11042",
