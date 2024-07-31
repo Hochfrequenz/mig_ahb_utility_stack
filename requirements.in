@@ -5,4 +5,5 @@ more_itertools
 xmltodict
 click
 lark
+efoli>=0.0.3
 # whenever adding something here, don't forget to also add it to pyproject.toml dependencies
