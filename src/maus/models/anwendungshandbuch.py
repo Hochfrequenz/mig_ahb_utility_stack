@@ -255,7 +255,9 @@ _data_element_pattern = re.compile(r"^\d{4}$|^\d{5}$|^[A-Za-z]+\d{4}$")
 # pylint:disable=unused-argument
 def _check_that_line_has_either_none_or_d4_data_element(instance, attribute, value: AhbLine):
     """
-    checks that the given line has either a None data element or a data element that matches \\d{4}
+    checks that the given line has either a None data element or a data element that matches
+    \\d{4},\\ d{5} or [A-Za-z]+\\d{4}.
+    AhbLine(data_element = 0001), AhbLine(data_element = 00001) or AhbLine(data_element = R0001)
     """
     if value.data_element is None:
         return
