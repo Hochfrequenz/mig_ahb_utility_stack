@@ -28,7 +28,7 @@ dependencies = [
     "attrs>=22.1.0",
     "marshmallow>=3.18.0",
     "more_itertools",
-    "efoli>=0.0.2"
+    "efoli>=0.0.3"
     # add everything you add in requirements.in here
 ]
 dynamic = ["readme", "version"]
