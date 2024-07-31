@@ -249,7 +249,7 @@ def _check_that_nearly_all_lines_have_a_segment_group(instance, attribute, value
         raise ValueError(f"There is a None segment group in line {last(switches_from_no_sg_to_sg[1])}")
 
 
-_data_element_pattern = re.compile(r"^\d{4}$")
+_data_element_pattern = re.compile(r"^\d{4}$|^\d{5}$|^[A-Za-z]+\d{4}$")
 
 
 # pylint:disable=unused-argument
