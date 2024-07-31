@@ -70,10 +70,10 @@ rich==13.7.1
 secretstorage==3.3.3
     # via keyring
 twine==5.1.1
-    # via -r dev_requirements/requirements-test_packaging.in
+    # via -r requirements-test_packaging.in
 urllib3==2.2.1
     # via
     #   requests
     #   twine
-zipp==3.18.2
+zipp==3.19.1
     # via importlib-metadata
