@@ -12,7 +12,7 @@ efoli==1.1.0
     # via -r requirements.in
 lark==1.1.9
     # via -r requirements.in
-lxml==5.2.2
+lxml==5.3.0
     # via -r requirements.in
 marshmallow==3.21.3
     # via -r requirements.in
