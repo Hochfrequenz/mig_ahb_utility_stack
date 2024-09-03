@@ -10,8 +10,9 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Optional
 
+from kohlrahbi.models.anwendungshandbuch import DeepAnwendungshandbuch
+
 from maus.edifact import EdifactFormat, EdifactFormatVersion
-from maus.models.anwendungshandbuch import DeepAnwendungshandbuch, DeepAnwendungshandbuchSchema
 
 # pylint:disable=too-few-public-methods
 
@@ -60,7 +61,7 @@ class FileBasedMausProvider(MausProvider):
         try:
             with open(full_path, "r", encoding=self._encoding) as maus_infile:
                 file_content_json = json.load(maus_infile)
-                maus = DeepAnwendungshandbuchSchema().load(file_content_json)
+                maus = DeepAnwendungshandbuch.model_validate(file_content_json)
         except FileNotFoundError:
             return None
         return maus

@@ -4,7 +4,8 @@ example AHB data for 11042 as of 2021-10-01
 
 from uuid import UUID
 
-from maus.models.anwendungshandbuch import AhbLine, AhbMetaInformation, FlatAnwendungshandbuch
+from kohlrahbi.models.anwendungshandbuch import AhbLine, AhbMetaInformation, FlatAnwendungshandbuch
+
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
 from maus.navigation import AhbLocation, AhbLocationLayer, _DifferentialAhbLineHierarchyChange
 

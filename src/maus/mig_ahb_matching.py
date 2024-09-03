@@ -6,9 +6,9 @@ This module contains methods to merge data from Message Implementation Guide and
 from itertools import groupby
 from typing import List, Optional, Sequence, Set, Tuple
 
+from kohlrahbi.models.anwendungshandbuch import _VERSION, AhbLine, DeepAnwendungshandbuch, FlatAnwendungshandbuch
 from more_itertools import first, first_true, last
 
-from maus.models.anwendungshandbuch import _VERSION, AhbLine, DeepAnwendungshandbuch, FlatAnwendungshandbuch
 from maus.models.edifact_components import (
     DataElement,
     DataElementFreeText,
@@ -98,7 +98,7 @@ def to_deep_ahb(
     Converts a flat ahb into a nested ahb using the provided segment hierarchy
     """
     result = DeepAnwendungshandbuch(meta=flat_ahb.meta, lines=[])
-    result.meta.maus_version = _VERSION
+    result.meta.maus_version = _VERSION  # pylint:disable=assigning-non-slot
     parent_group_lists: List[List[SegmentGroup]] = []
     used_stacks: Set[str] = set()
     # The following lists are _not_ a view into the lines that are going to follow (hence no name starting with "next")
@@ -170,7 +170,7 @@ def to_deep_ahb(
                 used_stacks.add(stack.to_json_path())
                 append_next_segments_here = segment_group.segments  # type:ignore[assignment]
                 if segment_group.discriminator == '$["Dokument"][0]["Nachricht"][0]':
-                    result.lines.append(segment_group)
+                    result.lines.append(segment_group)  # pylint:disable=no-member
                     append_next_sg_here = segment_group.segment_groups  # type:ignore[assignment]
                     parent_group_lists.append(result.lines)
                 elif position.is_sub_location_of(previous_position):  # pylint:disable=used-before-assignment

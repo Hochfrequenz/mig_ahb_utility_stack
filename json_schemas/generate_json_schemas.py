@@ -7,10 +7,9 @@ import json
 import pathlib
 from typing import List, Type
 
+from kohlrahbi.models.anwendungshandbuch import DeepAnwendungshandbuchSchema
 from marshmallow import Schema
 from marshmallow_jsonschema import JSONSchema  # type:ignore[import]
-
-from maus.models.anwendungshandbuch import DeepAnwendungshandbuchSchema
 
 schema_types: List[Type[Schema]] = [
     DeepAnwendungshandbuchSchema

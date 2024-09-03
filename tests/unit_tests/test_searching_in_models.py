@@ -1,16 +1,15 @@
 from typing import Callable, List
 
 import pytest  # type:ignore[import]
-
-from maus.models.anwendungshandbuch import (
+from kohlrahbi.models.anwendungshandbuch import (
     AhbMetaInformation,
     DataElementFreeText,
     DataElementValuePool,
     DeepAnwendungshandbuch,
     Segment,
     SegmentGroup,
+    ValuePoolEntry,
 )
-from maus.models.edifact_components import ValuePoolEntry
 
 
 class TestSearchingInModels:
@@ -239,6 +238,7 @@ class TestSearchingInModels:
                                             entered_input="Hello Mice",
                                             discriminator="bar",
                                             data_element_id="4567",
+                                            free_text="",
                                         ),
                                     ],
                                 ),

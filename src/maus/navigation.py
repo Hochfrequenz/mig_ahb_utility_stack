@@ -9,9 +9,9 @@ from enum import Enum
 from typing import Callable, List, Optional, Tuple, TypeVar, Union, overload
 
 import attrs
+from kohlrahbi.models.anwendungshandbuch import AhbLine
 from more_itertools import first_true, last
 
-from maus.models.anwendungshandbuch import AhbLine
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
 
 T = TypeVar("T")
