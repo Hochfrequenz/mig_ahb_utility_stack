@@ -6,4 +6,5 @@ xmltodict
 click
 lark
 efoli>=0.0.3
+kohlrahbi>=1.6.0
 # whenever adding something here, don't forget to also add it to pyproject.toml dependencies
