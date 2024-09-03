@@ -10,7 +10,7 @@ click==8.1.7
     # via -r requirements.in
 efoli==1.1.0
     # via -r requirements.in
-lark==1.1.9
+lark==1.2.2
     # via -r requirements.in
 lxml==5.2.2
     # via -r requirements.in
