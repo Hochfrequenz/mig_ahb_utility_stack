@@ -12,12 +12,9 @@ except ImportError as import_error:
     # click is only an optional dependency when maus is used as CLI tool
     raise
 
+from kohlrahbi.models.anwendungshandbuch import DeepAnwendungshandbuch, FlatAnwendungshandbuch
+
 from maus.mig_ahb_matching import to_deep_ahb
-from maus.models.anwendungshandbuch import (
-    DeepAnwendungshandbuch,
-    DeepAnwendungshandbuchSchema,
-    FlatAnwendungshandbuchSchema,
-)
 from maus.models.message_implementation_guide import SegmentGroupHierarchySchema
 from maus.reader.mig_xml_reader import MigXmlReader
 
@@ -79,7 +76,7 @@ def main(
         raise click.Abort()
 
     with open(flat_ahb_path, "r", encoding="utf-8") as flat_ahb_file:
-        flat_ahb = FlatAnwendungshandbuchSchema().load(json.load(flat_ahb_file))
+        flat_ahb = FlatAnwendungshandbuch.model_validate(json.load(flat_ahb_file))
     with open(sgh_path, "r", encoding="utf-8") as sgh_file:
         sgh = SegmentGroupHierarchySchema().loads(sgh_file.read())
 
@@ -93,14 +90,14 @@ def main(
         raise click.Abort()
 
     if output_path is not None:
-        maus_dict = DeepAnwendungshandbuchSchema().dump(maus)
+        maus_dict = maus.model_dump(mode="json")
 
         with open(output_path, "w", encoding="utf-8") as maus_file:
             json.dump(maus_dict, maus_file, indent=2, ensure_ascii=False, sort_keys=True)
 
     if check_path is not None:
         with open(check_path, "r", encoding="utf-8") as maus_file:
-            expected_maus: DeepAnwendungshandbuch = DeepAnwendungshandbuchSchema().loads(maus_file.read())
+            expected_maus: DeepAnwendungshandbuch = DeepAnwendungshandbuch.model_validate_json(maus_file.read())
 
             # reset the line index to make the comparison work
             # this is fine cause there is no logic built on top of the line index

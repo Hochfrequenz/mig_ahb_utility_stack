@@ -1,10 +1,10 @@
 from typing import List
 
 import pytest  # type:ignore[import]
+from kohlrahbi.models.anwendungshandbuch import AhbLine
 from unit_tests.serialization_test_helper import assert_serialization_roundtrip  # type:ignore[import]
 
 from maus.mig_ahb_matching import merge_lines_with_same_data_element
-from maus.models.anwendungshandbuch import AhbLine
 from maus.models.edifact_components import (
     DataElement,
     DataElementFreeText,

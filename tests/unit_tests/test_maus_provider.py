@@ -6,10 +6,10 @@ import json
 from pathlib import Path
 
 import pytest  # type:ignore[import]
+from kohlrahbi.models.anwendungshandbuch import AhbMetaInformation, DeepAnwendungshandbuch
 
 from maus.edifact import EdifactFormat, EdifactFormatVersion
 from maus.maus_provider import FileBasedMausProvider, MausProvider
-from maus.models.anwendungshandbuch import AhbMetaInformation, DeepAnwendungshandbuch, DeepAnwendungshandbuchSchema
 
 
 class MyFooBarMausProvider(FileBasedMausProvider):
@@ -50,7 +50,7 @@ class TestMausProvider:
             meta=AhbMetaInformation(pruefidentifikator="11001", maus_version="0.2.3"), lines=[]
         )
         with open(maus_root_dir / "FV2104/UTILMD/11001_maus.json", "w+") as maus_test_outfile:
-            deep_ahb_dict = DeepAnwendungshandbuchSchema().dump(example_maus)  # create a dictionary
+            deep_ahb_dict = example_maus.model_dump(mode="json")  # create a dictionary
             json.dump(deep_ahb_dict, maus_test_outfile)  # dump the dictionary to the file
         provider: MausProvider = MyFooBarMausProvider(base_path=maus_root_dir)
         assert provider is not None

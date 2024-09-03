@@ -4,14 +4,14 @@ from sys import gettrace
 from typing import Optional
 
 import attrs
-
-from maus.mig_ahb_matching import to_deep_ahb
-from maus.models.anwendungshandbuch import (
+from kohlrahbi.models.anwendungshandbuch import (
     DeepAnwendungshandbuch,
     DeepAnwendungshandbuchSchema,
     FlatAnwendungshandbuch,
     FlatAnwendungshandbuchSchema,
 )
+
+from maus.mig_ahb_matching import to_deep_ahb
 from maus.models.message_implementation_guide import SegmentGroupHierarchy, SegmentGroupHierarchySchema
 from maus.reader.flat_ahb_reader import FlatAhbCsvReader
 from maus.reader.mig_xml_reader import MigXmlReader

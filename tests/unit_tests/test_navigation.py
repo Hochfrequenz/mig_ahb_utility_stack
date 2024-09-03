@@ -3,9 +3,9 @@ from uuid import UUID
 
 import pytest  # type:ignore[import]
 from jsonpath_ng.ext import parse  # type:ignore[import] #  jsonpath is just installed in the tests
+from kohlrahbi.models.anwendungshandbuch import AhbLine, _remove_grouped_ahb_lines_containing_section_name
 from more_itertools import last
 
-from maus.models.anwendungshandbuch import AhbLine, _remove_grouped_ahb_lines_containing_section_name
 from maus.models.message_implementation_guide import SegmentGroupHierarchy
 from maus.navigation import (
     AhbLocation,
