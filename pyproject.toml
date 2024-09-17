@@ -42,7 +42,7 @@ unit_tests = [
 ]
 integration_tests = [
     "pytest==8.3.2",
-    "pytest-datafiles==1.0.0"
+    "pytest-datafiles==3.0.0"
 ]
 linting = [
     "pylint==3.2.7"
@@ -86,8 +86,6 @@ formating = [
 dev = [
     "pip-tools"
 ]
-
-[project.optional-dependencies]
 xml = ["lxml>=4.9.2", "xmltodict"] # for parsing the Hochfrequenz MIG templates
 tree = ["lark>=1.1.5"] # for parsing the Hochfrequenz .tree files
 cli = ["click"] # for the CLI tool (w/o python installer/executable)
