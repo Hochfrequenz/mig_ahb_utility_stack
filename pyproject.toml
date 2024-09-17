@@ -35,16 +35,21 @@ dynamic = ["readme", "version"]
 
 [project.optional-dependencies]
 unit_tests = [
-    "pytest==8.3.3"
+    "pytest==8.3.2",
+    "pytest-datafiles==3.0.0",
+    "jsonpath-ng==1.6.1",
+    "pytest-asyncio==0.23.8"
 ]
 integration_tests = [
-    "pytest==8.3.3"
+    "pytest==8.3.2",
+    "pytest-datafiles==1.0.0"
 ]
 linting = [
     "pylint==3.2.7"
 ]
 type_check = [
-    "mypy==1.11.2"
+    "mypy==1.11.2",
+    "types-xmltodict==0.13.0.3"
 ]
 spell_check = [
     "codespell==2.3.0"
@@ -73,6 +78,10 @@ json_schema = [
 test_packaging = [
     "build==1.2.1",
     "twine==5.1.1"
+]
+formating = [
+    "black==24.8.0",
+    "isort==5.13.2"
 ]
 dev = [
     "pip-tools"
