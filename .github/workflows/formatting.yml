@@ -17,7 +17,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install tox
-      - name: Run Code Formatter Checks
-        run: |
-          tox -e formatting
+          pip install .[formatting]
+          - name: ${{ matrix.tool }} Code Formatter
+          run: |
+          ${{ matrix.tool }} . --check

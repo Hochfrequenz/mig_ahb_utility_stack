@@ -34,6 +34,51 @@ dependencies = [
 dynamic = ["readme", "version"]
 
 [project.optional-dependencies]
+unit_tests = [
+    "pytest==8.3.3"
+]
+integration_tests = [
+    "pytest==8.3.3"
+]
+linting = [
+    "pylint==3.2.7"
+]
+type_check = [
+    "mypy==1.11.2"
+]
+spell_check = [
+    "codespell==2.3.0"
+]
+coverage = [
+    "coverage==7.6.1"
+]
+formatting = [
+    "black==24.8.0",
+    "isort==5.13.2"
+]
+packaging = [
+    "build==1.2.2",
+    "twine==5.1.1"
+]
+build_executable = [
+    "pyinstaller==6.10.0"
+]
+docs = [
+    "Sphinx==7.4.7",
+    "sphinx-rtd-theme==2.0.0"
+]
+json_schema = [
+    "marshmallow-jsonschema==0.13.0"
+]
+test_packaging = [
+    "build==1.2.1",
+    "twine==5.1.1"
+]
+dev = [
+    "pip-tools"
+]
+
+[project.optional-dependencies]
 xml = ["lxml>=4.9.2", "xmltodict"] # for parsing the Hochfrequenz MIG templates
 tree = ["lark>=1.1.5"] # for parsing the Hochfrequenz .tree files
 cli = ["click"] # for the CLI tool (w/o python installer/executable)
