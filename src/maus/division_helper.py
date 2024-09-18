@@ -17,7 +17,7 @@ class Division(str, Enum):
 
 def get_division(field_name: Optional[str]) -> Optional[Division]:
     """
-    returns a division if the field name is definitly from that division, None otherwise
+    returns a division if the field name is definitely from that division, None otherwise
     """
     if not field_name:
         return None

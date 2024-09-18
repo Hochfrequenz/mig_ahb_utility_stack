@@ -1,1 +1,5 @@
 # contains 1 lower case word per line which are ignored in the spell_check
+beginn
+TE
+als
+Dokument
