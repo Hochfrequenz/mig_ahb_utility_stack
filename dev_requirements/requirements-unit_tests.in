@@ -1,5 +1,0 @@
-# specific requirements for the tox unit_tests env
-pytest
-pytest-datafiles
-jsonpath-ng
-pytest-asyncio
