@@ -25,11 +25,20 @@ class TestAnmeldungMaus:
     @pytest.mark.datafiles("../../machine-readable_anwendungshandbuecher/FV2210/UTILMD/flatahb/11002.json")
     @pytest.mark.datafiles("./edifact-templates/segment_group_hierarchies/FV2210/UTILMD.sgh.json")
     def test_maus_creation_11002_52e(self, datafiles):
-        create_maus_and_assert(
+        result = create_maus_and_assert(
             flat_ahb_path=Path(datafiles) / "11002.json",
             sgh_path=Path(datafiles) / "UTILMD.sgh.json",
             template_path=Path(datafiles) / Path("UTILMD5.2e.template"),
             maus_path=Path("edifact-templates/maus/FV2210/UTILMD/11002_maus.json"),
+        )
+        assert result is not None
+        geplante_msb_ablesungen_strom = result.maus.find_segments(
+            segment_predicate=lambda seg: seg.section_name == "Geplante Turnusablesung des MSB (Strom)",
+        )
+        assert not any(
+            msba
+            for msba in geplante_msb_ablesungen_strom
+            if "Referenz auf die ID der Marktlokation" in msba.discriminator
         )
 
     @pytest.mark.datafiles("./edifact-templates/edi/UTILMD/UTILMD5.2e.template")
