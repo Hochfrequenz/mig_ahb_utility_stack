@@ -1,5 +1,6 @@
 MIG AHB Utility Stack (MAUS) 🐭
 ===============================
+⚠️ We stopped development in 2025, after the XML-based XMLs and AHBs were published.
 
 ℹ If you're looking for a wrapper around the new (2024) BDEW XMLs for MIG and AHB, checkout our `fundamend <https://github.com/Hochfrequenz/xml-fundamend-python>`__ repository.
 This maus package uses a different data format, because it's older than 2024.
