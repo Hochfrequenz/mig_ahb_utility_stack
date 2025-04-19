@@ -69,7 +69,7 @@ build_executable = [
     "pyinstaller==6.10.0"
 ]
 docs = [
-    "Sphinx==7.4.7",
+    "Sphinx==8.0.2",
     "sphinx-rtd-theme==2.0.0"
 ]
 json_schema = [
